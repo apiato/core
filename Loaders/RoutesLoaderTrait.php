@@ -45,7 +45,9 @@ trait RoutesLoaderTrait
 
         if (File::isDirectory($apiRoutesPath)) {
             $files = File::allFiles($apiRoutesPath);
-            $files = array_sort($files, function($file) { return $file->getFilename(); });
+            $files = array_sort($files, function ($file) {
+                return $file->getFilename();
+            });
             foreach ($files as $file) {
                 $this->loadApiRoute($file, $controllerNamespace);
             }
@@ -93,18 +95,57 @@ trait RoutesLoaderTrait
      */
     private function loadApiRoute($file, $controllerNamespace)
     {
-        $rateLimitMiddleware = 'throttle:' . Config::get('apiato.api.throttle_attempts') . ',' . Config::get('apiato.api.throttle_expires');
-
-        $versionPrefix = '/' . $this->getRouteFileVersionFromFileName($file);
-
         Route::group([
             'namespace'  => $controllerNamespace,
-            'middleware' => ['api', $rateLimitMiddleware],
-            'domain'     => Config::get('apiato.api.url'),
-            'prefix'     => $versionPrefix,
+            'middleware' => $this->getMiddlewares(),
+            'domain'     => $this->getApiUrl(),
+            'prefix'     => $this->getApiVersionPrefix($file),
         ], function ($router) use ($file) {
             require $file->getPathname();
         });
+    }
+
+    /**
+     * @return  mixed
+     */
+    private function getApiUrl()
+    {
+        return Config::get('apiato.api.url');
+    }
+
+    /**
+     * @param $file
+     *
+     * @return  string
+     */
+    private function getApiVersionPrefix($file)
+    {
+        return '/' . $this->getRouteFileVersionFromFileName($file);
+    }
+
+    /**
+     * @return  array
+     */
+    private function getMiddlewares()
+    {
+        return array_filter([
+            'api',
+            $this->getRateLimitMiddleware(), // returns NULL if feature disabled. Null will be removed form the array.
+        ]);
+    }
+
+    /**
+     * @return  null|string
+     */
+    private function getRateLimitMiddleware()
+    {
+        $rateLimitMiddleware = null;
+
+        if (Config::get('apiato.api.throttle.enabled')) {
+            $rateLimitMiddleware = 'throttle:' . Config::get('apiato.api.throttle.attempts') . ',' . Config::get('apiato.api.throttle.expires');
+        }
+
+        return $rateLimitMiddleware;
     }
 
     /**
@@ -123,7 +164,7 @@ trait RoutesLoaderTrait
         $apiVersion = prev($fileNameWithoutExtensionExploded); // get the array before the last one
 
         // Skip versioning the API's root route
-        if($apiVersion === 'ApisRoot'){
+        if ($apiVersion === 'ApisRoot') {
             $apiVersion = '';
         }
 
