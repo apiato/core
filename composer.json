@@ -1,0 +1,44 @@
+{
+  "name": "apiato/core",
+  "description": "Core package for Apiato.",
+  "homepage": "http://apiato.io/",
+  "support": {
+    "issues": "https://github.com/apiato/core/issues",
+    "source": "https://github.com/apiato/core"
+  },
+  "authors": [
+    {
+      "name": "Mahmoud Zalt",
+      "email": "mahmoud@zalt.me"
+    }
+  ],
+  "keywords": [
+    "apiato",
+    "apiato core",
+    "core",
+    "Porto",
+    "Porto SAP"
+  ],
+  "license": "MIT",
+  "require": {
+    "guzzlehttp/guzzle": "^6.2",
+    "prettus/l5-repository": "^2.6",
+    "barryvdh/laravel-cors": "0.9.*",
+    "spatie/laravel-fractal": "^3.5",
+    "vinkla/hashids": "3.1.*",
+    "johannesschobel/apiato-container-installer" : "0.*"
+  },
+  "require-dev": {
+
+  },
+  "autoload": {
+    "psr-4": {
+      "Apiato\\Core\\": ""
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {}
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
