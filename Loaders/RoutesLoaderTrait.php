@@ -120,7 +120,7 @@ trait RoutesLoaderTrait
      */
     private function getApiVersionPrefix($file)
     {
-        return Config::get('apiato.api.prefix') . $this->getRouteFileVersionFromFileName($file);
+        return Config::get('apiato.api.prefix') . (Config::get('apiato.api.enable_version_prefix') ? $this->getRouteFileVersionFromFileName($file) : '');
     }
 
     /**
