@@ -95,14 +95,28 @@ trait RoutesLoaderTrait
      */
     private function loadApiRoute($file, $controllerNamespace)
     {
-        Route::group([
+        $routeGroupArray = $this->getRouteGroup($file, $controllerNamespace);
+
+        Route::group($routeGroupArray, function ($router) use ($file) {
+            require $file->getPathname();
+        });
+    }
+
+    /**
+     * @param      $endpointFileOrPrefixString
+     * @param null $controllerNamespace
+     *
+     * @return  array
+     */
+    public function getRouteGroup($endpointFileOrPrefixString, $controllerNamespace = null)
+    {
+        return [
             'namespace'  => $controllerNamespace,
             'middleware' => $this->getMiddlewares(),
             'domain'     => $this->getApiUrl(),
-            'prefix'     => $this->getApiVersionPrefix($file),
-        ], function ($router) use ($file) {
-            require $file->getPathname();
-        });
+            // if $endpointFileOrPrefixString is a file then get the version name from the file name, else if string use that string as prefix
+            'prefix'     =>  is_string($endpointFileOrPrefixString) ? $endpointFileOrPrefixString :  $this->getApiVersionPrefix($endpointFileOrPrefixString),
+        ];
     }
 
     /**

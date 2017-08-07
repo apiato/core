@@ -2,35 +2,37 @@
 
 namespace Apiato\Core\Providers;
 
-use Apiato\Core\Loaders\AutoLoaderTrait;
-use Apiato\Core\Loaders\FactoriesLoaderTrait;
-use Apiato\Core\Generator\GeneratorsServiceProvider;
-use Apiato\Core\Traits\ValidationTrait;
+use Apiato\Core\Abstracts\Providers\MainProvider as AbstractMainProvider;
 use Apiato\Core\Butlers\ContainersButler;
 use Apiato\Core\Butlers\ShipButler;
-use App\Ship\Parents\Providers\MainProvider;
-use App\Ship\Parents\Providers\RoutesProvider;
-use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
+use Apiato\Core\Loaders\AutoLoaderTrait;
+use Apiato\Core\Loaders\FactoriesLoaderTrait;
+use Apiato\Core\Traits\ValidationTrait;
+use App\Ship\Providers\ShipProvider;
 use Illuminate\Support\Facades\Schema;
+
+use App\Ship\Parents\Providers\MainProvider;
+use Apiato\Core\Generator\GeneratorsServiceProvider;
+use App\Ship\Parents\Providers\RoutesProvider;
+
+use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
 use Prettus\Repository\Providers\RepositoryServiceProvider;
+use Spatie\Fractal\FractalFacade;
+use Spatie\Fractal\FractalServiceProvider;
 use Vinkla\Hashids\Facades\Hashids;
 use Vinkla\Hashids\HashidsServiceProvider;
-use Spatie\Fractal\FractalServiceProvider;
-use Spatie\Fractal\FractalFacade;
-use App\Ship\Providers\ServiceProvider;
 
 /**
- * The App Service Provider where all Service Providers gets registered
- * this is the only Service Provider that gets injected in the Config/app.php.
+ * Class ApiatoProviders
  *
- * A.K.A app/Providers/AppServiceProvider.php
+ * Does not have to extend from the Ship parent MainProvider since it's on the Core
+ * it directly extends from the Abstract MainProvider.
  *
- * Class MainServiceProvider
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
+ * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-class PortoServiceProvider extends MainProvider
+class ApiatoProvider extends AbstractMainProvider
 {
+
     use FactoriesLoaderTrait;
     use AutoLoaderTrait;
     use ValidationTrait;
@@ -41,13 +43,13 @@ class PortoServiceProvider extends MainProvider
      * @var array
      */
     public $serviceProviders = [
-        CorsServiceProvider::class,
-        HashidsServiceProvider::class,
-        RoutesProvider::class,
-        RepositoryServiceProvider::class,
         GeneratorsServiceProvider::class,
+        RoutesProvider::class,
+        HashidsServiceProvider::class,
+        RepositoryServiceProvider::class,
+        CorsServiceProvider::class,
         FractalServiceProvider::class,
-        ServiceProvider::class,
+        ShipProvider::class, // Registering the ShipProvider at the end.
     ];
 
     /**
