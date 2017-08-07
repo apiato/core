@@ -90,15 +90,12 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
-        $version = $this->checkParameterOrAsk('docversion', 'Define the version of this endpoint', self::DEFAULT_VERSION);
+        $version = $this->checkParameterOrAsk('docversion', 'Enter the endpoint version (integer)', self::DEFAULT_VERSION);
         $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for this endpoint', ['private', 'public']);
-
-        $operation = $this->checkParameterOrAsk('operation', 'Define the Operation to be invoked when calling the endpoint');
-
-        $verb = Str::upper($this->checkParameterOrAsk('verb', 'Enter the HTTP verb to be used to call this endpoint'));
-
+        $operation = $this->checkParameterOrAsk('operation', 'Enter the name of the controller function that needs to be invoked when calling this endpoint');
+        $verb = Str::upper($this->checkParameterOrAsk('verb', 'Enter the HTTP verb of this endpoint (GET, POST,...)'));
         // get the URI and remove the first trailing slash
-        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the relative URI of the endpoint'));
+        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the endpoint URI (foo/bar)'));
         $url = ltrim($url, '/');
 
         return [

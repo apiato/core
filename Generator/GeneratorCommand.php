@@ -86,7 +86,7 @@ abstract class GeneratorCommand extends Command
 
     private $defaultInputs = [
         ['container', 'c', InputOption::VALUE_OPTIONAL, 'The name of the container'],
-        ['file', 'f', InputOption::VALUE_OPTIONAL, 'The name of the file to be created'],
+        ['file', 'f', InputOption::VALUE_OPTIONAL, 'The name of the file'],
     ];
 
     /**
@@ -110,7 +110,7 @@ abstract class GeneratorCommand extends Command
         $this->validateGenerator($this);
 
         $this->containerName = $this->checkParameterOrAsk('container', 'Enter the name of the Container');
-        $this->fileName = $this->checkParameterOrAsk('file', 'Enter the name of the ' . $this->fileType . ' to be created', $this->getDefaultFileName());
+        $this->fileName = $this->checkParameterOrAsk('file', 'Enter the name of the ' . $this->fileType . ' file', $this->getDefaultFileName());
 
         $this->printStartedMessage($this->containerName, $this->fileName);
 
