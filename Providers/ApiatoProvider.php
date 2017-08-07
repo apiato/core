@@ -5,17 +5,14 @@ namespace Apiato\Core\Providers;
 use Apiato\Core\Abstracts\Providers\MainProvider as AbstractMainProvider;
 use Apiato\Core\Butlers\ContainersButler;
 use Apiato\Core\Butlers\ShipButler;
+use Apiato\Core\Generator\GeneratorsServiceProvider;
 use Apiato\Core\Loaders\AutoLoaderTrait;
 use Apiato\Core\Loaders\FactoriesLoaderTrait;
 use Apiato\Core\Traits\ValidationTrait;
-use App\Ship\Providers\ShipProvider;
-use Illuminate\Support\Facades\Schema;
-
-use App\Ship\Parents\Providers\MainProvider;
-use Apiato\Core\Generator\GeneratorsServiceProvider;
 use App\Ship\Parents\Providers\RoutesProvider;
-
+use App\Ship\Providers\ShipProvider;
 use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
+use Illuminate\Support\Facades\Schema;
 use Prettus\Repository\Providers\RepositoryServiceProvider;
 use Spatie\Fractal\FractalFacade;
 use Spatie\Fractal\FractalServiceProvider;
@@ -38,18 +35,28 @@ class ApiatoProvider extends AbstractMainProvider
     use ValidationTrait;
 
     /**
+     * The APIATO version.
+     *
+     * @var string
+     */
+    const VERSION = '5.0.0';
+
+    /**
      * Register any Service Providers on the Ship layer (including third party packages).
      *
      * @var array
      */
     public $serviceProviders = [
-        GeneratorsServiceProvider::class,
-        RoutesProvider::class,
+        // Third Party Packages Providers:
         HashidsServiceProvider::class,
         RepositoryServiceProvider::class,
         CorsServiceProvider::class,
         FractalServiceProvider::class,
-        ShipProvider::class, // Registering the ShipProvider at the end.
+
+        // Internal Apiato Providers:
+        RoutesProvider::class, // exceptionally adding the Route Provider, unlike all other providers in the parents.
+        ShipProvider::class, // the ShipProvider for the Ship third party packages.
+        GeneratorsServiceProvider::class, // the code generator provider.
     ];
 
     /**
@@ -91,7 +98,8 @@ class ApiatoProvider extends AbstractMainProvider
     {
         parent::register();
 
-        // Register Engine Facade Classes
+        // Register Core Facade Classes, should not be registered in the alias property above, since they are used
+        // by the auto-loading scripts, before the $aliases property is executed.
         $this->app->alias(ShipButler::class, 'ShipButler');
         $this->app->alias(ContainersButler::class, 'ContainersButler');
     }
