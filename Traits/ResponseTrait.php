@@ -2,10 +2,12 @@
 
 namespace Apiato\Core\Traits;
 
-use Request;
 use Fractal;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Collection;
 use ReflectionClass;
+use Request;
 
 /**
  * Class ResponseTrait
@@ -21,14 +23,15 @@ trait ResponseTrait
     protected $metaData = [];
 
     /**
-     * @param            $data
+     * @param $data
      * @param null $transformerName
      * @param array|null $includes
      * @param array $meta
+     * @param null $resourceKey
      *
-     * @return mixed
+     * @return array
      */
-    public function transform($data, $transformerName = null, array $includes = null, array $meta = [])
+    public function transform($data, $transformerName = null, array $includes = null, array $meta = [], $resourceKey = null)
     {
         $transformer = new $transformerName;
 
@@ -48,13 +51,33 @@ trait ResponseTrait
             'custom' => $meta,
         ];
 
-        $fractal = Fractal::create($data, $transformer)->addMeta($this->metaData);
+        // no resource key was set
+        if(!$resourceKey) {
+            // get the resource key from the model
+            $obj = null;
+            if($data instanceof AbstractPaginator) {
+                $obj = $data->getCollection()->first();
+            }
+            elseif($data instanceof Collection) {
+                $obj = $data->first();
+            }
+            else {
+                $obj = $data;
+            }
+
+            // if we have an object, try to get its resourceKey
+            if($obj) {
+                $resourceKey = $obj->getResourceKey();
+            }
+        }
+
+        $fractal = Fractal::create($data, $transformer)->withResourceName($resourceKey)->addMeta($this->metaData);
 
         // apply request filters if available in the request
         if($requestFilters = Request::get('filter')){
             $result = $this->filterResponse($fractal->toArray(), explode(';', $requestFilters));
         }else{
-            $result = $fractal->toJson();
+            $result = $fractal->toArray();
         }
 
         return $result;
