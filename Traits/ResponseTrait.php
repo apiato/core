@@ -2,10 +2,12 @@
 
 namespace Apiato\Core\Traits;
 
-use Request;
 use Fractal;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Collection;
 use ReflectionClass;
+use Request;
 
 /**
  * Class ResponseTrait
@@ -21,14 +23,15 @@ trait ResponseTrait
     protected $metaData = [];
 
     /**
-     * @param            $data
+     * @param $data
      * @param null $transformerName
      * @param array|null $includes
      * @param array $meta
+     * @param null $resourceKey
      *
-     * @return mixed
+     * @return array
      */
-    public function transform($data, $transformerName = null, array $includes = null, array $meta = [])
+    public function transform($data, $transformerName = null, array $includes = null, array $meta = [], $resourceKey = null)
     {
         $transformer = new $transformerName;
 
@@ -48,13 +51,33 @@ trait ResponseTrait
             'custom' => $meta,
         ];
 
-        $fractal = Fractal::create($data, $transformer)->addMeta($this->metaData);
+        // no resource key was set
+        if(!$resourceKey) {
+            // get the resource key from the model
+            $obj = null;
+            if($data instanceof AbstractPaginator) {
+                $obj = $data->getCollection()->first();
+            }
+            elseif($data instanceof Collection) {
+                $obj = $data->first();
+            }
+            else {
+                $obj = $data;
+            }
+
+            // if we have an object, try to get its resourceKey
+            if($obj) {
+                $resourceKey = $obj->getResourceKey();
+            }
+        }
+
+        $fractal = Fractal::create($data, $transformer)->withResourceName($resourceKey)->addMeta($this->metaData);
 
         // apply request filters if available in the request
         if($requestFilters = Request::get('filter')){
             $result = $this->filterResponse($fractal->toArray(), explode(';', $requestFilters));
         }else{
-            $result = $fractal->toJson();
+            $result = $fractal->toArray();
         }
 
         return $result;
@@ -81,7 +104,20 @@ trait ResponseTrait
      *
      * @return  \Illuminate\Http\JsonResponse
      */
-    public function json($message, $status = 200, array $headers = array(), $options = 0)
+    public function json($message, $status = 200, array $headers = [], $options = 0)
+    {
+        return new JsonResponse($message, $status, $headers, $options);
+    }
+
+    /**
+     * @param null  $message
+     * @param int   $status
+     * @param array $headers
+     * @param int   $options
+     *
+     * @return JsonResponse
+     */
+    public function created($message = null, $status = 201, array $headers = [], $options = 0)
     {
         return new JsonResponse($message, $status, $headers, $options);
     }
@@ -94,27 +130,27 @@ trait ResponseTrait
      *
      * @return  \Illuminate\Http\JsonResponse
      */
-    public function accepted($message = null, $status = 202, array $headers = array(), $options = 0)
+    public function accepted($message = null, $status = 202, array $headers = [], $options = 0)
     {
         return new JsonResponse($message, $status, $headers, $options);
     }
 
     /**
-     * @param $responseArrayect
+     * @param $responseArray
      *
      * @return  \Illuminate\Http\JsonResponse
      */
-    public function deleted($responseArrayect = null)
+    public function deleted($responseArray = null)
     {
-        if(!$responseArrayect){
+        if(!$responseArray){
             return $this->accepted();
         }
 
-        $id = $responseArrayect->getHashedKey();
-        $responseArrayectType = (new ReflectionClass($responseArrayect))->getShortName();
+        $id = $responseArray->getHashedKey();
+        $className = (new ReflectionClass($responseArray))->getShortName();
 
         return $this->accepted([
-            'message' => "$responseArrayectType ($id) Deleted Successfully.",
+            'message' => "$className ($id) Deleted Successfully.",
         ]);
     }
 
@@ -130,12 +166,12 @@ trait ResponseTrait
 
 
     /**
-     * @param $responseArray
-     * @param $filters
+     * @param array $responseArray
+     * @param array $filters
      *
-     * @return  mixed
+     * @return array
      */
-    private function filterResponse($responseArray, $filters)
+    private function filterResponse(array $responseArray, array $filters)
     {
         foreach ($responseArray as $k => $v)
         {
