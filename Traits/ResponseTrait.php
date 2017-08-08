@@ -81,7 +81,7 @@ trait ResponseTrait
      *
      * @return  \Illuminate\Http\JsonResponse
      */
-    public function json($message, $status = 200, array $headers = array(), $options = 0)
+    public function json($message, $status = 200, array $headers = [], $options = 0)
     {
         return new JsonResponse($message, $status, $headers, $options);
     }
@@ -94,27 +94,27 @@ trait ResponseTrait
      *
      * @return  \Illuminate\Http\JsonResponse
      */
-    public function accepted($message = null, $status = 202, array $headers = array(), $options = 0)
+    public function accepted($message = null, $status = 202, array $headers = [], $options = 0)
     {
         return new JsonResponse($message, $status, $headers, $options);
     }
 
     /**
-     * @param $responseArrayect
+     * @param $responseArray
      *
      * @return  \Illuminate\Http\JsonResponse
      */
-    public function deleted($responseArrayect = null)
+    public function deleted($responseArray = null)
     {
-        if(!$responseArrayect){
+        if(!$responseArray){
             return $this->accepted();
         }
 
-        $id = $responseArrayect->getHashedKey();
-        $responseArrayectType = (new ReflectionClass($responseArrayect))->getShortName();
+        $id = $responseArray->getHashedKey();
+        $className = (new ReflectionClass($responseArray))->getShortName();
 
         return $this->accepted([
-            'message' => "$responseArrayectType ($id) Deleted Successfully.",
+            'message' => "$className ($id) Deleted Successfully.",
         ]);
     }
 
@@ -130,12 +130,12 @@ trait ResponseTrait
 
 
     /**
-     * @param $responseArray
-     * @param $filters
+     * @param array $responseArray
+     * @param array $filters
      *
-     * @return  mixed
+     * @return array
      */
-    private function filterResponse($responseArray, $filters)
+    private function filterResponse(array $responseArray, array $filters)
     {
         foreach ($responseArray as $k => $v)
         {
