@@ -110,6 +110,19 @@ trait ResponseTrait
     }
 
     /**
+     * @param null  $message
+     * @param int   $status
+     * @param array $headers
+     * @param int   $options
+     *
+     * @return JsonResponse
+     */
+    public function created($message = null, $status = 201, array $headers = [], $options = 0)
+    {
+        return new JsonResponse($message, $status, $headers, $options);
+    }
+
+    /**
      * @param null  array or string $message
      * @param int   $status
      * @param array $headers
