@@ -8,6 +8,7 @@ use App\Containers\Authentication\Tasks\GetAuthenticatedUserTask;
 use App\Containers\User\Models\User;
 use Apiato\Core\Traits\HashIdTrait;
 use Illuminate\Foundation\Http\FormRequest as LaravelFormRequest;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class Request
@@ -36,6 +37,16 @@ abstract class Request extends LaravelFormRequest
         // if not in parameters, take from the request object {$this}
         $user = $user ? : $this->user();
 
+        $autoAccessRoles = Config::get('apiato.requests.allow-roles-to-access-all-routes');
+        // there are some roles defined that will automatically grant access
+        if(!empty($autoAccessRoles)) {
+            $hasAutoAccessByRole = $user->hasAnyRole($autoAccessRoles);
+            if($hasAutoAccessByRole) {
+                return true;
+            }
+        }
+
+        // check if the user has any role / permission to access the route
         $hasAccess = array_merge(
             $this->hasAnyPermissionAccess($user),
             $this->hasAnyRoleAccess($user)
