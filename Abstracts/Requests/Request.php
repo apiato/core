@@ -37,12 +37,14 @@ abstract class Request extends LaravelFormRequest
         // if not in parameters, take from the request object {$this}
         $user = $user ? : $this->user();
 
-        $autoAccessRoles = Config::get('apiato.requests.allow-roles-to-access-all-routes');
-        // there are some roles defined that will automatically grant access
-        if(!empty($autoAccessRoles)) {
-            $hasAutoAccessByRole = $user->hasAnyRole($autoAccessRoles);
-            if($hasAutoAccessByRole) {
-                return true;
+        if($user) {
+            $autoAccessRoles = Config::get('apiato.requests.allow-roles-to-access-all-routes');
+            // there are some roles defined that will automatically grant access
+            if (!empty($autoAccessRoles)) {
+                $hasAutoAccessByRole = $user->hasAnyRole($autoAccessRoles);
+                if ($hasAutoAccessByRole) {
+                    return true;
+                }
             }
         }
 
