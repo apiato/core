@@ -184,4 +184,19 @@ class ShipButler
         return (substr($word, 0, strlen($startsWith)) === $startsWith);
     }
 
+    /**
+     * @param        $word
+     * @param string $splitter
+     * @param bool   $uppercase
+     *
+     * @return  mixed|string
+     */
+    public function uncamelize($word, $splitter = " ", $uppercase = true)
+    {
+        $word = preg_replace('/(?!^)[[:upper:]][[:lower:]]/', '$0',
+            preg_replace('/(?!^)[[:upper:]]+/', $splitter . '$0', $word));
+
+        return $uppercase ? ucwords($word) : $word;
+    }
+
 }
