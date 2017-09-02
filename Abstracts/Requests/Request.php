@@ -2,12 +2,12 @@
 
 namespace Apiato\Core\Abstracts\Requests;
 
+use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\StateKeeperTrait;
 use App;
 use App\Containers\Authentication\Tasks\GetAuthenticatedUserTask;
 use App\Containers\User\Models\User;
-use Apiato\Core\Traits\HashIdTrait;
-use Illuminate\Foundation\Http\FormRequest as LaravelFormRequest;
+use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -17,11 +17,31 @@ use Illuminate\Support\Facades\Config;
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-abstract class Request extends LaravelFormRequest
+abstract class Request extends LaravelRequest
 {
 
     use HashIdTrait;
     use StateKeeperTrait;
+
+
+    /**
+     * Overriding this function to modify the any user input before
+     * applying the validation rules.
+     *
+     * @param null $keys
+     *
+     * @return  array
+     */
+    public function all($keys = null)
+    {
+        $requestData = parent::all($keys);
+
+        $requestData = $this->mergeUrlParametersWithRequestData($requestData);
+
+        $requestData = $this->decodeHashedIdsBeforeValidation($requestData);
+
+        return $requestData;
+    }
 
     /**
      * check if a user has permission to perform an action.
@@ -37,7 +57,7 @@ abstract class Request extends LaravelFormRequest
         // if not in parameters, take from the request object {$this}
         $user = $user ? : $this->user();
 
-        if($user) {
+        if ($user) {
             $autoAccessRoles = Config::get('apiato.requests.allow-roles-to-access-all-routes');
             // there are some roles defined that will automatically grant access
             if (!empty($autoAccessRoles)) {
@@ -98,6 +118,7 @@ abstract class Request extends LaravelFormRequest
      * FALSE and NULL values as well.
      *
      * @param array $fields a list of fields to be checked in the Dot-Notation (e.g., ['data.name', 'data.description'])
+     *
      * @return array an array containing the values if the field was present in the request and the intersection array
      */
     public function sanitizeInput(array $fields)
@@ -106,7 +127,7 @@ abstract class Request extends LaravelFormRequest
         $data = $this->all();
 
         $search = [];
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             // create a multidimensional array based on $fields
             // which was submitted as DOT notation (e.g., data.name)
             array_set($search, $field, true);
@@ -126,33 +147,20 @@ abstract class Request extends LaravelFormRequest
      *
      * @param array $a first array (that keeps the values)
      * @param array $b second array to be compared with
+     *
      * @return array an array containing all keys that are present in $a and $b. Only values from $a are returned
      */
-    private function recursive_array_intersect_key(array $a, array $b) {
+    private function recursive_array_intersect_key(array $a, array $b)
+    {
         $a = array_intersect_key($a, $b);
+
         foreach ($a as $key => &$value) {
             if (is_array($value) && is_array($b[$key])) {
                 $value = $this->recursive_array_intersect_key($value, $b[$key]);
             }
         }
+
         return $a;
-    }
-
-    /**
-     * Overriding this function to modify the any user input before
-     * applying the validation rules.
-     *
-     * @return  array
-     */
-    public function all()
-    {
-        $requestData = parent::all();
-
-        $requestData = $this->mergeUrlParametersWithRequestData($requestData);
-
-        $requestData = $this->decodeHashedIdsBeforeValidation($requestData);
-
-        return $requestData;
     }
 
     /**
@@ -267,6 +275,7 @@ abstract class Request extends LaravelFormRequest
      *
      * @param $key
      * @param $default
+     *
      * @return mixed
      */
     public function getInputByKey($key = null, $default = null)
