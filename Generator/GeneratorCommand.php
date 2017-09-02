@@ -105,7 +105,7 @@ abstract class GeneratorCommand extends Command
      * @void
      * @throws \Apiato\Core\Generator\Exceptions\GeneratorErrorException
      */
-    public function fire()
+    public function handle()
     {
         $this->validateGenerator($this);
 
