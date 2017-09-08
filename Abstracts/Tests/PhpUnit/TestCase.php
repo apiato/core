@@ -10,6 +10,9 @@ use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsRequestHelperTrait;
 use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsResponseHelperTrait;
 use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsUploadHelperTrait;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabaseState;
+use Illuminate\Contracts\Console\Kernel;
 
 /**
  * Class TestCase
@@ -25,7 +28,8 @@ abstract class TestCase extends LaravelTestCase
         TestsMockHelperTrait,
         TestsAuthHelperTrait,
         TestsUploadHelperTrait,
-        HashIdTrait;
+        HashIdTrait,
+        RefreshDatabase;
 
     /**
      * The base URL to use while testing the application.
@@ -42,7 +46,26 @@ abstract class TestCase extends LaravelTestCase
     public function setUp()
     {
         parent::setUp();
+    }
 
+    /**
+     * Reset the test environment, after each test.
+     */
+    public function tearDown()
+    {
+        $this->usingInMemoryDatabase()
+            ? $this->artisan('migrate:reset')
+            : parent::tearDown();
+    }
+
+    /**
+     * Refresh the in-memory database.
+     * Overridden refreshTestDatabase Trait
+     *
+     * @return void
+     */
+    protected function refreshInMemoryDatabase()
+    {
         // migrate the database
         $this->migrateDatabase();
 
@@ -51,14 +74,30 @@ abstract class TestCase extends LaravelTestCase
 
         // Install Passport Client for Testing
         $this->setupPassportOAuth2();
+
+        $this->app[Kernel::class]->setArtisan(null);
     }
 
     /**
-     * Reset the test environment, after each test.
+     * Refresh a conventional test database.
+     * Overridden refreshTestDatabase Trait
+     *
+     * @return void
      */
-    public function tearDown()
+    protected function refreshTestDatabase()
     {
-        $this->artisan('migrate:reset');
+        if (! RefreshDatabaseState::$migrated) {
+
+            $this->artisan('migrate:fresh');
+            $this->seed();
+            $this->setupPassportOAuth2();
+
+            $this->app[Kernel::class]->setArtisan(null);
+
+            RefreshDatabaseState::$migrated = true;
+        }
+
+        $this->beginDatabaseTransaction();
     }
 
 }
