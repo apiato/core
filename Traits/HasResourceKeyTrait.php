@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
+use Illuminate\Support\Pluralizer;
 use ReflectionClass;
 
 /**
@@ -23,7 +24,7 @@ trait HasResourceKeyTrait
         }
         else {
             $reflect = new ReflectionClass($this);
-            $resourceKey = $reflect->getShortName();
+            $resourceKey = strtolower(Pluralizer::plural($reflect->getShortName()));
         }
         return $resourceKey;
     }

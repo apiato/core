@@ -16,4 +16,7 @@ class {{class-name}} extends Model
         'created_at',
         'updated_at',
     ];
+
+    // the resource key, used to generate JSON API valid responses
+    protected $resourceKey = '{{resource-key}}';
 }

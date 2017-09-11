@@ -5,6 +5,7 @@ namespace Apiato\Core\Generator\Commands;
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Pluralizer;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -96,6 +97,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
             'stub-parameters' => [
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
+                'resource-key' => strtolower(Pluralizer::plural($this->fileName)),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
