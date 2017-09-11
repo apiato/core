@@ -20,6 +20,7 @@
  */
 
 $router->{{http-verb}}('{{endpoint-url}}', [
+    'as' => '{{user-interface}}_{{container-name}}_{{operation}}',
     'uses'  => 'Controller@{{operation}}',
     'middleware' => [
       'auth:api',
