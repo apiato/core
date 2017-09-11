@@ -55,7 +55,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  string
      */
-    protected $pathStructure = '{container-name}/UI/API/Routes/*';
+    protected $pathStructure = '{container-name}/UI/{user-interface}/Routes/*';
 
     /**
      * The structure of the file name.
@@ -78,6 +78,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
      * @var  array
      */
     public $inputs = [
+        ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
         ['operation', null, InputOption::VALUE_OPTIONAL, 'The operation from the Controller to be called (e.g., index)'],
         ['doctype', null, InputOption::VALUE_OPTIONAL, 'The type of the endpoint (private, public)'],
         ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of the endpoint (1, 2, ...)'],
@@ -90,6 +91,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
+        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB']));
         $version = $this->checkParameterOrAsk('docversion', 'Enter the endpoint version (integer)', self::DEFAULT_VERSION);
         $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for this endpoint', ['private', 'public']);
         $operation = $this->checkParameterOrAsk('operation', 'Enter the name of the controller function that needs to be invoked when calling this endpoint');
@@ -100,11 +102,13 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
 
         return [
             'path-parameters' => [
-                'container-name' => $this->containerName,
+                'container-name'    => $this->containerName,
+                'user-interface'    => Str::upper($ui),
             ],
             'stub-parameters' => [
                 'container-name'            => $this->containerName,
                 'operation'                 => $operation,
+                'user-interface'            => Str::upper($ui),
                 'endpoint-url'              => $url,
                 'versioned-endpoint-url'    => '/v' . $version . '/' . $url,
                 'endpoint-version'          => $version,
