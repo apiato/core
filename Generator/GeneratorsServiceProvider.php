@@ -39,7 +39,8 @@ class GeneratorsServiceProvider extends ServiceProvider
             'Route',
             'SubAction',
             'Task',
-            'Transformer'
+            'Transformer',
+            'Notification'
         ]);
     }
 
