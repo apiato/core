@@ -7,7 +7,7 @@ use App\Ship\Parents\Notifications\Notification;
 /**
  * Class {{class-name}}
  */
-class {{class-name}} extends Repository
+class {{class-name}} extends Notification
 {
 
     public function __construct()
