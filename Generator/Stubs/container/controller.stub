@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Containers\{{container-name}}\UI\{{user-interface}}\Controllers;
+
+use App\Containers\{{container-name}}\Actions\Create{{model}}Action;
+use App\Containers\{{container-name}}\Actions\Delete{{model}}Action;
+use App\Containers\{{container-name}}\Actions\GetAll{{model}}sAction;
+use App\Containers\{{container-name}}\Actions\Get{{model}}ByIdAction;
+use App\Containers\{{container-name}}\Actions\Update{{model}}Action;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{model}}sRequest;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Get{{model}}ByIdRequest;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
+use App\Ship\Parents\Controllers\{{base-controller}};
+
+class {{class-name}} extends {{base-controller}}
+{
+
+    public function create{{model}}(Create{{model}}Request $request)
+    {
+        ${{entity}} = $this->call(Create{{model}}Action::class, [$request]);
+
+        return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
+    }
+
+    public function getAll{{model}}s(GetAll{{model}}sRequest $request)
+    {
+        ${{entities}} = $this->call(GetAll{{model}}sAction::class, [$request]);
+
+        return $this->transform(${{entities}}, {{model}}Transformer::class);
+    }
+
+    public function get{{model}}ById(Get{{model}}ByIdRequest $request)
+    {
+        ${{entity}} = $this->call(Get{{model}}ByIdAction::class, [$request]);
+
+        return $this->transform(${{entity}}, {{model}}Transformer::class);
+    }
+
+    public function update{{model}}(Update{{model}}Request $request)
+    {
+        ${{entity}} = $this->call(Update{{model}}Action::class, [$request]);
+
+        return $this->transform(${{entity}}, {{model}}Transformer::class);
+    }
+
+    public function delete{{model}}(Delete{{model}}Request $request)
+    {
+        $result = $this->call(Delete{{model}}Action::class, [$request]);
+
+        return $this->noContent();
+    }
+}
