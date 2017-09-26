@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Containers\{{container-name}}\Actions;
+
+use App\Containers\{{container-name}}\Tasks\Create{{model}}Task;
+use App\Ship\Parents\Actions\Action;
+use App\Ship\Parents\Requests\Request;
+
+class Create{{model}}Action extends Action
+{
+    public function run(Request $request)
+    {
+        $data = $request->sanitizeInput([
+            // add your request data here
+        ]);
+
+        $object = $this->call(Create{{model}}Task::class, [$data]);
+
+        return $object;
+    }
+}

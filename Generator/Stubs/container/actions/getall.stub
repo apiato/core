@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Containers\{{container-name}}\Actions;
+
+use App\Containers\{{container-name}}\Tasks\GetAll{{models}}Task;
+use App\Ship\Parents\Actions\Action;
+use App\Ship\Parents\Requests\Request;
+
+class GetAll{{models}}Action extends Action
+{
+    public function run(Request $request)
+    {
+        $objects = $this->call(GetAll{{models}}Task::class, [], ['orderedByUpdatedAtDesc']);
+
+        return $objects;
+    }
+}

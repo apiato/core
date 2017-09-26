@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Containers\{{container-name}}\Actions;
+
+use App\Containers\{{container-name}}\Tasks\Get{{model}}ByIdTask;
+use App\Containers\{{container-name}}\Tasks\Update{{model}}Task;
+use App\Ship\Parents\Actions\Action;
+use App\Ship\Parents\Requests\Request;
+
+class Update{{model}}Action extends Action
+{
+    public function run(Request $request)
+    {
+        $id = $request->getInputByKey('id');
+
+        $object = $this->call(Get{{model}}ByIdTask::class, [$id]);
+
+        $data = $request->sanitizeInput([
+            // add your request data here
+        ]);
+
+        $object = $this->call(Update{{model}}Task::class, [$object, $data]);
+
+        return $object;
+    }
+}
