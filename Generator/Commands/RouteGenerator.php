@@ -97,8 +97,10 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
         $operation = $this->checkParameterOrAsk('operation', 'Enter the name of the controller function that needs to be invoked when calling this endpoint');
         $verb = Str::upper($this->checkParameterOrAsk('verb', 'Enter the HTTP verb of this endpoint (GET, POST,...)'));
         // get the URI and remove the first trailing slash
-        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the endpoint URI (foo/bar)'));
+        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the endpoint URI (foo/bar/{id})'));
         $url = ltrim($url, '/');
+
+        $docurl = preg_replace('~\{(.+?)\}~', ':$1', $url);
 
         return [
             'path-parameters' => [
@@ -110,7 +112,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
                 'operation'                 => $operation,
                 'user-interface'            => Str::upper($ui),
                 'endpoint-url'              => $url,
-                'versioned-endpoint-url'    => '/v' . $version . '/' . $url,
+                'doc-endpoint-url'          => '/v' . $version . '/' . $docurl,
                 'endpoint-version'          => $version,
                 'http-verb'                 => Str::lower($verb),
                 'doc-http-verb'             => Str::upper($verb),
