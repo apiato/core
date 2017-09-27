@@ -11,12 +11,14 @@ class {{class-name}} extends Transformer
      * @var  array
      */
     protected $defaultIncludes = [
+
     ];
 
     /**
      * @var  array
      */
     protected $availableIncludes = [
+
     ];
 
     /**

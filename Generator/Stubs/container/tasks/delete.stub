@@ -18,10 +18,10 @@ class Delete{{model}}Task extends Task
         $this->repository = $repository;
     }
 
-    public function run({{model}} $object)
+    public function run($id)
     {
         try {
-            return $this->repository->delete($object->id);
+            return $this->repository->delete($id);
         }
         catch (Exception $exception) {
             throw new DeleteResourceFailedException();

@@ -11,11 +11,9 @@ class Delete{{model}}Action extends Action
 {
     public function run(Request $request)
     {
-        $id = $request->getInputByKey('id');
+        $id = $request->id;
 
-        $object = $this->call(Get{{model}}ByIdTask::class, [$id]);
-
-        $result = $this->call(Delete{{model}}Task::class, [$object]);
+        $result = $this->call(Delete{{model}}Task::class, [$id]);
 
         return $result;
     }
