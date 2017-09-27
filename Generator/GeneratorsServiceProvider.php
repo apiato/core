@@ -42,7 +42,8 @@ class GeneratorsServiceProvider extends ServiceProvider
             'Transformer',
             'Notification',
             'Job',
-            'Mail'
+            'Mail',
+            'Seeder'
         ]);
     }
 
