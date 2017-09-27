@@ -41,7 +41,8 @@ class GeneratorsServiceProvider extends ServiceProvider
             'Task',
             'Transformer',
             'Notification',
-            'Job'
+            'Job',
+            'Mail'
         ]);
     }
 
