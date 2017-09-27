@@ -4,6 +4,7 @@ namespace Apiato\Core\Generator\Commands\Container;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -79,6 +80,8 @@ class ContainerActionGenerator extends GeneratorCommand implements ComponentsGen
         // load a new stub-file based on the users choice
         $this->stubName = 'container/actions/' . $stub . '.stub';
 
+        $models = Pluralizer::plural($model);
+
         return [
             'path-parameters' => [
                 'container-name' => $this->containerName,
@@ -87,6 +90,7 @@ class ContainerActionGenerator extends GeneratorCommand implements ComponentsGen
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'model' => $model,
+                'models' => $models,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -101,6 +105,6 @@ class ContainerActionGenerator extends GeneratorCommand implements ComponentsGen
      */
     public function getDefaultFileName()
     {
-        return 'container.' . $this->containerName;
+        return 'DefaultAction';
     }
 }
