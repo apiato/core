@@ -40,7 +40,9 @@ class GeneratorsServiceProvider extends ServiceProvider
             'SubAction',
             'Task',
             'Transformer',
-            'Notification'
+            'Notification',
+            'Job',
+            'Mail'
         ]);
     }
 
