@@ -3,6 +3,7 @@
 namespace Apiato\Core\Generator;
 
 use Apiato\Core\Generator\Commands\ActionGenerator;
+use Apiato\Core\Generator\Commands\Container\ContainerActionGenerator;
 use Apiato\Core\Generator\Commands\Container\ContainerConfigurationGenerator;
 use Apiato\Core\Generator\Commands\Container\ContainerControllerGenerator;
 use Apiato\Core\Generator\Commands\Container\ContainerMainServiceProviderGenerator;
@@ -50,6 +51,7 @@ class GeneratorsServiceProvider extends ServiceProvider
 
             // the container generator and its "sub"-generators
             ContainerGenerator::class,
+                ContainerActionGenerator::class,
                 ContainerConfigurationGenerator::class,
                 ContainerControllerGenerator::class,
                 ContainerMainServiceProviderGenerator::class,

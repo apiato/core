@@ -106,7 +106,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
         $this->printInfoMessage('Generating Model and Repository');
         Artisan::call('apiato:model', [
             '--container'   => $containerName,
-            '--file'        => $containerName,
+            '--file'        => $model,
             '--repository'  => true,
         ]);
 
@@ -138,6 +138,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
         $routes = [
             [
+                'stub'      => 'GetAll',
                 'name'      => 'GetAll' . $models,
                 'operation' => 'getAll' . $models,
                 'verb'      => 'GET',
@@ -146,6 +147,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'request'   => 'GetAll' . $models . 'Request',
             ],
             [
+                'stub'      => 'GetOne',
                 'name'      => 'Get' . $model . 'ById',
                 'operation' => 'get' . $model . 'ById',
                 'verb'      => 'GET',
@@ -154,6 +156,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'request'   => 'Get' . $model . 'ById' . 'Request',
             ],
             [
+                'stub'      => 'Create',
                 'name'      => 'Create' . $model,
                 'operation' => 'create' . $model,
                 'verb'      => 'POST',
@@ -162,6 +165,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'request'   => 'Create' . $model . 'Request',
             ],
             [
+                'stub'      => 'Update',
                 'name'      => 'Update' . $model,
                 'operation' => 'update' . $model,
                 'verb'      => 'PATCH',
@@ -170,6 +174,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'request'   => 'Update' . $model . 'Request',
             ],
             [
+                'stub'      => 'Delete',
                 'name'      => 'Delete' . $model,
                 'operation' => 'delete' . $model,
                 'verb'      => 'DELETE',
@@ -191,9 +196,11 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 '--verb'        => $route['verb'],
             ]);
 
-            Artisan::call('apiato:action', [
+            Artisan::call('apiato:container-action', [
                 '--container'   => $containerName,
                 '--file'        => $route['action'],
+                '--model'       => $model,
+                '--stub'        => $route['stub'],
             ]);
 
             Artisan::call('apiato:request', [

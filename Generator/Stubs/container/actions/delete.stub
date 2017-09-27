@@ -7,7 +7,7 @@ use App\Containers\{{container-name}}\Tasks\Get{{model}}ByIdTask;
 use App\Ship\Parents\Actions\Action;
 use App\Ship\Parents\Requests\Request;
 
-class Update{{model}}Action extends Action
+class Delete{{model}}Action extends Action
 {
     public function run(Request $request)
     {
