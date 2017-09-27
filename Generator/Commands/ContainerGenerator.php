@@ -95,14 +95,14 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
             '--file'        => $_containerName,
         ]);
 
-        // create the MainServiceProvider
+        // create the MainServiceProvider for the container
         $this->printInfoMessage('Generating MainServiceProvider');
         Artisan::call('apiato:container-mainserviceprovider', [
             '--container'   => $containerName,
             '--file'        => 'MainServiceProvider',
         ]);
 
-        // create the model for this container
+        // create the model and repository for this container
         $this->printInfoMessage('Generating Model and Repository');
         Artisan::call('apiato:model', [
             '--container'   => $containerName,
@@ -136,6 +136,10 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
         $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all endpoints (foo/bar)'));
         $url = ltrim($url, '/');
 
+        $this->printInfoMessage('Creating Requests for Routes');
+        $this->printInfoMessage('Generating Default Actions');
+        $this->printInfoMessage('Generating Default Tasks');
+
         $routes = [
             [
                 'stub'      => 'GetAll',
@@ -145,6 +149,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'url'       => $url,
                 'action'    => 'GetAll' . $models . 'Action',
                 'request'   => 'GetAll' . $models . 'Request',
+                'task'      => 'GetAll' . $models . 'Task',
             ],
             [
                 'stub'      => 'GetOne',
@@ -154,6 +159,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'url'       => $url . '/{id}',
                 'action'    => 'Get' . $model . 'ById' . 'Action',
                 'request'   => 'Get' . $model . 'ById' . 'Request',
+                'task'      => 'Get' . $model . 'ById' . 'Task',
             ],
             [
                 'stub'      => 'Create',
@@ -163,6 +169,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'url'       => $url,
                 'action'    => 'Create' . $model . 'Action',
                 'request'   => 'Create' . $model . 'Request',
+                'task'      => 'Create' . $model . 'Task',
             ],
             [
                 'stub'      => 'Update',
@@ -172,6 +179,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'url'       => $url . '/{id}',
                 'action'    => 'Update' . $model . 'Action',
                 'request'   => 'Update' . $model . 'Request',
+                'task'      => 'Update' . $model . 'Task',
             ],
             [
                 'stub'      => 'Delete',
@@ -181,6 +189,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'url'       => $url . '/{id}',
                 'action'    => 'Delete' . $model . 'Action',
                 'request'   => 'Delete' . $model . 'Request',
+                'task'      => 'Delete' . $model . 'Task',
             ],
         ];
         foreach ($routes as $route)
@@ -196,6 +205,12 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 '--verb'        => $route['verb'],
             ]);
 
+            Artisan::call('apiato:request', [
+                '--container'   => $containerName,
+                '--file'        => $route['request'],
+                '--ui'          => $ui,
+            ]);
+
             Artisan::call('apiato:container-action', [
                 '--container'   => $containerName,
                 '--file'        => $route['action'],
@@ -203,10 +218,11 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 '--stub'        => $route['stub'],
             ]);
 
-            Artisan::call('apiato:request', [
+            Artisan::call('apiato:container-task', [
                 '--container'   => $containerName,
-                '--file'        => $route['request'],
-                '--ui'          => $ui,
+                '--file'        => $route['task'],
+                '--model'       => $model,
+                '--stub'        => $route['stub'],
             ]);
         }
 

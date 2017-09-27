@@ -8,6 +8,7 @@ use Apiato\Core\Generator\Commands\Container\ContainerConfigurationGenerator;
 use Apiato\Core\Generator\Commands\Container\ContainerControllerGenerator;
 use Apiato\Core\Generator\Commands\Container\ContainerMainServiceProviderGenerator;
 use Apiato\Core\Generator\Commands\Container\ContainerMigrationGenerator;
+use Apiato\Core\Generator\Commands\Container\ContainerTaskGenerator;
 use Apiato\Core\Generator\Commands\ContainerGenerator;
 use Apiato\Core\Generator\Commands\ControllerGenerator;
 use Apiato\Core\Generator\Commands\ExceptionGenerator;
@@ -48,6 +49,7 @@ class GeneratorsServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // all generators ordered by name
         $this->registerGenerators([
             ActionGenerator::class,
 
@@ -58,6 +60,7 @@ class GeneratorsServiceProvider extends ServiceProvider
                 ContainerControllerGenerator::class,
                 ContainerMainServiceProviderGenerator::class,
                 ContainerMigrationGenerator::class,
+                ContainerTaskGenerator::class,
 
             ControllerGenerator::class,
             ExceptionGenerator::class,
