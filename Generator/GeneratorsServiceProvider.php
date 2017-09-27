@@ -11,6 +11,8 @@ use Apiato\Core\Generator\Commands\Container\ContainerMigrationGenerator;
 use Apiato\Core\Generator\Commands\ContainerGenerator;
 use Apiato\Core\Generator\Commands\ControllerGenerator;
 use Apiato\Core\Generator\Commands\ExceptionGenerator;
+use Apiato\Core\Generator\Commands\JobGenerator;
+use Apiato\Core\Generator\Commands\MailGenerator;
 use Apiato\Core\Generator\Commands\ModelGenerator;
 use Apiato\Core\Generator\Commands\NotificationGenerator;
 use Apiato\Core\Generator\Commands\RepositoryGenerator;
@@ -59,6 +61,8 @@ class GeneratorsServiceProvider extends ServiceProvider
 
             ControllerGenerator::class,
             ExceptionGenerator::class,
+            JobGenerator::class,
+            MailGenerator::class,
             ModelGenerator::class,
             NotificationGenerator::class,
             RepositoryGenerator::class,
