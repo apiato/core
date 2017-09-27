@@ -10,6 +10,8 @@ use Exception;
 class Get{{model}}ByIdTask extends Task
 {
 
+    private $repository;
+
     public function __construct({{model}}Repository $repository)
     {
         $this->repository = $repository;

@@ -11,6 +11,8 @@ use Exception;
 class Delete{{model}}Task extends Task
 {
 
+    private $repository;
+
     public function __construct({{model}}Repository $repository)
     {
         $this->repository = $repository;
