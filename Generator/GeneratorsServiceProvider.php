@@ -19,6 +19,7 @@ use Apiato\Core\Generator\Commands\NotificationGenerator;
 use Apiato\Core\Generator\Commands\RepositoryGenerator;
 use Apiato\Core\Generator\Commands\RequestGenerator;
 use Apiato\Core\Generator\Commands\RouteGenerator;
+use Apiato\Core\Generator\Commands\SeederGenerator;
 use Apiato\Core\Generator\Commands\SubActionGenerator;
 use Apiato\Core\Generator\Commands\TaskGenerator;
 use Apiato\Core\Generator\Commands\TransformerGenerator;
@@ -71,6 +72,7 @@ class GeneratorsServiceProvider extends ServiceProvider
             RepositoryGenerator::class,
             RequestGenerator::class,
             RouteGenerator::class,
+            SeederGenerator::class,
             SubActionGenerator::class,
             TaskGenerator::class,
             TransformerGenerator::class,
