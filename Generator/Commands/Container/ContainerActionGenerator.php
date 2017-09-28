@@ -82,6 +82,9 @@ class ContainerActionGenerator extends GeneratorCommand implements ComponentsGen
 
         $models = Pluralizer::plural($model);
 
+        $entity = Str::lower($model);
+        $entities = Pluralizer::plural($entity);
+
         return [
             'path-parameters' => [
                 'container-name' => $this->containerName,
@@ -91,6 +94,8 @@ class ContainerActionGenerator extends GeneratorCommand implements ComponentsGen
                 'container-name' => $this->containerName,
                 'model' => $model,
                 'models' => $models,
+                'entity' => $entity,
+                'entities' => $entities,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

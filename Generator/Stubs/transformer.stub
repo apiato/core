@@ -23,6 +23,7 @@ class {{class-name}} extends Transformer
 
     /**
      * @param {{model}} $entity
+     *
      * @return array
      */
     public function transform({{model}} $entity)
@@ -30,7 +31,6 @@ class {{class-name}} extends Transformer
         $response = [
 
 {{attributes}}
-
         ];
 
         $response = $this->ifAdmin([

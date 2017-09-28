@@ -114,7 +114,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
         $this->printInfoMessage('Generating a basic Migration file');
         Artisan::call('apiato:container-migration', [
             '--container'   => $containerName,
-            '--file'        => 'setup_' . Str::lower($_containerName) . '_tables',
+            '--file'        => 'create_' . Str::lower($_containerName) . '_tables',
             '--tablename'   => $models,
         ]);
 

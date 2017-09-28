@@ -14,8 +14,8 @@ class Create{{model}}Action extends Action
             // add your request data here
         ]);
 
-        $object = $this->call(Create{{model}}Task::class, [$data]);
+        ${{entity}} = $this->call(Create{{model}}Task::class, [$data]);
 
-        return $object;
+        return ${{entity}};
     }
 }

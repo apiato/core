@@ -21,7 +21,7 @@ class {{class-name}} extends Repository
      */
     protected $fieldSearchable = [
         'id'    => '=',
-        'name'  => 'like',
+        // more fields to be searched here
     ];
 
 }

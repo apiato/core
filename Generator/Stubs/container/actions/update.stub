@@ -11,14 +11,12 @@ class Update{{model}}Action extends Action
 {
     public function run(Request $request)
     {
-        $id = $request->id;
-
         $data = $request->sanitizeInput([
             // add your request data here
         ]);
 
-        $object = $this->call(Update{{model}}Task::class, [$id, $data]);
+        ${{entity}} = $this->call(Update{{model}}Task::class, [$request->id, $data]);
 
-        return $object;
+        return ${{entity}};
     }
 }

@@ -10,10 +10,8 @@ class Get{{model}}ByIdAction extends Action
 {
     public function run(Request $request)
     {
-        $id = $request->id;
+        ${{entity}} = $this->call(Get{{model}}ByIdTask::class, [$request->id]);
 
-        $object = $this->call(Get{{model}}ByIdTask::class, [$id]);
-
-        return $object;
+        return ${{entity}};
     }
 }

@@ -25,18 +25,18 @@ class {{class-name}} extends {{base-controller}}
         return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
     }
 
-    public function getAll{{model}}s(GetAll{{model}}sRequest $request)
-    {
-        ${{entities}} = $this->call(GetAll{{model}}sAction::class, [$request]);
-
-        return $this->transform(${{entities}}, {{model}}Transformer::class);
-    }
-
     public function get{{model}}ById(Get{{model}}ByIdRequest $request)
     {
         ${{entity}} = $this->call(Get{{model}}ByIdAction::class, [$request]);
 
         return $this->transform(${{entity}}, {{model}}Transformer::class);
+    }
+
+    public function getAll{{model}}s(GetAll{{model}}sRequest $request)
+    {
+        ${{entities}} = $this->call(GetAll{{model}}sAction::class, [$request]);
+
+        return $this->transform(${{entities}}, {{model}}Transformer::class);
     }
 
     public function update{{model}}(Update{{model}}Request $request)

@@ -99,6 +99,6 @@ class ContainerMigrationGenerator extends GeneratorCommand implements Components
     public function getDefaultFileName()
     {
         $date = Carbon::now()->format('Y_m_d_His');
-        return $date . '_' . 'setup_' . Str::lower($this->containerName) . '_tables';
+        return $date . '_' . 'create_' . Str::lower($this->containerName) . '_tables';
     }
 }
