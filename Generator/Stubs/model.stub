@@ -10,6 +10,13 @@ class {{class-name}} extends Model
 
     ];
 
+    /*
+     * default values for attributes
+     * /
+    protected $attributes = [
+
+    ];
+
     protected $hidden = [
 
     ];
