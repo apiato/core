@@ -102,6 +102,8 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
 
         $docurl = preg_replace('~\{(.+?)\}~', ':$1', $url);
 
+        $routename = Str::lower($ui . '_' . $this->containerName . '_' . Str::snake($operation));
+
         return [
             'path-parameters' => [
                 'container-name'    => $this->containerName,
@@ -116,6 +118,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
                 'endpoint-version'          => $version,
                 'http-verb'                 => Str::lower($verb),
                 'doc-http-verb'             => Str::upper($verb),
+                'route-name'                => $routename,
             ],
             'file-parameters' => [
                 'endpoint-name'         => $this->fileName,
