@@ -20,7 +20,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:route';
+    protected $name = 'apiato:generate:route';
 
     /**
      * The console command description.

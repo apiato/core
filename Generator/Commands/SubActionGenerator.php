@@ -19,7 +19,7 @@ class SubActionGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:subaction';
+    protected $name = 'apiato:generate:subaction';
 
     /**
      * The console command description.

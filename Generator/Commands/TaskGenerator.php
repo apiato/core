@@ -21,7 +21,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:task';
+    protected $name = 'apiato:generate:task';
 
     /**
      * The console command description.

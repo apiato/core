@@ -21,7 +21,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:event';
+    protected $name = 'apiato:generate:event';
 
     /**
      * The console command description.
@@ -80,7 +80,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
         if($handler) {
             // we need to generate a corresponding handler
             // so call the other command
-            $status = Artisan::call('apiato:eventhandler', [
+            $status = Artisan::call('apiato:generate:eventhandler', [
                                     '--container' => $this->containerName,
                                     '--file' => $this->fileName . 'Handler',
                                     '--event' => $this->fileName

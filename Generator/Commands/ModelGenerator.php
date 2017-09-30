@@ -22,7 +22,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:model';
+    protected $name = 'apiato:generate:model';
 
     /**
      * The console command description.
@@ -78,7 +78,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
         if($repository) {
             // we need to generate a corresponding repository
             // so call the other command
-            $status = Artisan::call('apiato:repository', [
+            $status = Artisan::call('apiato:generate:repository', [
                                     '--container' => $this->containerName,
                                     '--file' => $this->fileName . 'Repository'
             ]);

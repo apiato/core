@@ -19,7 +19,7 @@ class JobGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:job';
+    protected $name = 'apiato:generate:job';
 
     /**
      * The console command description.

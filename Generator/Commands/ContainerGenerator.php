@@ -4,7 +4,6 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
@@ -23,7 +22,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:container';
+    protected $name = 'apiato:generate:container';
 
     /**
      * The console command description.
@@ -90,14 +89,14 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
         // create the configuration file
         $this->printInfoMessage('Generating Configuration File');
-        Artisan::call('apiato:configuration', [
+        Artisan::call('apiato:generate:configuration', [
             '--container'   => $containerName,
             '--file'        => $_containerName,
         ]);
 
         // create the MainServiceProvider for the container
         $this->printInfoMessage('Generating MainServiceProvider');
-        Artisan::call('apiato:serviceprovider', [
+        Artisan::call('apiato:generate:serviceprovider', [
             '--container'   => $containerName,
             '--file'        => 'MainServiceProvider',
             '--stub'        => 'mainserviceprovider',
@@ -105,7 +104,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
         // create the model and repository for this container
         $this->printInfoMessage('Generating Model and Repository');
-        Artisan::call('apiato:model', [
+        Artisan::call('apiato:generate:model', [
             '--container'   => $containerName,
             '--file'        => $model,
             '--repository'  => true,
@@ -113,7 +112,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
         // create the migration file for the model
         $this->printInfoMessage('Generating a basic Migration file');
-        Artisan::call('apiato:migration', [
+        Artisan::call('apiato:generate:migration', [
             '--container'   => $containerName,
             '--file'        => 'create_' . Str::lower($_containerName) . '_tables',
             '--tablename'   => $models,
@@ -121,7 +120,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
         // create a transformer for the model
         $this->printInfoMessage('Generating Transformer for the Model');
-        Artisan::call('apiato:transformer', [
+        Artisan::call('apiato:generate:transformer', [
             '--container'   => $containerName,
             '--file'        => $containerName . 'Transformer',
             '--model'       => $model,
@@ -195,7 +194,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
         ];
         foreach ($routes as $route)
         {
-            Artisan::call('apiato:route', [
+            Artisan::call('apiato:generate:route', [
                 '--container'   => $containerName,
                 '--file'        => $route['name'],
                 '--ui'          => $ui,
@@ -206,20 +205,20 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 '--verb'        => $route['verb'],
             ]);
 
-            Artisan::call('apiato:request', [
+            Artisan::call('apiato:generate:request', [
                 '--container'   => $containerName,
                 '--file'        => $route['request'],
                 '--ui'          => $ui,
             ]);
 
-            Artisan::call('apiato:action', [
+            Artisan::call('apiato:generate:action', [
                 '--container'   => $containerName,
                 '--file'        => $route['action'],
                 '--model'       => $model,
                 '--stub'        => $route['stub'],
             ]);
 
-            Artisan::call('apiato:task', [
+            Artisan::call('apiato:generate:task', [
                 '--container'   => $containerName,
                 '--file'        => $route['task'],
                 '--model'       => $model,
@@ -229,7 +228,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
         // finally generate the controller
         $this->printInfoMessage('Generating Controller to wire everything together');
-        Artisan::call('apiato:controller', [
+        Artisan::call('apiato:generate:controller', [
             '--container'   => $containerName,
             '--file'        => 'Controller',
             '--ui'          => $ui,

@@ -21,7 +21,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:action';
+    protected $name = 'apiato:generate:action';
 
     /**
      * The console command description.

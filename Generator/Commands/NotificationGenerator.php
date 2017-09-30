@@ -19,7 +19,7 @@ class NotificationGenerator extends GeneratorCommand implements ComponentsGenera
      *
      * @var string
      */
-    protected $name = 'apiato:notification';
+    protected $name = 'apiato:generate:notification';
 
     /**
      * The console command description.
