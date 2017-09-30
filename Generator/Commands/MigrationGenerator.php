@@ -86,7 +86,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
                 'table-name' => $tablename
             ],
             'file-parameters' => [
-                'date'      => Carbon::now()->format('Y_m_d_His'),
+                'date' => Carbon::now()->format('Y_m_d_His'),
                 'file-name' => $this->fileName,
             ],
         ];

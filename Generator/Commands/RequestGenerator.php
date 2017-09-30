@@ -80,6 +80,7 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
                 'user-interface' => Str::upper($ui),
             ],
             'stub-parameters' => [
+                '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
                 'user-interface' => Str::upper($ui),

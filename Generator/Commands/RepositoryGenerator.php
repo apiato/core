@@ -4,6 +4,7 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Illuminate\Support\Str;
 
 /**
  * Class RepositoryGenerator
@@ -74,6 +75,7 @@ class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerato
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
             ],

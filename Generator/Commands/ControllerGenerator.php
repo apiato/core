@@ -95,22 +95,22 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
         return [
             'path-parameters' => [
-                'container-name'    => $this->containerName,
-                'user-interface'    => Str::upper($ui),
+                'container-name' => $this->containerName,
+                'user-interface' => Str::upper($ui),
             ],
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
-                'container-name'    => $this->containerName,
-                'class-name'         => $this->fileName,
-                'user-interface'    => Str::upper($ui),
-                'base-controller'   => $basecontroller,
+                'container-name' => $this->containerName,
+                'class-name' => $this->fileName,
+                'user-interface' => Str::upper($ui),
+                'base-controller' => $basecontroller,
 
-                'model'             => $model,
-                'entity'            => $entity,
-                'entities'          => $entities,
+                'model' => $model,
+                'entity' => $entity,
+                'entities' => $entities,
             ],
             'file-parameters' => [
-                'file-name'         => $this->fileName,
+                'file-name' => $this->fileName,
             ],
         ];
     }

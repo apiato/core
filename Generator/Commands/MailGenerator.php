@@ -80,8 +80,8 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                'container-name' => $this->containerName,
                 '_container-name' => Str::lower($this->containerName),
+                'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
                 'view' => $view,
             ],

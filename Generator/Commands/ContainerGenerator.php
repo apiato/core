@@ -68,8 +68,8 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
-        ['doctype', null, InputOption::VALUE_OPTIONAL, 'The type of all endpoints to be generated (private, public)'],
         ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of all endpoints to be generated (1, 2, ...)'],
+        ['doctype', null, InputOption::VALUE_OPTIONAL, 'The type of all endpoints to be generated (private, public)'],
         ['url', null, InputOption::VALUE_OPTIONAL, 'The base URI of all endpoints (/stores, /cars, ...)'],
     ];
 
@@ -78,7 +78,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
-        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for this container', ['API', 'WEB']));
+        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for this container', ['API', 'WEB'], 0));
 
         // containername as inputted and lower
         $containerName = $this->containerName;
@@ -130,11 +130,11 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
         // create the default routes for this container
         $this->printInfoMessage('Generating Default Routes');
-        $version = $this->checkParameterOrAsk('docversion', 'Enter the version for *all* endpoints (integer)', RouteGenerator::DEFAULT_VERSION);
-        $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for *all* endpoints', ['private', 'public']);
+        $version = $this->checkParameterOrAsk('docversion', 'Enter the version for *all* endpoints (integer)', 1);
+        $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for *all* endpoints', ['private', 'public'], 0);
 
         // get the URI and remove the first trailing slash
-        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all endpoints (foo/bar)'));
+        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all endpoints (foo/bar)', Str::lower($models)));
         $url = ltrim($url, '/');
 
         $this->printInfoMessage('Creating Requests for Routes');
