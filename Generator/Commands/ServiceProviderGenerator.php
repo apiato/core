@@ -1,19 +1,18 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands\Container;
+namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
-use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class ContainerTaskGenerator
+ * Class ServiceProviderGenerator
  *
  * @author  Johannes Schobel <johannes.schobel@googlemail.com>
  */
-class ContainerTaskGenerator extends GeneratorCommand implements ComponentsGenerator
+class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
     /**
@@ -21,28 +20,28 @@ class ContainerTaskGenerator extends GeneratorCommand implements ComponentsGener
      *
      * @var string
      */
-    protected $name = 'apiato:container-task';
+    protected $name = 'apiato:serviceprovider';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a Task file for a Container';
+    protected $description = 'Create a ServiceProvider for a Container';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $fileType = 'Task';
+    protected $fileType = 'ServiceProvider';
 
     /**
      * The structure of the file path.
      *
      * @var  string
      */
-    protected $pathStructure = '{container-name}/Tasks/*';
+    protected $pathStructure = '{container-name}/Providers/*';
 
     /**
      * The structure of the file name.
@@ -56,7 +55,7 @@ class ContainerTaskGenerator extends GeneratorCommand implements ComponentsGener
      *
      * @var  string
      */
-    protected $stubName = 'task.stub';
+    protected $stubName = 'providers/mainserviceprovider.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -65,7 +64,6 @@ class ContainerTaskGenerator extends GeneratorCommand implements ComponentsGener
      * @var  array
      */
     public $inputs = [
-        ['model', null, InputOption::VALUE_OPTIONAL, 'The model this task is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
 
@@ -74,13 +72,12 @@ class ContainerTaskGenerator extends GeneratorCommand implements ComponentsGener
      */
     public function getUserInputs()
     {
-        $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this task is for.', $this->containerName);
-        $stub = Str::lower($this->checkParameterOrChoice('stub', 'Select the Stub you want to load', ['GetAll', 'GetOne', 'Create', 'Update', 'Delete']));
-
-        // load a new stub-file based on the users choice
-        $this->stubName = 'container/tasks/' . $stub . '.stub';
-
-        $models = Pluralizer::plural($model);
+        $stub = Str::lower($this->checkParameterOrChoice(
+            'stub',
+            'Select the Stub you want to load',
+            ['Generic', 'MainServiceProvider'],
+            0)
+        );
 
         return [
             'path-parameters' => [
@@ -89,8 +86,7 @@ class ContainerTaskGenerator extends GeneratorCommand implements ComponentsGener
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
-                'model' => $model,
-                'models' => $models,
+                'class-name' => $this->fileName,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -105,6 +101,6 @@ class ContainerTaskGenerator extends GeneratorCommand implements ComponentsGener
      */
     public function getDefaultFileName()
     {
-        return 'DefaultTask';
+        return 'MainServiceProvider';
     }
 }

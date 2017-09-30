@@ -3,23 +3,20 @@
 namespace Apiato\Core\Generator;
 
 use Apiato\Core\Generator\Commands\ActionGenerator;
-use Apiato\Core\Generator\Commands\Container\ContainerActionGenerator;
-use Apiato\Core\Generator\Commands\Container\ContainerConfigurationGenerator;
-use Apiato\Core\Generator\Commands\Container\ContainerControllerGenerator;
-use Apiato\Core\Generator\Commands\Container\ContainerMainServiceProviderGenerator;
-use Apiato\Core\Generator\Commands\Container\ContainerMigrationGenerator;
-use Apiato\Core\Generator\Commands\Container\ContainerTaskGenerator;
+use Apiato\Core\Generator\Commands\ConfigurationGenerator;
 use Apiato\Core\Generator\Commands\ContainerGenerator;
 use Apiato\Core\Generator\Commands\ControllerGenerator;
 use Apiato\Core\Generator\Commands\ExceptionGenerator;
 use Apiato\Core\Generator\Commands\JobGenerator;
 use Apiato\Core\Generator\Commands\MailGenerator;
+use Apiato\Core\Generator\Commands\MigrationGenerator;
 use Apiato\Core\Generator\Commands\ModelGenerator;
 use Apiato\Core\Generator\Commands\NotificationGenerator;
 use Apiato\Core\Generator\Commands\RepositoryGenerator;
 use Apiato\Core\Generator\Commands\RequestGenerator;
 use Apiato\Core\Generator\Commands\RouteGenerator;
 use Apiato\Core\Generator\Commands\SeederGenerator;
+use Apiato\Core\Generator\Commands\ServiceProviderGenerator;
 use Apiato\Core\Generator\Commands\SubActionGenerator;
 use Apiato\Core\Generator\Commands\TaskGenerator;
 use Apiato\Core\Generator\Commands\TransformerGenerator;
@@ -53,26 +50,20 @@ class GeneratorsServiceProvider extends ServiceProvider
         // all generators ordered by name
         $this->registerGenerators([
             ActionGenerator::class,
-
-            // the container generator and its "sub"-generators
+            ConfigurationGenerator::class,
             ContainerGenerator::class,
-                ContainerActionGenerator::class,
-                ContainerConfigurationGenerator::class,
-                ContainerControllerGenerator::class,
-                ContainerMainServiceProviderGenerator::class,
-                ContainerMigrationGenerator::class,
-                ContainerTaskGenerator::class,
-
             ControllerGenerator::class,
             ExceptionGenerator::class,
             JobGenerator::class,
             MailGenerator::class,
+            MigrationGenerator::class,
             ModelGenerator::class,
             NotificationGenerator::class,
             RepositoryGenerator::class,
             RequestGenerator::class,
             RouteGenerator::class,
             SeederGenerator::class,
+            ServiceProviderGenerator::class,
             SubActionGenerator::class,
             TaskGenerator::class,
             TransformerGenerator::class,

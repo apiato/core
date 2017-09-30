@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands\Container;
+namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
@@ -9,11 +9,11 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class ContainerMigrationGenerator
+ * Class MigrationGenerator
  *
  * @author  Johannes Schobel <johannes.schobel@googlemail.com>
  */
-class ContainerMigrationGenerator extends GeneratorCommand implements ComponentsGenerator
+class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
     /**
@@ -21,14 +21,14 @@ class ContainerMigrationGenerator extends GeneratorCommand implements Components
      *
      * @var string
      */
-    protected $name = 'apiato:container-migration';
+    protected $name = 'apiato:migration';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create an empty migration file for a Container';
+    protected $description = 'Create an "empty" migration file for a Container';
 
     /**
      * The type of class being generated.
@@ -56,7 +56,7 @@ class ContainerMigrationGenerator extends GeneratorCommand implements Components
      *
      * @var  string
      */
-    protected $stubName = 'container/migration.stub';
+    protected $stubName = 'migration.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -82,6 +82,7 @@ class ContainerMigrationGenerator extends GeneratorCommand implements Components
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
+                'class-name' => $this->fileName,
                 'table-name' => $tablename
             ],
             'file-parameters' => [

@@ -1,17 +1,17 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands\Container;
+namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
 /**
- * Class ContainerMainServiceProviderGenerator
+ * Class ConfigurationGenerator
  *
  * @author  Johannes Schobel <johannes.schobel@googlemail.com>
  */
-class ContainerMainServiceProviderGenerator extends GeneratorCommand implements ComponentsGenerator
+class ConfigurationGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
     /**
@@ -19,42 +19,42 @@ class ContainerMainServiceProviderGenerator extends GeneratorCommand implements 
      *
      * @var string
      */
-    protected $name = 'apiato:container-mainserviceprovider';
+    protected $name = 'apiato:configuration';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create the MainServiceProvider for a Container';
+    protected $description = 'Create a Configuration file for a Container';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $fileType = 'ServiceProvider';
+    protected $fileType = 'Configuration';
 
     /**
      * The structure of the file path.
      *
      * @var  string
      */
-    protected $pathStructure = '{container-name}/Providers/*';
+    protected $pathStructure = '{container-name}/Configs/*';
 
     /**
      * The structure of the file name.
      *
      * @var  string
      */
-    protected $nameStructure = '{file-name}';
+    protected $nameStructure = 'container.{file-name}';
 
     /**
      * The name of the stub file.
      *
      * @var  string
      */
-    protected $stubName = 'container/mainserviceprovider.stub';
+    protected $stubName = 'config.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -77,6 +77,7 @@ class ContainerMainServiceProviderGenerator extends GeneratorCommand implements 
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
+                'class-name' => $this->fileName,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -91,6 +92,6 @@ class ContainerMainServiceProviderGenerator extends GeneratorCommand implements 
      */
     public function getDefaultFileName()
     {
-        return 'MainServiceProvider';
+        return 'container.' . $this->containerName;
     }
 }

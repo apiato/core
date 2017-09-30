@@ -4,6 +4,7 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -27,7 +28,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
      *
      * @var string
      */
-    protected $description = 'Create a new Controller class for a given UI (i.e., API or WEB)';
+    protected $description = 'Create a controller for a container';
 
     /**
      * The type of class being generated.
@@ -55,7 +56,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
      *
      * @var  string
      */
-    protected $stubName = 'controller.stub';
+    protected $stubName = 'controllers/generic.stub';
 
     /**
      * The options which can be passed to the command. All options are optional. You do not need to pass the
@@ -66,7 +67,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
      */
     public $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
-        ['crud', null, InputOption::VALUE_OPTIONAL, 'Generate all CRUD methods (may differ for the specified user-interface).'],
+        ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
 
     /**
@@ -76,13 +77,21 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB']));
 
-        $crud = $this->checkParameterOrConfirm('crud', 'Would you like to generate a CRUD stub for the controller', false);
+        $stub = Str::lower($this->checkParameterOrChoice(
+            'stub',
+            'Select the Stub you want to load',
+            ['Generic', 'CRUD.API', 'CRUD.WEB'],
+            0)
+        );
 
-        if($crud == true) {
-            $this->stubName = 'controller.crud.' . Str::lower($ui) . ".stub";
-        }
+        // load a new stub-file based on the users choice
+        $this->stubName = 'controllers/' . $stub . '.stub';
 
         $basecontroller = Str::ucfirst($ui) . 'Controller';
+
+        $model = $this->containerName;
+        $entity = Str::lower($model);
+        $entities = Pluralizer::plural($entity);
 
         return [
             'path-parameters' => [
@@ -90,10 +99,15 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
                 'user-interface'    => Str::upper($ui),
             ],
             'stub-parameters' => [
+                '_container-name' => Str::lower($this->containerName),
                 'container-name'    => $this->containerName,
                 'class-name'         => $this->fileName,
                 'user-interface'    => Str::upper($ui),
                 'base-controller'   => $basecontroller,
+
+                'model'             => $model,
+                'entity'            => $entity,
+                'entities'          => $entities,
             ],
             'file-parameters' => [
                 'file-name'         => $this->fileName,

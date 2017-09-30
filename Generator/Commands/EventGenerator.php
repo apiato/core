@@ -55,7 +55,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  string
      */
-    protected $stubName = 'event.stub';
+    protected $stubName = 'events/event.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
