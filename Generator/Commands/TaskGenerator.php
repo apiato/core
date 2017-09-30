@@ -4,11 +4,14 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Illuminate\Support\Pluralizer;
+use Illuminate\Support\Str;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class TaskGenerator
  *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
+ * @author  Johannes Schobel <johannes.schobel@googlemail.com>
  */
 class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
 {
@@ -18,14 +21,14 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:task';
+    protected $name = 'apiato:generate:task';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new Task class';
+    protected $description = 'Create a Task file for a Container';
 
     /**
      * The type of class being generated.
@@ -53,7 +56,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  string
      */
-    protected $stubName = 'task.stub';
+    protected $stubName = 'tasks/generic.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -62,6 +65,8 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
      * @var  array
      */
     public $inputs = [
+        ['model', null, InputOption::VALUE_OPTIONAL, 'The model this task is for.'],
+        ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
 
     /**
@@ -69,13 +74,29 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
+        $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this task is for.', $this->containerName);
+        $stub = Str::lower($this->checkParameterOrChoice(
+            'stub',
+            'Select the Stub you want to load',
+            ['Generic', 'GetAll', 'GetOne', 'Create', 'Update', 'Delete'],
+            0)
+        );
+
+        // load a new stub-file based on the users choice
+        $this->stubName = 'tasks/' . $stub . '.stub';
+
+        $models = Pluralizer::plural($model);
+
         return [
             'path-parameters' => [
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
+                'model' => $model,
+                'models' => $models,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -83,4 +104,13 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
         ];
     }
 
+    /**
+     * Get the default file name for this component to be generated
+     *
+     * @return string
+     */
+    public function getDefaultFileName()
+    {
+        return 'DefaultTask';
+    }
 }

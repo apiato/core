@@ -4,9 +4,11 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Illuminate\Support\Str;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class NotificationGenerator
+ * Class MailGenerator
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
@@ -18,7 +20,7 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:mail';
+    protected $name = 'apiato:generate:mail';
 
     /**
      * The console command description.
@@ -62,6 +64,7 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
      * @var  array
      */
     public $inputs = [
+        ['view', null, InputOption::VALUE_OPTIONAL, 'The name of the view (blade template) to be loaded.'],
     ];
 
     /**
@@ -69,13 +72,17 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
+        $view = $this->checkParameterOrAsk('view', 'Enter the name of the view to be loaded when sending this Mail');
+
         return [
             'path-parameters' => [
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
+                '_container-name' => Str::lower($this->containerName),
+                'container-name'  => $this->containerName,
+                'class-name'      => $this->fileName,
+                'view'            => $view,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -83,4 +90,10 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
         ];
     }
 
-  }
+    public function getDefaultFileName()
+    {
+        return 'DefaultMail';
+    }
+
+}
+

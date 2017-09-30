@@ -2,14 +2,13 @@
 
 namespace App\Containers\{{container-name}}\Job;
 
-use App\Port\Job\Abstracts\Job;
+use App\Ship\Parents\Jobs\Job;
 
 /**
  * Class {{class-name}}
  */
  class {{class-name}} extends Job
  {
- 
      private $recipients;
 
      public function __construct(array $recipients)

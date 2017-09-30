@@ -35,7 +35,7 @@ class {{class-name}} extends Request
      * @var  array
      */
     protected $urlParameters = [
-        //'id',
+        // 'id',
     ];
 
     /**
@@ -44,8 +44,8 @@ class {{class-name}} extends Request
     public function rules()
     {
         return [
-            // put your rules here
-            // 'name' => 'required|max:255'
+            // 'id' => 'required',
+            // '{user-input}' => 'required|max:255',
         ];
     }
 

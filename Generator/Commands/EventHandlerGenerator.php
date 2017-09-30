@@ -19,7 +19,7 @@ class EventHandlerGenerator extends GeneratorCommand implements ComponentsGenera
      *
      * @var string
      */
-    protected $name = 'apiato:eventhandler';
+    protected $name = 'apiato:generate:eventhandler';
 
     /**
      * The console command description.
@@ -54,7 +54,7 @@ class EventHandlerGenerator extends GeneratorCommand implements ComponentsGenera
      *
      * @var  string
      */
-    protected $stubName = 'eventhandler.stub';
+    protected $stubName = 'events/eventhandler.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.

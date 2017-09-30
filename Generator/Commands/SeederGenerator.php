@@ -4,6 +4,7 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Illuminate\Support\Str;
 
 /**
  * Class ActionGenerator
@@ -18,7 +19,7 @@ class SeederGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:seed';
+    protected $name = 'apiato:generate:seeder';
 
     /**
      * The console command description.
@@ -39,7 +40,7 @@ class SeederGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  string
      */
-    protected $pathStructure = '{container-name}/Seeders/*';
+    protected $pathStructure = '{container-name}/Data/Seeders/*';
 
     /**
      * The structure of the file name.
@@ -74,6 +75,7 @@ class SeederGenerator extends GeneratorCommand implements ComponentsGenerator
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
             ],
@@ -90,7 +92,7 @@ class SeederGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getDefaultFileName()
     {
-        return 'DefaultAction';
+        return $this->containerName . 'Seeder';
     }
 
 }

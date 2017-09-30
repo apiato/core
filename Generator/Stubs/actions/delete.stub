@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Containers\{{container-name}}\Actions;
+
+use App\Containers\{{container-name}}\Tasks\Delete{{model}}Task;
+use App\Containers\{{container-name}}\Tasks\Get{{model}}ByIdTask;
+use App\Ship\Parents\Actions\Action;
+use App\Ship\Parents\Requests\Request;
+
+class Delete{{model}}Action extends Action
+{
+    public function run(Request $request)
+    {
+        $result = $this->call(Delete{{model}}Task::class, [$request->id]);
+
+        return $result;
+    }
+}

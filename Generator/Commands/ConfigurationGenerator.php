@@ -4,16 +4,14 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
-use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class ActionGenerator
+ * Class ConfigurationGenerator
  *
  * @author  Johannes Schobel <johannes.schobel@googlemail.com>
  */
-class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
+class ConfigurationGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
     /**
@@ -21,42 +19,42 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:action';
+    protected $name = 'apiato:generate:configuration';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a Action file for a Container';
+    protected $description = 'Create a Configuration file for a Container';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $fileType = 'Action';
+    protected $fileType = 'Configuration';
 
     /**
      * The structure of the file path.
      *
      * @var  string
      */
-    protected $pathStructure = '{container-name}/Actions/*';
+    protected $pathStructure = '{container-name}/Configs/*';
 
     /**
      * The structure of the file name.
      *
      * @var  string
      */
-    protected $nameStructure = '{file-name}';
+    protected $nameStructure = 'container.{file-name}';
 
     /**
      * The name of the stub file.
      *
      * @var  string
      */
-    protected $stubName = 'actions/generic.stub';
+    protected $stubName = 'config.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -65,8 +63,6 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
      * @var  array
      */
     public $inputs = [
-        ['model', null, InputOption::VALUE_OPTIONAL, 'The model this action is for.'],
-        ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
 
     /**
@@ -74,22 +70,6 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
-        $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this action is for.', $this->containerName);
-        $stub = Str::lower($this->checkParameterOrChoice(
-            'stub',
-            'Select the Stub you want to load',
-            ['Generic', 'GetAll', 'GetOne', 'Create', 'Update', 'Delete'],
-            0)
-        );
-
-        // load a new stub-file based on the users choice
-        $this->stubName = 'actions/' . $stub . '.stub';
-
-        $models = Pluralizer::plural($model);
-
-        $entity = Str::lower($model);
-        $entities = Pluralizer::plural($entity);
-
         return [
             'path-parameters' => [
                 'container-name' => $this->containerName,
@@ -98,10 +78,6 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
-                'model' => $model,
-                'models' => $models,
-                'entity' => $entity,
-                'entities' => $entities,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -116,6 +92,6 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getDefaultFileName()
     {
-        return 'DefaultAction';
+        return 'container.' . $this->containerName;
     }
 }
