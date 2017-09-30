@@ -5,6 +5,7 @@ namespace Apiato\Core\Generator\Commands;
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -20,7 +21,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
      *
      * @var string
      */
-    protected $name = 'apiato:transformer';
+    protected $name = 'apiato:generate:transformer';
 
     /**
      * The console command description.
@@ -83,6 +84,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
                 'model' => $model,

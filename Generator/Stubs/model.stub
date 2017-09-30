@@ -6,17 +6,29 @@ use App\Ship\Parents\Models\Model;
 
 class {{class-name}} extends Model
 {
-    protected $fillable = [];
+    protected $fillable = [
 
-    protected $hidden = [];
+    ];
 
-    protected $casts = [];
+    protected $attributes = [
+
+    ];
+
+    protected $hidden = [
+
+    ];
+
+    protected $casts = [
+
+    ];
 
     protected $dates = [
         'created_at',
         'updated_at',
     ];
 
-    // the resource key, used to generate JSON API valid responses
+    /**
+     * the resource key, used to generate JSON API valid responses
+     */
     protected $resourceKey = '{{resource-key}}';
 }
