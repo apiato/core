@@ -19,6 +19,6 @@ class {{class-name}} extends ServiceProvider
     {
         parent::register();
 
-        // do other stuff here..
+        // ...
     }
 }

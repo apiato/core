@@ -37,7 +37,7 @@ class MainServiceProvider extends MainProvider
     {
         parent::register();
 
-        // do your binding here..
         // $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        // ...
     }
 }

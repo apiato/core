@@ -20,8 +20,8 @@ class {{class-name}} extends Repository
      * @var array
      */
     protected $fieldSearchable = [
-        'id'    => '=',
-        // more fields to be searched here
+        'id' => '=',
+        // ...
     ];
 
 }

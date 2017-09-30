@@ -29,7 +29,6 @@ class {{class-name}} extends Transformer
     public function transform({{model}} $entity)
     {
         $response = [
-
 {{attributes}}
         ];
 
