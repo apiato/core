@@ -4,9 +4,10 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Illuminate\Support\Str;
 
 /**
- * Class ActionGenerator
+ * Class JobGenerator
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
@@ -18,7 +19,7 @@ class JobGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:job';
+    protected $name = 'apiato:generate:job';
 
     /**
      * The console command description.
@@ -74,8 +75,9 @@ class JobGenerator extends GeneratorCommand implements ComponentsGenerator
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
+                '_container-name' => Str::lower($this->containerName),
+                'container-name'  => $this->containerName,
+                'class-name'      => $this->fileName,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -90,7 +92,6 @@ class JobGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getDefaultFileName()
     {
-        return 'DefaultAction';
+        return 'DefaultJob';
     }
-
 }

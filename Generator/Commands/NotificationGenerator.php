@@ -4,6 +4,7 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Illuminate\Support\Str;
 
 /**
  * Class NotificationGenerator
@@ -18,7 +19,7 @@ class NotificationGenerator extends GeneratorCommand implements ComponentsGenera
      *
      * @var string
      */
-    protected $name = 'apiato:notification';
+    protected $name = 'apiato:generate:notification';
 
     /**
      * The console command description.
@@ -74,6 +75,7 @@ class NotificationGenerator extends GeneratorCommand implements ComponentsGenera
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
             ],

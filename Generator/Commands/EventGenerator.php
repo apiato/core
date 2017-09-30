@@ -5,6 +5,7 @@ namespace Apiato\Core\Generator\Commands;
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -20,7 +21,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:event';
+    protected $name = 'apiato:generate:event';
 
     /**
      * The console command description.
@@ -55,7 +56,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  string
      */
-    protected $stubName = 'event.stub';
+    protected $stubName = 'events/event.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -79,7 +80,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
         if($handler) {
             // we need to generate a corresponding handler
             // so call the other command
-            $status = Artisan::call('apiato:eventhandler', [
+            $status = Artisan::call('apiato:generate:eventhandler', [
                                     '--container' => $this->containerName,
                                     '--file' => $this->fileName . 'Handler',
                                     '--event' => $this->fileName
@@ -100,6 +101,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
                 'model' => $model,

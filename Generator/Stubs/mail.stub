@@ -2,7 +2,9 @@
 
 namespace App\Containers\{{container-name}}\Mail;
 
+use App\Containers\User\Models\User;
 use App\Ship\Parents\Mails\Mail;
+use Illuminate\Bus\Queueable;
 
 /**
  * Class {{class-name}}
@@ -11,24 +13,25 @@ class {{class-name}} extends Mail
 {
     use Queueable;
 
-    protected $user;
+    protected $recipient;
 
     /**
      * {{class-name}} constructor.
      *
-     * @param $entity
+     * @param $recipient
      */
-    public function __construct($user)
+    public function __construct(User $recipient)
     {
-        $this->user = $user;
+        $this->recipient = $recipient;
     }
 
     public function build()
     {
-        return $this->view('user::user-registered')
-            ->to($this->user->email, $this->user->name)
+        return $this->view('{{_container-name}}::{{view}}')
+            ->to($this->recipient->email, $this->recipient->name)
             ->with([
-                'name' => $this->user->name,
+                // place your replacement variables here...
+                //'name' => $this->recipient->name,
             ]);
     }
 }

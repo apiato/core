@@ -4,6 +4,7 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Illuminate\Support\Str;
 
 /**
  * Class ExceptionGenerator
@@ -18,7 +19,7 @@ class ExceptionGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:exception';
+    protected $name = 'apiato:generate:exception';
 
     /**
      * The console command description.
@@ -74,6 +75,7 @@ class ExceptionGenerator extends GeneratorCommand implements ComponentsGenerator
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
             ],
