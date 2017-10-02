@@ -92,6 +92,6 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
      */
     public function getDefaultFileName()
     {
-        return 'container.' . $this->containerName;
+        return 'container.' . Str::lower($this->containerName);
     }
 }
