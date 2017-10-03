@@ -106,6 +106,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
                 'http-verb' => Str::lower($verb),
                 'doc-http-verb' => Str::upper($verb),
                 'route-name' => $routename,
+                'auth-middleware' => Str::lower($ui),
             ],
             'file-parameters' => [
                 'endpoint-name' => $this->fileName,
