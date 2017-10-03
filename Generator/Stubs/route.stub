@@ -23,6 +23,6 @@ $router->{{http-verb}}('{{endpoint-url}}', [
     'as' => '{{route-name}}',
     'uses'  => 'Controller@{{operation}}',
     'middleware' => [
-      'auth:api',
+      'auth:{{auth-middleware}}',
     ],
 ]);
