@@ -38,6 +38,11 @@ abstract class GeneratorCommand extends Command
     CONST STUB_PATH = 'Stubs/*';
 
     /**
+     * Relative path for the custom stubs (relative to the app/Ship directory!
+     */
+    CONST CUSTOM_STUB_PATH = 'Generators/CustomStubs/*';
+
+    /**
      * Containers main folder
      *
      * @var string
@@ -122,7 +127,7 @@ abstract class GeneratorCommand extends Command
         $this->filePath = $this->getFilePath($this->parsePathStructure($this->pathStructure, $this->userData['path-parameters']));
 
         // prepare stub content
-        $this->stubContent = $this->fileSystem->get($this->getStubFile());
+        $this->stubContent = $this->getStubContent();
         $this->renderedStubContent = $this->parseStubContent($this->stubContent, $this->userData['stub-parameters']);
 
         $this->generateFile($this->filePath, $this->renderedStubContent);
@@ -165,11 +170,22 @@ abstract class GeneratorCommand extends Command
     /**
      * @return  mixed
      */
-    protected function getStubFile()
+    protected function getStubContent()
     {
-        $path = __DIR__ . '/' . self::STUB_PATH;
+        // check if there is a custom file that overrides the default stubs
+        $path = app_path() . '/Ship/' . self::CUSTOM_STUB_PATH;
+        $file = str_replace('*', $this->stubName, $path);
 
-        return str_replace('*', $this->stubName, $path);
+        // check if the custom file exists
+        if (! $this->fileSystem->exists($file)) {
+            // it does not exist - so take the default file!
+            $path = __DIR__ . '/' . self::STUB_PATH;
+            $file = str_replace('*', $this->stubName, $path);
+        }
+
+        // now load the stub
+        $stub = $this->fileSystem->get($file);
+        return $stub;
     }
 
     /**
