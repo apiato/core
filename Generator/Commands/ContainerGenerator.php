@@ -192,6 +192,82 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'task'      => 'Delete' . $model . 'Task',
             ],
         ];
+
+        if ($ui == 'web') {
+            $routes = [
+                [
+                    'stub'      => 'GetAll',
+                    'name'      => 'GetAll' . $models,
+                    'operation' => 'index',
+                    'verb'      => 'GET',
+                    'url'       => $url,
+                    'action'    => 'GetAll' . $models . 'Action',
+                    'request'   => 'GetAll' . $models . 'Request',
+                    'task'      => 'GetAll' . $models . 'Task',
+                ],
+                [
+                    'stub'      => 'GetOne',
+                    'name'      => 'Get' . $model . 'ById',
+                    'operation' => 'show',
+                    'verb'      => 'GET',
+                    'url'       => $url . '/{id}',
+                    'action'    => 'Get' . $model . 'ById' . 'Action',
+                    'request'   => 'Get' . $model . 'ById' . 'Request',
+                    'task'      => 'Get' . $model . 'ById' . 'Task',
+                ],
+                [
+                    'stub'      => null,
+                    'name'      => 'Create' . $model,
+                    'operation' => 'create',
+                    'verb'      => 'GET',
+                    'url'       => $url . '/create',
+                    'action'    => null,
+                    'request'   => 'Create' . $model . 'Request',
+                    'task'      => null,
+                ],
+                [
+                    'stub'      => 'Create',
+                    'name'      => 'Store' . $model,
+                    'operation' => 'store',
+                    'verb'      => 'POST',
+                    'url'       => $url . '/store',
+                    'action'    => 'Create' . $model . 'Action',
+                    'request'   => 'Store' . $model . 'Request',
+                    'task'      => 'Create' . $model . 'Task',
+                ],
+                [
+                    'stub'      => null,
+                    'name'      => 'Edit' . $model,
+                    'operation' => 'edit',
+                    'verb'      => 'GET',
+                    'url'       => $url . '/{id}/edit',
+                    'action'    => null,
+                    'request'   => 'Edit' . $model . 'Request',
+                    'task'      => null,
+                ],
+                [
+                    'stub'      => 'Update',
+                    'name'      => 'Update' . $model,
+                    'operation' => 'update',
+                    'verb'      => 'PATCH',
+                    'url'       => $url . '/{id}',
+                    'action'    => 'Update' . $model . 'Action',
+                    'request'   => 'Update' . $model . 'Request',
+                    'task'      => 'Update' . $model . 'Task',
+                ],
+                [
+                    'stub'      => 'Delete',
+                    'name'      => 'Delete' . $model,
+                    'operation' => 'delete',
+                    'verb'      => 'DELETE',
+                    'url'       => $url . '/{id}',
+                    'action'    => 'Delete' . $model . 'Action',
+                    'request'   => 'Delete' . $model . 'Request',
+                    'task'      => 'Delete' . $model . 'Task',
+                ],
+            ];
+        }
+
         foreach ($routes as $route)
         {
             Artisan::call('apiato:generate:route', [
@@ -211,19 +287,23 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 '--ui'          => $ui,
             ]);
 
-            Artisan::call('apiato:generate:action', [
-                '--container'   => $containerName,
-                '--file'        => $route['action'],
-                '--model'       => $model,
-                '--stub'        => $route['stub'],
-            ]);
+            if ($route['action'] != null || $route['stub'] != null) {
+                Artisan::call('apiato:generate:action', [
+                    '--container' => $containerName,
+                    '--file' => $route['action'],
+                    '--model' => $model,
+                    '--stub' => $route['stub'],
+                ]);
+            }
 
-            Artisan::call('apiato:generate:task', [
-                '--container'   => $containerName,
-                '--file'        => $route['task'],
-                '--model'       => $model,
-                '--stub'        => $route['stub'],
-            ]);
+            if ($route['task'] != null || $route['stub'] != null) {
+                Artisan::call('apiato:generate:task', [
+                    '--container' => $containerName,
+                    '--file' => $route['task'],
+                    '--model' => $model,
+                    '--stub' => $route['stub'],
+                ]);
+            }
         }
 
         // finally generate the controller
