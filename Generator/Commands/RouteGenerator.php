@@ -37,7 +37,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
     protected $fileType = 'Route';
 
     /**
-     * THe structure of the file path.
+     * The structure of the file path.
      *
      * @var  string
      */
@@ -55,7 +55,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  string
      */
-    protected $stubName = 'route.stub';
+    protected $stubName = 'routes/generic.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -89,6 +89,10 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
         $docurl = preg_replace('~\{(.+?)\}~', ':$1', $url);
 
         $routename = Str::lower($ui . '_' . $this->containerName . '_' . Str::snake($operation));
+
+        if ($ui == 'api') {
+            $this->stubName = 'routes/api.stub';
+        }
 
         return [
             'path-parameters' => [
