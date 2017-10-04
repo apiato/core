@@ -89,7 +89,10 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
         $basecontroller = Str::ucfirst($ui) . 'Controller';
 
+        // name of the model (singular and plural)
         $model = $this->containerName;
+        $models = Pluralizer::plural($model);
+
         $entity = Str::lower($model);
         $entities = Pluralizer::plural($entity);
 
@@ -106,6 +109,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
                 'base-controller' => $basecontroller,
 
                 'model' => $model,
+                'models' => $models,
                 'entity' => $entity,
                 'entities' => $entities,
             ],
