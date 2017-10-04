@@ -2,57 +2,100 @@
 
 namespace App\Containers\{{container-name}}\UI\{{user-interface}}\Controllers;
 
+use App\Containers\{{container-name}}\Actions\Create{{model}}Action;
+use App\Containers\{{container-name}}\Actions\Delete{{model}}Action;
+use App\Containers\{{container-name}}\Actions\GetAll{{model}}sAction;
+use App\Containers\{{container-name}}\Actions\Get{{model}}ByIdAction;
+use App\Containers\{{container-name}}\Actions\Update{{model}}Action;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Store{{model}}Request;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{model}}sRequest;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Get{{model}}ByIdRequest;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Edit{{model}}Request;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
 use App\Ship\Parents\Controllers\WebController;
 use App\Ship\Parents\Requests\Request;
 
+/**
+ * Class {{class-name}}
+ *
+ * @package App\Containers\{{container-name}}\UI\{{user-interface}}\Controllers
+ */
 class {{class-name}} extends WebController
 {
     /**
      * Show all entities
+     *
+     * @param GetAll{{model}}sRequest $request
      */
-    public function index(Request $request) {
+    public function index(GetAll{{model}}sRequest $request) {
+        ${{entities}} = $this->call(GetAll{{model}}sAction::class, [$request]);
 
+        // ..
     }
 
     /**
      * Show one entity
+     *
+     * @param Get{{model}}ByIdRequest $request
      */
-    public function show(Request $request) {
+    public function show(Get{{model}}ByIdRequest $request) {
+        ${{entity}} = $this->call(Get{{model}}ByIdAction::class, [$request]);
 
+        // ..
     }
 
     /**
      * Create entity (show UI)
+     *
+     * @param Create{{model}}Request $request
      */
-    public function create(Request $request) {
+    public function create(Create{{model}}Request $request) {
 
     }
 
     /**
      * Add a new entity
+     *
+     * @param Store{{model}}Request $request
      */
-    public function store(Request $request) {
+    public function store(Store{{model}}Request $request) {
+        ${{entity}} = $this->call(Create{{model}}Action::class, [$request]);
 
+        // ..
     }
 
     /**
      * Edit entity (show UI)
+     *
+     * @param Edit{{model}}Request $request
      */
-    public function edit(Request $request) {
+    public function edit(Edit{{model}}Request $request) {
+        ${{entity}} = $this->call(Get{{model}}ByIdAction::class, [$request]);
 
+        // ..
     }
 
     /**
      * Update a given entity
+     *
+     * @param Update{{model}}Request $request
      */
-    public function update(Request $request) {
+    public function update(Update{{model}}Request $request) {
+        ${{entity}} = $this->call(Update{{model}}Action::class, [$request]);
 
+        // ..
     }
 
     /**
      * Delete a given entity
+     *
+     * @param Delete{{model}}Request $request
      */
-    public function delete(Request $request) {
+    public function delete(Delete{{model}}Request $request) {
+         $result = $this->call(Delete{{model}}Action::class, [$request]);
 
+         // ..
     }
 }
