@@ -4,18 +4,17 @@ namespace App\Containers\{{container-name}}\UI\{{user-interface}}\Controllers;
 
 use App\Containers\{{container-name}}\Actions\Create{{model}}Action;
 use App\Containers\{{container-name}}\Actions\Delete{{model}}Action;
-use App\Containers\{{container-name}}\Actions\GetAll{{model}}sAction;
+use App\Containers\{{container-name}}\Actions\GetAll{{models}}Action;
 use App\Containers\{{container-name}}\Actions\Get{{model}}ByIdAction;
 use App\Containers\{{container-name}}\Actions\Update{{model}}Action;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Store{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
-use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{model}}sRequest;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{models}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Get{{model}}ByIdRequest;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Edit{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
 use App\Ship\Parents\Controllers\WebController;
-use App\Ship\Parents\Requests\Request;
 
 /**
  * Class {{class-name}}
@@ -27,10 +26,10 @@ class {{class-name}} extends WebController
     /**
      * Show all entities
      *
-     * @param GetAll{{model}}sRequest $request
+     * @param GetAll{{models}}Request $request
      */
-    public function index(GetAll{{model}}sRequest $request) {
-        ${{entities}} = $this->call(GetAll{{model}}sAction::class, [$request]);
+    public function index(GetAll{{models}}Request $request) {
+        ${{entities}} = $this->call(GetAll{{models}}Action::class, [$request]);
 
         // ..
     }
