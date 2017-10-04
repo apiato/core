@@ -19,6 +19,7 @@
 }
  */
 
+/** @var Route $router */
 $router->{{http-verb}}('{{endpoint-url}}', [
     'as' => '{{route-name}}',
     'uses'  => 'Controller@{{operation}}',
