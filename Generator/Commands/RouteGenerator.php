@@ -94,6 +94,14 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
             $this->stubName = 'routes/api.stub';
         }
 
+        if ($ui == 'web') {
+            if (str_contains($url, '{id}')) {
+                $this->stubName = 'routes/web.id.stub';
+            } else {
+                $this->stubName = 'routes/generic.stub';
+            }
+        }
+
         return [
             'path-parameters' => [
                 'container-name' => $this->containerName,
