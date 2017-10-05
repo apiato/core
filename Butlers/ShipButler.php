@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 /**
  * Class ShipButler
  *
- * Helper Class to serve on the Ship layer.
+ * Helper Class to serve Apiato (Ship/Containers).
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
@@ -197,6 +197,20 @@ class ShipButler
             preg_replace('/(?!^)[[:upper:]]+/', $splitter . '$0', $word));
 
         return $uppercase ? ucwords($word) : $word;
+    }
+
+    /**
+     * @return  mixed
+     */
+    public function getLoginWebPageName()
+    {
+        $loginPage = Config::get('apiato.containers.login-page-url');
+
+        if (is_null($loginPage)) {
+            throw new WrongConfigurationsException();
+        }
+
+        return $loginPage;
     }
 
 }
