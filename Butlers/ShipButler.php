@@ -2,8 +2,11 @@
 
 namespace Apiato\Core\Butlers;
 
+use Apiato\Core\Exceptions\WrongConfigurationsException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Apiato\Core\Exceptions\ClassDoesNotExistException;
+use Apiato\Core\Exceptions\MissingContainerException;
 
 /**
  * Class ShipButler
@@ -213,4 +216,52 @@ class ShipButler
         return $loginPage;
     }
 
+
+    /**
+     * Build namespace for a class in Container.
+     *
+     * @param $containerName
+     * @param $className
+     *
+     * @return  string
+     */
+    public function buildClassFullName($containerName, $className)
+    {
+        return 'App\Containers\\' . $containerName . '\\' . $this->getClassType($className) . 's\\' . $className;
+    }
+
+    /**
+     * Get the last part of a camel case string.
+     * Example input = helloDearWorld | returns = World
+     *
+     * @param $className
+     *
+     * @return  mixed
+     */
+    public function getClassType($className)
+    {
+        $array = preg_split('/(?=[A-Z])/', $className);
+
+        return end($array);
+    }
+
+    /**
+     * @param $containerName
+     */
+    public function verifyContainerExist($containerName)
+    {
+        if(!is_dir(app_path('Containers/' . $containerName))){
+            throw new MissingContainerException("Container ($containerName) is not installed.");
+        }
+    }
+
+    /**
+     * @param $className
+     */
+    public function verifyClassExist($className)
+    {
+        if(!class_exists($className)){
+            throw new ClassDoesNotExistException("Class ($className) is not installed.");
+        }
+    }
 }
