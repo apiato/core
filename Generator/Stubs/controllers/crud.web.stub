@@ -8,12 +8,12 @@ use App\Containers\{{container-name}}\Actions\GetAll{{models}}Action;
 use App\Containers\{{container-name}}\Actions\Get{{model}}ByIdAction;
 use App\Containers\{{container-name}}\Actions\Update{{model}}Action;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
-use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Store{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{models}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Get{{model}}ByIdRequest;
-use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Edit{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Store{{model}}Request;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Edit{{model}}Request;
 use App\Ship\Parents\Controllers\WebController;
 
 /**
@@ -28,7 +28,8 @@ class {{class-name}} extends WebController
      *
      * @param GetAll{{models}}Request $request
      */
-    public function index(GetAll{{models}}Request $request) {
+    public function index(GetAll{{models}}Request $request)
+    {
         ${{entities}} = $this->call(GetAll{{models}}Action::class, [$request]);
 
         // ..
@@ -39,7 +40,8 @@ class {{class-name}} extends WebController
      *
      * @param Get{{model}}ByIdRequest $request
      */
-    public function show(Get{{model}}ByIdRequest $request) {
+    public function show(Get{{model}}ByIdRequest $request)
+    {
         ${{entity}} = $this->call(Get{{model}}ByIdAction::class, [$request]);
 
         // ..
@@ -50,8 +52,9 @@ class {{class-name}} extends WebController
      *
      * @param Create{{model}}Request $request
      */
-    public function create(Create{{model}}Request $request) {
-
+    public function create(Create{{model}}Request $request)
+    {
+        // ..
     }
 
     /**
@@ -59,7 +62,8 @@ class {{class-name}} extends WebController
      *
      * @param Store{{model}}Request $request
      */
-    public function store(Store{{model}}Request $request) {
+    public function store(Store{{model}}Request $request)
+    {
         ${{entity}} = $this->call(Create{{model}}Action::class, [$request]);
 
         // ..
@@ -70,7 +74,8 @@ class {{class-name}} extends WebController
      *
      * @param Edit{{model}}Request $request
      */
-    public function edit(Edit{{model}}Request $request) {
+    public function edit(Edit{{model}}Request $request)
+    {
         ${{entity}} = $this->call(Get{{model}}ByIdAction::class, [$request]);
 
         // ..
@@ -81,7 +86,8 @@ class {{class-name}} extends WebController
      *
      * @param Update{{model}}Request $request
      */
-    public function update(Update{{model}}Request $request) {
+    public function update(Update{{model}}Request $request)
+    {
         ${{entity}} = $this->call(Update{{model}}Action::class, [$request]);
 
         // ..
@@ -92,7 +98,8 @@ class {{class-name}} extends WebController
      *
      * @param Delete{{model}}Request $request
      */
-    public function delete(Delete{{model}}Request $request) {
+    public function delete(Delete{{model}}Request $request)
+    {
          $result = $this->call(Delete{{model}}Action::class, [$request]);
 
          // ..
