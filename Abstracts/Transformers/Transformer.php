@@ -2,8 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Transformers;
 
-use App\Containers\Authentication\Tasks\GetAuthenticatedUserTask;
-use Illuminate\Support\Facades\App;
+use Apiato\Core\Traits\CallableTrait;
 use League\Fractal\TransformerAbstract as FractalTransformer;
 
 /**
@@ -14,12 +13,14 @@ use League\Fractal\TransformerAbstract as FractalTransformer;
 abstract class Transformer extends FractalTransformer
 {
 
+    use CallableTrait;
+
     /**
      * @return  mixed
      */
     public function user()
     {
-        return App::make(GetAuthenticatedUserTask::class)->run();
+        return $this->call('Authentication@GetAuthenticatedUserTask');
     }
 
     /**
@@ -40,16 +41,16 @@ abstract class Transformer extends FractalTransformer
     }
 
     /**
-     * @param mixed $data
+     * @param mixed                       $data
      * @param callable|FractalTransformer $transformer
-     * @param null $resourceKey
+     * @param null                        $resourceKey
      *
      * @return \League\Fractal\Resource\Item
      */
     public function item($data, $transformer, $resourceKey = null)
     {
         // set a default resource key if none is set
-        if(!$resourceKey && $data) {
+        if (!$resourceKey && $data) {
             $resourceKey = $data->getResourceKey();
         }
 
@@ -57,16 +58,16 @@ abstract class Transformer extends FractalTransformer
     }
 
     /**
-     * @param mixed $data
+     * @param mixed                       $data
      * @param callable|FractalTransformer $transformer
-     * @param null $resourceKey
+     * @param null                        $resourceKey
      *
      * @return \League\Fractal\Resource\Collection
      */
     public function collection($data, $transformer, $resourceKey = null)
     {
         // set a default resource key if none is set
-        if(!$resourceKey && $data->isNotEmpty()) {
+        if (!$resourceKey && $data->isNotEmpty()) {
             $obj = $data->first();
             $resourceKey = $obj->getResourceKey();
         }
