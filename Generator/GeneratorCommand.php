@@ -114,7 +114,7 @@ abstract class GeneratorCommand extends Command
     {
         $this->validateGenerator($this);
 
-        $this->containerName = $this->checkParameterOrAsk('container', 'Enter the name of the Container');
+        $this->containerName = ucfirst($this->checkParameterOrAsk('container', 'Enter the name of the Container'));
         $this->fileName = $this->checkParameterOrAsk('file', 'Enter the name of the ' . $this->fileType . ' file', $this->getDefaultFileName());
 
         $this->printStartedMessage($this->containerName, $this->fileName);
