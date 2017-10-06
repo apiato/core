@@ -4,12 +4,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | {{container-name}}
+    | {{container-name}} Container
     |--------------------------------------------------------------------------
     |
-    | This is the configuration file for the {{container-name}} container.
-    | Put any configuration values for this container in this file.
+    |
+    |
     */
-
 
 ];
