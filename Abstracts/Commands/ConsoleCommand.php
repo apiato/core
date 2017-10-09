@@ -3,7 +3,6 @@
 namespace Apiato\Core\Abstracts\Commands;
 
 use Illuminate\Console\Command as LaravelCommand;
-use Illuminate\Support\Facades\App;
 
 /**
  * Class ConsoleCommand
@@ -12,9 +11,12 @@ use Illuminate\Support\Facades\App;
  */
 abstract class ConsoleCommand extends LaravelCommand
 {
+    /**
+     * The type of this controller. This will be accessible mirrored in the Actions.
+     * Giving each Action the ability to modify it's internal business logic based on the UI type that called it.
+     *
+     * @var  string
+     */
+    public $ui = 'cli';
 
-    public function apiatoCall($class, $runArguments = [], $methods = [])
-    {
-        return App::make(Call::class)->call($class, $runArguments, $methods);
-    }
 }
