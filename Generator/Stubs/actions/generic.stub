@@ -9,6 +9,6 @@ class {{class-name}} extends Action
 {
     public function run()
     {
-        // $var = Apiato::call(MyTask::class, [$arg1, $arg2, ...]);
+        // $var = Apiato::call('Container@Task', [$arg1, $arg2, ...]);
     }
 }

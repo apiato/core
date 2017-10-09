@@ -2,11 +2,6 @@
 
 namespace App\Containers\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use App\Containers\{{container-name}}\Actions\Create{{model}}Action;
-use App\Containers\{{container-name}}\Actions\Delete{{model}}Action;
-use App\Containers\{{container-name}}\Actions\GetAll{{models}}Action;
-use App\Containers\{{container-name}}\Actions\Find{{model}}ByIdAction;
-use App\Containers\{{container-name}}\Actions\Update{{model}}Action;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{models}}Request;
@@ -29,7 +24,7 @@ class {{class-name}} extends {{base-controller}}
      */
     public function create{{model}}(Create{{model}}Request $request)
     {
-        ${{entity}} = Apiato::call(Create{{model}}Action::class, [$request]);
+        ${{entity}} = Apiato::call('{{container-name}}@Create{{model}}Action', [$request]);
 
         return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
     }
@@ -40,7 +35,7 @@ class {{class-name}} extends {{base-controller}}
      */
     public function find{{model}}ById(Find{{model}}ByIdRequest $request)
     {
-        ${{entity}} = Apiato::call(Find{{model}}ByIdAction::class, [$request]);
+        ${{entity}} = Apiato::call('{{container-name}}@Find{{model}}ByIdAction', [$request]);
 
         return $this->transform(${{entity}}, {{model}}Transformer::class);
     }
@@ -51,7 +46,7 @@ class {{class-name}} extends {{base-controller}}
      */
     public function getAll{{models}}(GetAll{{models}}Request $request)
     {
-        ${{entities}} = Apiato::call(GetAll{{models}}Action::class, [$request]);
+        ${{entities}} = Apiato::call('{{container-name}}@GetAll{{models}}Action', [$request]);
 
         return $this->transform(${{entities}}, {{model}}Transformer::class);
     }
@@ -62,7 +57,7 @@ class {{class-name}} extends {{base-controller}}
      */
     public function update{{model}}(Update{{model}}Request $request)
     {
-        ${{entity}} = Apiato::call(Update{{model}}Action::class, [$request]);
+        ${{entity}} = Apiato::call('{{container-name}}@Update{{model}}Action', [$request]);
 
         return $this->transform(${{entity}}, {{model}}Transformer::class);
     }
@@ -73,7 +68,7 @@ class {{class-name}} extends {{base-controller}}
      */
     public function delete{{model}}(Delete{{model}}Request $request)
     {
-        $result = Apiato::call(Delete{{model}}Action::class, [$request]);
+        Apiato::call('{{container-name}}@Delete{{model}}Action', [$request]);
 
         return $this->noContent();
     }
