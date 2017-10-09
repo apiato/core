@@ -5,6 +5,7 @@ namespace App\Containers\{{container-name}}\Actions;
 use App\Containers\{{container-name}}\Tasks\Update{{model}}Task;
 use App\Ship\Parents\Actions\Action;
 use App\Ship\Parents\Requests\Request;
+use Apiato\Core\Foundation\Facades\Apiato;
 
 class Update{{model}}Action extends Action
 {
@@ -14,7 +15,7 @@ class Update{{model}}Action extends Action
             // add your request data here
         ]);
 
-        ${{entity}} = $this->call(Update{{model}}Task::class, [$request->id, $data]);
+        ${{entity}} = Apiato::call(Update{{model}}Task::class, [$request->id, $data]);
 
         return ${{entity}};
     }
