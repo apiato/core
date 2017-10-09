@@ -7,4 +7,4 @@ $router->{{http-verb}}('{{endpoint-url}}', [
     'middleware' => [
       'auth:{{auth-middleware}}',
     ],
-])->where('id', '[0-9]+');
+]);
