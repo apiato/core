@@ -36,7 +36,8 @@ trait FileSystemTrait
 
             $this->printErrorMessage($this->fileType . ' already exists');
 
-            exit();
+            // the file does exist - return but NOT exit
+            return;
         }
 
         try {

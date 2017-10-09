@@ -126,13 +126,19 @@ abstract class GeneratorCommand extends Command
         $this->parsedFileName = $this->parseFileStructure($this->nameStructure, $this->userData['file-parameters']);
         $this->filePath = $this->getFilePath($this->parsePathStructure($this->pathStructure, $this->userData['path-parameters']));
 
-        // prepare stub content
-        $this->stubContent = $this->getStubContent();
-        $this->renderedStubContent = $this->parseStubContent($this->stubContent, $this->userData['stub-parameters']);
+        if (! $this->fileSystem->exists($this->filePath)) {
 
-        $this->generateFile($this->filePath, $this->renderedStubContent);
+            // prepare stub content
+            $this->stubContent = $this->getStubContent();
+            $this->renderedStubContent = $this->parseStubContent($this->stubContent, $this->userData['stub-parameters']);
 
-        $this->printFinishedMessage($this->fileType);
+            $this->generateFile($this->filePath, $this->renderedStubContent);
+
+            $this->printFinishedMessage($this->fileType);
+        }
+
+        // exit the command successfully
+        return 0;
     }
 
     /**
