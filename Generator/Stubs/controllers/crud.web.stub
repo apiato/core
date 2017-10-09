@@ -5,12 +5,12 @@ namespace App\Containers\{{container-name}}\UI\{{user-interface}}\Controllers;
 use App\Containers\{{container-name}}\Actions\Create{{model}}Action;
 use App\Containers\{{container-name}}\Actions\Delete{{model}}Action;
 use App\Containers\{{container-name}}\Actions\GetAll{{models}}Action;
-use App\Containers\{{container-name}}\Actions\Get{{model}}ByIdAction;
+use App\Containers\{{container-name}}\Actions\Find{{model}}ByIdAction;
 use App\Containers\{{container-name}}\Actions\Update{{model}}Action;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{models}}Request;
-use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Get{{model}}ByIdRequest;
+use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Find{{model}}ByIdRequest;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Store{{model}}Request;
 use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Edit{{model}}Request;
@@ -38,11 +38,11 @@ class {{class-name}} extends WebController
     /**
      * Show one entity
      *
-     * @param Get{{model}}ByIdRequest $request
+     * @param Find{{model}}ByIdRequest $request
      */
-    public function show(Get{{model}}ByIdRequest $request)
+    public function show(Find{{model}}ByIdRequest $request)
     {
-        ${{entity}} = $this->call(Get{{model}}ByIdAction::class, [$request]);
+        ${{entity}} = $this->call(Find{{model}}ByIdAction::class, [$request]);
 
         // ..
     }
