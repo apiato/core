@@ -3,7 +3,6 @@
 namespace Apiato\Core\Providers;
 
 use Apiato\Core\Abstracts\Providers\MainProvider as AbstractMainProvider;
-use Apiato\Core\Butlers\ContainersButler;
 use Apiato\Core\Butlers\ShipButler;
 use Apiato\Core\Generator\GeneratorsServiceProvider;
 use Apiato\Core\Loaders\AutoLoaderTrait;
@@ -101,7 +100,6 @@ class ApiatoProvider extends AbstractMainProvider
         // Register Core Facade Classes, should not be registered in the alias property above, since they are used
         // by the auto-loading scripts, before the $aliases property is executed.
         $this->app->alias(ShipButler::class, 'ShipButler');
-        $this->app->alias(ContainersButler::class, 'ContainersButler');
     }
 
 }
