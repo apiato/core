@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Loaders;
 
-use Apiato\Core\Butlers\Facades\ShipButler;
+use Apiato\Core\Foundation\Facades\Apiato;
 use File;
 use Illuminate\Support\Collection;
 
@@ -40,7 +40,7 @@ trait SeederLoaderTrait
     {
         $seedersClasses = new Collection();
 
-        foreach (ShipButler::getContainersNames() as $containerName) {
+        foreach (Apiato::getContainersNames() as $containerName) {
 
             $containersDirectories[] = base_path('app/Containers/' . $containerName . $this->seedersPath);
 
@@ -60,7 +60,7 @@ trait SeederLoaderTrait
 //        $seedersClasses = new Collection();
 //
 //        // it has to do it's own loop for now
-//        foreach (ShipButler::getShipFoldersNames() as $portFolderName) {
+//        foreach (Apiato::getShipFoldersNames() as $portFolderName) {
 //
 //            // Need to Loop over that Directory and load the any Seeder file there.
 //            $containersDirectories[] = base_path('app/Ship/Seeders/Tests');
@@ -92,7 +92,7 @@ trait SeederLoaderTrait
 
                         // do not seed the classes now, just store them in a collection and w
                         $seedersClasses->push(
-                            ShipButler::getClassFullNameFromFile(
+                            Apiato::getClassFullNameFromFile(
                                 $seederClass->getPathname())
                         );
                     }

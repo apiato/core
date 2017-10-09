@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Commands;
 
-use Apiato\Core\Butlers\Facades\ShipButler;
+use Apiato\Core\Foundation\Facades\Apiato;
 use App\Ship\Parents\Commands\ConsoleCommand;
 use File;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -46,7 +46,7 @@ class ListActionsCommand extends ConsoleCommand
      */
     public function handle()
     {
-        foreach (ShipButler::getContainersNames() as $containerName) {
+        foreach (Apiato::getContainersNames() as $containerName) {
 
             $this->console->writeln("<fg=yellow> [$containerName]</fg=yellow>");
 
@@ -65,7 +65,7 @@ class ListActionsCommand extends ConsoleCommand
                     $fileName = str_replace('Action.php', '', $fileName);
 
                     // uncamelize the word and replace it with spaces
-                    $fileName = ShipButler::uncamelize($fileName);
+                    $fileName = Apiato::uncamelize($fileName);
 
                     // check if flag exist
                     $includeFileName = '';

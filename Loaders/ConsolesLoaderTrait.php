@@ -3,7 +3,7 @@
 namespace Apiato\Core\Loaders;
 
 use App;
-use Apiato\Core\Butlers\Facades\ShipButler;
+use Apiato\Core\Foundation\Facades\Apiato;
 use File;
 
 /**
@@ -51,7 +51,7 @@ trait ConsolesLoaderTrait
             $files = File::allFiles($directory);
 
             foreach ($files as $consoleFile) {
-                $consoleClass = ShipButler::getClassFullNameFromFile($consoleFile->getPathname());
+                $consoleClass = Apiato::getClassFullNameFromFile($consoleFile->getPathname());
 
                 // when user from the Main Service Provider, which extends Laravel
                 // service provider you get access to `$this->commands`

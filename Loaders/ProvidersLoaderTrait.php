@@ -3,7 +3,7 @@
 namespace Apiato\Core\Loaders;
 
 use App;
-use Apiato\Core\Butlers\Facades\ShipButler;
+use Apiato\Core\Foundation\Facades\Apiato;
 use File;
 
 /**
@@ -45,9 +45,9 @@ trait ProvidersLoaderTrait
                 if (File::isFile($file)) {
 
                     // Check if this is the Main Service Provider
-                    if (ShipButler::stringStartsWith($file->getFilename(), $mainServiceProviderNameStartWith)) {
+                    if (Apiato::stringStartsWith($file->getFilename(), $mainServiceProviderNameStartWith)) {
 
-                        $serviceProviderClass = ShipButler::getClassFullNameFromFile($file->getPathname());
+                        $serviceProviderClass = Apiato::getClassFullNameFromFile($file->getPathname());
 
                         $this->loadProvider($serviceProviderClass);
                     }

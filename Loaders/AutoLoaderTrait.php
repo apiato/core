@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Loaders;
 
-use Apiato\Core\Butlers\Facades\ShipButler;
+use Apiato\Core\Foundation\Facades\Apiato;
 
 /**
  * Class AutoLoaderTrait.
@@ -33,7 +33,7 @@ trait AutoLoaderTrait
         $this->loadConsolesFromShip();
 
         // > iterate over all the containers folders and autoload most of the components
-        foreach (ShipButler::getContainersNames() as $containerName) {
+        foreach (Apiato::getContainersNames() as $containerName) {
             $this->loadConfigsFromContainers($containerName);
             $this->loadLocalsFromContainers($containerName);
             $this->loadOnlyMainProvidersFromContainers($containerName);

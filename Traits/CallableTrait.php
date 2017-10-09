@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
-use Apiato\Core\Butlers\Facades\ShipButler;
+use Apiato\Core\Foundation\Facades\Apiato;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
@@ -52,11 +52,11 @@ trait CallableTrait
             $containerName = $this->capitalizeFirstLetter($parsedClass[0]);
             $className = $parsedClass[1];
 
-            ShipButler::verifyContainerExist($containerName);
+            Apiato::verifyContainerExist($containerName);
 
-            $class = $classFullName = ShipButler::buildClassFullName($containerName, $className);
+            $class = $classFullName = Apiato::buildClassFullName($containerName, $className);
 
-            ShipButler::verifyClassExist($classFullName);
+            Apiato::verifyClassExist($classFullName);
         } else {
             Log::warning('It is recommended to use the apiato caller style (containerName@className) for ' . $class);
         }
@@ -110,7 +110,7 @@ trait CallableTrait
      */
     private function setUIIfExist($class)
     {
-        if (method_exists($class, 'setUI')) {
+        if (method_exists($class, 'setUI') && property_exists($this, 'ui')) {
             $class->setUI($this->ui);
         }
     }

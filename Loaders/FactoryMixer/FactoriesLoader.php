@@ -7,7 +7,7 @@
  * This currently only load factories from containers not form the port as it's not necessary yet!
  */
 
-use Apiato\Core\Butlers\Facades\ShipButler;
+use Apiato\Core\Foundation\Facades\Apiato;
 
 // Default seeders directory in the container
 $containersFactoriesPath = '/Data/Factories/';
@@ -16,7 +16,7 @@ $containersFactoriesPath = '/Data/Factories/';
 // which will be used by Laravel when dealing with Model Factories.
 
 // Checkout the FactoriesLoaderTrait.php trait, to get an idea on how this works.
-foreach (ShipButler::getContainersNames() as $containerName) {
+foreach (Apiato::getContainersNames() as $containerName) {
 
     $containersDirectory = base_path('app/Containers/' . $containerName . $containersFactoriesPath);
 

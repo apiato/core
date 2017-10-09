@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Transformers;
 
-use Apiato\Core\Traits\CallableTrait;
+use Apiato\Core\Foundation\Facades\Apiato;
 use League\Fractal\TransformerAbstract as FractalTransformer;
 
 /**
@@ -13,14 +13,12 @@ use League\Fractal\TransformerAbstract as FractalTransformer;
 abstract class Transformer extends FractalTransformer
 {
 
-    use CallableTrait;
-
     /**
      * @return  mixed
      */
     public function user()
     {
-        return $this->call('Authentication@GetAuthenticatedUserTask');
+        return Apiato::call('Authentication@GetAuthenticatedUserTask');
     }
 
     /**
