@@ -1,15 +1,15 @@
 <?php
 
-namespace Apiato\Core\Butlers\Facades;
+namespace Apiato\Core\Foundation\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class ShipButler
+ * Class Apiato
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-class ShipButler extends Facade
+class Apiato extends Facade
 {
 
     /**
@@ -19,7 +19,7 @@ class ShipButler extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'ShipButler';
+        return 'Apiato';
     }
 
 }

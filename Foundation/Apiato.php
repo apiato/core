@@ -1,22 +1,24 @@
 <?php
 
-namespace Apiato\Core\Butlers;
+namespace Apiato\Core\Foundation;
 
 use Apiato\Core\Exceptions\WrongConfigurationsException;
+use Apiato\Core\Traits\CallableTrait;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Apiato\Core\Exceptions\ClassDoesNotExistException;
 use Apiato\Core\Exceptions\MissingContainerException;
 
 /**
- * Class ShipButler
+ * Class Apiato
  *
  * Helper Class to serve Apiato (Ship/Containers).
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-class ShipButler
+class Apiato
 {
+    use CallableTrait;
 
     /**
      * Get the containers namespace value from the containers config file
