@@ -101,6 +101,9 @@ trait HashIdTrait
 
         // is the current field an array?! we need to process it like crazy
         if($field == '*') {
+            //make sure field value is an array
+            $data = is_array($data) ? $data : [$data];
+
             // process each field of the array (and go down one level!)
             $fields = $data;
             foreach($fields as $key => $value) {
