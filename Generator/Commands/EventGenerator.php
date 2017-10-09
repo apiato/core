@@ -4,7 +4,6 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -80,13 +79,13 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
         if($handler) {
             // we need to generate a corresponding handler
             // so call the other command
-            $status = Artisan::call('apiato:generate:eventhandler', [
-                                    '--container' => $this->containerName,
-                                    '--file' => $this->fileName . 'Handler',
-                                    '--event' => $this->fileName
+            $status = $this->call('apiato:generate:eventhandler', [
+                '--container' => $this->containerName,
+                '--file' => $this->fileName . 'Handler',
+                '--event' => $this->fileName
             ]);
 
-            if($status == 0) {
+            if ($status == 0) {
                 $this->printInfoMessage('The Handler for Event was successfully generated');
             }
             else {

@@ -4,7 +4,6 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
@@ -78,12 +77,12 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
         if($repository) {
             // we need to generate a corresponding repository
             // so call the other command
-            $status = Artisan::call('apiato:generate:repository', [
-                                    '--container' => $this->containerName,
-                                    '--file' => $this->fileName . 'Repository'
+            $status = $this->call('apiato:generate:repository', [
+                '--container' => $this->containerName,
+                '--file' => $this->fileName . 'Repository'
             ]);
 
-            if($status == 0) {
+            if ($status == 0) {
                 $this->printInfoMessage('The Repository was successfully generated');
             }
             else {
