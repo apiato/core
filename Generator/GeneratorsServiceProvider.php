@@ -4,7 +4,9 @@ namespace Apiato\Core\Generator;
 
 use Apiato\Core\Generator\Commands\ActionGenerator;
 use Apiato\Core\Generator\Commands\ConfigurationGenerator;
+use Apiato\Core\Generator\Commands\ContainerApiGenerator;
 use Apiato\Core\Generator\Commands\ContainerGenerator;
+use Apiato\Core\Generator\Commands\ContainerWebGenerator;
 use Apiato\Core\Generator\Commands\ControllerGenerator;
 use Apiato\Core\Generator\Commands\ExceptionGenerator;
 use Apiato\Core\Generator\Commands\JobGenerator;
@@ -52,6 +54,8 @@ class GeneratorsServiceProvider extends ServiceProvider
             ActionGenerator::class,
             ConfigurationGenerator::class,
             ContainerGenerator::class,
+            ContainerApiGenerator::class,
+            ContainerWebGenerator::class,
             ControllerGenerator::class,
             ExceptionGenerator::class,
             JobGenerator::class,
