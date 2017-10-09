@@ -7,7 +7,7 @@ use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Tasks\Task;
 use Exception;
 
-class Get{{model}}ByIdTask extends Task
+class Find{{model}}ByIdTask extends Task
 {
 
     private $repository;

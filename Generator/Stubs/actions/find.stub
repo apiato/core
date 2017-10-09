@@ -2,15 +2,15 @@
 
 namespace App\Containers\{{container-name}}\Actions;
 
-use App\Containers\{{container-name}}\Tasks\Get{{model}}ByIdTask;
+use App\Containers\{{container-name}}\Tasks\Find{{model}}ByIdTask;
 use App\Ship\Parents\Actions\Action;
 use App\Ship\Parents\Requests\Request;
 
-class Get{{model}}ByIdAction extends Action
+class Find{{model}}ByIdAction extends Action
 {
     public function run(Request $request)
     {
-        ${{entity}} = $this->call(Get{{model}}ByIdTask::class, [$request->id]);
+        ${{entity}} = $this->call(Find{{model}}ByIdTask::class, [$request->id]);
 
         return ${{entity}};
     }
