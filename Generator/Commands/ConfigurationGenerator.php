@@ -47,7 +47,7 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
      *
      * @var  string
      */
-    protected $nameStructure = 'container.{file-name}';
+    protected $nameStructure = '{file-name}-container';
 
     /**
      * The name of the stub file.
@@ -92,6 +92,6 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
      */
     public function getDefaultFileName()
     {
-        return 'container.' . Str::lower($this->containerName);
+        return Str::lower($this->containerName);
     }
 }
