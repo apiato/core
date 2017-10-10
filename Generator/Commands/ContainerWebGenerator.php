@@ -275,7 +275,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
 
     public function getDefaultFileExtension()
     {
-        return '.json';
+        return 'json';
     }
 
 }

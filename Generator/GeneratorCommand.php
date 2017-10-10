@@ -164,7 +164,7 @@ abstract class GeneratorCommand extends Command
     {
         // complete the missing parts of the path
         $path = base_path() . '/' .
-                str_replace('\\', '/', self::ROOT . '/' . self::CONTAINER_DIRECTORY_NAME . '/' . $path) . $this->getDefaultFileExtension();
+                str_replace('\\', '/', self::ROOT . '/' . self::CONTAINER_DIRECTORY_NAME . '/' . $path) . '.' . $this->getDefaultFileExtension();
 
         // try to create directory
         $this->createDirectory($path);
@@ -315,7 +315,7 @@ abstract class GeneratorCommand extends Command
      */
     protected function getDefaultFileExtension()
     {
-        return '.php';
+        return 'php';
     }
 
 }

@@ -120,7 +120,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
     public function getDefaultFileExtension()
     {
-        return '.json';
+        return 'json';
     }
 
 
