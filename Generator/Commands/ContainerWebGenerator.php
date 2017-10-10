@@ -83,6 +83,13 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
         $model = $this->containerName;
         $models = Pluralizer::plural($model);
 
+        // add the README file
+        $this->printInfoMessage('Generating README File');
+        $this->call('apiato:generate:readme', [
+            '--container'   => $containerName,
+            '--file'        => 'README',
+        ]);
+
         // create the configuration file
         $this->printInfoMessage('Generating Configuration File');
         $this->call('apiato:generate:configuration', [
