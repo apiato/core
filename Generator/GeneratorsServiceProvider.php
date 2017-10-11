@@ -8,6 +8,8 @@ use Apiato\Core\Generator\Commands\ContainerApiGenerator;
 use Apiato\Core\Generator\Commands\ContainerGenerator;
 use Apiato\Core\Generator\Commands\ContainerWebGenerator;
 use Apiato\Core\Generator\Commands\ControllerGenerator;
+use Apiato\Core\Generator\Commands\EventGenerator;
+use Apiato\Core\Generator\Commands\EventHandlerGenerator;
 use Apiato\Core\Generator\Commands\ExceptionGenerator;
 use Apiato\Core\Generator\Commands\JobGenerator;
 use Apiato\Core\Generator\Commands\MailGenerator;
@@ -57,6 +59,8 @@ class GeneratorsServiceProvider extends ServiceProvider
             ContainerApiGenerator::class,
             ContainerWebGenerator::class,
             ControllerGenerator::class,
+            EventGenerator::class,
+            EventHandlerGenerator::class,
             ExceptionGenerator::class,
             JobGenerator::class,
             MailGenerator::class,
