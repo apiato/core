@@ -5,6 +5,7 @@ namespace Apiato\Core\Generator\Commands;
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -74,6 +75,30 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
     public function getUserInputs()
     {
         $tablename = Str::lower($this->checkParameterOrAsk('tablename', 'Enter the name of the database table'));
+
+        // now we need to check, if there already exists a "default migration file" for this container!
+        // we therefore search for a file that is named "xxxx_xx_xx_xxxxxx_NAME"
+        $exists = false;
+
+        $folder = $this->parsePathStructure($this->pathStructure, ['container-name' => $this->containerName]);
+        $folder = $this->getFilePath($folder);
+        $folder = rtrim($folder, '.php');
+
+        $migrationname = $this->fileName . '.' . $this->getDefaultFileExtension();
+
+        // get the content of this folder
+        $files = File::allFiles($folder);
+        foreach ($files as $file) {
+            if (Str::endsWith($file->getFilename(), $migrationname)) {
+                $exists = true;
+            }
+        }
+
+        if ($exists) {
+            // there exists a basic migration file for this container
+            return null;
+        }
+
 
         return [
             'path-parameters' => [
