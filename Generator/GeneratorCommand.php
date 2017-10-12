@@ -120,7 +120,12 @@ abstract class GeneratorCommand extends Command
         $this->printStartedMessage($this->containerName, $this->fileName);
 
         // get user inputs
-        $this->userData = $this->sanitizeUserData($this->getUserInputs());
+        $this->userData = $this->getUserInputs();
+        if ($this->userData === null) {
+            // the user skipped this step
+            return 0;
+        }
+        $this->userData = $this->sanitizeUserData($this->userData);
 
         // get the actual path of the output file as well as the correct filename
         $this->parsedFileName = $this->parseFileStructure($this->nameStructure, $this->userData['file-parameters']);
@@ -164,7 +169,7 @@ abstract class GeneratorCommand extends Command
     {
         // complete the missing parts of the path
         $path = base_path() . '/' .
-                str_replace('\\', '/', self::ROOT . '/' . self::CONTAINER_DIRECTORY_NAME . '/' . $path) . $this->getDefaultFileExtension();
+                str_replace('\\', '/', self::ROOT . '/' . self::CONTAINER_DIRECTORY_NAME . '/' . $path) . '.' . $this->getDefaultFileExtension();
 
         // try to create directory
         $this->createDirectory($path);
@@ -283,15 +288,15 @@ abstract class GeneratorCommand extends Command
      */
     private function sanitizeUserData($data) {
 
-        if(! array_key_exists('path-parameters', $data)) {
+        if (! array_key_exists('path-parameters', $data)) {
             $data['path-parameters'] = array();
         }
 
-        if(! array_key_exists('stub-parameters', $data)) {
+        if (! array_key_exists('stub-parameters', $data)) {
             $data['stub-parameters'] = array();
         }
 
-        if(! array_key_exists('file-parameters', $data)) {
+        if (! array_key_exists('file-parameters', $data)) {
             $data['file-parameters'] = array();
         }
 
@@ -315,7 +320,7 @@ abstract class GeneratorCommand extends Command
      */
     protected function getDefaultFileExtension()
     {
-        return '.php';
+        return 'php';
     }
 
 }

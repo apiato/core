@@ -5,14 +5,13 @@ namespace Apiato\Core\Generator\Commands;
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class ContainerComposerGenerator
+ * Class ReadmeGenerator
  *
  * @author  Johannes Schobel <johannes.schobel@googlemail.com>
  */
-class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
+class ReadmeGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
     /**
@@ -20,21 +19,21 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:container';
+    protected $name = 'apiato:generate:readme';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a Container for apiato from scratch';
+    protected $description = 'Create a README file for a Container';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $fileType = 'Container';
+    protected $fileType = 'Readme';
 
     /**
      * The structure of the file path.
@@ -55,7 +54,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  string
      */
-    protected $stubName = 'composer.stub';
+    protected $stubName = 'readme.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -64,7 +63,6 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      * @var  array
      */
     public $inputs = [
-        ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
     ];
 
     /**
@@ -72,34 +70,13 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
-        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for this container', ['API', 'WEB', 'BOTH'], 0));
-
-        // containername as inputted and lower
-        $containerName = $this->containerName;
-        $_containerName = Str::lower($this->containerName);
-
-        if ($ui == 'api' || $ui == 'both') {
-            $this->call('apiato:generate:container:api', [
-                '--container'   => $containerName,
-                '--file'        => 'composer',
-            ]);
-        }
-
-        if ($ui == 'web' || $ui == 'both') {
-            $this->call('apiato:generate:container:web', [
-                '--container'   => $containerName,
-                '--file'        => 'composer',
-            ]);
-        }
-
-        $this->printInfoMessage('Generating Composer File');
         return [
             'path-parameters' => [
-                'container-name' => $containerName,
+                'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                '_container-name' => $_containerName,
-                'container-name' => $containerName,
+                '_container-name' => Str::lower($this->containerName),
+                'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
             ],
             'file-parameters' => [
@@ -115,13 +92,11 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getDefaultFileName()
     {
-        return 'composer';
+        return 'README';
     }
 
     public function getDefaultFileExtension()
     {
-        return 'json';
+        return 'md';
     }
-
-
 }
