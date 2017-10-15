@@ -26,7 +26,8 @@
     "barryvdh/laravel-cors": "0.9.*",
     "spatie/laravel-fractal": "5.0.*",
     "vinkla/hashids": "^3.2",
-    "johannesschobel/apiato-container-installer" : "0.*"
+    "johannesschobel/apiato-container-installer" : "0.*",
+    "optimus/heimdal" : "~1.5"
   },
   "require-dev": {
 
