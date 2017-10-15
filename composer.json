@@ -21,12 +21,12 @@
   ],
   "license": "MIT",
   "require": {
+    "apiato/containers-installer" : "1.0.*",
     "guzzlehttp/guzzle": "^6.3",
     "prettus/l5-repository": "^2.6",
     "barryvdh/laravel-cors": "0.9.*",
     "spatie/laravel-fractal": "5.0.*",
     "vinkla/hashids": "^3.2",
-    "johannesschobel/apiato-container-installer" : "0.*",
     "optimus/heimdal" : "~1.5"
   },
   "require-dev": {
