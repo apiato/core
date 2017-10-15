@@ -12,7 +12,7 @@ use App\Ship\Parents\Providers\RoutesProvider;
 use App\Ship\Providers\ShipProvider;
 use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
 use Illuminate\Support\Facades\Schema;
-use Optimus\Heimdal\Provider\LaravelServiceProvider;
+use Optimus\Heimdal\Provider\LaravelServiceProvider as HeimdalExceptionsServiceProvider;
 use Prettus\Repository\Providers\RepositoryServiceProvider;
 use Spatie\Fractal\FractalFacade;
 use Spatie\Fractal\FractalServiceProvider;
@@ -35,13 +35,6 @@ class ApiatoProvider extends AbstractMainProvider
     use ValidationTrait;
 
     /**
-     * The APIATO version.
-     *
-     * @var string
-     */
-    const VERSION = '5.0.0';
-
-    /**
      * Register any Service Providers on the Ship layer (including third party packages).
      *
      * @var array
@@ -52,7 +45,7 @@ class ApiatoProvider extends AbstractMainProvider
         RepositoryServiceProvider::class,
         CorsServiceProvider::class,
         FractalServiceProvider::class,
-        LaravelServiceProvider::class,
+        HeimdalExceptionsServiceProvider::class,
 
         // Internal Apiato Providers:
         RoutesProvider::class, // exceptionally adding the Route Provider, unlike all other providers in the parents.
