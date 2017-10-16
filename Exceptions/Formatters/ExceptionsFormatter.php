@@ -45,22 +45,30 @@ abstract class ExceptionsFormatter extends HeimdalBaseFormatter
         $response->setData($data);
     }
 
+    /**
+     * @param $data
+     * @param $exception
+     *
+     * @return  array
+     */
     private function appendCustomData($data, $exception)
     {
-        $customData = $exception->getCustomData();
+        if (method_exists($exception, 'getCustomData')) {
+            $customData = $exception->getCustomData();
 
-        // no custom data needs to be appended - skip it for now
-        if ($customData === null) {
-            return $data;
+            // no custom data needs to be appended - skip it for now
+            if ($customData === null) {
+                return $data;
+            }
+
+            if (!is_array($customData)) {
+                $customData = ['customData' => $customData];
+            }
+
+            $data = array_merge($data,
+                $customData
+            );
         }
-
-        if (! is_array($customData)) {
-            $customData = ['customData' => $customData];
-        }
-
-        $data = array_merge($data,
-            $customData
-        );
 
         return $data;
     }
