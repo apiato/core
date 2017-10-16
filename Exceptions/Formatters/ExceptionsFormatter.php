@@ -30,6 +30,9 @@ abstract class ExceptionsFormatter extends HeimdalBaseFormatter
         // merge the error response data from the formatter with the response data. Allowing formatters to override values
         $data = array_merge($data, $this->responseData($exception, $response));
 
+        // append customData if needed
+        $data = $this->appendCustomData($data, $exception);
+
         // add debugging data to the response
         $data = $this->appendDebug($data, $exception);
 
@@ -40,6 +43,26 @@ abstract class ExceptionsFormatter extends HeimdalBaseFormatter
         $response->setStatusCode($this->statusCode());
 
         $response->setData($data);
+    }
+
+    private function appendCustomData($data, $exception)
+    {
+        $customData = $exception->getCustomData();
+
+        // no custom data needs to be appended - skip it for now
+        if ($customData === null) {
+            return $data;
+        }
+
+        if (! is_array($customData)) {
+            $customData = ['customData' => $customData];
+        }
+
+        $data = array_merge($data,
+            $customData
+        );
+
+        return $data;
     }
 
     /**

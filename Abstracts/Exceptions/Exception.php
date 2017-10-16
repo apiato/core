@@ -37,6 +37,11 @@ abstract class Exception extends SymfonyHttpException
     protected $environment;
 
     /**
+     * @var mixed
+     */
+    private $customData = null;
+
+    /**
      * Exception constructor.
      *
      * @param null            $message
@@ -65,6 +70,8 @@ abstract class Exception extends SymfonyHttpException
         $this->logTheError($statusCode, $message, $code);
 
         parent::__construct($statusCode, $message, $previous, $headers, $code);
+
+        $this->customData = $this->addCustomData();
     }
 
     /**
@@ -173,6 +180,35 @@ abstract class Exception extends SymfonyHttpException
     private function findStatusCode()
     {
         return property_exists($this, 'httpStatusCode') ? $this->httpStatusCode : Self::DEFAULT_STATUS_CODE;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomData()
+    {
+        return $this->customData;
+    }
+
+    /**
+     * @return void
+     */
+    protected function addCustomData()
+    {
+        $this->customData = null;
+    }
+
+    /**
+     * Append customData to the exception and return the Exception!
+     *
+     * @param $customData
+     *
+     * @return $this
+     */
+    public function overrideCustomData($customData)
+    {
+        $this->customData = $customData;
+        return $this;
     }
 
 }
