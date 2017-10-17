@@ -25,25 +25,28 @@ trait ResponseTrait
     /**
      * @param $data
      * @param null $transformerName
-     * @param array|null $includes
+     * @param array $includes
      * @param array $meta
      * @param null $resourceKey
      *
      * @return array
      */
-    public function transform($data, $transformerName = null, array $includes = null, array $meta = [], $resourceKey = null)
+    public function transform($data, $transformerName = null, array $includes = [], array $meta = [], $resourceKey = null)
     {
         $transformer = new $transformerName;
 
-        // override default includes by the request includes
-        if ($requestIncludes = Request::get('include')) {
-            $includes = explode(',', $requestIncludes);
+        // append the includes from the transform() to the defaultIncludes
+        $includes = array_unique(array_merge($transformer->getDefaultIncludes(), $includes));
+
+        // check if the user wants to include additional relationships
+        if ($requestIncludes = Request::get('include'))
+        {
+            $queryIncludes = explode(',', $requestIncludes);
+            $includes = array_unique(array_merge($includes, $queryIncludes));
         }
 
-        if($includes){
-            $includes = array_unique(array_merge($transformer->getDefaultIncludes(), $includes));
-            $transformer->setDefaultIncludes($includes);
-        }
+        // set the relationships to be included
+        $transformer->setDefaultIncludes($includes);
 
         // add specific meta information to the response message
         $this->metaData = [
@@ -52,21 +55,25 @@ trait ResponseTrait
         ];
 
         // no resource key was set
-        if(!$resourceKey) {
+        if (!$resourceKey)
+        {
             // get the resource key from the model
             $obj = null;
-            if($data instanceof AbstractPaginator) {
+            if ($data instanceof AbstractPaginator)
+            {
                 $obj = $data->getCollection()->first();
             }
-            elseif($data instanceof Collection) {
+            elseif ($data instanceof Collection)
+            {
                 $obj = $data->first();
             }
-            else {
+            else
+            {
                 $obj = $data;
             }
 
             // if we have an object, try to get its resourceKey
-            if($obj) {
+            if ($obj) {
                 $resourceKey = $obj->getResourceKey();
             }
         }
@@ -74,9 +81,12 @@ trait ResponseTrait
         $fractal = Fractal::create($data, $transformer)->withResourceName($resourceKey)->addMeta($this->metaData);
 
         // apply request filters if available in the request
-        if($requestFilters = Request::get('filter')){
+        if ($requestFilters = Request::get('filter'))
+        {
             $result = $this->filterResponse($fractal->toArray(), explode(';', $requestFilters));
-        }else{
+        }
+        else
+        {
             $result = $fractal->toArray();
         }
 
