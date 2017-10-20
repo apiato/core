@@ -82,7 +82,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
 
         $folder = $this->parsePathStructure($this->pathStructure, ['container-name' => $this->containerName]);
         $folder = $this->getFilePath($folder);
-        $folder = rtrim($folder, '.php');
+        $folder = rtrim($folder, $this->parsedFileName . '.' . $this->getDefaultFileExtension());
 
         $migrationname = $this->fileName . '.' . $this->getDefaultFileExtension();
 
@@ -98,7 +98,6 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
             // there exists a basic migration file for this container
             return null;
         }
-
 
         return [
             'path-parameters' => [
@@ -124,7 +123,6 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getDefaultFileName()
     {
-        $date = Carbon::now()->format('Y_m_d_His');
-        return $date . '_' . 'create_' . Str::lower($this->containerName) . '_tables';
+        return 'create_' . Str::lower($this->containerName) . '_tables';
     }
 }
