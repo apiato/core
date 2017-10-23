@@ -78,7 +78,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
         $stub = Str::lower($this->checkParameterOrChoice(
             'stub',
             'Select the Stub you want to load',
-            ['Generic', 'GetAll', 'GetOne', 'Create', 'Update', 'Delete'],
+            ['Generic', 'GetAll', 'Find', 'Create', 'Update', 'Delete'],
             0)
         );
 
