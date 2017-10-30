@@ -25,6 +25,7 @@ use Apiato\Core\Generator\Commands\ServiceProviderGenerator;
 use Apiato\Core\Generator\Commands\SubActionGenerator;
 use Apiato\Core\Generator\Commands\TaskGenerator;
 use Apiato\Core\Generator\Commands\TransformerGenerator;
+use Apiato\Core\Generator\Commands\ValueObjectGenerator;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -77,6 +78,7 @@ class GeneratorsServiceProvider extends ServiceProvider
             SubActionGenerator::class,
             TaskGenerator::class,
             TransformerGenerator::class,
+            ValueObjectGenerator::class,
         ]);
     }
 
