@@ -3,7 +3,6 @@
 namespace Apiato\Core\Abstracts\Exceptions;
 
 use App\Ship\Exceptions\Codes\ErrorCodeManager;
-use App\Ship\Exceptions\Codes\ApplicationErrorCodes;
 use Exception as BaseException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\MessageBag;
@@ -227,7 +226,7 @@ abstract class Exception extends SymfonyHttpException
 
     /**
      * Overrides the code with the application error code (if set)
-     * 
+     *
      * @return int
      */
     private function evaluateErrorCode()
@@ -235,7 +234,7 @@ abstract class Exception extends SymfonyHttpException
         $code = $this->useErrorCode();
 
         if (is_array($code)) {
-            $code = ErrorCodeManager::_getCode($code);
+            $code = ErrorCodeManager::getCode($code);
         }
 
         return $code;
