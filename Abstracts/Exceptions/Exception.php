@@ -2,6 +2,8 @@
 
 namespace Apiato\Core\Abstracts\Exceptions;
 
+use App\Ship\Exceptions\Codes\ErrorCodeManager;
+use App\Ship\Exceptions\Codes\ApplicationErrorCodes;
 use Exception as BaseException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\MessageBag;
@@ -72,6 +74,8 @@ abstract class Exception extends SymfonyHttpException
         parent::__construct($statusCode, $message, $previous, $headers, $code);
 
         $this->customData = $this->addCustomData();
+
+        $this->code = $this->evaluateErrorCode();
     }
 
     /**
@@ -211,4 +215,29 @@ abstract class Exception extends SymfonyHttpException
         return $this;
     }
 
+    /**
+     * Default value
+     *
+     * @return int
+     */
+    public function useErrorCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Overrides the code with the application error code (if set)
+     * 
+     * @return int
+     */
+    private function evaluateErrorCode()
+    {
+        $code = $this->useErrorCode();
+
+        if (is_array($code)) {
+            $code = ErrorCodeManager::_getCode($code);
+        }
+
+        return $code;
+    }
 }
