@@ -30,7 +30,6 @@ class EventJob extends Job
      *
      * @return @void
      */
-
     public function handle()
     {
         $this->handler->handle();
