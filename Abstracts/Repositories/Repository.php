@@ -41,8 +41,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         $fullName = get_called_class();
         $className = substr($fullName, strrpos($fullName, '\\') + 1);
         $classOnly = str_replace('Repository', '', $className);
-        $container = isset($this->container) ? $this->container : $classOnly;
-        $modelNamespace = 'App\Containers\\' . $container . '\\Models\\' . $classOnly;
+        $modelNamespace = 'App\Containers\\' . $this->getCurrentContainer() . '\\Models\\' . $classOnly;
 
         return $modelNamespace;
     }
@@ -80,6 +79,11 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         }
 
         return parent::paginate($limit, $columns, $method);
+    }
+
+    private function getCurrentContainer(): string
+    {
+        return substr(str_replace("App\\Containers\\", "", get_called_class()), 0, strpos(str_replace("App\\Containers\\", "", get_called_class()), '\\'));
     }
 
 }
