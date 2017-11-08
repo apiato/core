@@ -55,7 +55,7 @@ abstract class Request extends LaravelRequest
     public function hasAccess(User $user = null)
     {
         // if not in parameters, take from the request object {$this}
-        $user = $user ? : $this->user();
+        $user = $user ?: $this->user();
 
         if ($user) {
             $autoAccessRoles = Config::get('apiato.requests.allow-roles-to-access-all-routes');
@@ -92,11 +92,11 @@ abstract class Request extends LaravelRequest
     /**
      * To be used mainly from unit tests.
      *
-     * @param array                                 $parameters
+     * @param array $parameters
      * @param \App\Containers\User\Models\User|null $user
-     * @param array                                 $cookies
-     * @param array                                 $files
-     * @param array                                 $server
+     * @param array $cookies
+     * @param array $files
+     * @param array $server
      *
      * @return  static
      */
@@ -110,7 +110,13 @@ abstract class Request extends LaravelRequest
         }
 
         // For now doesn't matter which URI or Method is used.
-        return parent::create('/', 'GET', $parameters, $cookies, $files, $server);
+        $request = parent::create('/', 'GET', $parameters, $cookies, $files, $server);
+
+        $request->setUserResolver(function () use ($user) {
+            return $user;
+        });
+
+        return $request;
     }
 
     /**
