@@ -5,12 +5,14 @@ namespace Apiato\Core\Abstracts\Events\Dispatcher;
 use Apiato\Core\Abstracts\Events\Interfaces\ShouldHandle;
 use Apiato\Core\Abstracts\Events\Interfaces\ShouldHandleNow;
 use Apiato\Core\Abstracts\Events\Jobs\EventJob;
+use \Illuminate\Foundation\Bus\PendingDispatch as JobDispatcher;
+use \Illuminate\Events\Dispatcher as EventDispatcher;
 
 /**
  * Created by PhpStorm.
  * User: arthur Devious
  */
-class Dispatcher extends \Illuminate\Events\Dispatcher
+class Dispatcher extends EventDispatcher
 {
     public function dispatch($event, $payload = [], $halt = false)
     {
@@ -18,7 +20,7 @@ class Dispatcher extends \Illuminate\Events\Dispatcher
             $job = new EventJob($event);
             $job = isset($event->jobDelay) ? $job->delay($event->jobDelay) : $job;
             $job = isset($event->jobQueue) ? $job->onQueue($event->jobQueue) : $job;
-            new Dispatcher($job);
+            new JobDispatcher($job);
         } else if ($event instanceof ShouldHandleNow) {
             $event->handle();
         }

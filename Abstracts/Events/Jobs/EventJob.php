@@ -3,7 +3,7 @@
 namespace Apiato\Core\Abstracts\Events\Jobs;
 
 use Apiato\Core\Abstracts\Events\Interfaces\ShouldHandle;
-use App\Ship\Parents\Jobs\Job;
+use Apiato\Core\Abstracts\Jobs\Job;
 
 /**
  * Class EventJob
