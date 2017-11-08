@@ -8,6 +8,7 @@ use Apiato\Core\Generator\GeneratorsServiceProvider;
 use Apiato\Core\Loaders\AutoLoaderTrait;
 use Apiato\Core\Loaders\FactoriesLoaderTrait;
 use Apiato\Core\Traits\ValidationTrait;
+use Apiato\Core\Abstracts\Events\Providers\EventServiceProvider;
 use App\Ship\Parents\Providers\RoutesProvider;
 use App\Ship\Providers\ShipProvider;
 use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
@@ -48,6 +49,7 @@ class ApiatoProvider extends AbstractMainProvider
         HeimdalExceptionsServiceProvider::class,
 
         // Internal Apiato Providers:
+        EventServiceProvider::class, //The custom apiato eventserviceprovider
         RoutesProvider::class, // exceptionally adding the Route Provider, unlike all other providers in the parents.
         ShipProvider::class, // the ShipProvider for the Ship third party packages.
         GeneratorsServiceProvider::class, // the code generator provider.
