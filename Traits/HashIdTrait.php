@@ -4,7 +4,9 @@ namespace Apiato\Core\Traits;
 
 use App\Ship\Exceptions\IncorrectIdException;
 use Illuminate\Support\Facades\Config;
+use function is_null;
 use Route;
+use function strtolower;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -174,10 +176,17 @@ trait HashIdTrait
      */
     public function decode($id, $parameter = null)
     {
+        // check if passed as null, (could be an optional decodable variable)
+        if(is_null($id) || strtolower($id) == 'null'){
+            return $id;
+        }
+
+        // check if is a number, to throw exception, since hashed ID should not be a number
         if (is_numeric($id)) {
             throw new IncorrectIdException('Only Hashed ID\'s allowed' . (!is_null($parameter) ? " ($parameter)." : '.'));
         }
 
+        // do the decoding if the ID looks like a hashed one
         return empty($this->decoder($id)) ? [] : $this->decoder($id)[0];
     }
 
