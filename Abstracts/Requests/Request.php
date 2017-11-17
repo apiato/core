@@ -149,6 +149,34 @@ abstract class Request extends LaravelRequest
     }
 
     /**
+     * Maps Keys in the Request.
+     *
+     * For example, ['data.attributes.name' => 'firstname'] would map the field [data][attributes][name] to [firstname].
+     * Note that the old value (data.attributes.name) is removed the original request - this method manipulates the request!
+     * Be sure you know what you do!
+     *
+     * @param array $fields
+     */
+    public function mapInput(array $fields)
+    {
+        $data = $this->all();
+
+        foreach ($fields as $oldKey => $newKey) {
+            // the key to be mapped does not exist - skip it
+            if (!array_has($data, $oldKey)) {
+                continue;
+            }
+
+            // set the new field and remove the old one
+            array_set($data, $newKey, array_get($data, $oldKey));
+            array_forget($data, $oldKey);
+        }
+
+        // overwrite the initial request
+        $this->replace($data);
+    }
+
+    /**
      * Recursively intersects 2 arrays based on their keys.
      *
      * @param array $a first array (that keeps the values)
