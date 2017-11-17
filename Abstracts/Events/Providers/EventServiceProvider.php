@@ -3,6 +3,7 @@
 namespace Apiato\Core\Abstracts\Events\Providers;
 
 use Apiato\Core\Abstracts\Events\Dispatcher\Dispatcher;
+use Illuminate\Contracts\Queue\Factory as QueueFactoryContract;
 
 /**
  * Created by PhpStorm.
