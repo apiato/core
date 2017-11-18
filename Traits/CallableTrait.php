@@ -122,10 +122,18 @@ trait CallableTrait
     private function callExtraMethods($class, $methods)
     {
         // allows calling other methods in the class before calling the main `run` function.
-        foreach ($methods as $methodName => $arguments) {
+        foreach ($methods as $methodInfo) {
+
+            $methodName = $methodInfo;
+            // if $methodInfo is an array means we are passing arguments
+            if(is_array($methodInfo)) {
+                $arguments = $methodInfo;
+
+                $methodName = array_search($arguments, $methods);
+            }
 
             //make sure arguments is an array
-            $arguments = is_array($arguments) ? $arguments : [$arguments];
+            $arguments = isset($arguments) ? $arguments : [];
 
             $this->callMethod($class, $methodName, $arguments);
         }
