@@ -123,31 +123,37 @@ trait CallableTrait
     {
         // allows calling other methods in the class before calling the main `run` function.
         foreach ($methods as $methodInfo) {
-
-            $methodName = $methodInfo;
-            // if $methodInfo is an array means we are passing arguments
-            if(is_array($methodInfo)) {
-                $arguments = $methodInfo;
-
-                $methodName = array_search($arguments, $methods);
+            // if is array means it method has arguments
+            if (is_array($methodInfo)) {
+                $this->callWithArguments($class, $methodInfo);
+            } else {
+                // if is string means it's just the method name without arguments
+                $this->callWithoutArguments($class, $methodInfo);
             }
-
-            //make sure arguments is an array
-            $arguments = isset($arguments) ? $arguments : [];
-
-            $this->callMethod($class, $methodName, $arguments);
         }
     }
 
     /**
      * @param $class
-     * @param $method
-     * @param $arguments
+     * @param $methodInfo
      */
-    private function callMethod($class, $method, $arguments)
+    private function callWithArguments($class, $methodInfo)
     {
+        $method = key($methodInfo);
+        $arguments = $methodInfo[$method];
         if (method_exists($class, $method)) {
             $class->$method(...$arguments);
+        }
+    }
+
+    /**
+     * @param $class
+     * @param $methodInfo
+     */
+    private function callWithoutArguments($class, $methodInfo)
+    {
+        if (method_exists($class, $methodInfo)) {
+            $class->$methodInfo();
         }
     }
 
