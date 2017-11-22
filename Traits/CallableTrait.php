@@ -58,7 +58,7 @@ trait CallableTrait
 
             Apiato::verifyClassExist($classFullName);
         } else {
-            Log::warning('It is recommended to use the apiato caller style (containerName@className) for ' . $class);
+            Log::debug('It is recommended to use the apiato caller style (containerName@className) for ' . $class);
         }
 
         return App::make($class);
