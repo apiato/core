@@ -74,7 +74,7 @@ trait TestsRequestHelperTrait
      * @param array $data
      * @param array $headers
      *
-     * @return  mixed
+     * @return  mixed|\Illuminate\Foundation\Testing\TestResponse
      */
     public function makeCall(array $data = [], array $headers = [])
     {
@@ -109,7 +109,7 @@ trait TestsRequestHelperTrait
     /**
      * @param $httpResponse
      *
-     * @return  mixed
+     * @return  \Illuminate\Foundation\Testing\TestResponse
      */
     public function setResponseObjectAndContent($httpResponse)
     {
