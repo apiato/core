@@ -74,7 +74,9 @@ trait TestsRequestHelperTrait
      * @param array $data
      * @param array $headers
      *
-     * @return  mixed
+     * @throws \App\Ship\Exceptions\UndefinedMethodException
+     * 
+     * @return \Illuminate\Foundation\Testing\TestResponse
      */
     public function makeCall(array $data = [], array $headers = [])
     {
@@ -109,7 +111,7 @@ trait TestsRequestHelperTrait
     /**
      * @param $httpResponse
      *
-     * @return  mixed
+     * @return  \Illuminate\Foundation\Testing\TestResponse
      */
     public function setResponseObjectAndContent($httpResponse)
     {
