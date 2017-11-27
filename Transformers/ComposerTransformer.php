@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Containers\Application\UI\CLI\Transformers;
+namespace Apiato\Core\Transformers;
 
-use App\Ship\Parents\Transformers\Transformer;
+
+use Apiato\Core\Abstracts\Transformers\Transformer;
 use stdClass;
 
 

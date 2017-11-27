@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Containers\Application\UI\CLI\Commands;
 
-
-use App\Containers\Application\UI\CLI\Transformers\ComposerTransformer;
+use Apiato\Core\Transformers\ComposerTransformer;
 use App\Ship\Parents\Commands\ConsoleCommand;
 use Dotenv\Exception\InvalidPathException;
 use Exception;
