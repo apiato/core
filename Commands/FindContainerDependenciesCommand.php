@@ -19,7 +19,7 @@ use Spatie\Fractalistic\ArraySerializer;
  * It supports both $this->call(PATH/TO/FILE,... (by parsing imports)
  * as well as $Apiato::call('CONTAINER@FUNC',[args]...
  *
- * @author Fabian Widmann <fabian.widmann@uni-ulm.de>
+ * @author Fabian Widmann <fabian.widmann@gmail.com>
  */
 class FindContainerDependenciesCommand extends ConsoleCommand
 {
