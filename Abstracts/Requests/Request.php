@@ -273,7 +273,8 @@ abstract class Request extends LaravelRequest
             return [];
         }
 
-        $permissions = explode('|', $this->access['permissions']);
+        $permissions = is_array($this->access['permissions']) ? $this->access['permissions'] :
+            explode('|', $this->access['permissions']);
 
         $hasAccess = array_map(function ($permission) use ($user) {
             // Note: internal return
@@ -294,7 +295,8 @@ abstract class Request extends LaravelRequest
             return [];
         }
 
-        $roles = explode('|', $this->access['roles']);
+        $roles = is_array($this->access['roles']) ? $this->access['roles'] :
+            explode('|', $this->access['roles']);
 
         $hasAccess = array_map(function ($role) use ($user) {
             // Note: internal return
