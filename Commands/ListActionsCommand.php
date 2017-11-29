@@ -20,7 +20,7 @@ class ListActionsCommand extends ConsoleCommand
      *
      * @var string
      */
-    protected $signature = "apiato:actions {--withfilename}";
+    protected $signature = "apiato:list:actions {--withfilename}";
 
     /**
      * The console command description.
