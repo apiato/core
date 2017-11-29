@@ -32,7 +32,7 @@ trait HashIdTrait
      *
      * @param null $field The field of the model to be hashed
      *
-     * @return  mixed|null
+     * @return  mixed
      */
     public function getHashedKey($field = null)
     {
