@@ -64,6 +64,9 @@ class ListActionsCommand extends ConsoleCommand
                     // remove the Action.php postfix from each file name
                     $fileName = str_replace('Action.php', '', $fileName);
 
+                    // further, remove the `.php', if the file does not end on 'Action.php'
+                    $fileName = str_replace('.php', '', $fileName);
+
                     // uncamelize the word and replace it with spaces
                     $fileName = Apiato::uncamelize($fileName);
 
