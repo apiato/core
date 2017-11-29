@@ -36,7 +36,7 @@ trait HashIdTrait
     {
         // hash the ID only if hash-id enabled in the config
         if (Config::get('apiato.hash-id')) {
-            return $this->encoder(($key) ? : $this->getKey());
+            return $this->encoder(($key) ? $this->$key : $this->getKey());
         }
 
         return $this->getKey();
