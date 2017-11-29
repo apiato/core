@@ -26,17 +26,27 @@ trait HashIdTrait
     ];
 
     /**
+     * Hashes the value of a field (e.g., ID)
+     *
      * Will be used by the Eloquent Models (since it's used as trait there).
      *
-     * @param null $key
+     * @param null $field The field of the model to be hashed
      *
      * @return  mixed
      */
-    public function getHashedKey($key = null)
+    public function getHashedKey($field = null)
     {
         // hash the ID only if hash-id enabled in the config
         if (Config::get('apiato.hash-id')) {
-            return $this->encoder(($key) ? : $this->getKey());
+
+            // if no key is set, use the default key name (i.e., id)
+            if ($field === null) {
+                $field = $this->getKeyName();
+            }
+
+            // we need to get the VALUE for this KEY (model field)
+            $value = $this->getAttribute($field);
+            return $this->encoder($value);
         }
 
         return $this->getKey();
