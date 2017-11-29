@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-class ListActionsCommand extends ConsoleCommand
+class ListTasksCommand extends ConsoleCommand
 {
 
     /**
@@ -20,14 +20,14 @@ class ListActionsCommand extends ConsoleCommand
      *
      * @var string
      */
-    protected $signature = "apiato:actions {--withfilename}";
+    protected $signature = "apiato:list:tasks {--withfilename}";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = "List all Actions in the Application.";
+    protected $description = "List all Tasks in the Application.";
 
     /**
      * ListActionsCommand constructor.
@@ -50,7 +50,7 @@ class ListActionsCommand extends ConsoleCommand
 
             $this->console->writeln("<fg=yellow> [$containerName]</fg=yellow>");
 
-            $directory = base_path('app/Containers/' . $containerName . '/Actions');
+            $directory = base_path('app/Containers/' . $containerName . '/Tasks');
 
             if (File::isDirectory($directory)) {
 
@@ -61,10 +61,10 @@ class ListActionsCommand extends ConsoleCommand
                     // get the file name as is
                     $fileName = $originalFileName = $action->getFilename();
 
-                    // remove the Action.php postfix from each file name
-                    $fileName = str_replace('Action.php', '', $fileName);
+                    // remove the Task.php postfix from each file name
+                    $fileName = str_replace('Task.php', '', $fileName);
 
-                    // further, remove the `.php', if the file does not end on 'Action.php'
+                    // further, remove the `.php', if the file does not end on 'Task.php'
                     $fileName = str_replace('.php', '', $fileName);
 
                     // uncamelize the word and replace it with spaces
