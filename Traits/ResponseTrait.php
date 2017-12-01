@@ -38,13 +38,6 @@ trait ResponseTrait
         // append the includes from the transform() to the defaultIncludes
         $includes = array_unique(array_merge($transformer->getDefaultIncludes(), $includes));
 
-        // check if the user wants to include additional relationships
-        if ($requestIncludes = Request::get('include'))
-        {
-            $queryIncludes = explode(',', $requestIncludes);
-            $includes = array_unique(array_merge($includes, $queryIncludes));
-        }
-
         // set the relationships to be included
         $transformer->setDefaultIncludes($includes);
 
@@ -79,6 +72,11 @@ trait ResponseTrait
         }
 
         $fractal = Fractal::create($data, $transformer)->withResourceName($resourceKey)->addMeta($this->metaData);
+        // check if the user wants to include additional relationships
+        if ($requestIncludes = Request::get('include'))
+        {
+            $fractal->parseIncludes($requestIncludes);
+        }
 
         // apply request filters if available in the request
         if ($requestFilters = Request::get('filter'))
