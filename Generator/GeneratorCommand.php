@@ -90,8 +90,8 @@ abstract class GeneratorCommand extends Command
     private $fileSystem;
 
     private $defaultInputs = [
-        ['container', 'c', InputOption::VALUE_OPTIONAL, 'The name of the container'],
-        ['file', 'f', InputOption::VALUE_OPTIONAL, 'The name of the file'],
+        ['container', null, InputOption::VALUE_OPTIONAL, 'The name of the container'],
+        ['file', null, InputOption::VALUE_OPTIONAL, 'The name of the file'],
     ];
 
     /**
@@ -108,6 +108,7 @@ abstract class GeneratorCommand extends Command
 
     /**
      * @void
+     *
      * @throws \Apiato\Core\Generator\Exceptions\GeneratorErrorException
      */
     public function handle()
@@ -265,6 +266,13 @@ abstract class GeneratorCommand extends Command
         return $value;
     }
 
+    /**
+     * @param      $param
+     * @param      $question
+     * @param bool $default
+     *
+     * @return mixed
+     */
     protected function checkParameterOrConfirm($param, $question, $default = false)
     {
         // check if we have already have a param set
