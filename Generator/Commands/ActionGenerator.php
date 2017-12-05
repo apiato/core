@@ -60,7 +60,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
-     * This is a replacement of the `getArguments` function "which reads whenever it's called".
+     * This is a replacement of the `getArguments` function "which reads from the console whenever it's called".
      *
      * @var  array
      */
@@ -70,7 +70,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
     ];
 
     /**
-     * urn mixed|void
+     * @return array
      */
     public function getUserInputs()
     {
