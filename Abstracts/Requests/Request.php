@@ -127,7 +127,7 @@ abstract class Request extends LaravelRequest
 
         return $request;
     }
-i
+
 
     /**
      * Maps Keys in the Request.
