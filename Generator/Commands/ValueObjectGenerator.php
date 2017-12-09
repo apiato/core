@@ -6,7 +6,6 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ValueObjectGenerator
@@ -21,28 +20,28 @@ class ValueObjectGenerator extends GeneratorCommand implements ComponentsGenerat
      *
      * @var string
      */
-    protected $name = 'apiato:generate:valueobject';
+    protected $name = 'apiato:generate:value';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new ValueObject class';
+    protected $description = 'Create a new Value class';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $fileType = 'ValueObject';
+    protected $fileType = 'Value';
 
     /**
      * The structure of the file path.
      *
      * @var  string
      */
-    protected $pathStructure = '{container-name}/ValueObjects/*';
+    protected $pathStructure = '{container-name}/Values/*';
 
     /**
      * The structure of the file name.
@@ -56,7 +55,7 @@ class ValueObjectGenerator extends GeneratorCommand implements ComponentsGenerat
      *
      * @var  string
      */
-    protected $stubName = 'valueobject.stub';
+    protected $stubName = 'value.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -90,7 +89,7 @@ class ValueObjectGenerator extends GeneratorCommand implements ComponentsGenerat
 
     public function getDefaultFileName()
     {
-        return 'DefaultValueObject';
+        return 'DefaultValue';
     }
 
 }
