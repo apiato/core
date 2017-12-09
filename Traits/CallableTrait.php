@@ -2,6 +2,8 @@
 
 namespace Apiato\Core\Traits;
 
+use Apiato\Core\Abstracts\Requests\Request;
+use Apiato\Core\Abstracts\Transporters\Transporter;
 use Apiato\Core\Foundation\Facades\Apiato;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +34,9 @@ trait CallableTrait
 
         $this->callExtraMethods($class, $methods);
 
-        return $class->run(...$runArguments);
+        $convertedRunArguments = $this->convertRequestsToTransporters($class, $runArguments);
+
+        return $class->run(...$convertedRunArguments);
     }
 
     /**
@@ -155,6 +159,75 @@ trait CallableTrait
         if (method_exists($class, $methodInfo)) {
             $class->$methodInfo();
         }
+    }
+
+    /**
+     * @param string $class
+     * @param array  $runArguments
+     *
+     * @return array
+     */
+    private function convertRequestsToTransporters($class, array $runArguments = [])
+    {
+        $requestPositions = [];
+
+        // we first check, if one of the params is a REQUEST type
+        foreach ($runArguments as $callerPosition => $callerValue) {
+            if ($callerValue instanceof Request) {
+                $requestPositions[] = $callerPosition;
+            }
+        }
+
+        // now check, if we have found any REQUEST params
+        if ($requestPositions == []) {
+            // We have not found any REQUEST params, so we don't need to transform anything.
+            // Just return the runArguments and we are ready...
+            return $runArguments;
+        }
+
+        // ok.. now we need to get the method signature from the run() method to be called on the $class
+        // and check, if on the positions we found REQUESTs are TRANSPORTERs defined!
+        // this is a bit more tricky than the stuff above - but we will manage this
+
+        // get a reflector for the run() method
+        $reflector = new \ReflectionMethod($class, 'run');
+        $calleeParameters = $reflector->getParameters();
+
+        // now specifically check only the positions we have found a REQUEST in the call() method
+        foreach ($requestPositions as $requestPosition) {
+            $parameter = $calleeParameters[$requestPosition];
+            $parameterClass = $parameter->getClass();
+
+            // check if the parameter has a class and this class actually does exist!
+            if (!(($parameterClass != null) && (class_exists($parameterClass->name)))) {
+                // no, some tests failed - we cannot convert - skip this entry
+                continue;
+            }
+
+            // and now, we finally need to check, if the class of this param is a subclass of TRANSPORTER
+            // Note that we cannot use instanceof here, but rather need to rely on is_subclass_of instead
+            $parameterClassName = $parameterClass->name;
+            if (! is_subclass_of($parameterClassName, Transporter::class)) {
+                // the class is NOT a subclass of TRANSPORTER
+                continue;
+            }
+
+            // so everything is ok
+            // now we need to "switch" the REQUEST with the TRANSPORTER
+            /** @var Request $request */
+            $request = $runArguments[$requestPosition];
+            $transporterClass = $request->getTransporter();
+            /** @var Transporter $transporter */
+            $transporter = new $transporterClass;
+
+            // "copy" everything from the request to the transporter
+            $transporter->hydrate($request->all());
+
+            // and now "replace" the request with this transporter
+            $runArguments[$requestPosition] = $transporter;
+        }
+
+        return $runArguments;
     }
 
 }
