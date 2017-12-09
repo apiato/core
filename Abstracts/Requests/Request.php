@@ -2,9 +2,9 @@
 
 namespace Apiato\Core\Abstracts\Requests;
 
-use Apiato\Core\Abstracts\Transporters\Transporter;
 use Apiato\Core\Exceptions\UndefinedTransporterException;
 use Apiato\Core\Traits\HashIdTrait;
+use Apiato\Core\Traits\SanitizerTrait;
 use Apiato\Core\Traits\StateKeeperTrait;
 use App;
 use App\Containers\Authentication\Tasks\GetAuthenticatedUserTask;
@@ -24,6 +24,7 @@ abstract class Request extends LaravelRequest
 
     use HashIdTrait;
     use StateKeeperTrait;
+    use SanitizerTrait;
 
     /**
      * The transporter to be "casted" to
@@ -126,35 +127,7 @@ abstract class Request extends LaravelRequest
 
         return $request;
     }
-
-    /**
-     * Sanitizes the data of a request. This is a superior version of php built-in array_filter() as it preserves
-     * FALSE and NULL values as well.
-     *
-     * @param array $fields a list of fields to be checked in the Dot-Notation (e.g., ['data.name', 'data.description'])
-     *
-     * @return array an array containing the values if the field was present in the request and the intersection array
-     */
-    public function sanitizeInput(array $fields)
-    {
-        // get all request data
-        $data = $this->all();
-
-        $search = [];
-        foreach ($fields as $field) {
-            // create a multidimensional array based on $fields
-            // which was submitted as DOT notation (e.g., data.name)
-            array_set($search, $field, true);
-        }
-
-        // check, if the keys exist in both arrays
-        $data = $this->recursive_array_intersect_key(
-            $data,
-            $search
-        );
-
-        return $data;
-    }
+i
 
     /**
      * Maps Keys in the Request.
@@ -182,27 +155,6 @@ abstract class Request extends LaravelRequest
 
         // overwrite the initial request
         $this->replace($data);
-    }
-
-    /**
-     * Recursively intersects 2 arrays based on their keys.
-     *
-     * @param array $a first array (that keeps the values)
-     * @param array $b second array to be compared with
-     *
-     * @return array an array containing all keys that are present in $a and $b. Only values from $a are returned
-     */
-    private function recursive_array_intersect_key(array $a, array $b)
-    {
-        $a = array_intersect_key($a, $b);
-
-        foreach ($a as $key => &$value) {
-            if (is_array($value) && is_array($b[$key])) {
-                $value = $this->recursive_array_intersect_key($value, $b[$key]);
-            }
-        }
-
-        return $a;
     }
 
     /**
