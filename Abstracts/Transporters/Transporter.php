@@ -3,6 +3,7 @@
 namespace Apiato\Core\Abstracts\Transporters;
 
 use Dto\Dto;
+use Illuminate\Support\Str;
 
 /**
  * Class Transporter
@@ -11,6 +12,29 @@ use Dto\Dto;
  */
 abstract class Transporter extends Dto
 {
+
+    /**
+     * Override the __GET function in order to directly return the "raw value" (e.g., the containing string) of a field
+     *
+     * @param $name
+     *
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        // first, check if the field exists, otherwise return null (like the default laravel behavior)
+        if (! $this->exists($name)) {
+            return null;
+        }
+
+        $field = parent::__get($name);
+        $type = $field->getStorageType();
+
+        $value = call_user_func([$field, 'to' . Str::ucfirst($type)]);
+
+        return $value;
+    }
+
     /**
      * This method mimics the $request->input() method but works on the "decoded" values
      *
