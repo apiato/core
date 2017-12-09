@@ -2,6 +2,8 @@
 
 namespace Apiato\Core\Abstracts\Requests;
 
+use Apiato\Core\Abstracts\Transporters\Transporter;
+use Apiato\Core\Exceptions\UndefinedTransporterException;
 use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\StateKeeperTrait;
 use App;
@@ -23,6 +25,12 @@ abstract class Request extends LaravelRequest
     use HashIdTrait;
     use StateKeeperTrait;
 
+    /**
+     * The transporter to be "casted" to
+     *
+     * @var null
+     */
+    protected $transporter = null;
 
     /**
      * Overriding this function to modify the any user input before
@@ -317,6 +325,21 @@ abstract class Request extends LaravelRequest
     public function getInputByKey($key = null, $default = null)
     {
         return data_get($this->all(), $key, $default);
+    }
+
+    /**
+     * Returns the Transporter (if correctly set)
+     *
+     * @return string
+     * @throws UndefinedTransporterException
+     */
+    public function getTransporter()
+    {
+        if ($this->transporter == null) {
+            throw new UndefinedTransporterException();
+        }
+
+        return $this->transporter;
     }
 
 }

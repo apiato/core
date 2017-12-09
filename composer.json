@@ -27,7 +27,8 @@
     "barryvdh/laravel-cors": "0.9.*",
     "spatie/laravel-fractal": "5.0.*",
     "vinkla/hashids": "^3.2",
-    "optimus/heimdal" : "~1.5"
+    "optimus/heimdal" : "~1.5",
+    "dto/dto" : "^3.2"
   },
   "require-dev": {
 
