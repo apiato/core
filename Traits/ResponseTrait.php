@@ -23,16 +23,22 @@ trait ResponseTrait
     protected $metaData = [];
 
     /**
-     * @param $data
-     * @param null $transformerName
+     * @param       $data
+     * @param null  $transformerName
      * @param array $includes
      * @param array $meta
-     * @param null $resourceKey
+     * @param null  $resourceKey
      *
      * @return array
      */
-    public function transform($data, $transformerName = null, array $includes = [], array $meta = [], $resourceKey = null)
-    {
+    public function transform(
+        $data,
+        $transformerName = null,
+        array $includes = [],
+        array $meta = [],
+        $resourceKey = null
+    ) {
+        // create instance of the transformer
         $transformer = new $transformerName;
 
         // append the includes from the transform() to the defaultIncludes
@@ -44,24 +50,18 @@ trait ResponseTrait
         // add specific meta information to the response message
         $this->metaData = [
             'include' => $transformer->getAvailableIncludes(),
-            'custom' => $meta,
+            'custom'  => $meta,
         ];
 
         // no resource key was set
-        if (!$resourceKey)
-        {
+        if (!$resourceKey) {
             // get the resource key from the model
             $obj = null;
-            if ($data instanceof AbstractPaginator)
-            {
+            if ($data instanceof AbstractPaginator) {
                 $obj = $data->getCollection()->first();
-            }
-            elseif ($data instanceof Collection)
-            {
+            } elseif ($data instanceof Collection) {
                 $obj = $data->first();
-            }
-            else
-            {
+            } else {
                 $obj = $data;
             }
 
@@ -73,18 +73,14 @@ trait ResponseTrait
 
         $fractal = Fractal::create($data, $transformer)->withResourceName($resourceKey)->addMeta($this->metaData);
         // check if the user wants to include additional relationships
-        if ($requestIncludes = Request::get('include'))
-        {
+        if ($requestIncludes = Request::get('include')) {
             $fractal->parseIncludes($requestIncludes);
         }
 
         // apply request filters if available in the request
-        if ($requestFilters = Request::get('filter'))
-        {
+        if ($requestFilters = Request::get('filter')) {
             $result = $this->filterResponse($fractal->toArray(), explode(';', $requestFilters));
-        }
-        else
-        {
+        } else {
             $result = $fractal->toArray();
         }
 
@@ -150,7 +146,7 @@ trait ResponseTrait
      */
     public function deleted($responseArray = null)
     {
-        if(!$responseArray){
+        if (!$responseArray) {
             return $this->accepted();
         }
 
@@ -181,37 +177,31 @@ trait ResponseTrait
      */
     private function filterResponse(array $responseArray, array $filters)
     {
-        foreach ($responseArray as $k => $v)
-        {
-            if(in_array($k, $filters, true)) {
+        foreach ($responseArray as $k => $v) {
+            if (in_array($k, $filters, true)) {
                 // we have found our element - so continue with the next one
                 continue;
             }
 
-            if (is_array($v))
-            {
+            if (is_array($v)) {
                 // it is an array - so go one step deeper
                 $v = $this->filterResponse($v, $filters);
-                if(empty($v))
-                {
+                if (empty($v)) {
                     // it is an empty array - delete the key as well
                     unset($responseArray[$k]);
-                }
-                else
-                {
+                } else {
                     $responseArray[$k] = $v;
                 }
                 continue;
-            }
-            else
-            {
+            } else {
                 // check if the array is not in our filter-list
-                if(! in_array($k, $filters)) {
+                if (!in_array($k, $filters)) {
                     unset($responseArray[$k]);
                     continue;
                 }
             }
         }
+
         return $responseArray;
     }
 

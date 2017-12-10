@@ -17,26 +17,28 @@ trait CallableTrait
 {
 
     /**
-     * This function will be called from Controllers and Actions.
-     * The $class input will mainly be an Action or Task.
+     * This function will be called from anywhere (controllers, Actions,..) by the Apiato facade.
+     * The $class input will usually be an Action or Task.
      *
      * @param       $class
-     * @param array $runArguments
-     * @param array $methods
+     * @param array $runMethodArguments
+     * @param array $extraMethodsToCall
      *
      * @return  mixed
+     * @throws \Dto\Exceptions\UnstorableValueException
      */
-    public function call($class, $runArguments = [], $methods = [])
+    public function call($class, $runMethodArguments = [], $extraMethodsToCall = [])
     {
         $class = $this->resolveClass($class);
 
         $this->setUIIfExist($class);
 
-        $this->callExtraMethods($class, $methods);
+        $this->callExtraMethods($class, $extraMethodsToCall);
 
-        $convertedRunArguments = $this->convertRequestsToTransporters($class, $runArguments);
+        // detects Requests arguments "usually sent by controllers", and cvoert them to Transporters.
+        $runMethodArguments = $this->convertRequestsToTransporters($class, $runMethodArguments);
 
-        return $class->run(...$convertedRunArguments);
+        return $class->run(...$runMethodArguments);
     }
 
     /**
@@ -121,12 +123,12 @@ trait CallableTrait
 
     /**
      * @param $class
-     * @param $methods
+     * @param $extraMethodsToCall
      */
-    private function callExtraMethods($class, $methods)
+    private function callExtraMethods($class, $extraMethodsToCall)
     {
         // allows calling other methods in the class before calling the main `run` function.
-        foreach ($methods as $methodInfo) {
+        foreach ($extraMethodsToCall as $methodInfo) {
             // if is array means it method has arguments
             if (is_array($methodInfo)) {
                 $this->callWithArguments($class, $methodInfo);
@@ -162,27 +164,32 @@ trait CallableTrait
     }
 
     /**
-     * @param string $class
-     * @param array  $runArguments
+     * For backward compatibility purposes only. Could be a temporal function.
+     * In case a user passed a Request object to an Action that accepts a Transporter, this function
+     * converts that Request to Transporter object.
      *
-     * @return array
+     * @param       $class
+     * @param array $runMethodArguments
+     *
+     * @return  array
+     * @throws \Dto\Exceptions\UnstorableValueException
      */
-    private function convertRequestsToTransporters($class, array $runArguments = [])
+    private function convertRequestsToTransporters($class, array $runMethodArguments = [])
     {
         $requestPositions = [];
 
         // we first check, if one of the params is a REQUEST type
-        foreach ($runArguments as $callerPosition => $callerValue) {
-            if ($callerValue instanceof Request) {
-                $requestPositions[] = $callerPosition;
+        foreach ($runMethodArguments as $argumentPosition => $argumentValue) {
+            if ($argumentValue instanceof Request) {
+                $requestPositions[] = $argumentPosition;
             }
         }
 
         // now check, if we have found any REQUEST params
-        if ($requestPositions == []) {
+        if (empty($requestPositions)) {
             // We have not found any REQUEST params, so we don't need to transform anything.
             // Just return the runArguments and we are ready...
-            return $runArguments;
+            return $runMethodArguments;
         }
 
         // ok.. now we need to get the method signature from the run() method to be called on the $class
@@ -215,7 +222,7 @@ trait CallableTrait
             // so everything is ok
             // now we need to "switch" the REQUEST with the TRANSPORTER
             /** @var Request $request */
-            $request = $runArguments[$requestPosition];
+            $request = $runMethodArguments[$requestPosition];
             $transporterClass = $request->getTransporter();
             /** @var Transporter $transporter */
             $transporter = new $transporterClass;
@@ -224,10 +231,10 @@ trait CallableTrait
             $transporter->hydrate($request->all());
 
             // and now "replace" the request with this transporter
-            $runArguments[$requestPosition] = $transporter;
+            $runMethodArguments[$requestPosition] = $transporter;
         }
 
-        return $runArguments;
+        return $runMethodArguments;
     }
 
 }
