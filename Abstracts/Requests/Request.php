@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Requests;
 
+use Apiato\Core\Abstracts\Transporters\Transporter;
 use Apiato\Core\Exceptions\UndefinedTransporterException;
 use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\SanitizerTrait;
@@ -292,6 +293,18 @@ abstract class Request extends LaravelRequest
         }
 
         return $this->transporter;
+    }
+
+    /**
+     * Transforms the Request into a specified Transporter class.
+     *
+     * @return Transporter
+     */
+    public function toTransporter()
+    {
+        $transporterClass = $this->getTransporter();
+        $transporter = new $transporterClass($this);
+        return $transporter;
     }
 
 }
