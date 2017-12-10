@@ -20,7 +20,14 @@ abstract class Transporter extends Dto
     use SanitizerTrait;
 
     /**
-     * Overrides the Dto constructor to extend it for supporting Requests objects as $input.
+     * Holds instances of objects.
+     *
+     * @var  array
+     */
+    private $instances = [];
+
+    /**
+     * Override the Dto constructor to extend it for supporting Requests objects as $input.
      *
      * Transporter constructor.
      *
@@ -56,7 +63,17 @@ abstract class Transporter extends Dto
     }
 
     /**
-     * Override the __GET function in order to directly return the "raw value" (e.g., the containing string) of a field
+     * Since passing Objects doesn't work, because they cannot be hydrated by the DTO.
+     * This gives us the ability to pass instances, via the DTO.
+     */
+    public function setInstance($key, $value)
+    {
+        $this->instances[$key] = $value;
+    }
+
+    /**
+     * Override the __GET function to gain more control and flexibility in Apiato, and modify the default behavior
+     * of the parent function.
      *
      * @param $name
      *
@@ -64,14 +81,20 @@ abstract class Transporter extends Dto
      */
     public function __get($name)
     {
-        // first, check if the field exists, otherwise return null (like the default laravel behavior)
+
+        // if set as instance, return it directly
+        if(isset($this->instances[$name])){
+            return $this->instances[$name];
+        }
+
+        // if the field does not exist, return null instance of throwing exception `InvalidKeyException` by the parent.
         if (!$this->exists($name)) {
             return null;
         }
 
         $field = parent::__get($name);
-        $type = $field->getStorageType();
 
+        $type = $field->getStorageType();
         $value = call_user_func([$field, 'to' . Str::ucfirst($type)]);
 
         return $value;
