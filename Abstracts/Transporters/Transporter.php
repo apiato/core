@@ -2,8 +2,10 @@
 
 namespace Apiato\Core\Abstracts\Transporters;
 
+use Apiato\Core\Abstracts\Requests\Request;
 use Apiato\Core\Traits\SanitizerTrait;
 use Dto\Dto;
+use Dto\RegulatorInterface;
 use Illuminate\Support\Str;
 
 /**
@@ -16,6 +18,25 @@ abstract class Transporter extends Dto
 {
 
     use SanitizerTrait;
+
+    /**
+     * Overrides the Dto constructor to extend it for supporting Requests objects as $input.
+     *
+     * Transporter constructor.
+     *
+     * @param null                         $input
+     * @param null                         $schema
+     * @param \Dto\RegulatorInterface|null $regulator
+     */
+    public function __construct($input = null, $schema = null, RegulatorInterface $regulator = null)
+    {
+        if($input instanceof Request){
+            $input = $input->toArray();
+        }
+
+        parent::__construct($input, $schema, $regulator);
+    }
+
 
     /**
      * Override the __GET function in order to directly return the "raw value" (e.g., the containing string) of a field
