@@ -68,6 +68,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of all endpoints to be generated (1, 2, ...)'],
         ['doctype', null, InputOption::VALUE_OPTIONAL, 'The type of all endpoints to be generated (private, public)'],
         ['url', null, InputOption::VALUE_OPTIONAL, 'The base URI of all endpoints (/stores, /cars, ...)'],
+        ['transporters', null, InputOption::VALUE_OPTIONAL, 'Use specific Transporters or rely on the generic DataTransporter'],
     ];
 
     /**
@@ -76,6 +77,8 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
     public function getUserInputs()
     {
         $ui = 'api';
+
+        $useTransporters = $this->checkParameterOrConfirm('transporters', 'Would you like to use specific Transporters?', true);
 
         // containername as inputted and lower
         $containerName = $this->containerName;
@@ -147,74 +150,81 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
 
         $routes = [
             [
-                'stub'      => 'GetAll',
-                'name'      => 'GetAll' . $models,
-                'operation' => 'getAll' . $models,
-                'verb'      => 'GET',
-                'url'       => $url,
-                'action'    => 'GetAll' . $models . 'Action',
-                'request'   => 'GetAll' . $models . 'Request',
-                'task'      => 'GetAll' . $models . 'Task',
+                'stub'        => 'GetAll',
+                'name'        => 'GetAll' . $models,
+                'operation'   => 'getAll' . $models,
+                'verb'        => 'GET',
+                'url'         => $url,
+                'action'      => 'GetAll' . $models . 'Action',
+                'request'     => 'GetAll' . $models . 'Request',
+                'task'        => 'GetAll' . $models . 'Task',
+                'transporter' => 'GetAll' . $models . 'Transporter',
             ],
             [
-                'stub'      => 'Find',
-                'name'      => 'Find' . $model . 'ById',
-                'operation' => 'find' . $model . 'ById',
-                'verb'      => 'GET',
-                'url'       => $url . '/{id}',
-                'action'    => 'Find' . $model . 'ById' . 'Action',
-                'request'   => 'Find' . $model . 'ById' . 'Request',
-                'task'      => 'Find' . $model . 'ById' . 'Task',
+                'stub'        => 'Find',
+                'name'        => 'Find' . $model . 'ById',
+                'operation'   => 'find' . $model . 'ById',
+                'verb'        => 'GET',
+                'url'         => $url . '/{id}',
+                'action'      => 'Find' . $model . 'ById' . 'Action',
+                'request'     => 'Find' . $model . 'ById' . 'Request',
+                'task'        => 'Find' . $model . 'ById' . 'Task',
+                'transporter' => 'Find' . $model . 'ById' . 'Transporter',
             ],
             [
-                'stub'      => 'Create',
-                'name'      => 'Create' . $model,
-                'operation' => 'create' . $model,
-                'verb'      => 'POST',
-                'url'       => $url,
-                'action'    => 'Create' . $model . 'Action',
-                'request'   => 'Create' . $model . 'Request',
-                'task'      => 'Create' . $model . 'Task',
+                'stub'        => 'Create',
+                'name'        => 'Create' . $model,
+                'operation'   => 'create' . $model,
+                'verb'        => 'POST',
+                'url'         => $url,
+                'action'      => 'Create' . $model . 'Action',
+                'request'     => 'Create' . $model . 'Request',
+                'task'        => 'Create' . $model . 'Task',
+                'transporter' => 'Create' . $model . 'Transporter',
             ],
             [
-                'stub'      => 'Update',
-                'name'      => 'Update' . $model,
-                'operation' => 'update' . $model,
-                'verb'      => 'PATCH',
-                'url'       => $url . '/{id}',
-                'action'    => 'Update' . $model . 'Action',
-                'request'   => 'Update' . $model . 'Request',
-                'task'      => 'Update' . $model . 'Task',
+                'stub'        => 'Update',
+                'name'        => 'Update' . $model,
+                'operation'   => 'update' . $model,
+                'verb'        => 'PATCH',
+                'url'         => $url . '/{id}',
+                'action'      => 'Update' . $model . 'Action',
+                'request'     => 'Update' . $model . 'Request',
+                'task'        => 'Update' . $model . 'Task',
+                'transporter' => 'Update' . $model . 'Transporter',
             ],
             [
-                'stub'      => 'Delete',
-                'name'      => 'Delete' . $model,
-                'operation' => 'delete' . $model,
-                'verb'      => 'DELETE',
-                'url'       => $url . '/{id}',
-                'action'    => 'Delete' . $model . 'Action',
-                'request'   => 'Delete' . $model . 'Request',
-                'task'      => 'Delete' . $model . 'Task',
+                'stub'        => 'Delete',
+                'name'        => 'Delete' . $model,
+                'operation'   => 'delete' . $model,
+                'verb'        => 'DELETE',
+                'url'         => $url . '/{id}',
+                'action'      => 'Delete' . $model . 'Action',
+                'request'     => 'Delete' . $model . 'Request',
+                'task'        => 'Delete' . $model . 'Task',
+                'transporter' => 'Delete' . $model . 'Transporter',
             ],
         ];
 
         foreach ($routes as $route)
         {
             $this->call('apiato:generate:route', [
-                '--container'   => $containerName,
-                '--file'        => $route['name'],
-                '--ui'          => $ui,
-                '--operation'   => $route['operation'],
-                '--doctype'     => $doctype,
-                '--docversion'  => $version,
-                '--url'         => $route['url'],
-                '--verb'        => $route['verb'],
+                '--container' => $containerName,
+                '--file' => $route['name'],
+                '--ui' => $ui,
+                '--operation' => $route['operation'],
+                '--doctype' => $doctype,
+                '--docversion' => $version,
+                '--url' => $route['url'],
+                '--verb' => $route['verb'],
             ]);
 
             $this->call('apiato:generate:request', [
-                '--container'   => $containerName,
-                '--file'        => $route['request'],
-                '--ui'          => $ui,
+                '--container' => $containerName,
+                '--file' => $route['request'],
+                '--ui' => $ui,
+                '--transporter' => $useTransporters,
+                '--transportername' => $route['transporter'],
             ]);
 
             $this->call('apiato:generate:action', [

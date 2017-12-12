@@ -75,7 +75,7 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
     public function getUserInputs()
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
-        $transporter = Str::lower($this->checkParameterOrConfirm('transporter', 'Would you like to create a corresponding Transporter for this Request?', true));
+        $transporter = $this->checkParameterOrConfirm('transporter', 'Would you like to create a corresponding Transporter for this Request?', true);
 
         if ($transporter) {
             $transporterName = $this->checkParameterOrAsk('transportername', 'Enter the Name of the corresponding Transporter to be assigned');

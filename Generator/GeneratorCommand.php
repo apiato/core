@@ -277,15 +277,13 @@ abstract class GeneratorCommand extends Command
     {
         // check if we have already have a param set
         $value = $this->option($param);
-        if($value == null)
+        if ($value === null)
         {
             // there was no value provided via CLI, so ask the user..
             $value = $this->confirm($question, $default);
         }
 
-        // we need to parse the output value to a boolean value, as the values are strings (e.g., "true"), when they
-        // are read from the command line...
-        return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        return $value;
     }
 
     /**
