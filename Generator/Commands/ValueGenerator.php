@@ -8,11 +8,11 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 
 /**
- * Class ValueObjectGenerator
+ * Class ValueGenerator
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-class ValueObjectGenerator extends GeneratorCommand implements ComponentsGenerator
+class ValueGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
     /**
