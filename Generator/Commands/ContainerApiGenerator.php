@@ -71,7 +71,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
     ];
 
     /**
-     * urn mixed|void
+     * @return array
      */
     public function getUserInputs()
     {

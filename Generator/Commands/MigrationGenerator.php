@@ -70,7 +70,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
     ];
 
     /**
-     * urn mixed|void
+     * @return array|null
      */
     public function getUserInputs()
     {

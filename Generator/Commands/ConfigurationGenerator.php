@@ -66,7 +66,7 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
     ];
 
     /**
-     * urn mixed|void
+     * @return array
      */
     public function getUserInputs()
     {

@@ -66,7 +66,7 @@ class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerato
     ];
 
     /**
-     * urn mixed|void
+     * @return array
      */
     public function getUserInputs()
     {

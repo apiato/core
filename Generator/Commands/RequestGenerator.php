@@ -68,7 +68,7 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
     ];
 
     /**
-     * urn mixed|void
+     * @return array
      */
     public function getUserInputs()
     {
