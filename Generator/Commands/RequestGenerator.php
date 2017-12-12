@@ -65,6 +65,8 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Request for.'],
+        ['transporter', null, InputOption::VALUE_OPTIONAL, 'Create a corresponding Transporter for this Request'],
+        ['transportername', null, InputOption::VALUE_OPTIONAL, 'The name of the Transporter to be assigned'],
     ];
 
     /**
@@ -72,7 +74,25 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
-        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB']));
+        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
+        $transporter = Str::lower($this->checkParameterOrConfirm('transporter', 'Would you like to create a corresponding Transporter for this Request?', true));
+
+        if ($transporter) {
+            $transporterName = $this->checkParameterOrAsk('transportername', 'Enter the Name of the corresponding Transporter to be assigned');
+
+            $transporterComment = '';
+            $transporterClass = '\\App\\Containers\\' . $this->containerName . '\\Data\\Transporters\\' . $transporterName . '::class';
+
+            // now create the Transporter
+            $this->call('apiato:generate:transporter', [
+                '--container' => $this->containerName,
+                '--file' => $transporterName,
+            ]);
+        }
+        else {
+            $transporterComment = '// ';
+            $transporterClass = '\\App\\Ship\\Transporters\\DataTransporter::class';
+        }
 
         return [
             'path-parameters' => [
@@ -84,6 +104,8 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
                 'user-interface' => Str::upper($ui),
+                'transporterEnabled' => $transporterComment,
+                'transporterClass' => $transporterClass,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
