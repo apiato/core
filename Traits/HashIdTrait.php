@@ -4,10 +4,10 @@ namespace Apiato\Core\Traits;
 
 use App\Ship\Exceptions\IncorrectIdException;
 use Illuminate\Support\Facades\Config;
-use function is_null;
 use Route;
-use function strtolower;
 use Vinkla\Hashids\Facades\Hashids;
+use function is_null;
+use function strtolower;
 
 /**
  * Class HashIdTrait.
@@ -182,7 +182,8 @@ trait HashIdTrait
      * @param      $id
      * @param null $parameter
      *
-     * @return  array
+     * @return array
+     * @throws IncorrectIdException
      */
     public function decode($id, $parameter = null)
     {
