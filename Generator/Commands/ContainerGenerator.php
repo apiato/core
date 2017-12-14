@@ -65,14 +65,17 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
+        ['transporters', null, InputOption::VALUE_OPTIONAL, 'Use specific Transporters or rely on the generic DataTransporter'],
     ];
 
     /**
-     * urn mixed|void
+     * @return array
      */
     public function getUserInputs()
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for this container', ['API', 'WEB', 'BOTH'], 0));
+
+        $useTransporters = $this->checkParameterOrConfirm('transporters', 'Would you like to use specific Transporters', true);
 
         // containername as inputted and lower
         $containerName = $this->containerName;
@@ -80,15 +83,17 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
         if ($ui == 'api' || $ui == 'both') {
             $this->call('apiato:generate:container:api', [
-                '--container'   => $containerName,
-                '--file'        => 'composer',
+                '--container'    => $containerName,
+                '--file'         => 'composer',
+                '--transporters' => $useTransporters,
             ]);
         }
 
         if ($ui == 'web' || $ui == 'both') {
             $this->call('apiato:generate:container:web', [
-                '--container'   => $containerName,
-                '--file'        => 'composer',
+                '--container'    => $containerName,
+                '--file'         => 'composer',
+                '--transporters' => $useTransporters,
             ]);
         }
 

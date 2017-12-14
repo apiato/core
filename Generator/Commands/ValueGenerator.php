@@ -4,14 +4,15 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 
 /**
- * Class RepositoryGenerator
+ * Class ValueGenerator
  *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
+ * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerator
+class ValueGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
     /**
@@ -19,28 +20,28 @@ class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerato
      *
      * @var string
      */
-    protected $name = 'apiato:generate:repository';
+    protected $name = 'apiato:generate:value';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new Repository class';
+    protected $description = 'Create a new Value class';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $fileType = 'Repository';
+    protected $fileType = 'Value';
 
     /**
      * The structure of the file path.
      *
      * @var  string
      */
-    protected $pathStructure = '{container-name}/Data/Repositories/*';
+    protected $pathStructure = '{container-name}/Values/*';
 
     /**
      * The structure of the file name.
@@ -54,7 +55,7 @@ class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerato
      *
      * @var  string
      */
-    protected $stubName = 'repository.stub';
+    protected $stubName = 'value.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -76,8 +77,9 @@ class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerato
             ],
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
+                'container-name'  => $this->containerName,
+                'class-name'      => $this->fileName,
+                'resource-key'    => strtolower(Pluralizer::plural($this->fileName)),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -85,4 +87,10 @@ class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerato
         ];
     }
 
+    public function getDefaultFileName()
+    {
+        return 'DefaultValue';
+    }
+
 }
+

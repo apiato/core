@@ -66,14 +66,17 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
      */
     public $inputs = [
         ['url', null, InputOption::VALUE_OPTIONAL, 'The base URI of all endpoints (/stores, /cars, ...)'],
+        ['transporters', null, InputOption::VALUE_OPTIONAL, 'Use specific Transporters or rely on the generic DataTransporter'],
     ];
 
     /**
-     * urn mixed|void
+     * @return array
      */
     public function getUserInputs()
     {
         $ui = 'web';
+
+        $useTransporters = $this->checkParameterOrConfirm('transporters', 'Would you like to use specific Transporters?', true);
 
         // containername as inputted and lower
         $containerName = $this->containerName;
@@ -136,74 +139,81 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
 
         $routes = [
             [
-                'stub'      => 'GetAll',
-                'name'      => 'GetAll' . $models,
-                'operation' => 'index',
-                'verb'      => 'GET',
-                'url'       => $url,
-                'action'    => 'GetAll' . $models . 'Action',
-                'request'   => 'GetAll' . $models . 'Request',
-                'task'      => 'GetAll' . $models . 'Task',
+                'stub'        => 'GetAll',
+                'name'        => 'GetAll' . $models,
+                'operation'   => 'index',
+                'verb'        => 'GET',
+                'url'         => $url,
+                'action'      => 'GetAll' . $models . 'Action',
+                'request'     => 'GetAll' . $models . 'Request',
+                'task'        => 'GetAll' . $models . 'Task',
+                'transporter' => 'GetAll' . $models . 'Transporter',
             ],
             [
-                'stub'      => 'Find',
-                'name'      => 'Find' . $model . 'ById',
-                'operation' => 'show',
-                'verb'      => 'GET',
-                'url'       => $url . '/{id}',
-                'action'    => 'Find' . $model . 'ById' . 'Action',
-                'request'   => 'Find' . $model . 'ById' . 'Request',
-                'task'      => 'Find' . $model . 'ById' . 'Task',
+                'stub'        => 'Find',
+                'name'        => 'Find' . $model . 'ById',
+                'operation'   => 'show',
+                'verb'        => 'GET',
+                'url'         => $url . '/{id}',
+                'action'      => 'Find' . $model . 'ById' . 'Action',
+                'request'     => 'Find' . $model . 'ById' . 'Request',
+                'task'        => 'Find' . $model . 'ById' . 'Task',
+                'transporter' => 'Find' . $model . 'ById' . 'Transporter',
             ],
             [
-                'stub'      => null,
-                'name'      => 'Create' . $model,
-                'operation' => 'create',
-                'verb'      => 'GET',
-                'url'       => $url . '/create',
-                'action'    => null,
-                'request'   => 'Create' . $model . 'Request',
-                'task'      => null,
+                'stub'        => null,
+                'name'        => 'Create' . $model,
+                'operation'   => 'create',
+                'verb'        => 'GET',
+                'url'         => $url . '/create',
+                'action'      => null,
+                'request'     => 'Create' . $model . 'Request',
+                'task'        => null,
+                'transporter' => null,
             ],
             [
-                'stub'      => 'Create',
-                'name'      => 'Store' . $model,
-                'operation' => 'store',
-                'verb'      => 'POST',
-                'url'       => $url . '/store',
-                'action'    => 'Create' . $model . 'Action',
-                'request'   => 'Store' . $model . 'Request',
-                'task'      => 'Create' . $model . 'Task',
+                'stub'        => 'Create',
+                'name'        => 'Store' . $model,
+                'operation'   => 'store',
+                'verb'        => 'POST',
+                'url'         => $url . '/store',
+                'action'      => 'Create' . $model . 'Action',
+                'request'     => 'Store' . $model . 'Request',
+                'task'        => 'Create' . $model . 'Task',
+                'transporter' => 'Create' . $model . 'Transporter'
             ],
             [
-                'stub'      => null,
-                'name'      => 'Edit' . $model,
-                'operation' => 'edit',
-                'verb'      => 'GET',
-                'url'       => $url . '/{id}/edit',
-                'action'    => null,
-                'request'   => 'Edit' . $model . 'Request',
-                'task'      => null,
+                'stub'        => null,
+                'name'        => 'Edit' . $model,
+                'operation'   => 'edit',
+                'verb'        => 'GET',
+                'url'         => $url . '/{id}/edit',
+                'action'      => null,
+                'request'     => 'Edit' . $model . 'Request',
+                'task'        => null,
+                'transporter' => null,
             ],
             [
-                'stub'      => 'Update',
-                'name'      => 'Update' . $model,
-                'operation' => 'update',
-                'verb'      => 'PATCH',
-                'url'       => $url . '/{id}',
-                'action'    => 'Update' . $model . 'Action',
-                'request'   => 'Update' . $model . 'Request',
-                'task'      => 'Update' . $model . 'Task',
+                'stub'        => 'Update',
+                'name'        => 'Update' . $model,
+                'operation'   => 'update',
+                'verb'        => 'PATCH',
+                'url'         => $url . '/{id}',
+                'action'      => 'Update' . $model . 'Action',
+                'request'     => 'Update' . $model . 'Request',
+                'task'        => 'Update' . $model . 'Task',
+                'transporter' => 'Update' . $model . 'Transporter',
             ],
             [
-                'stub'      => 'Delete',
-                'name'      => 'Delete' . $model,
-                'operation' => 'delete',
-                'verb'      => 'DELETE',
-                'url'       => $url . '/{id}',
-                'action'    => 'Delete' . $model . 'Action',
-                'request'   => 'Delete' . $model . 'Request',
-                'task'      => 'Delete' . $model . 'Task',
+                'stub'        => 'Delete',
+                'name'        => 'Delete' . $model,
+                'operation'   => 'delete',
+                'verb'        => 'DELETE',
+                'url'         => $url . '/{id}',
+                'action'      => 'Delete' . $model . 'Action',
+                'request'     => 'Delete' . $model . 'Request',
+                'task'        => 'Delete' . $model . 'Task',
+                'transporter' => 'Delete' . $model . 'Transporter',
             ],
         ];
 
@@ -220,10 +230,19 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                 '--verb'        => $route['verb'],
             ]);
 
+            $enableTransporter = false;
+            if ($useTransporters) {
+                if ($route['transporter'] != null) {
+                    $enableTransporter = true;
+                }
+            }
+
             $this->call('apiato:generate:request', [
                 '--container'   => $containerName,
                 '--file'        => $route['request'],
                 '--ui'          => $ui,
+                '--transporter' => $enableTransporter,
+                '--transportername' => $route['transporter'],
             ]);
 
             if ($route['action'] != null || $route['stub'] != null) {

@@ -68,7 +68,7 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
     ];
 
     /**
-     * urn mixed|void
+     * @return array
      */
     public function getUserInputs()
     {

@@ -4,15 +4,14 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
-use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 
 /**
- * Class ValueObjectGenerator
+ * Class TransporterGenerator
  *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
+ * @author  Johannes Schobel <johannes.schobel@googlemail.com>
  */
-class ValueObjectGenerator extends GeneratorCommand implements ComponentsGenerator
+class TransporterGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
     /**
@@ -20,28 +19,28 @@ class ValueObjectGenerator extends GeneratorCommand implements ComponentsGenerat
      *
      * @var string
      */
-    protected $name = 'apiato:generate:value';
+    protected $name = 'apiato:generate:transporter';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new Value class';
+    protected $description = 'Create a new Transporter class';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $fileType = 'Value';
+    protected $fileType = 'Transporter';
 
     /**
      * The structure of the file path.
      *
      * @var  string
      */
-    protected $pathStructure = '{container-name}/Values/*';
+    protected $pathStructure = '{container-name}/Data/Transporters/*';
 
     /**
      * The structure of the file name.
@@ -55,7 +54,7 @@ class ValueObjectGenerator extends GeneratorCommand implements ComponentsGenerat
      *
      * @var  string
      */
-    protected $stubName = 'value.stub';
+    protected $stubName = 'transporter.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -64,10 +63,11 @@ class ValueObjectGenerator extends GeneratorCommand implements ComponentsGenerat
      * @var  array
      */
     public $inputs = [
+
     ];
 
     /**
-     * urn mixed|void
+     * @return array
      */
     public function getUserInputs()
     {
@@ -79,7 +79,6 @@ class ValueObjectGenerator extends GeneratorCommand implements ComponentsGenerat
                 '_container-name' => Str::lower($this->containerName),
                 'container-name'  => $this->containerName,
                 'class-name'      => $this->fileName,
-                'resource-key'    => strtolower(Pluralizer::plural($this->fileName)),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -89,8 +88,6 @@ class ValueObjectGenerator extends GeneratorCommand implements ComponentsGenerat
 
     public function getDefaultFileName()
     {
-        return 'DefaultValue';
+        return 'DefaultTransporter';
     }
-
 }
-

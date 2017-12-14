@@ -69,7 +69,6 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
 
-
     /**
      * @return array
      */

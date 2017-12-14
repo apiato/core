@@ -70,7 +70,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
     ];
 
     /**
-     * urn mixed|void
+     * @return array
      */
     public function getUserInputs()
     {
