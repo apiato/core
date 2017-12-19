@@ -303,7 +303,11 @@ abstract class Request extends LaravelRequest
     public function toTransporter()
     {
         $transporterClass = $this->getTransporter();
+
+        /** @var Transporter $transporter */
         $transporter = new $transporterClass($this);
+        $transporter->setInstance('request', $this);
+
         return $transporter;
     }
 
