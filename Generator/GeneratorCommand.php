@@ -118,6 +118,11 @@ abstract class GeneratorCommand extends Command
         $this->containerName = ucfirst($this->checkParameterOrAsk('container', 'Enter the name of the Container'));
         $this->fileName = $this->checkParameterOrAsk('file', 'Enter the name of the ' . $this->fileType . ' file', $this->getDefaultFileName());
 
+        // now fix the container and file name
+        $this->containerName = $this->removeSpecialChars($this->containerName);
+        $this->fileName = $this->removeSpecialChars($this->fileName);
+
+        // and we are ready to start
         $this->printStartedMessage($this->containerName, $this->fileName);
 
         // get user inputs
@@ -328,6 +333,21 @@ abstract class GeneratorCommand extends Command
     protected function getDefaultFileExtension()
     {
         return 'php';
+    }
+
+    /**
+     * Removes "special characters" from a string
+     *
+     * @param $str
+     *
+     * @return string
+     */
+    private function removeSpecialChars($str)
+    {
+        // remove everything that is NOT a character or digit
+        $str = preg_replace('/[^A-Za-z0-9]/', '', $str);
+
+        return $str;
     }
 
 }
