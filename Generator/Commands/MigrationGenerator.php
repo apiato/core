@@ -106,7 +106,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
+                'class-name' => Str::studly($this->fileName),
                 'table-name' => $tablename
             ],
             'file-parameters' => [
