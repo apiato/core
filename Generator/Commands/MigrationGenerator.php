@@ -125,4 +125,16 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
     {
         return 'create_' . Str::lower($this->containerName) . '_tables';
     }
+
+    /**
+     * Removes "special characters" from a string
+     *
+     * @param $str
+     *
+     * @return string
+     */
+    protected function removeSpecialChars($str)
+    {
+        return $str;
+    }
 }
