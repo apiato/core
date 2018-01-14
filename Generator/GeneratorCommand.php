@@ -342,7 +342,7 @@ abstract class GeneratorCommand extends Command
      *
      * @return string
      */
-    private function removeSpecialChars($str)
+    protected function removeSpecialChars($str)
     {
         // remove everything that is NOT a character or digit
         $str = preg_replace('/[^A-Za-z0-9]/', '', $str);
