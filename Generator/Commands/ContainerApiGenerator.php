@@ -132,7 +132,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--container'   => $containerName,
             '--file'        => $containerName . 'Transformer',
             '--model'       => $model,
-            '--full'        => 'no',
+            '--full'        => false,
         ]);
 
         // create the default routes for this container
