@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Containers\{{container-name}}\Tests\Unit;
+
+use App\Containers\{{container-name}}\Tests\TestCase;
+use App\Ship\Transporters\DataTransporter;
+use Illuminate\Support\Facades\App;
+
+/**
+ * Class {{class-name}}.
+ *
+ * @group {{_container-name}}
+ * @group unit
+ */
+class {{class-name}} extends TestCase
+{
+
+    /**
+     * @test
+     */
+    public function test_()
+    {
+        // create a data object
+        $data = [
+            // 'key' => 'value',
+        ];
+
+        // create a new Transporter with the data
+        $transporter = new DataTransporter($data);
+
+        // create the Action to be called
+        $action = App::make(XXXAction::class);
+
+        // and call it
+        $entity = $action->run($transporter);
+
+        // assert something here
+        $this->assertEquals(true, true);
+    }
+}
