@@ -33,7 +33,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
      *
      * @var string
      */
-    protected $fileType = 'Tests';
+    protected $fileType = 'Unit Test';
 
     /**
      * The structure of the file path.
@@ -54,7 +54,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
      *
      * @var  string
      */
-    protected $stubName = 'tests/unittest.stub';
+    protected $stubName = 'tests/unit/general.stub';
 
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -74,6 +74,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
         $this->call('apiato:generate:test:testcase', [
             '--container' => $this->containerName,
             '--file' => 'TestCase',
+            '--ui' => 'generic',
         ]);
 
         return [

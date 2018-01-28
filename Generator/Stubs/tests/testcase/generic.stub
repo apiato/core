@@ -7,7 +7,7 @@ use App\Ship\Parents\Tests\PhpUnit\TestCase as ShipTestCase;
 /**
  * Class {{class-name}}.
  *
- * This is the container TestCase class. Use this class to add your container specific helper functions.
+ * This is the container Main TestCase class. Use this class to add your container specific helper functions.
  */
 class {{class-name}} extends ShipTestCase
 {
