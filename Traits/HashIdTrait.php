@@ -45,7 +45,8 @@ trait HashIdTrait
         if (Config::get('apiato.hash-id')) {
             // we need to get the VALUE for this KEY (model field)
             $value = $this->getAttribute($field);
-            return $this->encoder($value);
+            
+            return is_null($value) ? null : $this->encoder($value);
         }
 
         return $this->getAttribute($field);
