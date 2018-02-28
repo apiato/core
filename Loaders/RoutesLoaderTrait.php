@@ -69,6 +69,9 @@ trait RoutesLoaderTrait
 
         if (File::isDirectory($webRoutesPath)) {
             $files = File::allFiles($webRoutesPath);
+            $files = array_sort($files, function ($file) {
+                return $file->getFilename();
+            });
             foreach ($files as $file) {
                 $this->loadWebRoute($file, $controllerNamespace);
             }
