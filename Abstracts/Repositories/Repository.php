@@ -51,7 +51,10 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      */
     public function boot()
     {
-        $this->pushCriteria(app(PrettusRequestCriteria::class));
+        // only apply the RequestCriteria if config flag is set!
+        if (Config::get('apiato.requests.automatically-apply-request-criteria', true)) {
+            $this->pushCriteria(app(PrettusRequestCriteria::class));
+        }
     }
 
     /**
@@ -74,7 +77,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         $limit = $limit ? : Request::get('limit');
 
         // check, if skipping pagination is allowed and the requested by the user
-        if(Config::get('repository.pagination.skip') && $limit == "0") {
+        if (Config::get('repository.pagination.skip') && $limit == "0") {
             return parent::all($columns);
         }
 
