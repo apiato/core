@@ -3,6 +3,7 @@
 namespace Apiato\Core\Abstracts\Actions;
 
 use Apiato\Core\Traits\CallableTrait;
+use Apiato\Core\Traits\HasRequestCriteriaTrait;
 
 /**
  * Class Action.
@@ -13,6 +14,7 @@ abstract class Action
 {
 
     use CallableTrait;
+    use HasRequestCriteriaTrait;
 
     /**
      * Set automatically by the controller after calling an Action.

@@ -8,7 +8,7 @@ use App\Ship\Parents\Tasks\Task;
 class GetAll{{models}}Task extends Task
 {
 
-    private $repository;
+    protected $repository;
 
     public function __construct({{model}}Repository $repository)
     {

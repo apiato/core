@@ -2,6 +2,8 @@
 
 namespace Apiato\Core\Abstracts\Tasks;
 
+use Apiato\Core\Traits\HasRequestCriteriaTrait;
+
 /**
  * Class Task.
  *
@@ -9,5 +11,6 @@ namespace Apiato\Core\Abstracts\Tasks;
  */
 abstract class Task
 {
+    use HasRequestCriteriaTrait;
 
 }
