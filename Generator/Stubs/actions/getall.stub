@@ -10,7 +10,7 @@ class GetAll{{models}}Action extends Action
 {
     public function run(Request $request)
     {
-        ${{entities}} = Apiato::call('{{container-name}}@GetAll{{models}}Task');
+        ${{entities}} = Apiato::call('{{container-name}}@GetAll{{models}}Task', [], ['addRequestCriteria');
 
         return ${{entities}};
     }
