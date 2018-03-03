@@ -41,7 +41,8 @@ trait SanitizerTrait
     }
 
     /**
-     * @return  array
+     * @return array
+     * @throws InternalErrorException
      */
     private function getData()
     {

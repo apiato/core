@@ -206,7 +206,8 @@ class Apiato
     }
 
     /**
-     * @return  mixed
+     * @return mixed
+     * @throws WrongConfigurationsException
      */
     public function getLoginWebPageName()
     {
@@ -250,6 +251,8 @@ class Apiato
 
     /**
      * @param $containerName
+     *
+     * @throws MissingContainerException
      */
     public function verifyContainerExist($containerName)
     {
@@ -260,6 +263,8 @@ class Apiato
 
     /**
      * @param $className
+     *
+     * @throws ClassDoesNotExistException
      */
     public function verifyClassExist($className)
     {

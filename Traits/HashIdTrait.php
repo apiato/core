@@ -180,7 +180,8 @@ trait HashIdTrait
      * @param      $id
      * @param null $parameter
      *
-     * @return  array
+     * @return array
+     * @throws IncorrectIdException
      */
     public function decode($id, $parameter = null)
     {
