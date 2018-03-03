@@ -5,8 +5,8 @@ namespace Apiato\Core\Abstracts\Events\Dispatcher;
 use Apiato\Core\Abstracts\Events\Interfaces\ShouldHandle;
 use Apiato\Core\Abstracts\Events\Interfaces\ShouldHandleNow;
 use Apiato\Core\Abstracts\Events\Jobs\EventJob;
-use \Illuminate\Foundation\Bus\PendingDispatch as JobDispatcher;
-use \Illuminate\Events\Dispatcher as EventDispatcher;
+use Illuminate\Events\Dispatcher as EventDispatcher;
+use Illuminate\Foundation\Bus\PendingDispatch as JobDispatcher;
 
 /**
  * Created by PhpStorm.

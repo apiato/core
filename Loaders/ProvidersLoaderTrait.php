@@ -2,8 +2,8 @@
 
 namespace Apiato\Core\Loaders;
 
-use App;
 use Apiato\Core\Foundation\Facades\Apiato;
+use App;
 use File;
 
 /**

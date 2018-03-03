@@ -10,7 +10,7 @@ use Exception;
 class Delete{{model}}Task extends Task
 {
 
-    private $repository;
+    protected $repository;
 
     public function __construct({{model}}Repository $repository)
     {

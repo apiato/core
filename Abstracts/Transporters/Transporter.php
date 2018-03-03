@@ -41,9 +41,9 @@ abstract class Transporter extends Dto
         // and pass them as array input to the Dto constructor..
         if ($input instanceof Request) {
             $content = $input->toArray();
-            $heders = ['_headers' => $input->headers->all()];
+            $headers = ['_headers' => $input->headers->all()];
 
-            $input = array_merge($heders, $content);
+            $input = array_merge($headers, $content);
         }
 
         parent::__construct($input, $schema, $regulator);
@@ -63,8 +63,11 @@ abstract class Transporter extends Dto
     }
 
     /**
-     * Since passing Objects doesn't work, because they cannot be hydrated by the DTO.
+     * Since passing Objects does not work, because they cannot be hydrated by the DTO.
      * This gives us the ability to pass instances, via the DTO.
+     *
+     * @param string $key
+     * @param mixed $value
      */
     public function setInstance($key, $value)
     {
@@ -94,6 +97,7 @@ abstract class Transporter extends Dto
 
         $field = parent::__get($name);
 
+        // this will call the toScalar / toArray / toObject / ... functions
         $type = $field->getStorageType();
         $value = call_user_func([$field, 'to' . Str::ucfirst($type)]);
 

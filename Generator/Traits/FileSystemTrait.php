@@ -10,6 +10,8 @@ trait FileSystemTrait
     /**
      * Determine if the file already exists.
      *
+     * @param $path
+     *
      * @return bool
      */
     protected function alreadyExists($path)
@@ -18,7 +20,10 @@ trait FileSystemTrait
     }
 
     /**
-     * @return  mixed
+     * @param $filePath
+     * @param $stubContent
+     *
+     * @return mixed
      */
     public function generateFile($filePath, $stubContent)
     {

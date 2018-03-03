@@ -12,7 +12,10 @@ trait ParserTrait
     /**
      * replaces the variables in the path structure with defined values
      *
-     * @return  mixed
+     * @param $path
+     * @param $data
+     *
+     * @return mixed
      */
     public function parsePathStructure($path, $data)
     {
@@ -25,7 +28,10 @@ trait ParserTrait
     /**
      * replaces the variables in the file structure with defined values
      *
-     * @return  mixed
+     * @param $filename
+     * @param $data
+     *
+     * @return mixed
      */
     public function parseFileStructure($filename, $data)
     {
@@ -36,7 +42,10 @@ trait ParserTrait
     /**
      * replaces the variables in the stub file with defined values
      *
-     * @return  mixed
+     * @param $stub
+     * @param $data
+     *
+     * @return mixed
      */
     public function parseStubContent($stub, $data)
     {
