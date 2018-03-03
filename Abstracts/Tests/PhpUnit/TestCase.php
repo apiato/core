@@ -9,10 +9,10 @@ use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsMockHelperTrait;
 use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsRequestHelperTrait;
 use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsResponseHelperTrait;
 use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsUploadHelperTrait;
-use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
+use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
-use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 
 /**
  * Class TestCase

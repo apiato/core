@@ -11,7 +11,9 @@ trait PrinterTrait
     }
 
     /**
-     * @void
+     * @param $type
+     *
+     * @return void
      */
     public function printFinishedMessage($type)
     {

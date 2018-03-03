@@ -26,7 +26,7 @@ trait MiddlewaresLoaderTrait
     /**
      * Registering Route Group's
      *
-     * @param array $middlewareGroups
+     * @param array $middlewares
      */
     private function registerMiddleware(array $middlewares = [])
     {

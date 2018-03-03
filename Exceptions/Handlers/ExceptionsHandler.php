@@ -3,9 +3,9 @@
 namespace Apiato\Core\Exceptions\Handlers;
 
 use Exception;
+use Illuminate\Foundation\Exceptions\Handler as LaravelExceptionHandler;
 use Illuminate\Support\Facades\Config;
 use Optimus\Heimdal\ExceptionHandler as HeimdalExceptionHandler;
-use Illuminate\Foundation\Exceptions\Handler as LaravelExceptionHandler;
 
 /**
  * Class ExceptionsHandler

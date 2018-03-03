@@ -242,7 +242,7 @@ trait TestsRequestHelperTrait
 
     /**
      * Attach Authorization Bearer Token to the request headers
-     * if it doesn't exist already and the authentication is required
+     * if it does not exist already and the authentication is required
      * for the endpoint `$this->auth = true`.
      *
      * @param $headers
@@ -345,6 +345,8 @@ trait TestsRequestHelperTrait
 
     /**
      * @param $separator
+     *
+     * @throws WrongEndpointFormatException
      */
     private function validateEndpointFormat($separator)
     {

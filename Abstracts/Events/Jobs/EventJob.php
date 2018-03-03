@@ -28,7 +28,7 @@ class EventJob extends Job
     /**
      * Handle the job.
      *
-     * @return @void
+     * @return void
      */
     public function handle()
     {
