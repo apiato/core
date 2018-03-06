@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Containers\{{container-name}}\Job;
+namespace App\Containers\{{container-name}}\Jobs;
 
 use App\Ship\Parents\Jobs\Job;
 
