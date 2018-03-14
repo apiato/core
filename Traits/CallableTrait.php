@@ -6,6 +6,7 @@ use Apiato\Core\Abstracts\Requests\Request;
 use Apiato\Core\Abstracts\Transporters\Transporter;
 use Apiato\Core\Foundation\Facades\Apiato;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -64,7 +65,9 @@ trait CallableTrait
 
             Apiato::verifyClassExist($classFullName);
         } else {
-            Log::debug('It is recommended to use the apiato caller style (containerName@className) for ' . $class);
+            if (Config::get('apiato.logging.log-wrong-apiato-caller-style', true)) {
+                Log::debug('It is recommended to use the apiato caller style (containerName@className) for ' . $class);
+            }
         }
 
         return App::make($class);
