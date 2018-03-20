@@ -7,6 +7,7 @@ use Apiato\Core\Abstracts\Transporters\Transporter;
 use Apiato\Core\Foundation\Facades\Apiato;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -40,6 +41,23 @@ trait CallableTrait
         $runMethodArguments = $this->convertRequestsToTransporters($class, $runMethodArguments);
 
         return $class->run(...$runMethodArguments);
+    }
+
+    /**
+     * This function calls another class but wraps it in a DB-Transaction. This might be useful for CREATE / UPDATE / DELETE
+     * operations in order to prevent the database from corrupt data. Internally, the regular call() method is used!
+     *
+     * @param       $class
+     * @param array $runMethodArguments
+     * @param array $extraMethodsToCall
+     *
+     * @return mixed
+     */
+    public function transactionalCall($class, $runMethodArguments = [], $extraMethodsToCall = [])
+    {
+        return DB::transaction(function() use ($class, $runMethodArguments, $extraMethodsToCall) {
+            return $this->call($class, $runMethodArguments, $extraMethodsToCall);
+        });
     }
 
     /**
