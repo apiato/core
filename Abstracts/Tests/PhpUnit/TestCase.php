@@ -53,9 +53,7 @@ abstract class TestCase extends LaravelTestCase
      */
     public function tearDown()
     {
-        $this->usingInMemoryDatabase()
-            ? $this->artisan('migrate:reset')
-            : parent::tearDown();
+        parent::tearDown();
     }
 
     /**
