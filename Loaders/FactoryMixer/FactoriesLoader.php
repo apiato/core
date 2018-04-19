@@ -29,7 +29,7 @@ foreach (Apiato::getContainersNames() as $containerName) {
             if (\File::isFile($factoryFile)) {
 
                 // Include the factory files
-                include($factoryFile);
+                require_once $factoryFile;
 
             }
         }
