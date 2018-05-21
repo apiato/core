@@ -19,7 +19,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
 
     use PrettusCacheableRepository;
     
-    protected $maxPaginationLimit;
+    protected $maxPaginationLimit = 0;
 
     /**
      * This function relies on the convention.
@@ -83,7 +83,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
             return parent::all($columns);
         }
 
-        if ($this->maxPaginationLimit !== null && $this->maxPaginationLimit > 0 && $limit > $this->maxPaginationLimit) {
+        if (is_int($this->maxPaginationLimit) && $this->maxPaginationLimit > 0 && $limit > $this->maxPaginationLimit) {
             $limit = $this->maxPaginationLimit;
         }
 
