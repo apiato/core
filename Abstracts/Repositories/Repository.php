@@ -19,10 +19,14 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
 
     use PrettusCacheableRepository;
     
+    /**
+     * Define the maximum amount of entries per page that is returned. 
+     * Set to 0 to "disable" this feature
+     */
     protected $maxPaginationLimit = 0;
 
     /**
-     * This function relies on the convention.
+     * This function relies on strict conventions.
      * Conventions:
      *    - Repository name should be same like it's model name (model: Foo -> repository: FooRepository).
      *    - If the container contains Models with names different than the container name, the repository class must
@@ -83,7 +87,11 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
             return parent::all($columns);
         }
 
-        if (is_int($this->maxPaginationLimit) && $this->maxPaginationLimit > 0 && $limit > $this->maxPaginationLimit) {
+        // check for the maximum entries per pagination
+        if (   is_int($this->maxPaginationLimit) 
+            && $this->maxPaginationLimit > 0 
+            && $limit > $this->maxPaginationLimit
+        ) {
             $limit = $this->maxPaginationLimit;
         }
 
