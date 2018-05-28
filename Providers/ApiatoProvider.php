@@ -12,6 +12,7 @@ use Apiato\Core\Traits\ValidationTrait;
 use App\Ship\Parents\Providers\RoutesProvider;
 use App\Ship\Providers\ShipProvider;
 use Barryvdh\Cors\ServiceProvider as CorsServiceProvider;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Tinker\TinkerServiceProvider;
 use Optimus\Heimdal\Provider\LaravelServiceProvider as HeimdalExceptionsServiceProvider;
@@ -53,7 +54,6 @@ class ApiatoProvider extends AbstractMainProvider
         TinkerServiceProvider::class,
 
         // Internal Apiato Providers:
-        EventServiceProvider::class, //The custom apiato eventserviceprovider
         RoutesProvider::class, // exceptionally adding the Route Provider, unlike all other providers in the parents.
         ShipProvider::class, // the ShipProvider for the Ship third party packages.
         GeneratorsServiceProvider::class, // the code generator provider.
@@ -98,9 +98,22 @@ class ApiatoProvider extends AbstractMainProvider
     {
         parent::register();
 
+        $this->overrideLaravelBaseProviders();
+
         // Register Core Facade Classes, should not be registered in the alias property above, since they are used
         // by the auto-loading scripts, before the $aliases property is executed.
         $this->app->alias(Apiato::class, 'Apiato');
+    }
+
+    /**
+     * Register Overided Base providers
+     *
+     * @see \Illuminate\Foundation\Application::registerBaseServiceProviders
+     * @return void
+     */
+    private function overrideLaravelBaseProviders()
+    {
+        App::register(EventServiceProvider::class); //The custom apiato eventserviceprovider
     }
 
 }

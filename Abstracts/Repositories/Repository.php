@@ -18,9 +18,15 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
 {
 
     use PrettusCacheableRepository;
+    
+    /**
+     * Define the maximum amount of entries per page that is returned. 
+     * Set to 0 to "disable" this feature
+     */
+    protected $maxPaginationLimit = 0;
 
     /**
-     * This function relies on the convention.
+     * This function relies on strict conventions.
      * Conventions:
      *    - Repository name should be same like it's model name (model: Foo -> repository: FooRepository).
      *    - If the container contains Models with names different than the container name, the repository class must
@@ -74,11 +80,19 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
     {
         // the priority is for the function parameter, if not available then take
         // it from the request if available and if not keep it null.
-        $limit = $limit ? : Request::get('limit');
+        $limit = $limit ?: Request::get('limit');
 
         // check, if skipping pagination is allowed and the requested by the user
         if (Config::get('repository.pagination.skip') && $limit == "0") {
             return parent::all($columns);
+        }
+
+        // check for the maximum entries per pagination
+        if (   is_int($this->maxPaginationLimit) 
+            && $this->maxPaginationLimit > 0 
+            && $limit > $this->maxPaginationLimit
+        ) {
+            $limit = $this->maxPaginationLimit;
         }
 
         return parent::paginate($limit, $columns, $method);
