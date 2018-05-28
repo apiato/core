@@ -5,6 +5,7 @@ namespace Apiato\Core\Traits;
 use Apiato\Core\Abstracts\Requests\Request;
 use Apiato\Core\Abstracts\Transporters\Transporter;
 use App\Ship\Exceptions\InternalErrorException;
+use Illuminate\Support\Arr;
 
 /**
  * Class SanitizerTrait.
@@ -27,17 +28,17 @@ trait SanitizerTrait
     {
         $data = $this->getData();
 
-        $search = [];
-        foreach ($fields as $field) {
-            // create a multidimensional array based on $fields
-            // which was submitted as DOT notation (e.g., data.name)
-            array_set($search, $field, true);
+        $results = [];
+        foreach (Arr::dot($data) as $key => $value) {
+            foreach ($fields as $field) {
+                $pattern = str_replace(['.', '*'], ['\.', '([^\.]+)'], $field);
+                if (preg_match('/^' . $pattern . '/', $key)) {
+                    Arr::set($results, $key, $value);
+                }
+            }
         }
 
-        // check, if the keys exist in both arrays
-        $data = $this->recursiveArrayIntersectKey($data, $search);
-
-        return $data;
+        return $results;
     }
 
     /**
@@ -58,24 +59,4 @@ trait SanitizerTrait
         return $data;
     }
 
-    /**
-     * Recursively intersects 2 arrays based on their keys.
-     *
-     * @param array $a first array (that keeps the values)
-     * @param array $b second array to be compared with
-     *
-     * @return array an array containing all keys that are present in $a and $b. Only values from $a are returned
-     */
-    private function recursiveArrayIntersectKey(array $a, array $b)
-    {
-        $a = array_intersect_key($a, $b);
-
-        foreach ($a as $key => &$value) {
-            if (is_array($value) && is_array($b[$key])) {
-                $value = $this->recursiveArrayIntersectKey($value, $b[$key]);
-            }
-        }
-
-        return $a;
-    }
 }
