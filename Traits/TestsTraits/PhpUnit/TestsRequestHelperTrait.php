@@ -232,12 +232,13 @@ trait TestsRequestHelperTrait
      */
     private function buildUrlForUri($uri)
     {
-        // add `/` at the beginning in case it doesn't exist
-        if (!Str::startsWith($uri, '/')) {
-            $uri = '/' . $uri;
+        $apiUrl = Config::get('apiato.api.url');
+
+        if (!Str::endsWith($apiUrl, '/')) {
+            $apiUrl .= '/';
         }
 
-        return Config::get('apiato.api.url') . $uri;
+        return $apiUrl . Config::get('apiato.api.prefix') . $uri;
     }
 
     /**
