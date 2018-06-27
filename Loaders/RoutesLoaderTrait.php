@@ -84,12 +84,18 @@ trait RoutesLoaderTrait
      */
     private function loadWebRoute($file, $controllerNamespace)
     {
-        Route::group([
+        $routerCallback = function ($router) use ($file) {
+            require $file->getPathname();
+        };
+
+        $webGroupParams = [
             'namespace'  => $controllerNamespace,
             'middleware' => ['web'],
-        ], function ($router) use ($file) {
-            require $file->getPathname();
-        });
+        ];
+
+        Route::group($webGroupParams, $routerCallback);
+
+        Route::group(array_merge($webGroupParams, ['prefix' => '{lang?}', 'where' => ['lang' => '[A-Za-z]{2}']]), $routerCallback);
     }
 
     /**
