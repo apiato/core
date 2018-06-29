@@ -93,9 +93,11 @@ trait RoutesLoaderTrait
             'middleware' => ['web'],
         ];
 
-        Route::group($webGroupParams, $routerCallback);
+        if(config('apiato.web.use_localized_routes')) {
+            $webGroupParams = array_merge($webGroupParams, ['prefix' => '{lang}', 'where' => ['lang' => '[A-Za-z]{2}']]);
+        }
 
-        Route::group(array_merge($webGroupParams, ['prefix' => '{lang?}', 'where' => ['lang' => '[A-Za-z]{2}']]), $routerCallback);
+        Route::group($webGroupParams, $routerCallback);
     }
 
     /**
