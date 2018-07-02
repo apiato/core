@@ -39,7 +39,7 @@ trait ResponseTrait
         $resourceKey = null
     ) {
         // create instance of the transformer
-        $transformer = new $transformerName;
+        $transformer = is_string($transformerName) ? new $transformerName : $transformerName;
 
         // append the includes from the transform() to the defaultIncludes
         $includes = array_unique(array_merge($transformer->getDefaultIncludes(), $includes));
