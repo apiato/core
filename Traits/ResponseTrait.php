@@ -40,7 +40,7 @@ trait ResponseTrait
         $resourceKey = null
     ) {
         // create instance of the transformer
-        $transformer = new $transformerName;
+        $transformer = is_string($transformerName) ? new $transformerName : $transformerName;
 
         // if an instance of Transformer was passed
         if ($transformerName instanceof Transformer) {
