@@ -40,18 +40,22 @@ trait ResponseTrait
         array $meta = [],
         $resourceKey = null
     ) {
-        // first, we need to create the transformer
-        if ($transformerName instanceof Transformer) {
-            // check, if we have provided a respective TRANSFORMER class
-            $transformer = $transformerName;
-        }
-        else {
-            // of if we just passed the classname
-            $transformer = new $transformerName;
-        }
 
-        // now, finally check, if the class is really a TRANSFORMER
-        if (! ($transformer instanceof Transformer)) {
+        // if string was passed, then create instance of the transformer
+        if(is_string($transformerName)) {
+
+            $transformer = new $transformerName;
+
+            // check, if we have provided a respective TRANSFORMER class
+            if(!($transformer instanceof Transformer)) {
+                throw new InvalidTransformerException;
+            }
+        }
+        // if an instance of Transformer was passed
+        elseif ($transformerName instanceof Transformer) {
+            $transformer = $transformerName;
+        }else{
+            // invalid parameter was passed
             throw new InvalidTransformerException();
         }
 
