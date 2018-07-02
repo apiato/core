@@ -59,10 +59,6 @@ trait ResponseTrait
             throw new InvalidTransformerException();
         }
 
-        // now, finally check, if the class is really a TRANSFORMER
-        if (! ($transformer instanceof Transformer)) {
-        }
-
         // append the includes from the transform() to the defaultIncludes
         $includes = array_unique(array_merge($transformer->getDefaultIncludes(), $includes));
 
