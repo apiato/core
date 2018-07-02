@@ -43,19 +43,19 @@ trait ResponseTrait
 
         // if string was passed, then create instance of the transformer
         if(is_string($transformerName)) {
+
             $transformer = new $transformerName;
 
-            // check instace
+            // check, if we have provided a respective TRANSFORMER class
             if(!($transformer instanceof Transformer)) {
                 throw new InvalidTransformerException;
             }
         }
         // if an instance of Transformer was passed
         elseif ($transformerName instanceof Transformer) {
-            // check, if we have provided a respective TRANSFORMER class
             $transformer = $transformerName;
-            // invalid parameter was passed
         }else{
+            // invalid parameter was passed
             throw new InvalidTransformerException();
         }
 
