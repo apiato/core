@@ -3,6 +3,7 @@
 namespace Apiato\Core\Traits;
 
 use Apiato\Core\Abstracts\Transformers\Transformer;
+use Apiato\Core\Exceptions\InvalidTranformerException;
 use Fractal;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\AbstractPaginator;
@@ -39,13 +40,22 @@ trait ResponseTrait
         array $meta = [],
         $resourceKey = null
     ) {
-        // create instance of the transformer
+
+        // if string was passed, then create instance of the transformer
         if(is_string($transformerName)) {
             $transformer = new $transformerName;
+
+            // check instace
+            if(!($transformer instanceof Transformer)) {
+                throw new InvalidTranformerException;
+            }
         }
         // if an instance of Transformer was passed
         elseif ($transformerName instanceof Transformer) {
             $transformer = $transformerName;
+        // invalid parameter was passed
+        }else{
+            throw new InvalidTranformerException;
         }
 
         // append the includes from the transform() to the defaultIncludes
