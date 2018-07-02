@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
+use Apiato\Core\Abstracts\Transformers\Transformer;
 use Fractal;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\AbstractPaginator;
@@ -24,10 +25,10 @@ trait ResponseTrait
 
     /**
      * @param       $data
-     * @param null  $transformerName
-     * @param array $includes
-     * @param array $meta
-     * @param null  $resourceKey
+     * @param null  $transformerName The transformer (e.g., Transformer::class or new Transformer()) to be applied
+     * @param array $includes additional resources to be included
+     * @param array $meta additional meta information to be applied
+     * @param null  $resourceKey the resource key to be set for the TOP LEVEL resource
      *
      * @return array
      */
@@ -40,6 +41,11 @@ trait ResponseTrait
     ) {
         // create instance of the transformer
         $transformer = new $transformerName;
+
+        // if an instance of Transformer was passed
+        if ($transformerName instanceof Transformer) {
+            $transformer = $transformerName;
+        }
 
         // append the includes from the transform() to the defaultIncludes
         $includes = array_unique(array_merge($transformer->getDefaultIncludes(), $includes));

@@ -189,6 +189,7 @@ trait TestsAuthHelperTrait
         if (isset($access['roles']) && !empty($access['roles'])) {
             if (!$user->hasRole($access['roles'])) {
                 $user->assignRole($access['roles']);
+                $user = $user->fresh();
             }
         }
 
@@ -205,6 +206,7 @@ trait TestsAuthHelperTrait
     {
         if (isset($access['permissions']) && !empty($access['permissions'])) {
             $user->givePermissionTo($access['permissions']);
+            $user = $user->fresh();
         }
 
         return $user;
