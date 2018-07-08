@@ -108,39 +108,40 @@ trait SeederLoaderTrait
     /**
      * @param $seedersClasses
      *
-     * @return  \Illuminate\Support\Collection|static
+     * @return  \Illuminate\Support\Collection
      */
     private function sortSeeders($seedersClasses)
     {
         $orderedSeederClasses = new Collection();
 
-        if (!$seedersClasses->isEmpty()) {
-
-            foreach ($seedersClasses as $key => $seederFullClassName) {
-                // if the class full namespace contain "_" it means it needs to be seeded in order
-                if (preg_match('/_/', $seederFullClassName)) {
-                    // move all the seeder classes that needs to be seeded in order to their own Collection
-                    $orderedSeederClasses->push($seederFullClassName);
-                    // delete the moved classes from the original collection
-                    $seedersClasses->forget($key);
-                }
-            }
-
-            // sort the classes that needed to be ordered
-            $orderedSeederClasses = $orderedSeederClasses->sortBy(function ($seederFullClassName) {
-                // get the order number form the end of each class name
-                $orderNumber = substr($seederFullClassName, strpos($seederFullClassName, "_") + 1);
-
-                return $orderNumber;
-            });
-
-            // append the randomly ordered seeder classes to the end of the ordered seeder classes
-            foreach ($seedersClasses as $seederClass) {
-                $orderedSeederClasses->push($seederClass);
-            }
-
+        if ($seedersClasses->isEmpty()) {
             return $orderedSeederClasses;
         }
+
+        foreach ($seedersClasses as $key => $seederFullClassName) {
+            // if the class full namespace contain "_" it means it needs to be seeded in order
+            if (preg_match('/_/', $seederFullClassName)) {
+                // move all the seeder classes that needs to be seeded in order to their own Collection
+                $orderedSeederClasses->push($seederFullClassName);
+                // delete the moved classes from the original collection
+                $seedersClasses->forget($key);
+            }
+        }
+
+        // sort the classes that needed to be ordered
+        $orderedSeederClasses = $orderedSeederClasses->sortBy(function ($seederFullClassName) {
+            // get the order number form the end of each class name
+            $orderNumber = substr($seederFullClassName, strpos($seederFullClassName, "_") + 1);
+
+            return $orderNumber;
+        });
+
+        // append the randomly ordered seeder classes to the end of the ordered seeder classes
+        foreach ($seedersClasses as $seederClass) {
+            $orderedSeederClasses->push($seederClass);
+        }
+
+        return $orderedSeederClasses;
     }
 
     /**
