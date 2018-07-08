@@ -112,7 +112,7 @@ trait SeederLoaderTrait
      */
     private function sortSeeders($seedersClasses)
     {
-        $orderedSeederClasses = new Collection([]);
+        $orderedSeederClasses = new Collection();
 
         if ($seedersClasses->isEmpty()) {
             return $orderedSeederClasses;
