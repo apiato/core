@@ -81,9 +81,13 @@ trait ResponseTrait
 
         $fractal = Fractal::create($data, $transformer)->withResourceName($resourceKey)->addMeta($this->metaData);
 
-        //read includes from url and merge them with given
+        // read includes passed via query params in url
         $requestIncludes = $this->parseRequestedIncludes();
-        $requestIncludes = array_unique(array_merge($requestIncludes, $includes));
+
+        // merge the requested includes with the one added by the transform() method itself
+        $requestIncludes = array_unique(array_merge($includes, $requestIncludes));
+
+        // and let fractal include everything
         $fractal->parseIncludes($requestIncludes);
 
         // apply request filters if available in the request
@@ -213,12 +217,13 @@ trait ResponseTrait
 
         return $responseArray;
     }
+    
+    /**
+     * @return array
+     */
     protected function parseRequestedIncludes() : array
     {
-        return explode(
-            ',',
-            Request::get('include')
-        );
+        return explode(',', Request::get('include'));
     }
 
 }
