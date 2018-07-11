@@ -55,12 +55,6 @@ trait ResponseTrait
             throw new InvalidTransformerException();
         }
 
-        // append the includes from the transform() to the defaultIncludes
-        $includes = array_unique(array_merge($transformer->getDefaultIncludes(), $includes));
-
-        // set the relationships to be included
-        $transformer->setDefaultIncludes($includes);
-
         // add specific meta information to the response message
         $this->metaData = [
             'include' => $transformer->getAvailableIncludes(),
@@ -86,10 +80,15 @@ trait ResponseTrait
         }
 
         $fractal = Fractal::create($data, $transformer)->withResourceName($resourceKey)->addMeta($this->metaData);
-        // check if the user wants to include additional relationships
-        if ($requestIncludes = Request::get('include')) {
-            $fractal->parseIncludes($requestIncludes);
-        }
+
+        // read includes passed via query params in url
+        $requestIncludes = $this->parseRequestedIncludes();
+
+        // merge the requested includes with the one added by the transform() method itself
+        $requestIncludes = array_unique(array_merge($includes, $requestIncludes));
+
+        // and let fractal include everything
+        $fractal->parseIncludes($requestIncludes);
 
         // apply request filters if available in the request
         if ($requestFilters = Request::get('filter')) {
@@ -217,6 +216,14 @@ trait ResponseTrait
         }
 
         return $responseArray;
+    }
+    
+    /**
+     * @return array
+     */
+    protected function parseRequestedIncludes() : array
+    {
+        return explode(',', Request::get('include'));
     }
 
 }
