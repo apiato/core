@@ -187,8 +187,12 @@ trait TestsAuthHelperTrait
     private function setupTestingUserRoles($user, $access)
     {
         if (isset($access['roles']) && !empty($access['roles'])) {
-            if (!$user->hasRole($access['roles'])) {
-                $user->assignRole($access['roles']);
+
+            $roles = is_array($access['roles']) ? $access['roles'] :
+            explode('|', $access['roles']);
+
+            if (!$user->hasRole($roles)) {
+                $user->assignRole($roles);
                 $user = $user->fresh();
             }
         }
@@ -205,7 +209,11 @@ trait TestsAuthHelperTrait
     private function setupTestingUserPermissions($user, $access)
     {
         if (isset($access['permissions']) && !empty($access['permissions'])) {
-            $user->givePermissionTo($access['permissions']);
+
+            $permissions = is_array($access['permissions']) ? $access['permissions'] :
+            explode('|', $access['permissions']);
+
+            $user->givePermissionTo($permissions);
             $user = $user->fresh();
         }
 
