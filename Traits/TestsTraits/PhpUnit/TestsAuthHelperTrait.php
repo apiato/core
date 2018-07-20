@@ -188,11 +188,13 @@ trait TestsAuthHelperTrait
     {
         if (isset($access['roles']) && !empty($access['roles'])) {
 
-            $roles = is_array($access['roles']) ? $access['roles'] :
-            explode('|', $access['roles']);
+            if(!is_array($access['roles']))
+            {
+                $access['roles'] = explode('|', $access['roles']);
+            }
 
-            if (!$user->hasRole($roles)) {
-                $user->assignRole($roles);
+            if (!$user->hasRole($access['roles'])) {
+                $user->assignRole($access['roles']);
                 $user = $user->fresh();
             }
         }
@@ -210,10 +212,12 @@ trait TestsAuthHelperTrait
     {
         if (isset($access['permissions']) && !empty($access['permissions'])) {
 
-            $permissions = is_array($access['permissions']) ? $access['permissions'] :
-            explode('|', $access['permissions']);
+            if(!is_array($access['permissions']))
+            {
+                $access['permissions'] = explode('|', $access['permissions']);
+            }
 
-            $user->givePermissionTo($permissions);
+            $user->givePermissionTo($access['permissions']);
             $user = $user->fresh();
         }
 
