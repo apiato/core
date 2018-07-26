@@ -88,25 +88,30 @@ trait TestsAuthHelperTrait
      */
     private function createTestingUser($userDetails = null, $access = null)
     {
-        // "inject" the confirmed status, if userdetails are submitted
-        if(is_array($userDetails)) {
-            $defaults = [
-                'confirmed' => true,
-            ];
+        // if $userDetails is User Model, then set this
+        if($userDetails instanceof User)  {
+            $user = $userDetails;
+        } else {
+            // "inject" the confirmed status, if userdetails are submitted
+            if(is_array($userDetails)) {
+                $defaults = [
+                    'confirmed' => true,
+                ];
 
-            $userDetails = array_merge($defaults, $userDetails);
+                $userDetails = array_merge($defaults, $userDetails);
+            }
+
+            // create new user
+            $user = $this->factoryCreateUser($userDetails);
+
+            // assign user roles and permissions based on the access property
+            $user = $this->setupTestingUserAccess($user, $access);
         }
-
-        // create new user
-        $user = $this->factoryCreateUser($userDetails);
-
-        // assign user roles and permissions based on the access property
-        $user = $this->setupTestingUserAccess($user, $access);
 
         // authentication the user
         $this->actingAs($user, 'api');
 
-        // set the created user
+        // set the created/seeded user
         return $this->testingUser = $user;
     }
 
