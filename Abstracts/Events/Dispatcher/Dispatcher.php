@@ -14,18 +14,17 @@ use Illuminate\Foundation\Bus\PendingDispatch as JobDispatcher;
  */
 class Dispatcher extends EventDispatcher
 {
-    public function dispatch($event, $payload = [], $halt = false)
-    {
-        if ($event instanceof ShouldHandle) {
-            $job = new EventJob($event);
-            $job = isset($event->jobDelay) ? $job->delay($event->jobDelay) : $job;
-            $job = isset($event->jobQueue) ? $job->onQueue($event->jobQueue) : $job;
-            new JobDispatcher($job);
-        } else if ($event instanceof ShouldHandleNow) {
-            $event->handle();
-        }
-
-        return parent::dispatch($event, $payload, $halt);
+  public function dispatch($event, $payload = [], $halt = false)
+  {
+    if ($event instanceof ShouldHandle) {
+      $job = new EventJob($event);
+      $delay = $event->jobDelay ?? 0;
+      (new JobDispatcher($job))
+        ->delay($delay)
+        ->onQueue($event->jobQueue);
+    } else if ($event instanceof ShouldHandleNow) {
+      $event->handle();
     }
-
+    return parent::dispatch($event, $payload, $halt);
+  }
 }
