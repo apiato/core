@@ -17,12 +17,26 @@ class Dispatcher extends EventDispatcher
   public function dispatch($event, $payload = [], $halt = false)
   {
     if ($event instanceof ShouldHandle) {
+
+      /* Initialize delay & queue variables */
+      $delay = $event->jobDelay;
+      $queue = $event->jobQueue;
+
+      /* Create a job & initialize the dispatcher */
       $job = new EventJob($event);
-      $delay = $event->jobDelay ?? 0;
-      $dispatcher = new JobDispatcher($job);
-      $dispatcher
-        ->delay($delay)
-        ->onQueue($event->jobQueue);
+      $dispatcher = (new JobDispatcher($job));
+
+      if (isset($delay) && (is_numeric($delay) ||
+          $delay instanceof \DateTimeInterface ||
+          $delay instanceof \DateInterval
+        )) {
+        $dispatcher->delay($delay);
+      }
+
+      if (isset($queue) && is_string($queue)) {
+        $dispatcher->onQueue($queue);
+      }
+
     } else if ($event instanceof ShouldHandleNow) {
       $event->handle();
     }
