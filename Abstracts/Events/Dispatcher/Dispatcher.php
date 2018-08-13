@@ -19,12 +19,14 @@ class Dispatcher extends EventDispatcher
     if ($event instanceof ShouldHandle) {
       $job = new EventJob($event);
       $delay = $event->jobDelay ?? 0;
-      (new JobDispatcher($job))
+      $dispatcher = new JobDispatcher($job);
+      $dispatcher
         ->delay($delay)
         ->onQueue($event->jobQueue);
     } else if ($event instanceof ShouldHandleNow) {
       $event->handle();
     }
+
     return parent::dispatch($event, $payload, $halt);
   }
 }
