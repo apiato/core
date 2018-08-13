@@ -17,28 +17,28 @@ use Illuminate\Queue\SerializesModels;
  */
 class EventJob extends Job implements ShouldQueue
 {
-  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-  public $handler;
+    public $handler;
 
-  /**
-   * EventJob constructor.
-   *
-   * @param \Apiato\Core\Abstracts\Events\Interfaces\ShouldHandle $handler
-   */
+    /**
+     * EventJob constructor.
+     *
+     * @param \Apiato\Core\Abstracts\Events\Interfaces\ShouldHandle $handler
+     */
 
-  public function __construct(ShouldHandle $handler)
-  {
-    $this->handler = $handler;
-  }
+    public function __construct(ShouldHandle $handler)
+    {
+        $this->handler = $handler;
+    }
 
-  /**
-   * Handle the job.
-   *
-   * @return void
-   */
-  public function handle()
-  {
-    $this->handler->handle();
-  }
+    /**
+     * Handle the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        $this->handler->handle();
+    }
 }
