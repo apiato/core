@@ -16,6 +16,7 @@ class Dispatcher extends EventDispatcher
 {
   public function dispatch($event, $payload = [], $halt = false)
   {
+    /* Handle the event Async when the ShouldHandle Interface is implemented */
     if ($event instanceof ShouldHandle) {
 
       /* Initialize delay & queue variables */
@@ -24,7 +25,7 @@ class Dispatcher extends EventDispatcher
 
       /* Create a job & initialize the dispatcher */
       $job = new EventJob($event);
-      $dispatcher = (new JobDispatcher($job));
+      $dispatcher = new JobDispatcher($job);
 
       if (isset($delay) && (is_numeric($delay) ||
           $delay instanceof \DateTimeInterface ||
