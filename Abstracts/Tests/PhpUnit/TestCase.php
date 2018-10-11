@@ -43,7 +43,7 @@ abstract class TestCase extends LaravelTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
     }
