@@ -4,6 +4,7 @@ namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
 
 use App;
 use Mockery;
+use Closure;
 
 /**
  * Class TestsMockHelperTrait
@@ -22,7 +23,7 @@ trait TestsMockHelperTrait
      *
      * @return  \Mockery\MockInterface
      */
-    public function mock($class)
+    public function mock($class, ?Closure $mock = NULL)
     {
         $mock = Mockery::mock($class);
         App::instance($class, $mock);
