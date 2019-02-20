@@ -4,6 +4,7 @@ namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
 
 use App;
 use Mockery;
+use Closure;
 
 /**
  * Class TestsMockHelperTrait
