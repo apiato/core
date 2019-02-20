@@ -181,11 +181,11 @@ trait ResponseTrait
     {
         $filteredData = null;
 
-        if ($this->array_is_associative($obj)) {
-            return $this->filterObjectKeys($obj, $filters);
+        if ($this->array_is_associative($responseArray)) {
+            return $this->filterObjectKeys($responseArray, $filters);
         }
 
-        foreach ($obj as $key => $value) {
+        foreach ($responseArray as $key => $value) {
             array_set($filteredData, $key, $this->filterResponse($value, $filters));
         }
 
