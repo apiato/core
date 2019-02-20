@@ -2,14 +2,13 @@
 
 namespace Apiato\Core\Traits;
 
-use Fractal;
-use Request;
-use ReflectionClass;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\AbstractPaginator;
 use Apiato\Core\Abstracts\Transformers\Transformer;
-use Apiato\Core\Exceptions\InvalidTransformerException;
+use Fractal;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Collection;
+use ReflectionClass;
+use Request;
 
 /**
  * Class ResponseTrait
@@ -18,7 +17,6 @@ use Apiato\Core\Exceptions\InvalidTransformerException;
  */
 trait ResponseTrait
 {
-
     /**
      * @var array
      */
@@ -26,41 +24,37 @@ trait ResponseTrait
 
     /**
      * @param  $data
-     * @param  null    $transformerName The transformer (e.g., Transformer::class or new Transformer()) to be applied
-     * @param  array   $includes        additional resources to be included
-     * @param  array   $meta            additional meta information to be applied
-     * @param  null    $resourceKey     the resource key to be set for the TOP LEVEL resource
+     * @param  null $transformerName The transformer (e.g., Transformer::class or new Transformer()) to be applied
+     * @param  array $includes additional resources to be included
+     * @param  array $meta additional meta information to be applied
+     * @param  null $resourceKey the resource key to be set for the TOP LEVEL resource
      * @return array
      */
     public function transform(
-              $data,
-              $transformerName = null,
+        $data,
+        $transformerName = null,
         array $includes = [],
         array $meta = [],
-              $resourceKey = null
-    ) {
-        // first, we need to create the transformer
+        $resourceKey = null
+    )
+    {
+        // create instance of the transformer
+        $transformer = new $transformerName();
+        // if an instance of Transformer was passed
         if ($transformerName instanceof Transformer) {
-            // check, if we have provided a respective TRANSFORMER class
             $transformer = $transformerName;
-        } else {
-            // of if we just passed the classname
-            $transformer = new $transformerName();
         }
-
-        // now, finally check, if the class is really a TRANSFORMER
-        if (! ($transformer instanceof Transformer)) {
-            throw new InvalidTransformerException();
-        }
-
+        // append the includes from the transform() to the defaultIncludes
+        $includes = array_unique(array_merge($transformer->getDefaultIncludes(), $includes));
+        // set the relationships to be included
+        $transformer->setDefaultIncludes($includes);
         // add specific meta information to the response message
         $this->metaData = [
             'include' => $transformer->getAvailableIncludes(),
-            'custom'  => $meta,
+            'custom' => $meta,
         ];
-
         // no resource key was set
-        if (! $resourceKey) {
+        if (!$resourceKey) {
             // get the resource key from the model
             $obj = null;
             if ($data instanceof AbstractPaginator) {
@@ -70,31 +64,22 @@ trait ResponseTrait
             } else {
                 $obj = $data;
             }
-
             // if we have an object, try to get its resourceKey
             if ($obj) {
                 $resourceKey = $obj->getResourceKey();
             }
         }
-
         $fractal = Fractal::create($data, $transformer)->withResourceName($resourceKey)->addMeta($this->metaData);
-
-        // read includes passed via query params in url
-        $requestIncludes = $this->parseRequestedIncludes();
-
-        // merge the requested includes with the one added by the transform() method itself
-        $requestIncludes = array_unique(array_merge($includes, $requestIncludes));
-
-        // and let fractal include everything
-        $fractal->parseIncludes($requestIncludes);
-
+        // check if the user wants to include additional relationships
+        if ($requestIncludes = Request::get('include')) {
+            $fractal->parseIncludes($requestIncludes);
+        }
         // apply request filters if available in the request
         if ($requestFilters = Request::get('filter')) {
             $result = $this->filterResponse($fractal->toArray(), explode(';', $requestFilters));
         } else {
             $result = $fractal->toArray();
         }
-
         return $result;
     }
 
@@ -105,15 +90,14 @@ trait ResponseTrait
     public function withMeta($data)
     {
         $this->metaData = $data;
-
         return $this;
     }
 
     /**
      * @param  $message
-     * @param  int                             $status
-     * @param  array                           $headers
-     * @param  int                             $options
+     * @param  int $status
+     * @param  array $headers
+     * @param  int $options
      * @return \Illuminate\Http\JsonResponse
      */
     public function json($message, $status = 200, array $headers = [], $options = 0)
@@ -122,10 +106,10 @@ trait ResponseTrait
     }
 
     /**
-     * @param  null           $message
-     * @param  int            $status
-     * @param  array          $headers
-     * @param  int            $options
+     * @param  null $message
+     * @param  int $status
+     * @param  array $headers
+     * @param  int $options
      * @return JsonResponse
      */
     public function created($message = null, $status = 201, array $headers = [], $options = 0)
@@ -135,9 +119,9 @@ trait ResponseTrait
 
     /**
      * @param  null                            array      or string $message
-     * @param  int                             $status
-     * @param  array                           $headers
-     * @param  int                             $options
+     * @param  int $status
+     * @param  array $headers
+     * @param  int $options
      * @return \Illuminate\Http\JsonResponse
      */
     public function accepted($message = null, $status = 202, array $headers = [], $options = 0)
@@ -151,20 +135,18 @@ trait ResponseTrait
      */
     public function deleted($responseArray = null)
     {
-        if (! $responseArray) {
+        if (!$responseArray) {
             return $this->accepted();
         }
-
-        $id        = $responseArray->getHashedKey();
+        $id = $responseArray->getHashedKey();
         $className = (new ReflectionClass($responseArray))->getShortName();
-
         return $this->accepted([
             'message' => "$className ($id) Deleted Successfully.",
         ]);
     }
 
     /**
-     * @param  int                             $status
+     * @param  int $status
      * @return \Illuminate\Http\JsonResponse
      */
     public function noContent($status = 204)
@@ -173,22 +155,22 @@ trait ResponseTrait
     }
 
     /**
-     * @param  array   $responseArray
-     * @param  array   $filters
+     * @param  array $responseArray
+     * @param  array $filters
      * @return array
      */
     private function filterResponse(array $responseArray, array $filters)
     {
         $filteredData = null;
-
-        if ($this->array_is_associative($responseArray)) {
-            return $this->filterObjectKeys($responseArray, $filters);
+        $responseArrayWithoutMeta = array_except($responseArray, ['meta']);
+        if ($this->array_is_associative($responseArrayWithoutMeta)) {
+            $filteredData = $this->filterObjectKeys($responseArrayWithoutMeta, $filters);
+        } else {
+            foreach ($responseArrayWithoutMeta as $key => $value) {
+                array_set($filteredData, $key, $this->filterResponse($value, $filters));
+            }
         }
-
-        foreach ($responseArray as $key => $value) {
-            array_set($filteredData, $key, $this->filterResponse($value, $filters));
-        }
-
+        $filteredData['meta'] = array_get($responseArray, 'meta', []);
         return $filteredData;
     }
 
@@ -199,7 +181,6 @@ trait ResponseTrait
     {
         // Create new Array,  Make it the same size as the input array
         $compareArray = array_pad([], count($array), 0);
-
         return (count(array_diff_key($array, $compareArray))) ? true : false;
     }
 
@@ -210,26 +191,14 @@ trait ResponseTrait
     public function filterObjectKeys($obj, $filters)
     {
         $filteredData = [];
-
         foreach (array_dot($obj) as $key => $value) {
             foreach ($filters as $filter) {
                 $keyWithWildcard = preg_replace("/\.(\d)+\./", ".*.", $key);
-
-                if ($keyWithWildcard === $filter) {
+                if ($keyWithWildcard === $filter || preg_match("/^{$filter}\./", $keyWithWildcard)) {
                     array_set($filteredData, $key, $value);
                 }
             }
         }
-
         return $filteredData;
     }
-
-    /**
-     * @return array
-     */
-    protected function parseRequestedIncludes(): array
-    {
-        return explode(',', Request::get('include'));
-    }
-
 }
