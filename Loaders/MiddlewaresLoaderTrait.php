@@ -20,7 +20,7 @@ trait MiddlewaresLoaderTrait
     {
         $this->registerMiddleware($this->middlewares);
         $this->registerMiddlewareGroups($this->middlewareGroups);
-		$this->registerMiddlewarePriority($this->middlewarePriority);
+		//$this->registerMiddlewarePriority($this->middlewarePriority);
         $this->registerRouteMiddleware($this->routeMiddleware);
     }
 
