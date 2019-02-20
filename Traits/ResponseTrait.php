@@ -2,14 +2,14 @@
 
 namespace Apiato\Core\Traits;
 
+use Fractal;
+use Request;
+use ReflectionClass;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\AbstractPaginator;
 use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Exceptions\InvalidTransformerException;
-use Fractal;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Pagination\AbstractPaginator;
-use Illuminate\Support\Collection;
-use ReflectionClass;
-use Request;
 
 /**
  * Class ResponseTrait
@@ -20,34 +20,32 @@ trait ResponseTrait
 {
 
     /**
-     * @var  array
+     * @var array
      */
     protected $metaData = [];
 
     /**
-     * @param       $data
-     * @param null  $transformerName The transformer (e.g., Transformer::class or new Transformer()) to be applied
-     * @param array $includes additional resources to be included
-     * @param array $meta additional meta information to be applied
-     * @param null  $resourceKey the resource key to be set for the TOP LEVEL resource
-     *
+     * @param  $data
+     * @param  null    $transformerName The transformer (e.g., Transformer::class or new Transformer()) to be applied
+     * @param  array   $includes        additional resources to be included
+     * @param  array   $meta            additional meta information to be applied
+     * @param  null    $resourceKey     the resource key to be set for the TOP LEVEL resource
      * @return array
      */
     public function transform(
-        $data,
-        $transformerName = null,
+              $data,
+              $transformerName = null,
         array $includes = [],
         array $meta = [],
-        $resourceKey = null
+              $resourceKey = null
     ) {
         // first, we need to create the transformer
         if ($transformerName instanceof Transformer) {
             // check, if we have provided a respective TRANSFORMER class
             $transformer = $transformerName;
-        }
-        else {
+        } else {
             // of if we just passed the classname
-            $transformer = new $transformerName;
+            $transformer = new $transformerName();
         }
 
         // now, finally check, if the class is really a TRANSFORMER
@@ -62,7 +60,7 @@ trait ResponseTrait
         ];
 
         // no resource key was set
-        if (!$resourceKey) {
+        if (! $resourceKey) {
             // get the resource key from the model
             $obj = null;
             if ($data instanceof AbstractPaginator) {
@@ -100,11 +98,9 @@ trait ResponseTrait
         return $result;
     }
 
-
     /**
-     * @param $data
-     *
-     * @return  $this
+     * @param  $data
+     * @return $this
      */
     public function withMeta($data)
     {
@@ -114,12 +110,11 @@ trait ResponseTrait
     }
 
     /**
-     * @param       $message
-     * @param int   $status
-     * @param array $headers
-     * @param int   $options
-     *
-     * @return  \Illuminate\Http\JsonResponse
+     * @param  $message
+     * @param  int                             $status
+     * @param  array                           $headers
+     * @param  int                             $options
+     * @return \Illuminate\Http\JsonResponse
      */
     public function json($message, $status = 200, array $headers = [], $options = 0)
     {
@@ -127,11 +122,10 @@ trait ResponseTrait
     }
 
     /**
-     * @param null  $message
-     * @param int   $status
-     * @param array $headers
-     * @param int   $options
-     *
+     * @param  null           $message
+     * @param  int            $status
+     * @param  array          $headers
+     * @param  int            $options
      * @return JsonResponse
      */
     public function created($message = null, $status = 201, array $headers = [], $options = 0)
@@ -140,12 +134,11 @@ trait ResponseTrait
     }
 
     /**
-     * @param null  array or string $message
-     * @param int   $status
-     * @param array $headers
-     * @param int   $options
-     *
-     * @return  \Illuminate\Http\JsonResponse
+     * @param  null                            array      or string $message
+     * @param  int                             $status
+     * @param  array                           $headers
+     * @param  int                             $options
+     * @return \Illuminate\Http\JsonResponse
      */
     public function accepted($message = null, $status = 202, array $headers = [], $options = 0)
     {
@@ -153,17 +146,16 @@ trait ResponseTrait
     }
 
     /**
-     * @param $responseArray
-     *
-     * @return  \Illuminate\Http\JsonResponse
+     * @param  $responseArray
+     * @return \Illuminate\Http\JsonResponse
      */
     public function deleted($responseArray = null)
     {
-        if (!$responseArray) {
+        if (! $responseArray) {
             return $this->accepted();
         }
 
-        $id = $responseArray->getHashedKey();
+        $id        = $responseArray->getHashedKey();
         $className = (new ReflectionClass($responseArray))->getShortName();
 
         return $this->accepted([
@@ -172,56 +164,70 @@ trait ResponseTrait
     }
 
     /**
-     * @param int $status
-     *
-     * @return  \Illuminate\Http\JsonResponse
+     * @param  int                             $status
+     * @return \Illuminate\Http\JsonResponse
      */
     public function noContent($status = 204)
     {
         return new JsonResponse(null, $status);
     }
 
-
     /**
-     * @param array $responseArray
-     * @param array $filters
-     *
+     * @param  array   $responseArray
+     * @param  array   $filters
      * @return array
      */
     private function filterResponse(array $responseArray, array $filters)
     {
-        foreach ($responseArray as $k => $v) {
-            if (in_array($k, $filters, true)) {
-                // we have found our element - so continue with the next one
-                continue;
-            }
+        $filteredData = null;
 
-            if (is_array($v)) {
-                // it is an array - so go one step deeper
-                $v = $this->filterResponse($v, $filters);
-                if (empty($v)) {
-                    // it is an empty array - delete the key as well
-                    unset($responseArray[$k]);
-                } else {
-                    $responseArray[$k] = $v;
-                }
-                continue;
-            } else {
-                // check if the array is not in our filter-list
-                if (!in_array($k, $filters)) {
-                    unset($responseArray[$k]);
-                    continue;
+        if ($this->array_is_associative($obj)) {
+            return $this->filterObjectKeys($obj, $filters);
+        }
+
+        foreach ($obj as $key => $value) {
+            array_set($filteredData, $key, $this->filterResponse($value, $filters));
+        }
+
+        return $filteredData;
+    }
+
+    /**
+     * @param $array
+     */
+    public function array_is_associative($array)
+    {
+        // Create new Array,  Make it the same size as the input array
+        $compareArray = array_pad([], count($array), 0);
+
+        return (count(array_diff_key($array, $compareArray))) ? true : false;
+    }
+
+    /**
+     * @param $obj
+     * @param $filters
+     */
+    public function filterObjectKeys($obj, $filters)
+    {
+        $filteredData = [];
+
+        foreach (array_dot($obj) as $key => $value) {
+            foreach ($filters as $filter) {
+                $keyWithWildcard = preg_replace("/\.(\d)+\./", ".*.", $key);
+
+                if ($keyWithWildcard === $filter) {
+                    array_set($filteredData, $key, $value);
                 }
             }
         }
 
-        return $responseArray;
+        return $filteredData;
     }
-    
+
     /**
      * @return array
      */
-    protected function parseRequestedIncludes() : array
+    protected function parseRequestedIncludes(): array
     {
         return explode(',', Request::get('include'));
     }
