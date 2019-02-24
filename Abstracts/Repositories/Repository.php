@@ -19,7 +19,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
 
     use PrettusCacheableRepository {
 		paginate as public paginateExtend;
-	};
+	}
     
     /**
      * Define the maximum amount of entries per page that is returned. 
