@@ -48,11 +48,14 @@ trait ResponseTrait
         $includes = array_unique(array_merge($transformer->getDefaultIncludes(), $includes));
         // set the relationships to be included
         $transformer->setDefaultIncludes($includes);
-        // add specific meta information to the response message
-        $this->metaData = [
-            'include' => $transformer->getAvailableIncludes(),
-            'custom' => $meta,
-        ];
+        // add specific meta information to the response message (Only if exist)
+        if ($transformer->getAvailableIncludes()) {
+            $this->metaData['include'] = $transformer->getAvailableIncludes();
+        }
+        if ($meta) {
+            $this->metaData['custom'] = $meta;
+        }
+
         // no resource key was set
         if (!$resourceKey) {
             // get the resource key from the model
@@ -69,7 +72,10 @@ trait ResponseTrait
                 $resourceKey = $obj->getResourceKey();
             }
         }
-        $fractal = Fractal::create($data, $transformer)->withResourceName($resourceKey)->addMeta($this->metaData);
+        $fractal = Fractal::create($data, $transformer)->withResourceName($resourceKey);
+        if ($this->metaData) {
+            $fractal->addMeta($this->metaData);
+        }
         // check if the user wants to include additional relationships
         if ($requestIncludes = Request::get('include')) {
             $fractal->parseIncludes($requestIncludes);
