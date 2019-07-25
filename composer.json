@@ -25,8 +25,8 @@
     "guzzlehttp/guzzle": "^6.3",
     "prettus/l5-repository": "^2.6",
     "barryvdh/laravel-cors": "^0.11",
-    "spatie/laravel-fractal": "5.3.*",
-    "vinkla/hashids": "^5.0",
+    "spatie/laravel-fractal": "5.5.*",
+    "vinkla/hashids": "^5.1",
     "optimus/heimdal" : "~1.5",
     "dto/dto" : "^3.2"
   },
