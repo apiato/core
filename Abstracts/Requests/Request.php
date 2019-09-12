@@ -188,6 +188,9 @@ abstract class Request extends LaravelRequest
                 foreach (explode($orIndicator, $function) as $orFunction) {
                     // dynamically call each function
                     $orReturns[] = $this->{$orFunction}();
+                    
+                    if ($requireAll && in_array(false, $orReturns))
+                        break;
                 }
                 
                 if ($requireAll)
