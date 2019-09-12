@@ -164,10 +164,11 @@ abstract class Request extends LaravelRequest
      * if the user can proceed with the request or not.
      *
      * @param array $functions
+     * @param bool $requireAll
      *
      * @return  bool
      */
-    protected function check(array $functions)
+    protected function check(array $functions, bool $requireAll = false)
     {
         $orIndicator = '|';
         $returns = [];
@@ -188,6 +189,9 @@ abstract class Request extends LaravelRequest
                     // dynamically call each function
                     $orReturns[] = $this->{$orFunction}();
                 }
+                
+                if ($requireAll)
+                    return in_array(false, $orReturns) ? false : true;
 
                 // if in_array returned `true` means at least one function returned `true` thus return `true` to allow access.
                 // if in_array returned `false` means no function returned `true` thus return `false` to prevent access.
