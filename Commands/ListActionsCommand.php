@@ -3,7 +3,7 @@
 namespace Apiato\Core\Commands;
 
 use Apiato\Core\Foundation\Facades\Apiato;
-use App\Ship\Parents\Commands\ConsoleCommand;
+use Apiato\Core\Abstracts\Commands\ConsoleCommand;
 use File;
 use Symfony\Component\Console\Output\ConsoleOutput;
 

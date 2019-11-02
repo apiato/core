@@ -3,9 +3,9 @@
 namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
 
 use App;
-use App\Ship\Exceptions\MissingTestEndpointException;
-use App\Ship\Exceptions\UndefinedMethodException;
-use App\Ship\Exceptions\WrongEndpointFormatException;
+use Apiato\Core\Exceptions\MissingTestEndpointException;
+use Apiato\Core\Exceptions\UndefinedMethodException;
+use Apiato\Core\Exceptions\WrongEndpointFormatException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Vinkla\Hashids\Facades\Hashids;
@@ -74,7 +74,7 @@ trait TestsRequestHelperTrait
      * @param array $data
      * @param array $headers
      *
-     * @throws \App\Ship\Exceptions\UndefinedMethodException
+     * @throws UndefinedMethodException
      * 
      * @return \Illuminate\Foundation\Testing\TestResponse
      */

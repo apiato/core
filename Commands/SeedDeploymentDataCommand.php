@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Commands;
 
-use App\Ship\Parents\Commands\ConsoleCommand;
+use Apiato\Core\Abstracts\Commands\ConsoleCommand;
 
 /**
  * Class SeedDeploymentDataCommand

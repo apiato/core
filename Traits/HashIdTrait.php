@@ -2,7 +2,6 @@
 
 namespace Apiato\Core\Traits;
 
-use App\Ship\Exceptions\IncorrectIdException;
 use Illuminate\Support\Facades\Config;
 use Route;
 use Vinkla\Hashids\Facades\Hashids;
@@ -246,8 +245,7 @@ trait HashIdTrait
                     $decoded = $this->decoder($id);
 
                     if (empty($decoded)) {
-                        throw new IncorrectIdException('ID (' . $id . ') is incorrect, consider using the hashed ID
-                        instead of the numeric ID.');
+                        throw new IncorrectIdException('ID (' . $id . ') is incorrect, consider using the hashed ID instead of the numeric ID.');
                     }
 
                     return $decoded[0];
