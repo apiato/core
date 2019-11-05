@@ -65,7 +65,7 @@ abstract class Exception extends SymfonyHttpException
         $this->environment = Config::get('app.env');
 
         $message = $this->prepareMessage($message);
-        $error = $this->prepareError($errors);
+        $this->errors = $this->prepareError($errors);
         $statusCode = $this->prepareStatusCode($statusCode);
 
         $this->logTheError($statusCode, $message, $code);

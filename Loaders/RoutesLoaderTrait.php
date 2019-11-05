@@ -3,6 +3,7 @@
 namespace Apiato\Core\Loaders;
 
 use Apiato\Core\Foundation\Facades\Apiato;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -45,7 +46,7 @@ trait RoutesLoaderTrait
 
         if (File::isDirectory($apiRoutesPath)) {
             $files = File::allFiles($apiRoutesPath);
-            $files = array_sort($files, function ($file) {
+            $files = Arr::sort($files, function ($file) {
                 return $file->getFilename();
             });
             foreach ($files as $file) {
@@ -69,7 +70,7 @@ trait RoutesLoaderTrait
 
         if (File::isDirectory($webRoutesPath)) {
             $files = File::allFiles($webRoutesPath);
-            $files = array_sort($files, function ($file) {
+            $files = Arr::sort($files, function ($file) {
                 return $file->getFilename();
             });
             foreach ($files as $file) {

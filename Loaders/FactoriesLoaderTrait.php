@@ -20,14 +20,10 @@ trait FactoriesLoaderTrait
      */
     public function loadFactoriesFromContainers()
     {
-        $loadersDirectory = str_replace(getcwd(), '', __DIR__);
-
-        $newFactoriesPath = $loadersDirectory . '/FactoryMixer';
+		$newFactoriesPath = base_path('vendor/apiato/core/Loaders/FactoryMixer');
 
         App::singleton(Factory::class, function ($app) use ($newFactoriesPath) {
-            $faker = $app->make(Generator::class);
-
-            return Factory::construct($faker, base_path() . $newFactoriesPath);
+            return Factory::construct($app->make(Generator::class), $newFactoriesPath);
         });
     }
 

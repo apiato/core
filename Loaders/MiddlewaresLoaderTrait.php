@@ -20,6 +20,7 @@ trait MiddlewaresLoaderTrait
     {
         $this->registerMiddleware($this->middlewares);
         $this->registerMiddlewareGroups($this->middlewareGroups);
+		//$this->registerMiddlewarePriority($this->middlewarePriority);
         $this->registerRouteMiddleware($this->routeMiddleware);
     }
 
@@ -51,6 +52,20 @@ trait MiddlewaresLoaderTrait
                 foreach ($middleware as $item) {
                     $this->app['router']->pushMiddlewareToGroup($key, $item);
                 }
+            }
+        }
+    }
+
+	/**
+     * Registering Route Middleware's priority
+     *
+     * @param array $middlewarePriority
+     */
+    private function registerMiddlewarePriority(array $middlewarePriority = [])
+    {
+        foreach ($middlewarePriority as $key => $middleware) {
+            if (! in_array($middleware, $this->app['router']->middlewarePriority)) {
+                $this->app['router']->middlewarePriority[] = $middleware;
             }
         }
     }
