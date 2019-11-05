@@ -27,10 +27,11 @@
     "barryvdh/laravel-cors": "^0.11",
     "spatie/laravel-fractal": "5.6.*",
     "vinkla/hashids": "^7",
-    "dto/dto" : "^3.2"
+    "dto/dto" : "^3.2",
+    "zmaren/heimdal": "^1.5"
   },
   "require-dev": {
-    "zmaren/heimdal": "*"
+
   },
   "autoload": {
     "psr-4": {
