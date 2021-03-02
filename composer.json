@@ -45,6 +45,7 @@
     "extra": {
         "laravel": {
             "providers": [
+                "Apiato\\Core\\Providers\\ApiatoProvider",
                 "Vinkla\\Hashids\\HashidsServiceProvider",
                 "Prettus\\Repository\\Providers\\RepositoryServiceProvider",
                 "Fruitcake\\Cors\\CorsServiceProvider",
