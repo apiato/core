@@ -8,6 +8,9 @@ use Apiato\Core\Foundation\Facades\Apiato;
 use ErrorException;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Scope;
 use League\Fractal\TransformerAbstract as FractalTransformer;
 
@@ -49,7 +52,7 @@ abstract class Transformer extends FractalTransformer
      * @param callable|FractalTransformer $transformer
      * @param null                        $resourceKey
      *
-     * @return \League\Fractal\Resource\Item
+     * @return Item
      */
     public function item($data, $transformer, $resourceKey = null)
     {
@@ -66,14 +69,13 @@ abstract class Transformer extends FractalTransformer
      * @param callable|FractalTransformer $transformer
      * @param null                        $resourceKey
      *
-     * @return \League\Fractal\Resource\Collection
+     * @return Collection
      */
     public function collection($data, $transformer, $resourceKey = null)
     {
         // set a default resource key if none is set
         if (!$resourceKey && $data->isNotEmpty()) {
-            $obj = $data->first();
-            $resourceKey = $obj->getResourceKey();
+            $resourceKey = (string) $data->modelKeys()[0];
         }
 
         return parent::collection($data, $transformer, $resourceKey);
@@ -84,7 +86,7 @@ abstract class Transformer extends FractalTransformer
      * @param string $includeName
      * @param mixed  $data
      *
-     * @return \League\Fractal\Resource\ResourceInterface
+     * @return ResourceInterface
      * @throws CoreInternalErrorException
      * @throws UnsupportedFractalIncludeException
      */
@@ -95,11 +97,11 @@ abstract class Transformer extends FractalTransformer
         }
         catch (ErrorException $exception) {
             if (Config::get('apiato.requests.force-valid-includes', true)) {
-                throw new UnsupportedFractalIncludeException();
+                throw new UnsupportedFractalIncludeException($exception->getMessage());
             }
         }
         catch (Exception $exception) {
-            throw new CoreInternalErrorException();
+            throw new CoreInternalErrorException($exception->getMessage());
         }
     }
 

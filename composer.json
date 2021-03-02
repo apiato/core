@@ -1,47 +1,68 @@
 {
-  "name": "apiato/core",
-  "description": "Core package for Apiato.",
-  "homepage": "http://apiato.io/",
-  "support": {
-    "issues": "https://github.com/apiato/core/issues",
-    "source": "https://github.com/apiato/core"
-  },
-  "authors": [
-    {
-      "name": "Mahmoud Zalt",
-      "email": "mahmoud@zalt.me"
-    }
-  ],
-  "keywords": [
-    "apiato",
-    "apiato core",
-    "core",
-    "Porto",
-    "Porto SAP"
-  ],
-  "license": "MIT",
-  "require": {
-    "illuminate/support": "~5.5",
-    "apiato/containers-installer" : "1.0.*",
-    "guzzlehttp/guzzle": "^6.3",
-    "prettus/l5-repository": "^2.6",
-    "barryvdh/laravel-cors": "^0.11",
-    "spatie/laravel-fractal": "^5.3",
-    "vinkla/hashids": "^5.0",
-    "optimus/heimdal" : "~1.5",
-    "dto/dto" : "^3.2"
-  },
-  "require-dev": {
-
-  },
-  "autoload": {
-    "psr-4": {
-      "Apiato\\Core\\": ""
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {}
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "name": "apiato/core",
+    "description": "Core package for Apiato.",
+    "homepage": "http://apiato.io/",
+    "support": {
+        "issues": "https://github.com/apiato/core/issues",
+        "source": "https://github.com/apiato/core"
+    },
+    "authors": [
+        {
+            "name": "Mahmoud Zalt",
+            "email": "mahmoud@zalt.me"
+        }
+    ],
+    "keywords": [
+        "apiato",
+        "apiato core",
+        "core",
+        "Porto",
+        "Porto SAP"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^8.28.1",
+        "apiato/containers-installer": "^1.0",
+        "prettus/l5-repository": "^2.7.4",
+        "fruitcake/laravel-cors": "^1.0.5",
+        "spatie/laravel-fractal": "^5.8.1",
+        "vinkla/hashids": "^9.1.0",
+        "dto/dto": "^3.2.7"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Apiato\\Core\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Apiato\\Core\\Providers\\ApiatoProvider",
+                "Barryvdh\\Debugbar\\ServiceProvider",
+                "Vinkla\\Hashids\\HashidsServiceProvider",
+                "Prettus\\Repository\\Providers\\RepositoryServiceProvider",
+                "Fruitcake\\Cors\\CorsServiceProvider",
+                "Spatie\\Fractal\\FractalServiceProvider",
+                "Laravel\\Tinker\\TinkerServiceProvider",
+                "App\\Ship\\Parents\\Providers\\RoutesProvider",
+                "App\\Ship\\Providers\\ShipProvider",
+                "Apiato\\Core\\Generator\\GeneratorsServiceProvider"
+            ],
+            "aliases": {
+                "Debugbar": "Barryvdh\\Debugbar\\Facade",
+                "Hashids": "Vinkla\\Hashids\\Facades\\Hashids",
+                "Fractal": "Spatie\\Fractal\\FractalFacade",
+                "Apiato": "Apiato\\Core\\Foundation\\Facades\\Apiato"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

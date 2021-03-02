@@ -2,15 +2,15 @@
 
 namespace Apiato\Core\Commands;
 
+use Apiato\Core\Foundation\Apiato;
 use App\Ship\Parents\Commands\ConsoleCommand;
-use App\Ship\Seeders\SeedTestingData;
 
 /**
- * Class SeedTestingDataCommand
+ * Class GetApiatoVersionCommand
  *
  * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
-class SeedTestingDataCommand extends ConsoleCommand
+class GetApiatoVersionCommand extends ConsoleCommand
 {
 
     /**
@@ -18,21 +18,21 @@ class SeedTestingDataCommand extends ConsoleCommand
      *
      * @var string
      */
-    protected $signature = "apiato:seed-test";
+    protected $signature = "apiato";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = "Seed testing data.";
+    protected $description = "Display the current Apiato version.";
 
     /**
-     * SeedTestingDataCommand constructor.
+     * GetApiatoVersionCommand constructor.
      */
     public function __construct()
     {
-        parent::__construct();
+      parent::__construct();
     }
 
     /**
@@ -40,11 +40,7 @@ class SeedTestingDataCommand extends ConsoleCommand
      */
     public function handle()
     {
-        $this->call('db:seed', [
-            '--class' => SeedTestingData::class
-        ]);
-
-        $this->info('Testing Data Seeded Successfully.');
+      $this->info(Apiato::VERSION);
     }
 
 }
