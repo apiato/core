@@ -33,8 +33,11 @@ class ApiatoProvider extends AbstractMainProvider
     {
         parent::register();
 
-        $this->app->singleton(Apiato::class, Apiato::class);
         $this->overrideLaravelBaseProviders();
+
+        // Register Core Facade Classes, should not be registered in the $aliases property, since they are used
+        // by the auto-loading scripts, before the $aliases property is executed.
+        $this->app->alias(Apiato::class, 'Apiato');
     }
 
     /**
