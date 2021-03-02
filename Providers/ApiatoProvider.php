@@ -10,14 +10,6 @@ use Apiato\Core\Traits\ValidationTrait;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Class ApiatoProviders
- *
- * Does not have to extend from the Ship parent MainProvider since it's on the Core
- * it directly extends from the Abstract MainProvider.
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class ApiatoProvider extends AbstractMainProvider
 {
     use AutoLoaderTrait;
