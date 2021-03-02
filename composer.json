@@ -28,7 +28,8 @@
         "fruitcake/laravel-cors": "^1.0.5",
         "spatie/laravel-fractal": "^5.8.1",
         "vinkla/hashids": "^9.1.0",
-        "dto/dto": "^3.2.7"
+        "dto/dto": "^3.2.7",
+        "laravel/tinker": "^2.6.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master"
@@ -45,7 +46,6 @@
         "laravel": {
             "providers": [
                 "Apiato\\Core\\Providers\\ApiatoProvider",
-                "Barryvdh\\Debugbar\\ServiceProvider",
                 "Vinkla\\Hashids\\HashidsServiceProvider",
                 "Prettus\\Repository\\Providers\\RepositoryServiceProvider",
                 "Fruitcake\\Cors\\CorsServiceProvider",
@@ -56,7 +56,6 @@
                 "Apiato\\Core\\Generator\\GeneratorsServiceProvider"
             ],
             "aliases": {
-                "Debugbar": "Barryvdh\\Debugbar\\Facade",
                 "Hashids": "Vinkla\\Hashids\\Facades\\Hashids",
                 "Fractal": "Spatie\\Fractal\\FractalFacade",
                 "Apiato": "Apiato\\Core\\Foundation\\Facades\\Apiato"
