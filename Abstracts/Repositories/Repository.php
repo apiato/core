@@ -70,15 +70,9 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      * @param string $method
      *
      * @return  mixed
-     * @throws RepositoryException
      */
     public function paginate($limit = null, $columns = ['*'], $method = "paginate")
     {
-        // only apply the RequestCriteria if config flag is set
-        if (Config::get('apiato.requests.automatically-apply-request-criteria', true)) {
-            $this->pushCriteria(app(PrettusRequestCriteria::class));
-        }
-
         // the priority is for the function parameter, if not available then take
         // it from the request if available and if not keep it null.
         $limit = $limit ?: Request::get('limit');
