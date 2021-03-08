@@ -18,12 +18,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException as SymfonyHttpException
 abstract class Exception extends SymfonyHttpException
 {
 
-    /**
-     * MessageBag errors.
-     *
-     * @var MessageBag
-     */
-    protected $errors;
+    protected ?MessageBag $errors;
 
     /**
      * Default status code.
@@ -32,15 +27,9 @@ abstract class Exception extends SymfonyHttpException
      */
     const DEFAULT_STATUS_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
 
-    /**
-     * @var string
-     */
-    protected $environment;
+    protected string $environment;
 
-    /**
-     * @var mixed
-     */
-    private $customData = null;
+    private $customData;
 
     /**
      * Exception constructor.
@@ -53,12 +42,12 @@ abstract class Exception extends SymfonyHttpException
      * @param array $headers
      */
     public function __construct(
-        $message = null,
-        $errors = null,
-        $statusCode = null,
-        $code = 0,
-        BaseException $previous = null,
-        $headers = []
+        ?string $message = null,
+        ?array $errors = null,
+        ?int $statusCode = null,
+        int $code = 0,
+        ?BaseException $previous = null,
+        array $headers = []
     )
     {
 
@@ -66,14 +55,14 @@ abstract class Exception extends SymfonyHttpException
         $this->environment = Config::get('app.env');
 
         $message = $this->prepareMessage($message);
-        $error = $this->prepareError($errors);
+        $this->errors = $this->prepareError($errors);
         $statusCode = $this->prepareStatusCode($statusCode);
 
         $this->logTheError($statusCode, $message, $code);
 
         parent::__construct($statusCode, $message, $previous, $headers, $code);
 
-        $this->customData = $this->addCustomData();
+        $this->clearCustomData();
 
         $this->code = $this->evaluateErrorCode();
     }
@@ -87,7 +76,7 @@ abstract class Exception extends SymfonyHttpException
      *
      * @return $this
      */
-    public function debug($error, $force = false)
+    public function debug($error, bool $force = false)
     {
         if ($error instanceof BaseException) {
             $error = $error->getMessage();
@@ -100,24 +89,14 @@ abstract class Exception extends SymfonyHttpException
         return $this;
     }
 
-    /**
-     * Get the errors message bag.
-     *
-     * @return MessageBag
-     */
-    public function getErrors()
+    public function getErrors(): MessageBag
     {
         return $this->errors;
     }
 
-    /**
-     * Determine if message bag has any errors.
-     *
-     * @return bool
-     */
-    public function hasErrors()
+    public function hasErrors(): bool
     {
-        return !$this->errors->isEmpty();
+        return $this->errors->isNotEmpty();
     }
 
     /**
@@ -143,7 +122,7 @@ abstract class Exception extends SymfonyHttpException
      *
      * @return  MessageBag|null
      */
-    private function prepareError($errors = null)
+    private function prepareError(?array $errors = null)
     {
         return is_null($errors) ? new MessageBag() : $this->prepareArrayError($errors);
     }
@@ -163,7 +142,7 @@ abstract class Exception extends SymfonyHttpException
      *
      * @return  null
      */
-    private function prepareMessage($message = null)
+    private function prepareMessage(?string $message = null): ?string
     {
         return is_null($message) && property_exists($this, 'message') ? $this->message : $message;
     }
@@ -194,10 +173,7 @@ abstract class Exception extends SymfonyHttpException
         return $this->customData;
     }
 
-    /**
-     * @return void
-     */
-    protected function addCustomData()
+    protected function clearCustomData()
     {
         $this->customData = null;
     }
@@ -215,12 +191,7 @@ abstract class Exception extends SymfonyHttpException
         return $this;
     }
 
-    /**
-     * Default value
-     *
-     * @return int
-     */
-    public function useErrorCode()
+    public function getErrorCode(): int
     {
         return $this->code;
     }
@@ -230,9 +201,9 @@ abstract class Exception extends SymfonyHttpException
      *
      * @return int
      */
-    private function evaluateErrorCode()
+    private function evaluateErrorCode(): int
     {
-        $code = $this->useErrorCode();
+        $code = $this->getErrorCode();
 
         if (is_array($code)) {
             $code = ErrorCodeManager::getCode($code);
