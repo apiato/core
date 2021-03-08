@@ -6,11 +6,6 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-/**
- * Class NotificationGenerator
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class NotificationGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -85,4 +80,4 @@ class NotificationGenerator extends GeneratorCommand implements ComponentsGenera
         ];
     }
 
-  }
+}

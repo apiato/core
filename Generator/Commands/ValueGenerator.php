@@ -7,11 +7,6 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 
-/**
- * Class ValueGenerator
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class ValueGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -77,9 +72,9 @@ class ValueGenerator extends GeneratorCommand implements ComponentsGenerator
             ],
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
-                'container-name'  => $this->containerName,
-                'class-name'      => $this->fileName,
-                'resource-key'    => strtolower(Pluralizer::plural($this->fileName)),
+                'container-name' => $this->containerName,
+                'class-name' => $this->fileName,
+                'resource-key' => strtolower(Pluralizer::plural($this->fileName)),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -93,4 +88,3 @@ class ValueGenerator extends GeneratorCommand implements ComponentsGenerator
     }
 
 }
-

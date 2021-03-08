@@ -6,11 +6,6 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-/**
- * Class ExceptionGenerator
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class ExceptionGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 

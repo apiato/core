@@ -4,11 +4,6 @@ namespace Apiato\Core\Generator;
 
 use Exception;
 
-/**
- * Class GeneratorException
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class GeneratorException extends Exception
 {
 

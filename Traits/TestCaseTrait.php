@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Artisan;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\PersonalAccessClient;
 
-/**
- * Class TestCaseTrait
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 trait TestCaseTrait
 {
 

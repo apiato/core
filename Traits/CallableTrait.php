@@ -12,17 +12,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use ReflectionMethod;
 
-/**
- * Class CallableTrait.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
 trait CallableTrait
 {
 
     /**
-     * This function will be called from anywhere (controllers, Actions,..) by the Apiato facade.
-     * The $class input will usually be an Action or Task.
+     * This function will be called from anywhere (Controllers, Actions, Tasks,..) by Apiato facade.
+     * The $class input will usually be an Action or a Task.
      *
      * @param       $class
      * @param array $runMethodArguments
@@ -39,15 +34,15 @@ trait CallableTrait
 
         $this->callExtraMethods($class, $extraMethodsToCall);
 
-        // detects Requests arguments "usually sent by controllers", and cvoert them to Transporters.
+        // Detect Request arguments "usually sent by Controllers", and convert them to Transporters.
         $runMethodArguments = $this->convertRequestsToTransporters($class, $runMethodArguments);
 
         return $class->run(...$runMethodArguments);
     }
 
     /**
-     * This function calls another class but wraps it in a DB-Transaction. This might be useful for CREATE / UPDATE / DELETE
-     * operations in order to prevent the database from corrupt data. Internally, the regular call() method is used!
+     * This function calls a class wrapped in a DB-Transaction. This might be useful for CREATE / UPDATE / DELETE
+     * operations in order to prevent database from corrupting the data. Internally, the regular call() method is used!
      *
      * @param       $class
      * @param array $runMethodArguments
@@ -63,7 +58,7 @@ trait CallableTrait
     }
 
     /**
-     * Get instance from a class string
+     * Get an instance from a class string
      *
      * @param $class
      *
@@ -71,7 +66,7 @@ trait CallableTrait
      */
     private function resolveClass($class)
     {
-        // in case passing apiato style names such as containerName@classType
+        // In case passing Apiato style names such as containerName@classType
         if ($this->needsParsing($class)) {
 
             $parsedClass = $this->parseClassName($class);
@@ -86,7 +81,7 @@ trait CallableTrait
             Apiato::verifyClassExist($classFullName);
         } else {
             if (Config::get('apiato.logging.log-wrong-apiato-caller-style', true)) {
-                Log::debug('It is recommended to use the apiato caller style (containerName@className) for ' . $class);
+                Log::debug('It is recommended to use Apiato caller style (containerName@className) for ' . $class);
             }
         }
 
@@ -107,7 +102,7 @@ trait CallableTrait
     }
 
     /**
-     * If it's apiato Style caller like this: containerName@someClass
+     * Check if it is Apiato Style caller like this: containerName@someClass
      *
      * @param        $class
      * @param string $separator
@@ -126,7 +121,7 @@ trait CallableTrait
 
     /**
      *
-     * $this->ui is coming, should be attached on the parent controller, from where the actions was called.
+     * $this->ui is coming, should be attached on the parent controller, from where the action was called.
      * It can be WebController and ApiController. Each of them has ui, to inform the action
      * if it needs to handle the request differently.
      *
@@ -145,13 +140,13 @@ trait CallableTrait
      */
     private function callExtraMethods($class, $extraMethodsToCall)
     {
-        // allows calling other methods in the class before calling the main `run` function.
+        // Allows calling other methods in the class before calling the main `run` function.
         foreach ($extraMethodsToCall as $methodInfo) {
-            // if is array means it method has arguments
+            // If $methodInfo is an array, it means that the method has arguments
             if (is_array($methodInfo)) {
                 $this->callWithArguments($class, $methodInfo);
             } else {
-                // if is string means it's just the method name without arguments
+                // If $methodInfo is string, it means it's just the method name without arguments
                 $this->callWithoutArguments($class, $methodInfo);
             }
         }

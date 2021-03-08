@@ -7,11 +7,6 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class RequestGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -83,13 +78,12 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
             $transporterComment = '';
             $transporterClass = '\\App\\Containers\\' . $this->containerName . '\\Data\\Transporters\\' . $transporterName . '::class';
 
-            // now create the Transporter
+            // Now create the Transporter
             $this->call('apiato:generate:transporter', [
                 '--container' => $this->containerName,
                 '--file' => $transporterName,
             ]);
-        }
-        else {
+        } else {
             $transporterComment = '// ';
             $transporterClass = '\\App\\Ship\\Transporters\\DataTransporter::class';
         }

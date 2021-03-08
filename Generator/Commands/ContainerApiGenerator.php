@@ -8,11 +8,6 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class ContainerApiGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -80,29 +75,29 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
 
         $useTransporters = $this->checkParameterOrConfirm('transporters', 'Would you like to use specific Transporters?', true);
 
-        // containername as inputted and lower
+        // Container name as inputted and lower
         $containerName = $this->containerName;
         $_containerName = Str::lower($this->containerName);
 
-        // name of the model (singular and plural)
+        // Name of the model (singular and plural)
         $model = $this->containerName;
         $models = Pluralizer::plural($model);
 
-        // add the README file
+        // Add the README file
         $this->printInfoMessage('Generating README File');
         $this->call('apiato:generate:readme', [
             '--container'   => $containerName,
             '--file'        => 'README',
         ]);
 
-        // create the configuration file
+        // Create the configuration file
         $this->printInfoMessage('Generating Configuration File');
         $this->call('apiato:generate:configuration', [
             '--container'   => $containerName,
             '--file'        => $_containerName,
         ]);
 
-        // create the MainServiceProvider for the container
+        // Create the MainServiceProvider for the container
         $this->printInfoMessage('Generating MainServiceProvider');
         $this->call('apiato:generate:serviceprovider', [
             '--container'   => $containerName,
@@ -110,7 +105,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--stub'        => 'mainserviceprovider',
         ]);
 
-        // create the model and repository for this container
+        // Create the model and repository for this container
         $this->printInfoMessage('Generating Model and Repository');
         $this->call('apiato:generate:model', [
             '--container'   => $containerName,
@@ -118,7 +113,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--repository'  => true,
         ]);
 
-        // create the migration file for the model
+        // Create the migration file for the model
         $this->printInfoMessage('Generating a basic Migration file');
         $this->call('apiato:generate:migration', [
             '--container'   => $containerName,
@@ -126,7 +121,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--tablename'   => $models,
         ]);
 
-        // create a transformer for the model
+        // Create a transformer for the model
         $this->printInfoMessage('Generating Transformer for the Model');
         $this->call('apiato:generate:transformer', [
             '--container'   => $containerName,
@@ -135,12 +130,12 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--full'        => false,
         ]);
 
-        // create the default routes for this container
+        // Create the default routes for this container
         $this->printInfoMessage('Generating Default Routes');
         $version = $this->checkParameterOrAsk('docversion', 'Enter the version for *all* API endpoints (integer)', 1);
         $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for *all* endpoints', ['private', 'public'], 0);
 
-        // get the URI and remove the first trailing slash
+        // Get the URI and remove the first trailing slash
         $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all endpoints (foo/bar)', Str::lower($models)));
         $url = ltrim($url, '/');
 
@@ -242,7 +237,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             ]);
         }
 
-        // finally generate the controller
+        // Finally generate the controller
         $this->printInfoMessage('Generating Controller to wire everything together');
         $this->call('apiato:generate:controller', [
             '--container'   => $containerName,

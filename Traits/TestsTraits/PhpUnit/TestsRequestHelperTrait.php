@@ -13,11 +13,7 @@ use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
- * Class TestsRequestHelperTrait
- *
  * Tests helper for making HTTP requests.
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
 trait TestsRequestHelperTrait
 {

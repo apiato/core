@@ -26,7 +26,7 @@ trait ConfigsLoaderTrait
                 $config = File::getRequire($file);
                 $name = File::name($file);
 
-                // special case for files named config.php (config keyword is omitted)
+                // Special case for files named config.php (config keyword is omitted)
                 if ($name === 'config') {
                     foreach ($config as $key => $value) {
                         Config::set($namespace . $key, $value);

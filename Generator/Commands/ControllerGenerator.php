@@ -8,11 +8,6 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class ControllerGenerator
- *
- * @author  Johannes Schobel  <johannes.schobel@googlemail.com>
- */
 class ControllerGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -84,12 +79,12 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
             0)
         );
 
-        // load a new stub-file based on the users choice
+        // Load a new stub-file based on the users choice
         $this->stubName = 'controllers/' . $stub . '.stub';
 
         $basecontroller = Str::ucfirst($ui) . 'Controller';
 
-        // name of the model (singular and plural)
+        // Name of the model (singular and plural)
         $model = $this->containerName;
         $models = Pluralizer::plural($model);
 

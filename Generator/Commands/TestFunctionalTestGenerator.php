@@ -7,11 +7,6 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class TestFunctionalTestGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class TestFunctionalTestGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -74,10 +69,10 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the Test', ['API', 'WEB', 'CLI'], 0));
 
-        // set the stub file accordingly
+        // Set the stub file accordingly
         $this->stubName = 'tests/functional/' . $ui . '.stub';
 
-        // we need to generate the TestCase class before
+        // We need to generate the TestCase class before
         $this->call('apiato:generate:test:testcase', [
             '--container' => $this->containerName,
             '--file' => 'TestCase',
@@ -91,8 +86,8 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
             ],
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
-                'container-name'  => $this->containerName,
-                'class-name'      => $this->fileName,
+                'container-name' => $this->containerName,
+                'class-name' => $this->fileName,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

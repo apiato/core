@@ -8,11 +8,6 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class ActionGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -82,7 +77,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
             0)
         );
 
-        // load a new stub-file based on the users choice
+        // Load a new stub-file based on the users choice
         $this->stubName = 'actions/' . $stub . '.stub';
 
         $models = Pluralizer::plural($model);

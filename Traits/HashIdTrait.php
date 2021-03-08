@@ -9,11 +9,6 @@ use Vinkla\Hashids\Facades\Hashids;
 use function is_null;
 use function strtolower;
 
-/**
- * Class HashIdTrait.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
 trait HashIdTrait
 {
 
@@ -59,7 +54,7 @@ trait HashIdTrait
      *
      * @return  array
      */
-    protected function decodeHashedIdsBeforeValidation(Array $requestData)
+    protected function decodeHashedIdsBeforeValidation(array $requestData)
     {
 
         // the hash ID feature must be enabled to use this decoder feature.

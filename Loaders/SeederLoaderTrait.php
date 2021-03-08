@@ -7,12 +7,8 @@ use File;
 use Illuminate\Support\Collection;
 
 /**
- * Class SeederLoaderTrait.
- *
  * This Class has inverted dependency :( you must extend this class from the default
  * seeder class provided by the framework (database/seeders/DatabaseSeeder.php)
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
  */
 trait SeederLoaderTrait
 {

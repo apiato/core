@@ -4,11 +4,6 @@ namespace Apiato\Core\Abstracts\Controllers;
 
 use Apiato\Core\Traits\ResponseTrait;
 
-/**
- * Class ApiController.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
 abstract class ApiController extends Controller
 {
 

@@ -6,11 +6,6 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-/**
- * Class TransporterGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class TransporterGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -77,8 +72,8 @@ class TransporterGenerator extends GeneratorCommand implements ComponentsGenerat
             ],
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
-                'container-name'  => $this->containerName,
-                'class-name'      => $this->fileName,
+                'container-name' => $this->containerName,
+                'class-name' => $this->fileName,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

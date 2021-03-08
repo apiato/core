@@ -7,11 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Str as LaravelStr;
 
 /**
- * Class TestsResponseHelperTrait
- *
  * Tests helper for making formatting and asserting http responses.
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
 trait TestsResponseHelperTrait
 {

@@ -6,11 +6,6 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-/**
- * Class JobGenerator
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class JobGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -76,8 +71,8 @@ class JobGenerator extends GeneratorCommand implements ComponentsGenerator
             ],
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
-                'container-name'  => $this->containerName,
-                'class-name'      => $this->fileName,
+                'container-name' => $this->containerName,
+                'class-name' => $this->fileName,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

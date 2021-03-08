@@ -7,11 +7,6 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class ContainerComposerGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -77,22 +72,22 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
         $useTransporters = $this->checkParameterOrConfirm('transporters', 'Would you like to use specific Transporters', true);
 
-        // containername as inputted and lower
+        // Container name as inputted and lower
         $containerName = $this->containerName;
         $_containerName = Str::lower($this->containerName);
 
         if ($ui == 'api' || $ui == 'both') {
             $this->call('apiato:generate:container:api', [
-                '--container'    => $containerName,
-                '--file'         => 'composer',
+                '--container' => $containerName,
+                '--file' => 'composer',
                 '--transporters' => $useTransporters,
             ]);
         }
 
         if ($ui == 'web' || $ui == 'both') {
             $this->call('apiato:generate:container:web', [
-                '--container'    => $containerName,
-                '--file'         => 'composer',
+                '--container' => $containerName,
+                '--file' => 'composer',
                 '--transporters' => $useTransporters,
             ]);
         }

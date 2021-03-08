@@ -22,11 +22,11 @@ trait ConsolesLoaderTrait
 
             foreach ($files as $consoleFile) {
 
-                // do not load route files
+                // Do not load route files
                 if (!$this->isRouteFile($consoleFile)) {
                     $consoleClass = Apiato::getClassFullNameFromFile($consoleFile->getPathname());
 
-                    // when user from the Main Service Provider, which extends Laravel
+                    // When user from the Main Service Provider, which extends Laravel
                     // service provider you get access to `$this->commands`
                     $this->commands([$consoleClass]);
                 }

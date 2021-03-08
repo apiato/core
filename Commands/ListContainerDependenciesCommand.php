@@ -14,12 +14,9 @@ use Spatie\Fractal\Fractal;
 use Spatie\Fractalistic\ArraySerializer;
 
 /**
- * Class FindContainerDependenciesCommand
  * Parses all files in the Container. This is needed due to the implemented apiato calls.
- * It supports both $this->call(PATH/TO/FILE,... (by parsing imports)
+ * It supports both $this->call(PATH/TO/FILE,.. (by parsing imports)
  * as well as $Apiato::call('CONTAINER@FUNC',[args]...
- *
- * @author Fabian Widmann <fabian.widmann@gmail.com>
  */
 class ListContainerDependenciesCommand extends ConsoleCommand
 {

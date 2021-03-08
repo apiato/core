@@ -32,11 +32,6 @@ use Apiato\Core\Generator\Commands\TransporterGenerator;
 use Apiato\Core\Generator\Commands\ValueGenerator;
 use Illuminate\Support\ServiceProvider;
 
-/**
- * Class GeneratorsServiceProvider
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class GeneratorsServiceProvider extends ServiceProvider
 {
 

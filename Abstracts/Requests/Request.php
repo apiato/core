@@ -14,13 +14,6 @@ use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 
-/**
- * Class Request
- *
- * A.K.A (app/Http/Requests/Request.php)
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 abstract class Request extends LaravelRequest
 {
 

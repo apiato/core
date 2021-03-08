@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class MigrationGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -74,28 +69,28 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
-        $tablename = Str::lower($this->checkParameterOrAsk('tablename', 'Enter the name of the database table'));
+        $tableName = Str::lower($this->checkParameterOrAsk('tablename', 'Enter the name of the database table'));
 
-        // now we need to check, if there already exists a "default migration file" for this container!
-        // we therefore search for a file that is named "xxxx_xx_xx_xxxxxx_NAME"
+        // Now we need to check if there already exists a "default migration file" for this container!
+        // We therefore search for a file that is named "xxxx_xx_xx_xxxxxx_NAME"
         $exists = false;
 
         $folder = $this->parsePathStructure($this->pathStructure, ['container-name' => $this->containerName]);
         $folder = $this->getFilePath($folder);
         $folder = rtrim($folder, $this->parsedFileName . '.' . $this->getDefaultFileExtension());
 
-        $migrationname = $this->fileName . '.' . $this->getDefaultFileExtension();
+        $migrationName = $this->fileName . '.' . $this->getDefaultFileExtension();
 
-        // get the content of this folder
+        // Get the content of this folder
         $files = File::allFiles($folder);
         foreach ($files as $file) {
-            if (Str::endsWith($file->getFilename(), $migrationname)) {
+            if (Str::endsWith($file->getFilename(), $migrationName)) {
                 $exists = true;
             }
         }
 
         if ($exists) {
-            // there exists a basic migration file for this container
+            // There exists a basic migration file for this container
             return null;
         }
 
@@ -107,7 +102,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => Str::studly($this->fileName),
-                'table-name' => $tablename
+                'table-name' => $tableName
             ],
             'file-parameters' => [
                 'date' => Carbon::now()->format('Y_m_d_His'),

@@ -6,11 +6,6 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-/**
- * Class TestUnitTestGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -70,7 +65,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
      */
     public function getUserInputs()
     {
-        // we need to generate the TestCase class before
+        // We need to generate the TestCase class before
         $this->call('apiato:generate:test:testcase', [
             '--container' => $this->containerName,
             '--file' => 'TestCase',

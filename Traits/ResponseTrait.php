@@ -11,11 +11,6 @@ use Illuminate\Support\Collection;
 use ReflectionClass;
 use Request;
 
-/**
- * Class ResponseTrait
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 trait ResponseTrait
 {
 
@@ -26,12 +21,13 @@ trait ResponseTrait
 
     /**
      * @param       $data
-     * @param null  $transformerName The transformer (e.g., Transformer::class or new Transformer()) to be applied
+     * @param null $transformerName The transformer (e.g., Transformer::class or new Transformer()) to be applied
      * @param array $includes additional resources to be included
      * @param array $meta additional meta information to be applied
-     * @param null  $resourceKey the resource key to be set for the TOP LEVEL resource
+     * @param null $resourceKey the resource key to be set for the TOP LEVEL resource
      *
      * @return array
+     * @throws InvalidTransformerException
      */
     public function transform(
         $data,
@@ -39,26 +35,26 @@ trait ResponseTrait
         array $includes = [],
         array $meta = [],
         $resourceKey = null
-    ) {
+    )
+    {
         // first, we need to create the transformer
         if ($transformerName instanceof Transformer) {
             // check, if we have provided a respective TRANSFORMER class
             $transformer = $transformerName;
-        }
-        else {
+        } else {
             // of if we just passed the classname
             $transformer = new $transformerName;
         }
 
         // now, finally check, if the class is really a TRANSFORMER
-        if (! ($transformer instanceof Transformer)) {
+        if (!($transformer instanceof Transformer)) {
             throw new InvalidTransformerException();
         }
 
         // add specific meta information to the response message
         $this->metaData = [
             'include' => $transformer->getAvailableIncludes(),
-            'custom'  => $meta,
+            'custom' => $meta,
         ];
 
         // no resource key was set
@@ -115,9 +111,9 @@ trait ResponseTrait
 
     /**
      * @param       $message
-     * @param int   $status
+     * @param int $status
      * @param array $headers
-     * @param int   $options
+     * @param int $options
      *
      * @return  JsonResponse
      */
@@ -127,10 +123,10 @@ trait ResponseTrait
     }
 
     /**
-     * @param null  $message
-     * @param int   $status
+     * @param null $message
+     * @param int $status
      * @param array $headers
-     * @param int   $options
+     * @param int $options
      *
      * @return JsonResponse
      */
@@ -141,9 +137,9 @@ trait ResponseTrait
 
     /**
      * @param null  array or string $message
-     * @param int   $status
+     * @param int $status
      * @param array $headers
-     * @param int   $options
+     * @param int $options
      *
      * @return  JsonResponse
      */
@@ -221,7 +217,7 @@ trait ResponseTrait
     /**
      * @return array
      */
-    protected function parseRequestedIncludes() : array
+    protected function parseRequestedIncludes(): array
     {
         return explode(',', Request::get('include'));
     }

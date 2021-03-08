@@ -2,17 +2,11 @@
 
 namespace Apiato\Core\Traits;
 
-use Illuminate\Support\Arr;
 use Apiato\Core\Abstracts\Requests\Request;
 use Apiato\Core\Abstracts\Transporters\Transporter;
 use App\Ship\Exceptions\InternalErrorException;
+use Illuminate\Support\Arr;
 
-/**
- * Class SanitizerTrait.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 trait SanitizerTrait
 {
 

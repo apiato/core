@@ -7,11 +7,7 @@ use Mockery;
 use Mockery\MockInterface;
 
 /**
- * Class TestsMockHelperTrait
- *
  * Tests helper for mocking objects and services.
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
 trait TestsMockHelperTrait
 {

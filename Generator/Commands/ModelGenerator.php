@@ -8,11 +8,6 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class ModelGenerator
- *
- * @author  Justin Atack  <justinatack@gmail.com>
- */
 class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -74,8 +69,8 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
     public function getUserInputs()
     {
         $repository = $this->checkParameterOrConfirm('repository', 'Do you want to generate the corresponding Repository for this Model?', true);
-        if($repository) {
-            // we need to generate a corresponding repository
+        if ($repository) {
+            // We need to generate a corresponding repository
             // so call the other command
             $status = $this->call('apiato:generate:repository', [
                 '--container' => $this->containerName,
@@ -84,8 +79,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
 
             if ($status == 0) {
                 $this->printInfoMessage('The Repository was successfully generated');
-            }
-            else {
+            } else {
                 $this->printErrorMessage('Could not generate the corresponding Repository!');
             }
         }

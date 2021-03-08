@@ -8,11 +8,6 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class ContainerWebGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -78,58 +73,58 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
 
         $useTransporters = $this->checkParameterOrConfirm('transporters', 'Would you like to use specific Transporters?', true);
 
-        // containername as inputted and lower
+        // Container name as inputted and lower
         $containerName = $this->containerName;
         $_containerName = Str::lower($this->containerName);
 
-        // name of the model (singular and plural)
+        // Name of the model (singular and plural)
         $model = $this->containerName;
         $models = Pluralizer::plural($model);
 
-        // add the README file
+        // Add the README file
         $this->printInfoMessage('Generating README File');
         $this->call('apiato:generate:readme', [
-            '--container'   => $containerName,
-            '--file'        => 'README',
+            '--container' => $containerName,
+            '--file' => 'README',
         ]);
 
-        // create the configuration file
+        // Create the configuration file
         $this->printInfoMessage('Generating Configuration File');
         $this->call('apiato:generate:configuration', [
-            '--container'   => $containerName,
-            '--file'        => $_containerName,
+            '--container' => $containerName,
+            '--file' => $_containerName,
         ]);
 
-        // create the MainServiceProvider for the container
+        // Create the MainServiceProvider for the container
         $this->printInfoMessage('Generating MainServiceProvider');
         $this->call('apiato:generate:serviceprovider', [
-            '--container'   => $containerName,
-            '--file'        => 'MainServiceProvider',
-            '--stub'        => 'mainserviceprovider',
+            '--container' => $containerName,
+            '--file' => 'MainServiceProvider',
+            '--stub' => 'mainserviceprovider',
         ]);
 
-        // create the model and repository for this container
+        // Create the model and repository for this container
         $this->printInfoMessage('Generating Model and Repository');
         $this->call('apiato:generate:model', [
-            '--container'   => $containerName,
-            '--file'        => $model,
-            '--repository'  => true,
+            '--container' => $containerName,
+            '--file' => $model,
+            '--repository' => true,
         ]);
 
-        // create the migration file for the model
+        // Create the migration file for the model
         $this->printInfoMessage('Generating a basic Migration file');
         $this->call('apiato:generate:migration', [
-            '--container'   => $containerName,
-            '--file'        => 'create_' . Str::lower($_containerName) . '_tables',
-            '--tablename'   => $models,
+            '--container' => $containerName,
+            '--file' => 'create_' . Str::lower($_containerName) . '_tables',
+            '--tablename' => $models,
         ]);
 
-        // create the default routes for this container
+        // Create the default routes for this container
         $this->printInfoMessage('Generating Default Routes');
         $version = 1;
         $doctype = 'private';
 
-        // get the URI and remove the first trailing slash
+        // Get the URI and remove the first trailing slash
         $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for *all* WEB endpoints (foo/bar)', Str::lower($models)));
         $url = ltrim($url, '/');
 
@@ -139,95 +134,94 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
 
         $routes = [
             [
-                'stub'        => 'GetAll',
-                'name'        => 'GetAll' . $models,
-                'operation'   => 'index',
-                'verb'        => 'GET',
-                'url'         => $url,
-                'action'      => 'GetAll' . $models . 'Action',
-                'request'     => 'GetAll' . $models . 'Request',
-                'task'        => 'GetAll' . $models . 'Task',
+                'stub' => 'GetAll',
+                'name' => 'GetAll' . $models,
+                'operation' => 'index',
+                'verb' => 'GET',
+                'url' => $url,
+                'action' => 'GetAll' . $models . 'Action',
+                'request' => 'GetAll' . $models . 'Request',
+                'task' => 'GetAll' . $models . 'Task',
                 'transporter' => 'GetAll' . $models . 'Transporter',
             ],
             [
-                'stub'        => 'Find',
-                'name'        => 'Find' . $model . 'ById',
-                'operation'   => 'show',
-                'verb'        => 'GET',
-                'url'         => $url . '/{id}',
-                'action'      => 'Find' . $model . 'ById' . 'Action',
-                'request'     => 'Find' . $model . 'ById' . 'Request',
-                'task'        => 'Find' . $model . 'ById' . 'Task',
+                'stub' => 'Find',
+                'name' => 'Find' . $model . 'ById',
+                'operation' => 'show',
+                'verb' => 'GET',
+                'url' => $url . '/{id}',
+                'action' => 'Find' . $model . 'ById' . 'Action',
+                'request' => 'Find' . $model . 'ById' . 'Request',
+                'task' => 'Find' . $model . 'ById' . 'Task',
                 'transporter' => 'Find' . $model . 'ById' . 'Transporter',
             ],
             [
-                'stub'        => null,
-                'name'        => 'Create' . $model,
-                'operation'   => 'create',
-                'verb'        => 'GET',
-                'url'         => $url . '/create',
-                'action'      => null,
-                'request'     => 'Create' . $model . 'Request',
-                'task'        => null,
+                'stub' => null,
+                'name' => 'Create' . $model,
+                'operation' => 'create',
+                'verb' => 'GET',
+                'url' => $url . '/create',
+                'action' => null,
+                'request' => 'Create' . $model . 'Request',
+                'task' => null,
                 'transporter' => null,
             ],
             [
-                'stub'        => 'Create',
-                'name'        => 'Store' . $model,
-                'operation'   => 'store',
-                'verb'        => 'POST',
-                'url'         => $url . '/store',
-                'action'      => 'Create' . $model . 'Action',
-                'request'     => 'Store' . $model . 'Request',
-                'task'        => 'Create' . $model . 'Task',
+                'stub' => 'Create',
+                'name' => 'Store' . $model,
+                'operation' => 'store',
+                'verb' => 'POST',
+                'url' => $url . '/store',
+                'action' => 'Create' . $model . 'Action',
+                'request' => 'Store' . $model . 'Request',
+                'task' => 'Create' . $model . 'Task',
                 'transporter' => 'Create' . $model . 'Transporter'
             ],
             [
-                'stub'        => null,
-                'name'        => 'Edit' . $model,
-                'operation'   => 'edit',
-                'verb'        => 'GET',
-                'url'         => $url . '/{id}/edit',
-                'action'      => null,
-                'request'     => 'Edit' . $model . 'Request',
-                'task'        => null,
+                'stub' => null,
+                'name' => 'Edit' . $model,
+                'operation' => 'edit',
+                'verb' => 'GET',
+                'url' => $url . '/{id}/edit',
+                'action' => null,
+                'request' => 'Edit' . $model . 'Request',
+                'task' => null,
                 'transporter' => null,
             ],
             [
-                'stub'        => 'Update',
-                'name'        => 'Update' . $model,
-                'operation'   => 'update',
-                'verb'        => 'PATCH',
-                'url'         => $url . '/{id}',
-                'action'      => 'Update' . $model . 'Action',
-                'request'     => 'Update' . $model . 'Request',
-                'task'        => 'Update' . $model . 'Task',
+                'stub' => 'Update',
+                'name' => 'Update' . $model,
+                'operation' => 'update',
+                'verb' => 'PATCH',
+                'url' => $url . '/{id}',
+                'action' => 'Update' . $model . 'Action',
+                'request' => 'Update' . $model . 'Request',
+                'task' => 'Update' . $model . 'Task',
                 'transporter' => 'Update' . $model . 'Transporter',
             ],
             [
-                'stub'        => 'Delete',
-                'name'        => 'Delete' . $model,
-                'operation'   => 'delete',
-                'verb'        => 'DELETE',
-                'url'         => $url . '/{id}',
-                'action'      => 'Delete' . $model . 'Action',
-                'request'     => 'Delete' . $model . 'Request',
-                'task'        => 'Delete' . $model . 'Task',
+                'stub' => 'Delete',
+                'name' => 'Delete' . $model,
+                'operation' => 'delete',
+                'verb' => 'DELETE',
+                'url' => $url . '/{id}',
+                'action' => 'Delete' . $model . 'Action',
+                'request' => 'Delete' . $model . 'Request',
+                'task' => 'Delete' . $model . 'Task',
                 'transporter' => 'Delete' . $model . 'Transporter',
             ],
         ];
 
-        foreach ($routes as $route)
-        {
+        foreach ($routes as $route) {
             $this->call('apiato:generate:route', [
-                '--container'   => $containerName,
-                '--file'        => $route['name'],
-                '--ui'          => $ui,
-                '--operation'   => $route['operation'],
-                '--doctype'     => $doctype,
-                '--docversion'  => $version,
-                '--url'         => $route['url'],
-                '--verb'        => $route['verb'],
+                '--container' => $containerName,
+                '--file' => $route['name'],
+                '--ui' => $ui,
+                '--operation' => $route['operation'],
+                '--doctype' => $doctype,
+                '--docversion' => $version,
+                '--url' => $route['url'],
+                '--verb' => $route['verb'],
             ]);
 
             $enableTransporter = false;
@@ -238,9 +232,9 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             }
 
             $this->call('apiato:generate:request', [
-                '--container'   => $containerName,
-                '--file'        => $route['request'],
-                '--ui'          => $ui,
+                '--container' => $containerName,
+                '--file' => $route['request'],
+                '--ui' => $ui,
                 '--transporter' => $enableTransporter,
                 '--transportername' => $route['transporter'],
             ]);
@@ -264,13 +258,13 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             }
         }
 
-        // finally generate the controller
+        // Finally generate the controller
         $this->printInfoMessage('Generating Controller to wire everything together');
         $this->call('apiato:generate:controller', [
-            '--container'   => $containerName,
-            '--file'        => 'Controller',
-            '--ui'          => $ui,
-            '--stub'        => 'crud.' . $ui,
+            '--container' => $containerName,
+            '--file' => 'Controller',
+            '--ui' => $ui,
+            '--stub' => 'crud.' . $ui,
         ]);
 
         $this->printInfoMessage('Generating Composer File');

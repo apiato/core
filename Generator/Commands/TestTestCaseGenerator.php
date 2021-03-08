@@ -7,11 +7,6 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class TestTestCaseGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -72,12 +67,12 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
      */
     public function getUserInputs()
     {
-        // we manually set the filename to TestCase as this is the preferred name within apiato
+        // We manually set the filename to TestCase as this is the preferred name within apiato
         $this->fileName = 'TestCase';
 
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['Generic', 'API', 'WEB', 'CLI'], 0));
 
-        // we need to generate the generic testcase first!
+        // We need to generate the generic testcase first!
         if ($ui != 'generic') {
             $this->call('apiato:generate:test:testcase', [
                 '--container' => $this->containerName,
@@ -85,7 +80,7 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
                 '--ui' => 'generic',
             ]);
 
-            // however, as this generator here is NOT the one for the generic TestCase, we need to prepend the UI before
+            // However, as this generator here is NOT the one for the generic TestCase, we need to prepend the UI before
             // this results in something like ApiTestCase
             $this->fileName = Str::ucfirst($ui) . $this->fileName;
         }

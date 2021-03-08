@@ -9,12 +9,6 @@ use Dto\RegulatorInterface;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-/**
- * Class Transporter
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 abstract class Transporter extends Dto
 {
 
@@ -38,7 +32,7 @@ abstract class Transporter extends Dto
      */
     public function __construct($input = null, $schema = null, RegulatorInterface $regulator = null)
     {
-        // if the transporter got a Request object, get the content and headers
+        // If the transporter got a Request object, get the content and headers
         // and pass them as array input to the Dto constructor..
         if ($input instanceof Request) {
             $content = $input->toArray();
@@ -57,6 +51,7 @@ abstract class Transporter extends Dto
      * @param null $default
      *
      * @return  mixed
+     * @throws \Dto\Exceptions\InvalidDataTypeException
      */
     public function getInputByKey($key = null, $default = null)
     {
@@ -86,19 +81,19 @@ abstract class Transporter extends Dto
     public function __get($name)
     {
 
-        // if set as instance, return it directly
+        // If set as instance, return it directly
         if (isset($this->instances[$name])) {
             return $this->instances[$name];
         }
 
-        // if the field does not exist, return null instance of throwing exception `InvalidKeyException` by the parent.
+        // If the field does not exist, return null instance of throwing exception `InvalidKeyException` by the parent.
         if (!$this->exists($name)) {
             return null;
         }
 
         $field = parent::__get($name);
 
-        // this will call the toScalar / toArray / toObject / ... functions
+        // This will call the toScalar / toArray / toObject / ... functions
         $type = $field->getStorageType();
         $value = call_user_func([$field, 'to' . Str::ucfirst($type)]);
 

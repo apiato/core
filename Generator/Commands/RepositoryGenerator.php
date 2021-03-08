@@ -6,11 +6,6 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-/**
- * Class RepositoryGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 

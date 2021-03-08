@@ -5,11 +5,6 @@ namespace Apiato\Core\Transformers;
 use Apiato\Core\Abstracts\Transformers\Transformer;
 use stdClass;
 
-/**
- * Class ComposerTransformer
- *
- * @author Fabian Widmann <fabian.widmann@gmail.com>
- */
 class ComposerTransformer extends Transformer
 {
     /**

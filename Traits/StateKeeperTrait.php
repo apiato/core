@@ -2,11 +2,6 @@
 
 namespace Apiato\Core\Traits;
 
-/**
- * Class StateKeeperTrait
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 trait StateKeeperTrait
 {
 

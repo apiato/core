@@ -10,37 +10,17 @@ use Log;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException as SymfonyHttpException;
 
-/**
- * Class Exception.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
 abstract class Exception extends SymfonyHttpException
 {
 
     protected ?MessageBag $errors;
 
-    /**
-     * Default status code.
-     *
-     * @var int
-     */
     const DEFAULT_STATUS_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
 
     protected string $environment;
 
     private $customData;
 
-    /**
-     * Exception constructor.
-     *
-     * @param null $message
-     * @param null $errors
-     * @param null $statusCode
-     * @param int $code
-     * @param BaseException|null $previous
-     * @param array $headers
-     */
     public function __construct(
         ?string $message = null,
         ?array $errors = null,
@@ -50,8 +30,7 @@ abstract class Exception extends SymfonyHttpException
         array $headers = []
     )
     {
-
-        // detect and set the running environment
+        // Detect and set the running environment
         $this->environment = Config::get('app.env');
 
         $message = $this->prepareMessage($message);
@@ -106,7 +85,7 @@ abstract class Exception extends SymfonyHttpException
      */
     private function logTheError($statusCode, $message, $code)
     {
-        // if not testing environment, log the error message
+        // If not testing environment, log the error message
         if ($this->environment != 'testing') {
             Log::error('[ERROR] ' .
                 'Status Code: ' . $statusCode . ' | ' .
@@ -118,9 +97,8 @@ abstract class Exception extends SymfonyHttpException
     }
 
     /**
-     * @param null $errors
-     *
-     * @return  MessageBag|null
+     * @param array|null $errors
+     * @return  MessageBag|array
      */
     private function prepareError(?array $errors = null)
     {
@@ -138,36 +116,25 @@ abstract class Exception extends SymfonyHttpException
     }
 
     /**
-     * @param null $message
+     * @param string|null $message
      *
-     * @return  null
+     * @return string|null
      */
     private function prepareMessage(?string $message = null): ?string
     {
         return is_null($message) && property_exists($this, 'message') ? $this->message : $message;
     }
 
-    /**
-     * @param $statusCode
-     *
-     * @return  int
-     */
-    private function prepareStatusCode($statusCode = null)
+    private function prepareStatusCode(?int $statusCode = null): int
     {
         return is_null($statusCode) ? $this->findStatusCode() : $statusCode;
     }
 
-    /**
-     * @return  int
-     */
-    private function findStatusCode()
+    private function findStatusCode(): int
     {
         return property_exists($this, 'httpStatusCode') ? $this->httpStatusCode : Self::DEFAULT_STATUS_CODE;
     }
 
-    /**
-     * @return mixed
-     */
     public function getCustomData()
     {
         return $this->customData;
@@ -198,8 +165,6 @@ abstract class Exception extends SymfonyHttpException
 
     /**
      * Overrides the code with the application error code (if set)
-     *
-     * @return int
      */
     private function evaluateErrorCode(): int
     {

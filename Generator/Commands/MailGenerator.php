@@ -7,11 +7,6 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class MailGenerator
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class MailGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -80,9 +75,9 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
             ],
             'stub-parameters' => [
                 '_container-name' => Str::lower($this->containerName),
-                'container-name'  => $this->containerName,
-                'class-name'      => $this->fileName,
-                'view'            => $view,
+                'container-name' => $this->containerName,
+                'class-name' => $this->fileName,
+                'view' => $view,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -96,4 +91,3 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
     }
 
 }
-
