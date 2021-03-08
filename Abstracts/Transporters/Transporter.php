@@ -2,11 +2,11 @@
 
 namespace Apiato\Core\Abstracts\Transporters;
 
-use Illuminate\Support\Arr;
 use Apiato\Core\Abstracts\Requests\Request;
 use Apiato\Core\Traits\SanitizerTrait;
 use Dto\Dto;
 use Dto\RegulatorInterface;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 /**
@@ -32,8 +32,8 @@ abstract class Transporter extends Dto
      *
      * Transporter constructor.
      *
-     * @param null                         $input
-     * @param null                         $schema
+     * @param null $input
+     * @param null $schema
      * @param RegulatorInterface|null $regulator
      */
     public function __construct($input = null, $schema = null, RegulatorInterface $regulator = null)
@@ -87,7 +87,7 @@ abstract class Transporter extends Dto
     {
 
         // if set as instance, return it directly
-        if(isset($this->instances[$name])){
+        if (isset($this->instances[$name])) {
             return $this->instances[$name];
         }
 

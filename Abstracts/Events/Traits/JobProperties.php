@@ -9,7 +9,6 @@ use DateTimeInterface;
  * Created by PhpStorm.
  * User: Arthur Devious
  */
-
 trait JobProperties
 {
     /**

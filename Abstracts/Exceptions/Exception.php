@@ -30,7 +30,7 @@ abstract class Exception extends SymfonyHttpException
      *
      * @var int
      */
-    CONST DEFAULT_STATUS_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
+    const DEFAULT_STATUS_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
 
     /**
      * @var string
@@ -45,12 +45,12 @@ abstract class Exception extends SymfonyHttpException
     /**
      * Exception constructor.
      *
-     * @param null            $message
-     * @param null            $errors
-     * @param null            $statusCode
-     * @param int             $code
+     * @param null $message
+     * @param null $errors
+     * @param null $statusCode
+     * @param int $code
      * @param BaseException|null $previous
-     * @param array           $headers
+     * @param array $headers
      */
     public function __construct(
         $message = null,
@@ -59,7 +59,8 @@ abstract class Exception extends SymfonyHttpException
         $code = 0,
         BaseException $previous = null,
         $headers = []
-    ) {
+    )
+    {
 
         // detect and set the running environment
         $this->environment = Config::get('app.env');

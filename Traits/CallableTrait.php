@@ -57,7 +57,7 @@ trait CallableTrait
      */
     public function transactionalCall($class, $runMethodArguments = [], $extraMethodsToCall = [])
     {
-        return DB::transaction(function() use ($class, $runMethodArguments, $extraMethodsToCall) {
+        return DB::transaction(function () use ($class, $runMethodArguments, $extraMethodsToCall) {
             return $this->call($class, $runMethodArguments, $extraMethodsToCall);
         });
     }
@@ -114,17 +114,12 @@ trait CallableTrait
      *
      * @return  int
      */
-    private function needsParsing($class, $separator = '@')
+    private function needsParsing($class, string $separator = '@')
     {
         return preg_match('/' . $separator . '/', $class);
     }
 
-    /**
-     * @param $string
-     *
-     * @return  string
-     */
-    private function capitalizeFirstLetter($string)
+    private function capitalizeFirstLetter(string $string): string
     {
         return ucfirst($string);
     }
@@ -237,7 +232,7 @@ trait CallableTrait
             // and now, we finally need to check, if the class of this param is a subclass of TRANSPORTER
             // Note that we cannot use instanceof here, but rather need to rely on is_subclass_of instead
             $parameterClassName = $parameterClass->name;
-            if (! is_subclass_of($parameterClassName, Transporter::class)) {
+            if (!is_subclass_of($parameterClassName, Transporter::class)) {
                 // the class is NOT a subclass of TRANSPORTER
                 continue;
             }

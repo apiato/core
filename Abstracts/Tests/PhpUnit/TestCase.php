@@ -43,7 +43,7 @@ abstract class TestCase extends LaravelTestCase
      *
      * @return void
      */
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -51,7 +51,7 @@ abstract class TestCase extends LaravelTestCase
     /**
      * Reset the test environment, after each test.
      */
-    public function tearDown() : void
+    public function tearDown(): void
     {
         parent::tearDown();
     }
@@ -84,7 +84,7 @@ abstract class TestCase extends LaravelTestCase
      */
     protected function refreshTestDatabase()
     {
-        if (! RefreshDatabaseState::$migrated) {
+        if (!RefreshDatabaseState::$migrated) {
 
             $this->artisan('migrate:fresh');
             $this->seed();

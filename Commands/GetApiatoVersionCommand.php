@@ -32,7 +32,7 @@ class GetApiatoVersionCommand extends ConsoleCommand
      */
     public function __construct()
     {
-      parent::__construct();
+        parent::__construct();
     }
 
     /**
@@ -40,7 +40,7 @@ class GetApiatoVersionCommand extends ConsoleCommand
      */
     public function handle()
     {
-      $this->info(Apiato::VERSION);
+        $this->info(Apiato::VERSION);
     }
 
 }

@@ -9,7 +9,6 @@ use Illuminate\Mail\Mailable;
  *
  * @author  Mahmoud Zalt <mahmoud@zalt.me>
  */
-
 abstract class Mail extends Mailable
 {
 

@@ -22,5 +22,4 @@ abstract class Controller extends LaravelBaseController
 {
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, HashIdTrait, CallableTrait;
-
 }

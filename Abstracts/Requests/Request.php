@@ -2,7 +2,6 @@
 
 namespace Apiato\Core\Abstracts\Requests;
 
-use Illuminate\Support\Arr;
 use Apiato\Core\Abstracts\Transporters\Transporter;
 use Apiato\Core\Exceptions\UndefinedTransporterException;
 use Apiato\Core\Traits\HashIdTrait;
@@ -12,6 +11,7 @@ use App;
 use App\Containers\Authentication\Tasks\GetAuthenticatedUserTask;
 use App\Containers\User\Models\User;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -66,7 +66,7 @@ abstract class Request extends LaravelRequest
     public function hasAccess(User $user = null)
     {
         // if not in parameters, take from the request object {$this}
-        $user = $user ? : $this->user();
+        $user = $user ?: $this->user();
 
         if ($user) {
             $autoAccessRoles = Config::get('apiato.requests.allow-roles-to-access-all-routes');
@@ -103,11 +103,11 @@ abstract class Request extends LaravelRequest
     /**
      * To be used mainly from unit tests.
      *
-     * @param array                                 $parameters
+     * @param array $parameters
      * @param User|null $user
-     * @param array                                 $cookies
-     * @param array                                 $files
-     * @param array                                 $server
+     * @param array $cookies
+     * @param array $files
+     * @param array $server
      *
      * @return  static
      */
@@ -213,7 +213,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    private function mergeUrlParametersWithRequestData(Array $requestData)
+    private function mergeUrlParametersWithRequestData(array $requestData)
     {
         if (isset($this->urlParameters) && !empty($this->urlParameters)) {
             foreach ($this->urlParameters as $param) {

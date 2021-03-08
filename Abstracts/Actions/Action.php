@@ -22,13 +22,8 @@ abstract class Action
      *
      * @var string
      */
-    protected $ui;
+    protected string $ui;
 
-    /**
-     * @param $interface
-     *
-     * @return  $this
-     */
     public function setUI($interface)
     {
         $this->ui = $interface;
@@ -36,9 +31,6 @@ abstract class Action
         return $this;
     }
 
-    /**
-     * @return  mixed
-     */
     public function getUI()
     {
         return $this->ui;
