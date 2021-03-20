@@ -114,7 +114,7 @@ trait TestsAuthHelperTrait
      */
     private function factoryCreateUser($userDetails = null): User
     {
-        return User::factory()->create($this->prepareUserDetails($userDetails));
+        return User::factory()->admin()->create($this->prepareUserDetails($userDetails));
     }
 
     /**
