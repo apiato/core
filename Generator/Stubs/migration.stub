@@ -5,19 +5,16 @@ use Illuminate\Database\Schema\Blueprint;
 
 class {{class-name}} extends Migration
 {
-
     /**
      * Run the migrations.
      */
     public function up()
     {
         Schema::create('{{table-name}}', function (Blueprint $table) {
-
-            $table->id('id');
+            $table->id();
 
             $table->timestamps();
             //$table->softDeletes();
-
         });
     }
 

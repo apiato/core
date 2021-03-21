@@ -12,13 +12,8 @@ use App\Containers\{{container-name}}\Tests\TestCase;
  */
 class {{class-name}} extends TestCase
 {
-
-    /**
-     * @test
-     */
     public function test_()
     {
 
     }
-
 }

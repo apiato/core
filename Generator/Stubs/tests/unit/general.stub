@@ -12,10 +12,6 @@ use App\Containers\{{container-name}}\Tests\TestCase;
  */
 class {{class-name}} extends TestCase
 {
-
-    /**
-     * @test
-     */
     public function test_()
     {
         // create a data object
@@ -26,9 +22,9 @@ class {{class-name}} extends TestCase
         /**
          * you may want to do something like:
          *
-         * 1) create a new Transporter with this data
+         * 1) create a new Request with this data
          * 2) create a specific Action or Task
-         * 3) pass the Transporter to the Action / Task
+         * 3) pass the Request to the Action / Task
          * 4) assert that everything is correct!
          *
          */

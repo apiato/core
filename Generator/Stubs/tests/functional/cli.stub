@@ -12,15 +12,10 @@ use App\Containers\{{container-name}}\Tests\CliTestCase;
  */
 class {{class-name}} extends CliTestCase
 {
-
-    /**
-     * @test
-     */
     public function test_()
     {
         // make something here
 
         // assert basic stuff here
     }
-
 }
