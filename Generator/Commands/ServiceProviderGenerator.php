@@ -79,6 +79,9 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
             0)
         );
 
+        // load a new stub-file based on the users choice
+        $this->stubName = 'providers/' . $stub . '.stub';
+
         return [
             'path-parameters' => [
                 'container-name' => $this->containerName,
