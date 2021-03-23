@@ -9,7 +9,7 @@ use Exception;
 
 class Find{{model}}ByIdTask extends Task
 {
-    protected $repository;
+    protected {{model}}Repository $repository;
 
     public function __construct({{model}}Repository $repository)
     {

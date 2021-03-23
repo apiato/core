@@ -35,8 +35,7 @@ class {{class-name}} extends Request
     public function rules(): array
     {
         return [
-            // 'id' => 'required',
-            // '{user-input}' => 'required|max:255',
+            // 'id' => 'required'
         ];
     }
 
