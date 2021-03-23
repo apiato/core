@@ -28,34 +28,23 @@ use Apiato\Core\Generator\Commands\TestFunctionalTestGenerator;
 use Apiato\Core\Generator\Commands\TestTestCaseGenerator;
 use Apiato\Core\Generator\Commands\TestUnitTestGenerator;
 use Apiato\Core\Generator\Commands\TransformerGenerator;
-use Apiato\Core\Generator\Commands\TransporterGenerator;
 use Apiato\Core\Generator\Commands\ValueGenerator;
 use Illuminate\Support\ServiceProvider;
 
-/**
- * Class GeneratorsServiceProvider
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class GeneratorsServiceProvider extends ServiceProvider
 {
-
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         //
     }
 
     /**
      * Register the application services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         // all generators ordered by name
         $this->registerGenerators([
@@ -85,7 +74,6 @@ class GeneratorsServiceProvider extends ServiceProvider
             TestUnitTestGenerator::class,
             TaskGenerator::class,
             TransformerGenerator::class,
-            TransporterGenerator::class,
             ValueGenerator::class,
         ]);
     }
@@ -94,7 +82,7 @@ class GeneratorsServiceProvider extends ServiceProvider
      * Register the generators.
      * @param array $classes
      */
-    private function registerGenerators(array $classes)
+    private function registerGenerators(array $classes): void
     {
         foreach ($classes as $class) {
             $lowerClass = strtolower($class);
