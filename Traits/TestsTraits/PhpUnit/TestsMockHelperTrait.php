@@ -6,29 +6,13 @@ use App;
 use Mockery;
 use Mockery\MockInterface;
 
-/**
- * Class TestsMockHelperTrait
- *
- * Tests helper for mocking objects and services.
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 trait TestsMockHelperTrait
 {
-
-    /**
-     * Mocking helper
-     *
-     * @param $class
-     *
-     * @return  MockInterface
-     */
-    public function mockIt($class)
+    public function mockIt($class): MockInterface
     {
         $mock = Mockery::mock($class);
         App::instance($class, $mock);
 
         return $mock;
     }
-
 }

@@ -2,55 +2,23 @@
 
 namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
 
-use App;
 use App\Containers\User\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-/**
- * Class TestsAuthHelperTrait.
- *
- * Tests helper for authentication and authorization.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
 trait TestsAuthHelperTrait
 {
     /**
      * Logged in user object.
-     *
-     * @var User
      */
-    protected $testingUser;
+    protected ?User $testingUser = null;
 
     /**
      * Roles and permissions, to be attached on the user
-     *
-     * @var array
      */
-    protected $access = [
+    protected array $access = [
         'permissions' => '',
-        'roles'       => '',
+        'roles' => '',
     ];
-
-    /**
-     * Try to get the last logged in User, if not found then create new one.
-     * Note: if $userDetails are provided it will always create new user, even
-     * if another one was previously created during the execution of your test.
-     *
-     * By default Users will be given the Roles and Permissions found int he class
-     * `$access` property. But the $access parameter can be used to override the
-     * defined roles and permissions in the `$access` property of your class.
-     *
-     * @param null $access      roles and permissions you'd like to provide this user with
-     * @param null $userDetails what to be attached on the User object
-     *
-     * @return  User
-     */
-    public function getTestingUser($userDetails = null, $access = null): User
-    {
-        return is_null($userDetails) ? $this->findOrCreateTestingUser($userDetails, $access)
-            : $this->createTestingUser($userDetails, $access);
-    }
 
     /**
      * Same as `getTestingUser()` but always overrides the User Access
@@ -67,6 +35,26 @@ trait TestsAuthHelperTrait
     }
 
     /**
+     * Try to get the last logged in User, if not found then create new one.
+     * Note: if $userDetails are provided it will always create new user, even
+     * if another one was previously created during the execution of your test.
+     *
+     * By default Users will be given the Roles and Permissions found int he class
+     * `$access` property. But the $access parameter can be used to override the
+     * defined roles and permissions in the `$access` property of your class.
+     *
+     * @param null $access roles and permissions you'd like to provide this user with
+     * @param null $userDetails what to be attached on the User object
+     *
+     * @return  User
+     */
+    public function getTestingUser($userDetails = null, $access = null): User
+    {
+        return is_null($userDetails) ? $this->findOrCreateTestingUser($userDetails, $access)
+            : $this->createTestingUser($userDetails, $access);
+    }
+
+    /**
      * @param $userDetails
      * @param $access
      *
@@ -74,7 +62,7 @@ trait TestsAuthHelperTrait
      */
     private function findOrCreateTestingUser($userDetails, $access): User
     {
-        return $this->testingUser ? : $this->createTestingUser($userDetails, $access);
+        return $this->testingUser ?: $this->createTestingUser($userDetails, $access);
     }
 
     /**
@@ -86,7 +74,7 @@ trait TestsAuthHelperTrait
     private function createTestingUser($userDetails = null, $access = null): User
     {
         // "inject" the confirmed status, if user details are submitted
-        if(is_array($userDetails)) {
+        if (is_array($userDetails)) {
             $defaults = [
                 'confirmed' => true,
             ];
@@ -125,13 +113,13 @@ trait TestsAuthHelperTrait
     private function prepareUserDetails($userDetails = null): array
     {
         $defaultUserDetails = [
-            'name'     => $this->faker->name,
-            'email'    => $this->faker->email,
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
             'password' => 'testing-password',
         ];
 
         // if no user detail provided, use the default details, to find the password or generate one before encoding it
-        return $this->prepareUserPassword($userDetails ? : $defaultUserDetails);
+        return $this->prepareUserPassword($userDetails ?: $defaultUserDetails);
     }
 
     /**
@@ -150,6 +138,21 @@ trait TestsAuthHelperTrait
         return $userDetails;
     }
 
+    /**
+     * @param $user
+     * @param $access
+     *
+     * @return  mixed
+     */
+    private function setupTestingUserAccess($user, $access = null)
+    {
+        $access = $access ?: $this->getAccess();
+
+        $user = $this->setupTestingUserPermissions($user, $access);
+        $user = $this->setupTestingUserRoles($user, $access);
+
+        return $user;
+    }
 
     /**
      * @return  array|null
@@ -165,12 +168,12 @@ trait TestsAuthHelperTrait
      *
      * @return  mixed
      */
-    private function setupTestingUserAccess($user, $access = null)
+    private function setupTestingUserPermissions($user, $access)
     {
-        $access = $access ? : $this->getAccess();
-
-        $user = $this->setupTestingUserPermissions($user, $access);
-        $user = $this->setupTestingUserRoles($user, $access);
+        if (isset($access['permissions']) && !empty($access['permissions'])) {
+            $user->givePermissionTo($access['permissions']);
+            $user = $user->fresh();
+        }
 
         return $user;
     }
@@ -192,31 +195,13 @@ trait TestsAuthHelperTrait
     }
 
     /**
-     * @param $user
-     * @param $access
-     *
-     * @return  mixed
-     */
-    private function setupTestingUserPermissions($user, $access)
-    {
-        if (isset($access['permissions']) && !empty($access['permissions'])) {
-            $user->givePermissionTo($access['permissions']);
-            $user = $user->fresh();
-        }
-
-        return $user;
-    }
-
-
-    /**
      * @return  array
      */
     private function getNullAccess(): array
     {
         return [
             'permissions' => null,
-            'roles'       => null
+            'roles' => null
         ];
     }
-
 }

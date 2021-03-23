@@ -6,20 +6,9 @@ use Illuminate\Support\Arr as LaravelArr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Str as LaravelStr;
 
-/**
- * Class TestsResponseHelperTrait
- *
- * Tests helper for making formatting and asserting http responses.
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 trait TestsResponseHelperTrait
 {
-
-    /**
-     * @param $keys
-     */
-    public function assertResponseContainKeys($keys)
+    public function assertResponseContainKeys($keys): void
     {
         if (!is_array($keys)) {
             $keys = (array)$keys;
@@ -32,10 +21,7 @@ trait TestsResponseHelperTrait
         }
     }
 
-    /**
-     * @param $values
-     */
-    public function assertResponseContainValues($values)
+    public function assertResponseContainValues($values): void
     {
         if (!is_array($values)) {
             $values = (array)$values;
@@ -48,10 +34,7 @@ trait TestsResponseHelperTrait
         }
     }
 
-    /**
-     * @param $data
-     */
-    public function assertResponseContainKeyValue($data)
+    public function assertResponseContainKeyValue($data): void
     {
         // `responseContentToArray` will remove the `data` node
         $httpResponse = json_encode(LaravelArr::sortRecursive((array)$this->getResponseContentArray()));
@@ -63,10 +46,7 @@ trait TestsResponseHelperTrait
         }
     }
 
-    /**
-     * @param array $messages
-     */
-    public function assertValidationErrorContain(array $messages)
+    public function assertValidationErrorContain(array $messages): void
     {
         $responseContent = $this->getResponseContentObject();
 
@@ -75,13 +55,7 @@ trait TestsResponseHelperTrait
         }
     }
 
-    /**
-     * @param $key
-     * @param $value
-     *
-     * @return  string
-     */
-    private function formatToExpectedJson($key, $value)
+    private function formatToExpectedJson($key, $value): string
     {
         $expected = json_encode([$key => $value]);
 
@@ -109,5 +83,4 @@ trait TestsResponseHelperTrait
 
         return $responseContent;
     }
-
 }

@@ -9,19 +9,13 @@ use Vinkla\Hashids\Facades\Hashids;
 use function is_null;
 use function strtolower;
 
-/**
- * Class HashIdTrait.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
+
 trait HashIdTrait
 {
-
     /**
      * endpoint to be skipped from decoding their ID's (example for external ID's)
-     * @var  array
      */
-    private $skippedEndpoints = [
+    private array $skippedEndpoints = [
 //        'orders/{id}/external',
     ];
 
@@ -31,7 +25,6 @@ trait HashIdTrait
      * Will be used by the Eloquent Models (since it's used as trait there).
      *
      * @param null $field The field of the model to be hashed
-     *
      * @return  mixed
      */
     public function getHashedKey($field = null)
@@ -54,14 +47,11 @@ trait HashIdTrait
     /**
      * without decoding the encoded ID's you won't be able to use
      * validation features like `exists:table,id`
-     *
      * @param array $requestData
-     *
-     * @return  array
+     * @return array
      */
-    protected function decodeHashedIdsBeforeValidation(Array $requestData)
+    protected function decodeHashedIdsBeforeValidation(Array $requestData): array
     {
-
         // the hash ID feature must be enabled to use this decoder feature.
         if (Config::get('apiato.hash-id') && isset($this->decode) && !empty($this->decode)) {
             // iterate over each key (ID that needs to be decoded) and call keys locator to decode them
@@ -98,7 +88,7 @@ trait HashIdTrait
      * @param $keysTodo
      * @return array
      */
-    private function processField($data, $keysTodo)
+    private function processField($data, $keysTodo): ?array
     {
         // check if there are no more fields to be processed
         if (empty($keysTodo)) {
@@ -135,13 +125,6 @@ trait HashIdTrait
         }
     }
 
-    /**
-     * @param $subject
-     * @param $findKey
-     * @param $callback
-     *
-     * @return  array
-     */
     public function findKeyAndReturnValue(&$subject, $findKey, $callback)
     {
         // if the value is not an array, then you have reached the deepest point of the branch, so return the value.
@@ -161,12 +144,7 @@ trait HashIdTrait
         }
     }
 
-    /**
-     * @param array $ids
-     *
-     * @return  array
-     */
-    public function decodeArray(array $ids)
+    public function decodeArray(array $ids): array
     {
         $result = [];
         foreach ($ids as $id) {
@@ -176,14 +154,7 @@ trait HashIdTrait
         return $result;
     }
 
-    /**
-     * @param      $id
-     * @param null $parameter
-     *
-     * @return array
-     * @throws IncorrectIdException
-     */
-    public function decode($id, $parameter = null)
+    public function decode($id, $parameter = null): array
     {
         // check if passed as null, (could be an optional decodable variable)
         if (is_null($id) || strtolower($id) == 'null') {
@@ -199,32 +170,17 @@ trait HashIdTrait
         return empty($this->decoder($id)) ? [] : $this->decoder($id)[0];
     }
 
-    /**
-     * @param $id
-     *
-     * @return  mixed
-     */
     public function encode($id)
     {
         return $this->encoder($id);
     }
 
-    /**
-     * @param $id
-     *
-     * @return  mixed
-     */
-    private function decoder($id)
+    private function decoder($id): array
     {
         return Hashids::decode($id);
     }
 
-    /**
-     * @param $id
-     *
-     * @return  mixed
-     */
-    public function encoder($id)
+    public function encoder($id): string
     {
         return Hashids::encode($id);
     }
@@ -235,7 +191,7 @@ trait HashIdTrait
      *
      * All ID's passed with all endpoints will be decoded before entering the Application
      */
-    public function runHashedIdsDecoder()
+    public function runHashedIdsDecoder(): void
     {
         if (Config::get('apiato.hash-id')) {
             Route::bind('id', function ($id, $route) {
@@ -255,5 +211,4 @@ trait HashIdTrait
             });
         }
     }
-
 }

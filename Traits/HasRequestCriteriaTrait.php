@@ -6,32 +6,16 @@ use Apiato\Core\Abstracts\Repositories\Repository;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Prettus\Repository\Criteria\RequestCriteria;
 
-/**
- * Trait HasRequestCriteriaTrait
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 trait HasRequestCriteriaTrait
 {
-
-    /**
-     * Adds the RequestCriteria to a Repository
-     *
-     * @param null $repository
-     */
-    public function addRequestCriteria($repository = null)
+    public function addRequestCriteria($repository = null): void
     {
         $validatedRepository = $this->validateRepository($repository);
 
         $validatedRepository->pushCriteria(app(RequestCriteria::class));
     }
 
-    /**
-     * Removes the RequestCriteria from a Repository
-     *
-     * @param null $repository
-     */
-    public function removeRequestCriteria($repository = null)
+    public function removeRequestCriteria($repository = null): void
     {
         $validatedRepository = $this->validateRepository($repository);
 
@@ -70,5 +54,4 @@ trait HasRequestCriteriaTrait
 
         return $validatedRepository;
     }
-
 }

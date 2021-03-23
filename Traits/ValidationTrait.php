@@ -5,11 +5,6 @@ namespace Apiato\Core\Traits;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-/**
- * Class ValidationTrait
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 trait ValidationTrait
 {
     /**
