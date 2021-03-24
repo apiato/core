@@ -6,7 +6,6 @@ use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\SanitizerTrait;
 use Apiato\Core\Traits\StateKeeperTrait;
 use App;
-use App\Containers\Authentication\Tasks\GetAuthenticatedUserTask;
 use App\Containers\User\Models\User;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Arr;
@@ -132,17 +131,6 @@ abstract class Request extends LaravelRequest
         }, $roles);
 
         return $hasAccess;
-    }
-
-    /**
-     * Check if the submitted ID (mainly URL ID's) is the same as
-     * the authenticated user ID (based on the user Token).
-     *
-     * @return  bool
-     */
-    public function isOwner()
-    {
-        return App::make(GetAuthenticatedUserTask::class)->run()->id == $this->id;
     }
 
     /**
