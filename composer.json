@@ -28,7 +28,6 @@
         "fruitcake/laravel-cors": "^1.0.5",
         "spatie/laravel-fractal": "^5.8.1",
         "vinkla/hashids": "^9.1.0",
-        "dto/dto": "^3.2.7",
         "laravel/tinker": "^2.6.0",
         "ext-json": "*"
     },
