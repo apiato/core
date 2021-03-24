@@ -184,7 +184,7 @@ abstract class Request extends LaravelRequest
      * apply validation rules to the ID's in the URL, since Laravel
      * doesn't validate them by default!
      *
-     * Now you can use validation riles like this: `'id' => 'required|integer|exists:items,id'`
+     * Now you can use validation rules like this: `'id' => 'required|integer|exists:items,id'`
      *
      * @param array $requestData
      *
