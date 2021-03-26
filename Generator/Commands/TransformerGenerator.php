@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class TransformerGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class TransformerGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -96,20 +91,21 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
         ];
     }
 
-    private function getListOfAllAttributes($full, $model) {
+    private function getListOfAllAttributes($full, $model)
+    {
         $indent = str_repeat(' ', 12);
         $fields = [
             'object' => "'$model'",
         ];
 
-        if($full) {
+        if ($full) {
             $obj = 'App\\Containers\\' . $this->containerName . '\\Models\\' . $model;
             $obj = new $obj();
             $columns = Schema::getColumnListing($obj->getTable());
 
-            foreach($columns as $column) {
-                if(in_array($column, $obj->getHidden())) {
-                    // skip all hidden fields of respective model
+            foreach ($columns as $column) {
+                if (in_array($column, $obj->getHidden())) {
+                    // Skip all hidden fields of respective model
                     continue;
                 }
 
@@ -124,7 +120,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
         ]);
 
         $attributes = "";
-        foreach($fields as $key => $value) {
+        foreach ($fields as $key => $value) {
             $attributes = $attributes . $indent . "'$key' => $value," . PHP_EOL;
         }
 

@@ -2,11 +2,6 @@
 
 namespace Apiato\Core\Generator\Traits;
 
-/**
- * Trait ParserTrait
- *
- * @author  Johannes Schobel    <johannes.schobel@googlemail.com>
- */
 trait ParserTrait
 {
     /**
@@ -53,15 +48,18 @@ trait ParserTrait
         return $stub;
     }
 
-    private function maskPathVariables($key) {
+    private function maskPathVariables($key)
+    {
         return '{' . $key . '}';
     }
 
-    private function maskFileVariables($key) {
+    private function maskFileVariables($key)
+    {
         return '{' . $key . '}';
     }
 
-    private function maskStubVariables($key) {
+    private function maskStubVariables($key)
+    {
         return '{{' . $key . '}}';
     }
 }

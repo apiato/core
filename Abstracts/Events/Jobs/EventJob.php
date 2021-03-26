@@ -10,33 +10,17 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-/**
- * Class EventJob
- *
- * @author  Arthur Devious
- */
 class EventJob extends Job implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $handler;
-
-    /**
-     * EventJob constructor.
-     *
-     * @param ShouldHandle $handler
-     */
+    public ShouldHandle $handler;
 
     public function __construct(ShouldHandle $handler)
     {
         $this->handler = $handler;
     }
 
-    /**
-     * Handle the job.
-     *
-     * @return void
-     */
     public function handle()
     {
         $this->handler->handle();

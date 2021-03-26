@@ -7,11 +7,6 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class ServiceProviderGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 

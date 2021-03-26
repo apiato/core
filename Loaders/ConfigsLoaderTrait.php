@@ -42,7 +42,6 @@ trait ConfigsLoaderTrait
         }
     }
 
-
     public function loadConfigsFromContainers($containerName): void
     {
         $containerConfigsDirectory = base_path('app/Containers/' . $containerName . '/Configs');

@@ -14,11 +14,6 @@ use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Scope;
 use League\Fractal\TransformerAbstract as FractalTransformer;
 
-/**
- * Class Transformer.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
 abstract class Transformer extends FractalTransformer
 {
 
@@ -48,9 +43,9 @@ abstract class Transformer extends FractalTransformer
     }
 
     /**
-     * @param mixed                       $data
+     * @param mixed $data
      * @param callable|FractalTransformer $transformer
-     * @param null                        $resourceKey
+     * @param null $resourceKey
      *
      * @return Item
      */
@@ -65,9 +60,9 @@ abstract class Transformer extends FractalTransformer
     }
 
     /**
-     * @param mixed                       $data
+     * @param mixed $data
      * @param callable|FractalTransformer $transformer
-     * @param null                        $resourceKey
+     * @param null $resourceKey
      *
      * @return Collection
      */
@@ -75,16 +70,16 @@ abstract class Transformer extends FractalTransformer
     {
         // set a default resource key if none is set
         if (!$resourceKey && $data->isNotEmpty()) {
-            $resourceKey = (string) $data->modelKeys()[0];
+            $resourceKey = (string)$data->modelKeys()[0];
         }
 
         return parent::collection($data, $transformer, $resourceKey);
     }
 
     /**
-     * @param Scope  $scope
+     * @param Scope $scope
      * @param string $includeName
-     * @param mixed  $data
+     * @param mixed $data
      *
      * @return ResourceInterface
      * @throws CoreInternalErrorException
@@ -94,13 +89,11 @@ abstract class Transformer extends FractalTransformer
     {
         try {
             return parent::callIncludeMethod($scope, $includeName, $data);
-        }
-        catch (ErrorException $exception) {
+        } catch (ErrorException $exception) {
             if (Config::get('apiato.requests.force-valid-includes', true)) {
                 throw new UnsupportedFractalIncludeException($exception->getMessage());
             }
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             throw new CoreInternalErrorException($exception->getMessage());
         }
     }

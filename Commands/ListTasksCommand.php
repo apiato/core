@@ -7,33 +7,19 @@ use App\Ship\Parents\Commands\ConsoleCommand;
 use File;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-/**
- * Class ListActionsCommand
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class ListTasksCommand extends ConsoleCommand
 {
 
     /**
      * The name and signature of the console command.
-     *
-     * @var string
      */
-    protected $signature = "apiato:list:tasks {--withfilename}";
+    protected string $signature = "apiato:list:tasks {--withfilename}";
 
     /**
      * The console command description.
-     *
-     * @var string
      */
-    protected $description = "List all Tasks in the Application.";
+    protected string $description = "List all Tasks in the Application.";
 
-    /**
-     * ListActionsCommand constructor.
-     *
-     * @param ConsoleOutput $console
-     */
     public function __construct(ConsoleOutput $console)
     {
         parent::__construct();
@@ -41,9 +27,6 @@ class ListTasksCommand extends ConsoleCommand
         $this->console = $console;
     }
 
-    /**
-     * Handle the command
-     */
     public function handle()
     {
         foreach (Apiato::getContainersNames() as $containerName) {
@@ -58,19 +41,19 @@ class ListTasksCommand extends ConsoleCommand
 
                 foreach ($files as $action) {
 
-                    // get the file name as is
+                    // Get the file name as is
                     $fileName = $originalFileName = $action->getFilename();
 
-                    // remove the Task.php postfix from each file name
+                    // Remove the Task.php postfix from each file name
                     $fileName = str_replace('Task.php', '', $fileName);
 
-                    // further, remove the `.php', if the file does not end on 'Task.php'
+                    // Further, remove the `.php', if the file does not end on 'Task.php'
                     $fileName = str_replace('.php', '', $fileName);
 
-                    // uncamelize the word and replace it with spaces
+                    // UnCamelize the word and replace it with spaces
                     $fileName = Apiato::uncamelize($fileName);
 
-                    // check if flag exist
+                    // Check if flag exists
                     $includeFileName = '';
                     if ($this->option('withfilename')) {
                         $includeFileName = "<fg=red>($originalFileName)</fg=red>";

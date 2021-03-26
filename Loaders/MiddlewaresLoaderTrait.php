@@ -5,11 +5,6 @@ namespace Apiato\Core\Loaders;
 use App;
 use Illuminate\Contracts\Http\Kernel;
 
-/**
- * Class MiddlewaresLoaderTrait.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
 trait MiddlewaresLoaderTrait
 {
 

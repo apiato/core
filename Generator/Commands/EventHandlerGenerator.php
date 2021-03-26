@@ -6,11 +6,6 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class EventHandlerGenerator
- *
- * @author  Johannes Schobel  <johannes.schobel@googlemail.com>
- */
 class EventHandlerGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 

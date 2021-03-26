@@ -5,11 +5,6 @@ namespace Apiato\Core\Loaders;
 use App;
 use File;
 
-/**
- * Class LocalizationLoaderTrait
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 trait LocalizationLoaderTrait
 {
 

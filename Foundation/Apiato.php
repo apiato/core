@@ -10,11 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 
 /**
- * Class Apiato
- *
  * Helper Class to serve Apiato (Ship/Containers).
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
  */
 class Apiato
 {
@@ -22,15 +18,11 @@ class Apiato
 
     /**
      * The Apiato version.
-     *
-     * @var string
      */
     public const VERSION = '10.0.0';
 
     /**
      * Get the containers namespace value from the containers config file
-     *
-     * @return  string
      */
     public function getContainersNamespace(): string
     {
@@ -39,8 +31,6 @@ class Apiato
 
     /**
      * Get the containers names
-     *
-     * @return  array
      */
     public function getContainersNames(): array
     {
@@ -54,9 +44,7 @@ class Apiato
     }
 
     /**
-     * get containers directories paths
-     *
-     * @return  mixed
+     * Get containers directories paths
      */
     public function getContainersPaths()
     {
@@ -65,8 +53,6 @@ class Apiato
 
     /**
      * Get the port folders names
-     *
-     * @return  array
      */
     public function getShipFoldersNames(): array
     {
@@ -79,16 +65,13 @@ class Apiato
         return $portFoldersNames;
     }
 
-    /**
-     * @return  mixed
-     */
     public function getShipPath()
     {
         return File::directories(app_path('Ship'));
     }
 
     /**
-     * build and return an object of a class from its file path
+     * Build and return an object of a class from its file path
      *
      * @param $filePathName
      *
@@ -102,7 +85,7 @@ class Apiato
     }
 
     /**
-     * get the full name (name \ namespace) of a class from its file path
+     * Get the full name (name \ namespace) of a class from its file path
      * result example: (string) "I\Am\The\Namespace\Of\This\Class"
      *
      * @param $filePathName
@@ -115,7 +98,7 @@ class Apiato
     }
 
     /**
-     * get the class namespace form file path using token
+     * Get the class namespace form file path using token
      *
      * @param $filePathName
      *
@@ -154,7 +137,7 @@ class Apiato
     }
 
     /**
-     * get the class name from file path using token
+     * Get the class name from file path using token
      *
      * @param $filePathName
      *
@@ -182,14 +165,12 @@ class Apiato
     }
 
     /**
-     * check if a word starts with another word
-     *
-     * @param $word
-     * @param $startsWith
-     *
-     * @return  bool
+     * Check if a word starts with another word
+     * @param string $word
+     * @param string $startsWith
+     * @return bool
      */
-    public function stringStartsWith($word, $startsWith): bool
+    public function stringStartsWith(string $word, string $startsWith): bool
     {
         return (substr($word, 0, strlen($startsWith)) === $startsWith);
     }

@@ -14,11 +14,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 
-/**
- * Class TestCase
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 abstract class TestCase extends LaravelTestCase
 {
 
@@ -33,17 +28,13 @@ abstract class TestCase extends LaravelTestCase
 
     /**
      * The base URL to use while testing the application.
-     *
-     * @var string
      */
-    protected $baseUrl;
+    protected string $baseUrl;
 
     /**
      * Setup the test environment, before each test.
-     *
-     * @return void
      */
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -51,7 +42,7 @@ abstract class TestCase extends LaravelTestCase
     /**
      * Reset the test environment, after each test.
      */
-    public function tearDown() : void
+    public function tearDown(): void
     {
         parent::tearDown();
     }
@@ -59,15 +50,13 @@ abstract class TestCase extends LaravelTestCase
     /**
      * Refresh the in-memory database.
      * Overridden refreshTestDatabase Trait
-     *
-     * @return void
      */
-    protected function refreshInMemoryDatabase()
+    protected function refreshInMemoryDatabase(): void
     {
-        // migrate the database
+        // Migrate the database
         $this->migrateDatabase();
 
-        // seed the database
+        // Seed the database
         $this->seed();
 
         // Install Passport Client for Testing
@@ -79,12 +68,10 @@ abstract class TestCase extends LaravelTestCase
     /**
      * Refresh a conventional test database.
      * Overridden refreshTestDatabase Trait
-     *
-     * @return void
      */
-    protected function refreshTestDatabase()
+    protected function refreshTestDatabase(): void
     {
-        if (! RefreshDatabaseState::$migrated) {
+        if (!RefreshDatabaseState::$migrated) {
 
             $this->artisan('migrate:fresh');
             $this->seed();

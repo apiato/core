@@ -4,11 +4,6 @@ namespace Apiato\Core\Abstracts\Providers;
 
 use Apiato\Core\Loaders\MiddlewaresLoaderTrait;
 
-/**
- * Class MiddlewareProvider
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 abstract class MiddlewareProvider extends MainProvider
 {
     use MiddlewaresLoaderTrait;

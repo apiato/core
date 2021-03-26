@@ -7,11 +7,6 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class RouteGenerator
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
@@ -82,15 +77,15 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
         $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for this endpoint', ['private', 'public'], 0);
         $operation = $this->checkParameterOrAsk('operation', 'Enter the name of the controller function that needs to be invoked when calling this endpoint');
         $verb = Str::upper($this->checkParameterOrAsk('verb', 'Enter the HTTP verb of this endpoint (GET, POST,...)'));
-        // get the URI and remove the first trailing slash
+        // Get the URI and remove the first trailing slash
         $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the endpoint URI (foo/bar/{id})'));
         $url = ltrim($url, '/');
 
-        $docurl = preg_replace('~\{(.+?)\}~', ':$1', $url);
+        $docUrl = preg_replace('~\{(.+?)\}~', ':$1', $url);
 
-        $routename = Str::lower($ui . '_' . $this->containerName . '_' . Str::snake($operation));
+        $routeName = Str::lower($ui . '_' . $this->containerName . '_' . Str::snake($operation));
 
-        // change the stub to the currently selected UI (API / WEB)
+        // Change the stub to the currently selected UI (API / WEB)
         $this->stubName = 'routes/' . $ui . '.stub';
 
         return [
@@ -104,11 +99,11 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
                 'operation' => $operation,
                 'user-interface' => Str::upper($ui),
                 'endpoint-url' => $url,
-                'doc-endpoint-url' => '/v' . $version . '/' . $docurl,
+                'doc-endpoint-url' => '/v' . $version . '/' . $docUrl,
                 'endpoint-version' => $version,
                 'http-verb' => Str::lower($verb),
                 'doc-http-verb' => Str::upper($verb),
-                'route-name' => $routename,
+                'route-name' => $routeName,
                 'auth-middleware' => Str::lower($ui),
             ],
             'file-parameters' => [

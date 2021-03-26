@@ -8,11 +8,6 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class TaskGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 

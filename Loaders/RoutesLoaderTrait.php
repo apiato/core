@@ -33,9 +33,9 @@ trait RoutesLoaderTrait
      */
     private function loadApiContainerRoutes(string $containerPath, string $containersNamespace): void
     {
-        // build the container api routes path
+        // Build the container api routes path
         $apiRoutesPath = $containerPath . '/UI/API/Routes';
-        // build the namespace from the path
+        // Build the namespace from the path
         $controllerNamespace = $containersNamespace . '\\Containers\\' . basename($containerPath) . '\\UI\API\Controllers';
 
         if (File::isDirectory($apiRoutesPath)) {
@@ -74,7 +74,7 @@ trait RoutesLoaderTrait
             'namespace' => $controllerNamespace,
             'middleware' => $this->getMiddlewares(),
             'domain' => $this->getApiUrl(),
-            // if $endpointFileOrPrefixString is a file then get the version name from the file name, else if string use that string as prefix
+            // If $endpointFileOrPrefixString is a file then get the version name from the file name, else if string use that string as prefix
             'prefix' => is_string($endpointFileOrPrefixString) ? $endpointFileOrPrefixString : $this->getApiVersionPrefix($endpointFileOrPrefixString),
         ];
     }
@@ -86,7 +86,7 @@ trait RoutesLoaderTrait
     {
         return array_filter([
             'api',
-            $this->getRateLimitMiddleware(), // returns NULL if feature disabled. Null will be removed form the array.
+            $this->getRateLimitMiddleware(), // Returns NULL if feature disabled. Null will be removed form the array.
         ]);
     }
 
