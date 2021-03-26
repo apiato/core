@@ -8,9 +8,10 @@ trait FactoryLocatorTrait
 {
     protected static function newFactory(): Factory
     {
-        $containersFactoriesPath = DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR . 'Factories' . DIRECTORY_SEPARATOR;
-        $containerName = explode(DIRECTORY_SEPARATOR, static::class)[2];
-        $nameSpace = 'App' . DIRECTORY_SEPARATOR . 'Containers' . DIRECTORY_SEPARATOR . $containerName . $containersFactoriesPath;
+        $separator = '\\';
+        $containersFactoriesPath = $separator . 'Data' . $separator . 'Factories' . $separator;
+        $containerName = explode($separator, static::class)[2];
+        $nameSpace = 'App' . $separator . 'Containers' . $separator . $containerName . $containersFactoriesPath;
 
         Factory::useNamespace($nameSpace);
         $className = class_basename(static::class);
