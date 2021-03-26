@@ -12,7 +12,7 @@ use Illuminate\Foundation\Bus\PendingDispatch as JobDispatcher;
 
 class Dispatcher extends EventDispatcher
 {
-    public function dispatch($event, $payload = [], bool $halt = false)
+    public function dispatch($event, $payload = [], $halt = false)
     {
         // Handle event Async when ShouldHandle Interface is implemented
         if ($event instanceof ShouldHandle) {
