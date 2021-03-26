@@ -121,12 +121,8 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
 
     /**
      * Removes "special characters" from a string
-     *
-     * @param $str
-     *
-     * @return string
      */
-    protected function removeSpecialChars($str)
+    protected function removeSpecialChars($str): string
     {
         return $str;
     }

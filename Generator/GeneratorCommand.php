@@ -305,10 +305,6 @@ abstract class GeneratorCommand extends Command
 
     /**
      * Removes "special characters" from a string
-     *
-     * @param $str
-     *
-     * @return string
      */
     protected function removeSpecialChars($str): string
     {
