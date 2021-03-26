@@ -59,7 +59,7 @@ trait MiddlewaresLoaderTrait
     private function registerMiddlewarePriority(array $middlewarePriority = [])
     {
         foreach ($middlewarePriority as $key => $middleware) {
-            if (! in_array($middleware, $this->app['router']->middlewarePriority)) {
+            if (!in_array($middleware, $this->app['router']->middlewarePriority)) {
                 $this->app['router']->middlewarePriority[] = $middleware;
             }
         }

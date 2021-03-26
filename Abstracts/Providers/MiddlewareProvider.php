@@ -12,6 +12,8 @@ abstract class MiddlewareProvider extends MainProvider
 
     protected array $middlewareGroups = [];
 
+    protected array $middlewarePriority = [];
+
     protected array $routeMiddleware = [];
 
     /**
