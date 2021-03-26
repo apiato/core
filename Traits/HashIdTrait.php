@@ -190,11 +190,6 @@ trait HashIdTrait
             return $id;
         }
 
-        // check if is a number, to throw exception, since hashed ID should not be a number
-        if (is_numeric($id)) {
-            throw new IncorrectIdException('Only Hashed ID\'s allowed' . (!is_null($parameter) ? " ($parameter)." : '.'));
-        }
-
         // do the decoding if the ID looks like a hashed one
         return empty($this->decoder($id)) ? [] : $this->decoder($id)[0];
     }
