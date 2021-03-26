@@ -11,7 +11,7 @@ class GetApiatoVersionCommand extends ConsoleCommand
     /**
      * The name and signature of the console command.
      */
-    protected string $signature = "apiato";
+    protected $signature = "apiato";
 
     /**
      * The console command description.
