@@ -11,12 +11,12 @@ class SeedDeploymentDataCommand extends ConsoleCommand
     /**
      * The name and signature of the console command.
      */
-    protected string $signature = "apiato:seed-deploy";
+    protected $signature = "apiato:seed-deploy";
 
     /**
      * The console command description.
      */
-    protected string $description = "Seed data for initial deployment.";
+    protected $description = "Seed data for initial deployment.";
 
     public function __construct()
     {

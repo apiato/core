@@ -13,12 +13,12 @@ class ListActionsCommand extends ConsoleCommand
     /**
      * The name and signature of the console command.
      */
-    protected string $signature = "apiato:list:actions {--withfilename}";
+    protected $signature = "apiato:list:actions {--withfilename}";
 
     /**
      * The console command description.
      */
-    protected string $description = "List all Actions in the Application.";
+    protected $description = "List all Actions in the Application.";
 
     public function __construct(ConsoleOutput $console)
     {

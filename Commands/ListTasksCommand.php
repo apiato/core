@@ -13,12 +13,12 @@ class ListTasksCommand extends ConsoleCommand
     /**
      * The name and signature of the console command.
      */
-    protected string $signature = "apiato:list:tasks {--withfilename}";
+    protected $signature = "apiato:list:tasks {--withfilename}";
 
     /**
      * The console command description.
      */
-    protected string $description = "List all Tasks in the Application.";
+    protected $description = "List all Tasks in the Application.";
 
     public function __construct(ConsoleOutput $console)
     {

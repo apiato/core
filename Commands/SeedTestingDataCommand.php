@@ -11,12 +11,12 @@ class SeedTestingDataCommand extends ConsoleCommand
     /**
      * The name and signature of the console command.
      */
-    protected string $signature = "apiato:seed-test";
+    protected $signature = "apiato:seed-test";
 
     /**
      * The console command description.
      */
-    protected string $description = "Seed testing data.";
+    protected $description = "Seed testing data.";
 
     public function __construct()
     {
