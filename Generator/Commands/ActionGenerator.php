@@ -106,10 +106,8 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
 
     /**
      * Get the default file name for this component to be generated
-     *
-     * @return string
      */
-    public function getDefaultFileName()
+    public function getDefaultFileName(): string
     {
         return 'DefaultAction';
     }
