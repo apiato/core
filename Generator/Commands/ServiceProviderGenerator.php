@@ -94,10 +94,8 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
 
     /**
      * Get the default file name for this component to be generated
-     *
-     * @return string
      */
-    public function getDefaultFileName()
+    public function getDefaultFileName(): string
     {
         return 'MainServiceProvider';
     }
