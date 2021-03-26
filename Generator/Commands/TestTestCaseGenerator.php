@@ -102,7 +102,7 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
         ];
     }
 
-    public function getDefaultFileName()
+    public function getDefaultFileName(): string
     {
         return 'TestCase';
     }

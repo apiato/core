@@ -114,7 +114,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
         ];
     }
 
-    public function getDefaultFileName()
+    public function getDefaultFileName(): string
     {
         return 'Controller';
     }

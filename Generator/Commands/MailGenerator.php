@@ -85,7 +85,7 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
         ];
     }
 
-    public function getDefaultFileName()
+    public function getDefaultFileName(): string
     {
         return 'DefaultMail';
     }

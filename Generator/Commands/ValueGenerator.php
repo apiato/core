@@ -82,7 +82,7 @@ class ValueGenerator extends GeneratorCommand implements ComponentsGenerator
         ];
     }
 
-    public function getDefaultFileName()
+    public function getDefaultFileName(): string
     {
         return 'DefaultValue';
     }

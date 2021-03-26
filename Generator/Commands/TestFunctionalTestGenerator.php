@@ -95,7 +95,7 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
         ];
     }
 
-    public function getDefaultFileName()
+    public function getDefaultFileName(): string
     {
         return 'DefaultFunctionalTest';
     }
