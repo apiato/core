@@ -191,22 +191,6 @@ class Apiato
     }
 
     /**
-     * @return mixed
-     * @throws WrongConfigurationsException
-     */
-    public function getLoginWebPageName()
-    {
-        $loginPage = Config::get('apiato.containers.login-page-url');
-
-        if (is_null($loginPage)) {
-            throw new WrongConfigurationsException();
-        }
-
-        return $loginPage;
-    }
-
-
-    /**
      * Build namespace for a class in Container.
      *
      * @param $containerName

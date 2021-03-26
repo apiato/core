@@ -12,55 +12,35 @@ use Illuminate\Support\Str;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Tests helper for making HTTP requests.
- */
 trait TestsRequestHelperTrait
 {
     /**
      * property to be set on the user test class
-     *
-     * @var  string
      */
-    protected $endpoint = '';
+    protected string $endpoint = '';
 
     /**
      * property to be set on the user test class
-     *
-     * @var  bool
      */
-    protected $auth = true;
+    protected bool $auth = true;
 
     protected $response;
 
-    /**
-     * @var string
-     */
-    protected $responseContent;
+    protected string $responseContent;
 
-    /**
-     * @var array
-     */
-    protected $responseContentArray;
+    protected ?array $responseContentArray = null;
 
-    /**
-     * @var stdClass
-     */
-    protected $responseContentObject;
+    protected ?stdClass $responseContentObject = null;
 
     /**
      * Allows users to override the default class property `endpoint` directly before calling the `makeCall` function.
-     *
-     * @var string
      */
-    protected $overrideEndpoint;
+    protected ?string $overrideEndpoint = null;
 
     /**
      * Allows users to override the default class property `auth` directly before calling the `makeCall` function.
-     *
-     * @var string
      */
-    protected $overrideAuth;
+    protected string $overrideAuth;
 
     public function makeCall(array $data = [], array $headers = [])
     {
@@ -96,8 +76,6 @@ trait TestsRequestHelperTrait
 
     /**
      * read `$this->endpoint` property from the test class (`verb@uri`) and convert it to usable data
-     *
-     * @return  array
      */
     private function parseEndpoint(): array
     {
@@ -112,8 +90,8 @@ trait TestsRequestHelperTrait
 
         // get the verb and uri values from the array
         extract(array_combine(['verb', 'uri'], $asArray));
-        /** @var TYPE_NAME $verb */
-        /** @var TYPE_NAME $uri */
+        /** @var string $verb */
+        /** @var string $uri */
 
         return [
             'verb' => $verb,
@@ -172,40 +150,25 @@ trait TestsRequestHelperTrait
         return $this->response = $httpResponse;
     }
 
-    /**
-     * @return  mixed
-     */
+
     public function getResponseContentArray()
     {
-        return $this->responseContentArray ?: $this->responseContentArray = json_decode($this->getResponseContent(),
-            true);
+        return $this->responseContentArray ?: $this->responseContentArray = json_decode($this->getResponseContent(), true);
     }
 
-    /**
-     * @return  string
-     */
     public function getResponseContent(): string
     {
         return $this->responseContent;
     }
 
-    /**
-     * @param $httpResponse
-     *
-     * @return  mixed
-     */
     public function setResponseContent($httpResponse)
     {
         return $this->responseContent = $httpResponse->getContent();
     }
 
-    /**
-     * @return  mixed
-     */
     public function getResponseContentObject()
     {
-        return $this->responseContentObject ?: $this->responseContentObject = json_decode($this->getResponseContent(),
-            false);
+        return $this->responseContentObject ?: $this->responseContentObject = json_decode($this->getResponseContent(), false);
     }
 
     /**
@@ -229,13 +192,7 @@ trait TestsRequestHelperTrait
         return $this;
     }
 
-    /**
-     * @param      $id
-     * @param bool $skipEncoding
-     *
-     * @return  mixed
-     */
-    private function hashEndpointId($id, $skipEncoding = false)
+    private function hashEndpointId($id, $skipEncoding = false): string
     {
         return (Config::get('apiato.hash-id') && !$skipEncoding) ? Hashids::encode($id) : $id;
     }

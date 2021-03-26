@@ -21,12 +21,7 @@ class {{class-name}} extends Transformer
 
     ];
 
-    /**
-     * @param {{model}} $entity
-     *
-     * @return array
-     */
-    public function transform({{model}} $entity)
+    public function transform({{model}} $entity): array
     {
         $response = [
 {{attributes}}

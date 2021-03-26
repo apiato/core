@@ -9,8 +9,7 @@ use Exception;
 
 class Create{{model}}Task extends Task
 {
-
-    protected $repository;
+    protected {{model}}Repository $repository;
 
     public function __construct({{model}}Repository $repository)
     {

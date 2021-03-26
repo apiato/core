@@ -13,29 +13,15 @@ use Request;
 
 trait ResponseTrait
 {
+    protected array $metaData = [];
 
-    /**
-     * @var  array
-     */
-    protected $metaData = [];
-
-    /**
-     * @param       $data
-     * @param null $transformerName The transformer (e.g., Transformer::class or new Transformer()) to be applied
-     * @param array $includes additional resources to be included
-     * @param array $meta additional meta information to be applied
-     * @param null $resourceKey the resource key to be set for the TOP LEVEL resource
-     *
-     * @return array
-     * @throws InvalidTransformerException
-     */
     public function transform(
         $data,
         $transformerName = null,
         array $includes = [],
         array $meta = [],
         $resourceKey = null
-    )
+    ): array
     {
         // first, we need to create the transformer
         if ($transformerName instanceof Transformer) {
@@ -96,95 +82,12 @@ trait ResponseTrait
         return $result;
     }
 
-
-    /**
-     * @param $data
-     *
-     * @return  $this
-     */
-    public function withMeta($data)
+    protected function parseRequestedIncludes(): array
     {
-        $this->metaData = $data;
-
-        return $this;
+        return explode(',', Request::get('include'));
     }
 
-    /**
-     * @param       $message
-     * @param int $status
-     * @param array $headers
-     * @param int $options
-     *
-     * @return  JsonResponse
-     */
-    public function json($message, $status = 200, array $headers = [], $options = 0)
-    {
-        return new JsonResponse($message, $status, $headers, $options);
-    }
-
-    /**
-     * @param null $message
-     * @param int $status
-     * @param array $headers
-     * @param int $options
-     *
-     * @return JsonResponse
-     */
-    public function created($message = null, $status = 201, array $headers = [], $options = 0)
-    {
-        return new JsonResponse($message, $status, $headers, $options);
-    }
-
-    /**
-     * @param null  array or string $message
-     * @param int $status
-     * @param array $headers
-     * @param int $options
-     *
-     * @return  JsonResponse
-     */
-    public function accepted($message = null, $status = 202, array $headers = [], $options = 0)
-    {
-        return new JsonResponse($message, $status, $headers, $options);
-    }
-
-    /**
-     * @param $responseArray
-     *
-     * @return  JsonResponse
-     */
-    public function deleted($responseArray = null)
-    {
-        if (!$responseArray) {
-            return $this->accepted();
-        }
-
-        $id = $responseArray->getHashedKey();
-        $className = (new ReflectionClass($responseArray))->getShortName();
-
-        return $this->accepted([
-            'message' => "$className ($id) Deleted Successfully.",
-        ]);
-    }
-
-    /**
-     * @param int $status
-     *
-     * @return  JsonResponse
-     */
-    public function noContent($status = 204)
-    {
-        return new JsonResponse(null, $status);
-    }
-
-
-    /**
-     * @param array $responseArray
-     * @param array $filters
-     *
-     * @return array
-     */
-    private function filterResponse(array $responseArray, array $filters)
+    private function filterResponse(array $responseArray, array $filters): array
     {
         foreach ($responseArray as $k => $v) {
             if (in_array($k, $filters, true)) {
@@ -214,12 +117,44 @@ trait ResponseTrait
         return $responseArray;
     }
 
-    /**
-     * @return array
-     */
-    protected function parseRequestedIncludes(): array
+    public function withMeta($data): self
     {
-        return explode(',', Request::get('include'));
+        $this->metaData = $data;
+
+        return $this;
     }
 
+    public function json($message, $status = 200, array $headers = [], $options = 0): JsonResponse
+    {
+        return new JsonResponse($message, $status, $headers, $options);
+    }
+
+    public function created($message = null, $status = 201, array $headers = [], $options = 0): JsonResponse
+    {
+        return new JsonResponse($message, $status, $headers, $options);
+    }
+
+    public function deleted($responseArray = null): JsonResponse
+    {
+        if (!$responseArray) {
+            return $this->accepted();
+        }
+
+        $id = $responseArray->getHashedKey();
+        $className = (new ReflectionClass($responseArray))->getShortName();
+
+        return $this->accepted([
+            'message' => "$className ($id) Deleted Successfully.",
+        ]);
+    }
+
+    public function accepted($message = null, $status = 202, array $headers = [], $options = 0): JsonResponse
+    {
+        return new JsonResponse($message, $status, $headers, $options);
+    }
+
+    public function noContent($status = 204): JsonResponse
+    {
+        return new JsonResponse(null, $status);
+    }
 }

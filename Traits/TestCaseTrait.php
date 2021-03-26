@@ -8,10 +8,6 @@ use Laravel\Passport\PersonalAccessClient;
 
 trait TestCaseTrait
 {
-
-    /**
-     * Migrate the database.
-     */
     public function migrateDatabase(): void
     {
         Artisan::call('migrate');
@@ -60,5 +56,4 @@ trait TestCaseTrait
         $accessClient->client_id = $client->id;
         $accessClient->save();
     }
-
 }

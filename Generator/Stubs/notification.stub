@@ -4,12 +4,8 @@ namespace App\Containers\{{container-name}}\Notifications;
 
 use App\Ship\Parents\Notifications\Notification;
 
-/**
- * Class {{class-name}}
- */
 class {{class-name}} extends Notification
 {
-
     public function __construct()
     {
         // ..

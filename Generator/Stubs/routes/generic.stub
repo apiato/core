@@ -1,10 +1,9 @@
 <?php
 
-/** @var Route $router */
-$router->{{http-verb}}('{{endpoint-url}}', [
-    'as' => '{{route-name}}',
-    'uses'  => 'Controller@{{operation}}',
-    'middleware' => [
-      'auth:{{auth-middleware}}',
-    ],
-]);
+use App\Containers\{{container-name}}\UI\API\Controllers\Controller;
+use Illuminate\Support\Facades\Route;
+
+Route::{{http-verb}}('{{endpoint-url}}', [Controller::class, '{{operation}}'])
+    ->name('{{route-name}}')
+    ->middleware(['auth:{{auth-middleware}}']);
+

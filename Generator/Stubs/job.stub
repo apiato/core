@@ -4,9 +4,6 @@ namespace App\Containers\{{container-name}}\Jobs;
 
 use App\Ship\Parents\Jobs\Job;
 
-/**
- * Class {{class-name}}
- */
  class {{class-name}} extends Job
  {
      private $recipients;

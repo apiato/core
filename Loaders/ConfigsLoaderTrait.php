@@ -18,23 +18,26 @@ trait ConfigsLoaderTrait
 
     private function loadConfigs($configFolder, $namespace = null): void
     {
-        $files = File::files($configFolder);
-        $namespace = $namespace ? $namespace . '::' : '';
+        if (File::isDirectory($configFolder)) {
 
-        foreach ($files as $file) {
-            try {
-                $config = File::getRequire($file);
-                $name = File::name($file);
+            $files = File::files($configFolder);
+            $namespace = $namespace ? $namespace . '::' : '';
 
-                // Special case for files named config.php (config keyword is omitted)
-                if ($name === 'config') {
-                    foreach ($config as $key => $value) {
-                        Config::set($namespace . $key, $value);
+            foreach ($files as $file) {
+                try {
+                    $config = File::getRequire($file);
+                    $name = File::name($file);
+
+                    // special case for files named config.php (config keyword is omitted)
+                    if ($name === 'config') {
+                        foreach ($config as $key => $value) {
+                            Config::set($namespace . $key, $value);
+                        }
                     }
-                }
 
-                Config::set($namespace . $name, $config);
-            } catch (FileNotFoundException $e) {
+                    Config::set($namespace . $name, $config);
+                } catch (FileNotFoundException $e) {
+                }
             }
         }
     }

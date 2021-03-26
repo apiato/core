@@ -9,15 +9,14 @@ use Exception;
 
 class Delete{{model}}Task extends Task
 {
-
-    protected $repository;
+    protected {{model}}Repository $repository;
 
     public function __construct({{model}}Repository $repository)
     {
         $this->repository = $repository;
     }
 
-    public function run($id)
+    public function run($id): ?int
     {
         try {
             return $this->repository->delete($id);
