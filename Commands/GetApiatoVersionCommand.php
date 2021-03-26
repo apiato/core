@@ -16,7 +16,7 @@ class GetApiatoVersionCommand extends ConsoleCommand
     /**
      * The console command description.
      */
-    protected string $description = "Display the current Apiato version.";
+    protected $description = "Display the current Apiato version.";
 
     public function __construct()
     {
