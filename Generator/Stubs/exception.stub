@@ -7,9 +7,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class {{class-name}} extends Exception
 {
-    public $httpStatusCode = Response::HTTP_BAD_REQUEST;
-
-    public $message = 'Exception Default Message.';
-
-    public $code = 0;
+    protected $code = Response::HTTP_BAD_REQUEST;
+    protected $message = 'Exception Default Message.';
 }
