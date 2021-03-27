@@ -2,48 +2,48 @@
 
 namespace Apiato\Core\Abstracts\Exceptions;
 
-use App\Ship\Exceptions\Codes\ErrorCodeManager;
 use Exception as BaseException;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\MessageBag;
 use Log;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException as SymfonyHttpException;
 
-abstract class Exception extends SymfonyHttpException
+abstract class Exception extends BaseException
 {
-
-    protected ?MessageBag $errors;
-
-    const DEFAULT_STATUS_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
-
+    private const DEFAULT_STATUS_CODE = 500;
     protected string $environment;
-
-    private $customData;
+    protected $message;
+    protected $code;
 
     public function __construct(
         ?string $message = null,
-        ?array $errors = null,
-        ?int $statusCode = null,
-        int $code = 0,
-        ?BaseException $previous = null,
-        array $headers = []
+        ?int $code = null,
+        ?BaseException $previous = null
     )
     {
         // Detect and set the running environment
         $this->environment = Config::get('app.env');
 
-        $message = $this->prepareMessage($message);
-        $this->errors = $this->prepareError($errors);
-        $statusCode = $this->prepareStatusCode($statusCode);
+        $this->message = $this->prepareMessage($message);
+        $this->code = $this->prepareStatusCode($code);
+    }
 
-        $this->logTheError($statusCode, $message, $code);
+    /**
+     * @param string|null $message
+     *
+     * @return string|null
+     */
+    private function prepareMessage(?string $message = null): ?string
+    {
+        return is_null($message) ? $this->message : $message;
+    }
 
-        parent::__construct($statusCode, $message, $previous, $headers, $code);
+    private function prepareStatusCode(?int $code = null): int
+    {
+        return is_null($code) ? $this->findStatusCode() : $code;
+    }
 
-        $this->clearCustomData();
-
-        $this->code = $this->evaluateErrorCode();
+    private function findStatusCode(): int
+    {
+        return $this->code ?? Self::DEFAULT_STATUS_CODE;
     }
 
     /**
@@ -66,114 +66,5 @@ abstract class Exception extends SymfonyHttpException
         }
 
         return $this;
-    }
-
-    public function getErrors(): MessageBag
-    {
-        return $this->errors;
-    }
-
-    public function hasErrors(): bool
-    {
-        return $this->errors->isNotEmpty();
-    }
-
-    /**
-     * @param $statusCode
-     * @param $message
-     * @param $code
-     */
-    private function logTheError($statusCode, $message, $code)
-    {
-        // If not testing environment, log the error message
-        if ($this->environment != 'testing') {
-            Log::error('[ERROR] ' .
-                'Status Code: ' . $statusCode . ' | ' .
-                'Message: ' . $message . ' | ' .
-                'Errors: ' . $this->errors . ' | ' .
-                'Code: ' . $code
-            );
-        }
-    }
-
-    /**
-     * @param array|null $errors
-     * @return  MessageBag|array
-     */
-    private function prepareError(?array $errors = null)
-    {
-        return is_null($errors) ? new MessageBag() : $this->prepareArrayError($errors);
-    }
-
-    /**
-     * @param array $errors
-     *
-     * @return  array|MessageBag
-     */
-    private function prepareArrayError(array $errors = [])
-    {
-        return is_array($errors) ? new MessageBag($errors) : $errors;
-    }
-
-    /**
-     * @param string|null $message
-     *
-     * @return string|null
-     */
-    private function prepareMessage(?string $message = null): ?string
-    {
-        return is_null($message) && property_exists($this, 'message') ? $this->message : $message;
-    }
-
-    private function prepareStatusCode(?int $statusCode = null): int
-    {
-        return is_null($statusCode) ? $this->findStatusCode() : $statusCode;
-    }
-
-    private function findStatusCode(): int
-    {
-        return property_exists($this, 'httpStatusCode') ? $this->httpStatusCode : Self::DEFAULT_STATUS_CODE;
-    }
-
-    public function getCustomData()
-    {
-        return $this->customData;
-    }
-
-    protected function clearCustomData()
-    {
-        $this->customData = null;
-    }
-
-    /**
-     * Append customData to the exception and return the Exception!
-     *
-     * @param $customData
-     *
-     * @return $this
-     */
-    public function overrideCustomData($customData)
-    {
-        $this->customData = $customData;
-        return $this;
-    }
-
-    public function getErrorCode(): int
-    {
-        return $this->code;
-    }
-
-    /**
-     * Overrides the code with the application error code (if set)
-     */
-    private function evaluateErrorCode(): int
-    {
-        $code = $this->getErrorCode();
-
-        if (is_array($code)) {
-            $code = ErrorCodeManager::getCode($code);
-        }
-
-        return $code;
     }
 }
