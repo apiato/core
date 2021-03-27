@@ -3,6 +3,7 @@
 namespace Apiato\Core\Abstracts\Exceptions;
 
 use Exception as BaseException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Log;
 
@@ -12,6 +13,7 @@ abstract class Exception extends BaseException
     protected string $environment;
     protected $message;
     protected $code;
+    protected array $errors = [];
 
     public function __construct(
         ?string $message = null,
@@ -55,7 +57,7 @@ abstract class Exception extends BaseException
      *
      * @return $this
      */
-    public function debug($error, bool $force = false)
+    public function debug($error, bool $force = false): Exception
     {
         if ($error instanceof BaseException) {
             $error = $error->getMessage();
@@ -66,5 +68,38 @@ abstract class Exception extends BaseException
         }
 
         return $this;
+    }
+
+    public function withErrors(array $errors, bool $override = true): Exception
+    {
+        if ($override) {
+            $this->errors = $errors;
+        } else {
+            $this->errors = array_merge($this->errors, $errors);
+        }
+        return $this;
+    }
+
+    public function getErrors(): array
+    {
+        $translatedErrors = [];
+
+        foreach ($this->errors as $key => $value) {
+            $translatedValues = [];
+            // here we translate and mutate each error so all error values will be arrays (for consistency)
+            // e.g. error => value becomes error => [translated_value]
+            // e.g. error => [value1, value2] becomes error => [translated_value1, translated_value2]
+            if (is_array($value)) {
+                foreach ($value as $translationKey) {
+                    $translatedValues[] = __($translationKey);
+                }
+            } else {
+                $translatedValues[] = __($value);
+            }
+
+            $translatedErrors[$key] = $translatedValues;
+        }
+
+        return $translatedErrors;
     }
 }
