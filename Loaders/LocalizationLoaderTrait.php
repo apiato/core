@@ -7,15 +7,25 @@ use File;
 
 trait LocalizationLoaderTrait
 {
-
     /**
      * @param $containerName
      */
     public function loadLocalsFromContainers($containerName)
     {
-        $containerMigrationDirectory = base_path('app/Containers/' . $containerName . '/Resources/Languages');
+        $containerLocaleDirectory = base_path('app/Containers/' . $containerName . '/Resources/Languages');
+        $this->loadLocals($containerLocaleDirectory, $containerName);
+    }
 
-        $this->loadLocals($containerMigrationDirectory, $containerName);
+    /**
+     * @param $directory
+     * @param $containerName
+     */
+    private function loadLocals($directory, $namespace = null)
+    {
+        if (File::isDirectory($directory)) {
+            $this->loadTranslationsFrom($directory, strtolower($namespace));
+            $this->loadJsonTranslationsFrom($directory);
+        }
     }
 
     /**
@@ -23,20 +33,7 @@ trait LocalizationLoaderTrait
      */
     public function loadLocalsFromShip()
     {
-        // ..
+        $shipLocaleDirectory = base_path('app/Ship/Resources/Languages');
+        $this->loadLocals($shipLocaleDirectory, 'ship');
     }
-
-    /**
-     * @param $directory
-     * @param $containerName
-     */
-    private function loadLocals($directory, $containerName)
-    {
-        if (File::isDirectory($directory)) {
-
-            $this->loadTranslationsFrom($directory, strtolower($containerName));
-
-        }
-    }
-
 }
