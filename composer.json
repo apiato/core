@@ -51,8 +51,6 @@
                 "Fruitcake\\Cors\\CorsServiceProvider",
                 "Spatie\\Fractal\\FractalServiceProvider",
                 "Laravel\\Tinker\\TinkerServiceProvider",
-                "App\\Ship\\Parents\\Providers\\RoutesProvider",
-                "App\\Ship\\Providers\\ShipProvider",
                 "Apiato\\Core\\Generator\\GeneratorsServiceProvider"
             ],
             "aliases": {
