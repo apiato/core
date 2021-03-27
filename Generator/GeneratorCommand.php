@@ -59,13 +59,13 @@ abstract class GeneratorCommand extends Command
      */
     protected string $fileName;
 
-    protected string $userData;
+    protected $userData;
 
-    protected string $parsedFileName;
+    protected $parsedFileName;
 
-    protected string $stubContent;
+    protected $stubContent;
 
-    protected string $renderedStubContent;
+    protected $renderedStubContent;
 
     private IlluminateFilesystem $fileSystem;
 
