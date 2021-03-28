@@ -10,5 +10,4 @@ abstract class WebController extends Controller
      * Giving each Action the ability to modify it's internal business logic based on the UI type that called it.
      */
     public string $ui = 'web';
-
 }

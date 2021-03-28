@@ -12,5 +12,4 @@ abstract class ConsoleCommand extends LaravelCommand
      * Giving each Action the ability to modify it's internal business logic based on the UI type that called it.
      */
     public string $ui = 'cli';
-
 }

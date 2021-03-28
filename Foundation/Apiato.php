@@ -4,7 +4,6 @@ namespace Apiato\Core\Foundation;
 
 use Apiato\Core\Exceptions\ClassDoesNotExistException;
 use Apiato\Core\Exceptions\MissingContainerException;
-use Apiato\Core\Exceptions\WrongConfigurationsException;
 use Apiato\Core\Traits\CallableTrait;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
@@ -46,7 +45,7 @@ class Apiato
     /**
      * Get containers directories paths
      */
-    public function getContainersPaths()
+    public function getContainersPaths(): array
     {
         return File::directories(app_path('Containers'));
     }
@@ -65,7 +64,7 @@ class Apiato
         return $portFoldersNames;
     }
 
-    public function getShipPath()
+    public function getShipPath(): array
     {
         return File::directories(app_path('Ship'));
     }
