@@ -11,32 +11,29 @@ use Symfony\Component\Finder\SplFileInfo;
 
 trait RoutesLoaderTrait
 {
-
     /**
      * Register all the containers routes files in the framework
      */
     public function runRoutesAutoLoader(): void
     {
-        $containersPaths = Apiato::getContainerPaths();
-        $containersNamespace = Apiato::getContainersNamespace();
+        $containersPaths = Apiato::getAllContainerPaths();
 
         foreach ($containersPaths as $containerPath) {
-            $this->loadApiContainerRoutes($containerPath, $containersNamespace);
-            $this->loadWebContainerRoutes($containerPath, $containersNamespace);
+            $this->loadApiContainerRoutes($containerPath);
+            $this->loadWebContainerRoutes($containerPath);
         }
     }
 
     /**
      * Register the Containers API routes files
      * @param string $containerPath
-     * @param string $containersNamespace
      */
-    private function loadApiContainerRoutes(string $containerPath, string $containersNamespace): void
+    private function loadApiContainerRoutes(string $containerPath): void
     {
         // Build the container api routes path
         $apiRoutesPath = $containerPath . '/UI/API/Routes';
         // Build the namespace from the path
-        $controllerNamespace = $containersNamespace . '\\Containers\\' . basename($containerPath) . '\\UI\API\Controllers';
+        $controllerNamespace = $containerPath . '\\UI\API\Controllers';
 
         if (File::isDirectory($apiRoutesPath)) {
             $files = File::allFiles($apiRoutesPath);
@@ -161,14 +158,13 @@ trait RoutesLoaderTrait
      * Register the Containers WEB routes files
      *
      * @param $containerPath
-     * @param $containersNamespace
      */
-    private function loadWebContainerRoutes($containerPath, $containersNamespace): void
+    private function loadWebContainerRoutes($containerPath): void
     {
         // build the container web routes path
         $webRoutesPath = $containerPath . '/UI/WEB/Routes';
         // build the namespace from the path
-        $controllerNamespace = $containersNamespace . '\\Containers\\' . basename($containerPath) . '\\UI\WEB\Controllers';
+        $controllerNamespace = $containerPath . '\\UI\WEB\Controllers';
 
         if (File::isDirectory($webRoutesPath)) {
             $files = File::allFiles($webRoutesPath);

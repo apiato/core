@@ -5,7 +5,6 @@ namespace Apiato\Core\Foundation;
 use Apiato\Core\Exceptions\ClassDoesNotExistException;
 use Apiato\Core\Exceptions\MissingContainerException;
 use Apiato\Core\Traits\CallableTrait;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 
 class Apiato
@@ -17,75 +16,22 @@ class Apiato
      */
     public const VERSION = '10.0.0';
 
-    /**
-     * Get the containers namespace value from the apiato config file
-     */
-    public function getContainersNamespace(): string
-    {
-        return Config::get('apiato.containers.namespace');
-    }
+    private const SHIP_NAME = 'ship';
 
-    /**
-     * Get the sections namespace value from the apiato config file
-     */
-    public function getSectionsNamespace(): string
+    public function getSectionContainerNames(string $sectionName): array
     {
-        return Config::get('apiato.sections.namespace');
-    }
-
-    /**
-     * Get the containers names
-     */
-    public function getContainerNames(): array
-    {
-        $containersNames = [];
-
-        foreach ($this->getContainerPaths() as $containersPath) {
-            $containersNames[] = basename($containersPath);
+        $containerNames = [];
+        foreach (File::directories($this->getSectionPath($sectionName)) as $key => $name) {
+            $containerNames[] = basename($name);
         }
-
-        return $containersNames;
+        return $containerNames;
     }
 
-    /**
-     * Get containers directories paths
-     */
-    public function getContainerPaths(): array
+    private function getSectionPath(string $sectionName): string
     {
-        return File::directories(app_path('Containers'));
+        return app_path($sectionName);
     }
 
-    /**
-     * Get the section names
-     */
-    public function getSectionNames(): array
-    {
-        $sectionNames = [];
-
-        foreach ($this->getSectionPaths() as $sectionPath) {
-            $sectionNames[] = basename($sectionPath);
-        }
-
-        // remove "ship" from list
-        foreach ($sectionNames as $key => $value) {
-            if (strtolower($value) === 'ship')
-                array_splice($sectionNames, $key, 1);
-        }
-
-        return $sectionNames;
-    }
-
-    /**
-     * Get section directories paths
-     */
-    public function getSectionPaths(): array
-    {
-        return File::directories(app_path());
-    }
-
-    /**
-     * Get the port folders names
-     */
     public function getShipFoldersNames(): array
     {
         $portFoldersNames = [];
@@ -99,7 +45,7 @@ class Apiato
 
     public function getShipPath(): array
     {
-        return File::directories(app_path('Ship'));
+        return File::directories(app_path(self::SHIP_NAME));
     }
 
     /**
@@ -232,7 +178,34 @@ class Apiato
      */
     public function buildClassFullName($containerName, $className): string
     {
-        return 'App\Containers\\' . $containerName . '\\' . $this->getClassType($className) . 's\\' . $className;
+        return 'App\\' . $this->getSectionNameByContainerName($containerName) . '\\' . $containerName . '\\' . $this->getClassType($className) . 's\\' . $className;
+    }
+
+    public function getSectionNameByContainerName(string $containerName): ?string
+    {
+        foreach ($this->getSectionPaths() as $sectionPath) {
+            if (is_dir($sectionPath . '/' . $containerName)) {
+                return basename($sectionPath);
+            }
+        }
+    }
+
+    public function getSectionPaths(): array
+    {
+        $paths = File::directories(app_path());
+
+        // remove ship from paths
+        foreach ($paths as $key => $path) {
+            if ($this->isShip(basename($path))) {
+                array_splice($paths, $key, 1);
+            }
+        }
+        return $paths;
+    }
+
+    protected function isShip(string $name): bool
+    {
+        return strtolower($name) === self::SHIP_NAME;
     }
 
     /**
@@ -257,9 +230,64 @@ class Apiato
      */
     public function verifyContainerExist($containerName): void
     {
-        if (!is_dir(app_path('Containers/' . $containerName))) {
+        $containerExist = false;
+        // if it exist in at least one section then we count it as "exist"
+        foreach ($this->getSectionPaths() as $sectionPath) {
+            if (is_dir($sectionPath . '/' . $containerName)) {
+                $containerExist = true;
+            }
+        }
+
+        if (!$containerExist) {
             throw new MissingContainerException("Container ($containerName) is not installed.");
         }
+    }
+
+    public function getAllContainerNames(): array
+    {
+        $containersNames = [];
+
+        foreach ($this->getAllContainerPaths() as $containersPath) {
+            $containersNames[] = basename($containersPath);
+        }
+
+        return $containersNames;
+    }
+
+    public function getAllContainerPaths(): array
+    {
+        $sectionNames = $this->getSectionNames();
+        $containerPaths = [];
+        foreach ($sectionNames as $name) {
+            $sectionContainerPaths = $this->getSectionContainerPaths($name);
+            foreach ($sectionContainerPaths as $containerPath) {
+                $containerPaths[] = $containerPath;
+            }
+        }
+        return $containerPaths;
+    }
+
+    public function getSectionNames(): array
+    {
+        $sectionNames = [];
+
+        foreach ($this->getSectionPaths() as $sectionPath) {
+            $sectionNames[] = basename($sectionPath);
+        }
+
+        // remove ship from names
+        foreach ($sectionNames as $key => $sectionName) {
+            if ($this->isShip($sectionName)) {
+                array_splice($sectionNames, $key, 1);
+            }
+        }
+
+        return $sectionNames;
+    }
+
+    public function getSectionContainerPaths(string $sectionName): array
+    {
+        return File::directories(app_path($sectionName));
     }
 
     /**
@@ -267,11 +295,10 @@ class Apiato
      *
      * @throws ClassDoesNotExistException
      */
-    public function verifyClassExist($className): void
+    public function verifyClassExist(string $className): void
     {
         if (!class_exists($className)) {
             throw new ClassDoesNotExistException("Class ($className) is not installed.");
         }
     }
-
 }

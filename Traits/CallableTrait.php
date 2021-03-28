@@ -3,7 +3,6 @@
 namespace Apiato\Core\Traits;
 
 use Apiato\Core\Foundation\Facades\Apiato;
-use Dto\Exceptions\UnstorableValueException;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +36,6 @@ trait CallableTrait
      * @param array $extraMethodsToCall
      *
      * @return  mixed
-     * @throws UnstorableValueException
      */
     public function call($class, $runMethodArguments = [], $extraMethodsToCall = [])
     {
@@ -89,7 +87,7 @@ trait CallableTrait
      *
      * @return  int
      */
-    private function needsParsing($class, $separator = '@')
+    private function needsParsing($class, $separator = '@'): int
     {
         return preg_match('/' . $separator . '/', $class);
     }
@@ -102,7 +100,7 @@ trait CallableTrait
      *
      * @return  array
      */
-    private function parseClassName($class, $delimiter = '@')
+    private function parseClassName($class, $delimiter = '@'): array
     {
         return explode($delimiter, $class);
     }
@@ -112,7 +110,7 @@ trait CallableTrait
      *
      * @return  string
      */
-    private function capitalizeFirstLetter($string)
+    private function capitalizeFirstLetter($string): string
     {
         return ucfirst($string);
     }
@@ -125,7 +123,7 @@ trait CallableTrait
      *
      * @param $class
      */
-    private function setUIIfExist($class)
+    private function setUIIfExist($class): void
     {
         if (method_exists($class, 'setUI') && property_exists($this, 'ui')) {
             $class->setUI($this->ui);
@@ -136,7 +134,7 @@ trait CallableTrait
      * @param $class
      * @param $extraMethodsToCall
      */
-    private function callExtraMethods($class, $extraMethodsToCall)
+    private function callExtraMethods($class, $extraMethodsToCall): void
     {
         // allows calling other methods in the class before calling the main `run` function.
         foreach ($extraMethodsToCall as $methodInfo) {
@@ -154,7 +152,7 @@ trait CallableTrait
      * @param $class
      * @param $methodInfo
      */
-    private function callWithArguments($class, $methodInfo)
+    private function callWithArguments($class, $methodInfo): void
     {
         $method = key($methodInfo);
         $arguments = $methodInfo[$method];
@@ -167,7 +165,7 @@ trait CallableTrait
      * @param $class
      * @param $methodInfo
      */
-    private function callWithoutArguments($class, $methodInfo)
+    private function callWithoutArguments($class, $methodInfo): void
     {
         if (method_exists($class, $methodInfo)) {
             $class->$methodInfo();

@@ -38,7 +38,7 @@ trait SeederLoaderTrait
 
         $containersDirectories = [];
 
-        foreach (Apiato::getContainerNames() as $containerName) {
+        foreach (Apiato::getAllContainerNames() as $containerName) {
 
             $containersDirectories[] = base_path('app/Containers/' . $containerName . $this->seedersPath);
 

@@ -2,25 +2,17 @@
 
 namespace Apiato\Core\Loaders;
 
-use App;
 use File;
 
 trait LocalizationLoaderTrait
 {
-    /**
-     * @param $containerName
-     */
-    public function loadLocalsFromContainers($containerName)
+    public function loadLocalsFromContainers($containerPath): void
     {
-        $containerLocaleDirectory = base_path('app/Containers/' . $containerName . '/Resources/Languages');
-        $this->loadLocals($containerLocaleDirectory, $containerName);
+        $containerLocaleDirectory = $containerPath . '/Resources/Languages';
+        $this->loadLocals($containerLocaleDirectory, $containerPath);
     }
 
-    /**
-     * @param $directory
-     * @param $containerName
-     */
-    private function loadLocals($directory, $namespace = null)
+    private function loadLocals($directory, $namespace = null): void
     {
         if (File::isDirectory($directory)) {
             $this->loadTranslationsFrom($directory, strtolower($namespace));
@@ -28,10 +20,7 @@ trait LocalizationLoaderTrait
         }
     }
 
-    /**
-     * @void
-     */
-    public function loadLocalsFromShip()
+    public function loadLocalsFromShip(): void
     {
         $shipLocaleDirectory = base_path('app/Ship/Resources/Languages');
         $this->loadLocals($shipLocaleDirectory, 'ship');

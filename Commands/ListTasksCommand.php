@@ -29,7 +29,7 @@ class ListTasksCommand extends ConsoleCommand
 
     public function handle()
     {
-        foreach (Apiato::getContainerNames() as $containerName) {
+        foreach (Apiato::getAllContainerNames() as $containerName) {
 
             $this->console->writeln("<fg=yellow> [$containerName]</fg=yellow>");
 

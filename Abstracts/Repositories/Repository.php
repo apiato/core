@@ -38,14 +38,19 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         $fullName = static::class;
         $className = substr($fullName, strrpos($fullName, '\\') + 1);
         $classOnly = str_replace('Repository', '', $className);
-        $modelNamespace = 'App\Containers\\' . $this->getCurrentContainer() . '\\Models\\' . $classOnly;
+        $modelNamespace = 'App\\' . $this->getCurrentSection() . '\\' . $this->getCurrentContainer() . '\\Models\\' . $classOnly;
 
         return $modelNamespace;
     }
 
+    private function getCurrentSection(): string
+    {
+        return explode('\\', static::class)[1];
+    }
+
     private function getCurrentContainer(): string
     {
-        return substr(str_replace("App\\Containers\\", "", static::class), 0, strpos(str_replace("App\\Containers\\", "", static::class), '\\'));
+        return explode('\\', static::class)[2];
     }
 
     /**

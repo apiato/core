@@ -13,12 +13,11 @@ trait ProvidersLoaderTrait
      * All the Service Providers (registered inside the main), will be
      * loaded from the `boot()` function on the parent of the Main
      * Service Providers.
-     * @param $containerName
+     * @param $containerPath
      */
-    public function loadOnlyMainProvidersFromContainers($containerName): void
+    public function loadOnlyMainProvidersFromContainers($containerPath): void
     {
-        $containerProvidersDirectory = base_path('app/Containers/' . $containerName . '/Providers');
-
+        $containerProvidersDirectory = $containerPath . '/Providers';
         $this->loadProviders($containerProvidersDirectory);
     }
 
