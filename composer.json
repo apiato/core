@@ -32,6 +32,7 @@
         "ext-json": "*"
     },
     "require-dev": {
+        "laravel/framework": "^8.28.1",
         "roave/security-advisories": "dev-latest"
     },
     "autoload": {
