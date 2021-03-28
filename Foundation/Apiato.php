@@ -8,9 +8,6 @@ use Apiato\Core\Traits\CallableTrait;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 
-/**
- * Helper Class to serve Apiato (Ship/Containers).
- */
 class Apiato
 {
     use CallableTrait;
@@ -21,7 +18,7 @@ class Apiato
     public const VERSION = '10.0.0';
 
     /**
-     * Get the containers namespace value from the containers config file
+     * Get the containers namespace value from the apiato config file
      */
     public function getContainersNamespace(): string
     {
@@ -29,13 +26,21 @@ class Apiato
     }
 
     /**
+     * Get the sections namespace value from the apiato config file
+     */
+    public function getSectionsNamespace(): string
+    {
+        return Config::get('apiato.sections.namespace');
+    }
+
+    /**
      * Get the containers names
      */
-    public function getContainersNames(): array
+    public function getContainerNames(): array
     {
         $containersNames = [];
 
-        foreach ($this->getContainersPaths() as $containersPath) {
+        foreach ($this->getContainerPaths() as $containersPath) {
             $containersNames[] = basename($containersPath);
         }
 
@@ -45,9 +50,37 @@ class Apiato
     /**
      * Get containers directories paths
      */
-    public function getContainersPaths(): array
+    public function getContainerPaths(): array
     {
         return File::directories(app_path('Containers'));
+    }
+
+    /**
+     * Get the section names
+     */
+    public function getSectionNames(): array
+    {
+        $sectionNames = [];
+
+        foreach ($this->getSectionPaths() as $sectionPath) {
+            $sectionNames[] = basename($sectionPath);
+        }
+
+        // remove "ship" from list
+        foreach ($sectionNames as $key => $value) {
+            if (strtolower($value) === 'ship')
+                array_splice($sectionNames, $key, 1);
+        }
+
+        return $sectionNames;
+    }
+
+    /**
+     * Get section directories paths
+     */
+    public function getSectionPaths(): array
+    {
+        return File::directories(app_path());
     }
 
     /**

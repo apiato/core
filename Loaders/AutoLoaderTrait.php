@@ -30,7 +30,7 @@ trait AutoLoaderTrait
         $this->loadHelpersFromShip();
 
         // Iterate over all the containers folders and autoload most of the components
-        foreach (Apiato::getContainersNames() as $containerName) {
+        foreach (Apiato::getContainerNames() as $containerName) {
             $this->loadConfigsFromContainers($containerName);
             $this->loadLocalsFromContainers($containerName);
             $this->loadOnlyMainProvidersFromContainers($containerName);

@@ -17,7 +17,7 @@ trait RoutesLoaderTrait
      */
     public function runRoutesAutoLoader(): void
     {
-        $containersPaths = Apiato::getContainersPaths();
+        $containersPaths = Apiato::getContainerPaths();
         $containersNamespace = Apiato::getContainersNamespace();
 
         foreach ($containersPaths as $containerPath) {
