@@ -54,7 +54,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
-        $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Event for');
+        $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Event for', Str::ucfirst($this->containerName));
 
         $handler = $this->checkParameterOrConfirm('handler', 'Do you want to generate a Handler for this Event?', true);
         if ($handler) {
