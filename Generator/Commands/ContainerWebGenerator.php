@@ -103,7 +103,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
         $this->printInfoMessage('Generating a basic Migration file');
         $this->call('apiato:generate:migration', [
             '--container' => $containerName,
-            '--file' => 'create_' . Str::lower($_containerName) . '_tables',
+            '--file' => 'create_' . $models . '_table',
             '--tablename' => $models,
         ]);
 
