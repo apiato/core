@@ -18,20 +18,6 @@ class Apiato
 
     private const SHIP_NAME = 'ship';
 
-    public function getSectionContainerNames(string $sectionName): array
-    {
-        $containerNames = [];
-        foreach (File::directories($this->getSectionPath($sectionName)) as $key => $name) {
-            $containerNames[] = basename($name);
-        }
-        return $containerNames;
-    }
-
-    private function getSectionPath(string $sectionName): string
-    {
-        return app_path($sectionName);
-    }
-
     public function getShipFoldersNames(): array
     {
         $portFoldersNames = [];

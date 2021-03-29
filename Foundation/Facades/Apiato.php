@@ -5,8 +5,6 @@ namespace Apiato\Core\Foundation\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static array getSectionContainerNames(string $sectionName)
- * @method static string getSectionPath(string $sectionName)
  * @method static array getShipFoldersNames()
  * @method static array getShipPath()
  * @method static mixed getClassObjectFromFile($filePathName)
