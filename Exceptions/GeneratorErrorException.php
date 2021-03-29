@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Generator\Exceptions;
+namespace Apiato\Core\Exceptions;
 
 use Apiato\Core\Abstracts\Exceptions\Exception;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;

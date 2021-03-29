@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Generator;
 
-use Apiato\Core\Generator\Exceptions\GeneratorErrorException;
+use Apiato\Core\Exceptions\GeneratorErrorException;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Apiato\Core\Generator\Traits\FileSystemTrait;
 use Apiato\Core\Generator\Traits\FormatterTrait;
