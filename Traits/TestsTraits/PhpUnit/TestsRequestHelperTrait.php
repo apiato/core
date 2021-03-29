@@ -2,9 +2,9 @@
 
 namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
 
-use App\Ship\Exceptions\MissingTestEndpointException;
-use App\Ship\Exceptions\UndefinedMethodException;
-use App\Ship\Exceptions\WrongEndpointFormatException;
+use Apiato\Core\Exceptions\MissingTestEndpointException;
+use Apiato\Core\Exceptions\UndefinedMethodException;
+use Apiato\Core\Exceptions\WrongEndpointFormatException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
