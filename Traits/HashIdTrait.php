@@ -4,7 +4,7 @@ namespace Apiato\Core\Traits;
 
 use App\Ship\Exceptions\IncorrectIdException;
 use Illuminate\Support\Facades\Config;
-use Route;
+use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
 use function is_null;
 use function strtolower;
