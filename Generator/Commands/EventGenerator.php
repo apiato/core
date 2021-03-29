@@ -61,6 +61,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
             // We need to generate a corresponding handler
             // so call the other command
             $status = $this->call('apiato:generate:eventhandler', [
+                '--section' => $this->sectionName,
                 '--container' => $this->containerName,
                 '--file' => $this->fileName . 'Handler',
                 '--event' => $this->fileName

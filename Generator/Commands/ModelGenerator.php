@@ -59,6 +59,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
             // We need to generate a corresponding repository
             // so call the other command
             $status = $this->call('apiato:generate:repository', [
+                '--section' => $this->sectionName,
                 '--container' => $this->containerName,
                 '--file' => $this->fileName . 'Repository'
             ]);
