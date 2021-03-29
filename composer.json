@@ -33,12 +33,16 @@
     },
     "require-dev": {
         "laravel/framework": "^8.28.1",
+        "guzzlehttp/guzzle": "^7.2.0",
         "roave/security-advisories": "dev-latest"
     },
     "autoload": {
         "psr-4": {
             "Apiato\\Core\\": ""
-        }
+        },
+        "files": [
+            "Helpers/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {}
