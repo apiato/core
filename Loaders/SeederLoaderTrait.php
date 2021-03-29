@@ -3,8 +3,8 @@
 namespace Apiato\Core\Loaders;
 
 use Apiato\Core\Foundation\Facades\Apiato;
-use File;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 
 /**
  * This Class has inverted dependency :( you must extend this class from the default
@@ -37,9 +37,10 @@ trait SeederLoaderTrait
 
         $containersDirectories = [];
 
-        foreach (Apiato::getAllContainerNames() as $containerName) {
-            $containersDirectories[] = base_path('app/Containers/' . $containerName . $this->seedersPath);
-
+        foreach (Apiato::getSectionNames() as $sectionName) {
+            foreach (Apiato::getSectionContainerNames($sectionName) as $containerName) {
+                $containersDirectories[] = base_path('app/' . $sectionName . '/' . $containerName . $this->seedersPath);
+            }
         }
 
         $seedersClasses = $this->findSeedersClasses($containersDirectories, $seedersClasses);
