@@ -62,7 +62,10 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
         // We therefore search for a file that is named "xxxx_xx_xx_xxxxxx_NAME"
         $exists = false;
 
-        $folder = $this->parsePathStructure($this->pathStructure, ['container-name' => $this->containerName]);
+        $folder = $this->parsePathStructure($this->pathStructure, [
+            'section-name' => $this->sectionName,
+            'container-name' => $this->containerName
+        ]);
         $folder = $this->getFilePath($folder);
         $folder = rtrim($folder, $this->parsedFileName . '.' . $this->getDefaultFileExtension());
 
