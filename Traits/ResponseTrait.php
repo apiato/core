@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
-use Apiato\Core\Abstracts\Requests\Request;
+use Request;
 use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Exceptions\InvalidTransformerException;
 use Illuminate\Http\JsonResponse;
