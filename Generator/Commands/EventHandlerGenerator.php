@@ -62,7 +62,6 @@ class EventHandlerGenerator extends GeneratorCommand implements ComponentsGenera
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
                 'section-name' => $this->sectionName,
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
