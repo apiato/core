@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Containers\{{container-name}}\UI\{{user-interface}}\Controllers;
+namespace App\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
-use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
-use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{models}}Request;
-use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Find{{model}}ByIdRequest;
-use App\Containers\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
-use App\Containers\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
+use App\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
+use App\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
+use App\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{models}}Request;
+use App\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Find{{model}}ByIdRequest;
+use App\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
+use App\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
 use App\Ship\Parents\Controllers\{{base-controller}};
 use Apiato\Core\Foundation\Facades\Apiato;
 use Illuminate\Http\JsonResponse;

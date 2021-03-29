@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Containers\{{container-name}}\Events\Events;
+namespace App\{{section-name}}\{{container-name}}\Events\Events;
 
 use App\Ship\Parents\Events\Event;
 use Illuminate\Queue\SerializesModels;

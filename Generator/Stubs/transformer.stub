@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Containers\{{container-name}}\UI\API\Transformers;
+namespace App\{{section-name}}\{{container-name}}\UI\API\Transformers;
 
-use App\Containers\{{container-name}}\Models\{{model}};
+use App\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Ship\Parents\Transformers\Transformer;
 
 class {{class-name}} extends Transformer

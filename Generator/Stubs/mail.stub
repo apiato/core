@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Containers\{{container-name}}\Mails;
+namespace App\{{section-name}}\{{container-name}}\Mails;
 
 use App\Containers\User\Models\User;
 use App\Ship\Parents\Mails\Mail;

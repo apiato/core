@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Containers\{{container-name}}\Events\Handlers;
+namespace App\{{section-name}}\{{container-name}}\Events\Handlers;
 
-use App\Containers\{{container-name}}\Events\Events\{{model}};
+use App\{{section-name}}\{{container-name}}\Events\Events\{{model}};
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class {{class-name}} implements ShouldQueue
