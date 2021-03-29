@@ -54,6 +54,10 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
     {
         $ui = 'api';
 
+        // section name as inputted and lower
+        $sectionName = $this->sectionName;
+        $_sectionName = Str::lower($this->sectionName);
+
         // container name as inputted and lower
         $containerName = $this->containerName;
         $_containerName = Str::lower($this->containerName);
@@ -65,6 +69,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         // add the README file
         $this->printInfoMessage('Generating README File');
         $this->call('apiato:generate:readme', [
+            '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => 'README',
         ]);
@@ -72,6 +77,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         // create the configuration file
         $this->printInfoMessage('Generating Configuration File');
         $this->call('apiato:generate:configuration', [
+            '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => $_containerName,
         ]);
@@ -79,6 +85,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         // create the MainServiceProvider for the container
         $this->printInfoMessage('Generating MainServiceProvider');
         $this->call('apiato:generate:serviceprovider', [
+            '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => 'MainServiceProvider',
             '--stub' => 'mainserviceprovider',
@@ -87,6 +94,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         // create the model and repository for this container
         $this->printInfoMessage('Generating Model and Repository');
         $this->call('apiato:generate:model', [
+            '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => $model,
             '--repository' => true,
@@ -95,6 +103,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         // create the migration file for the model
         $this->printInfoMessage('Generating a basic Migration file');
         $this->call('apiato:generate:migration', [
+            '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => 'create_' . $models . '_table',
             '--tablename' => $models,
@@ -103,6 +112,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         // create a transformer for the model
         $this->printInfoMessage('Generating Transformer for the Model');
         $this->call('apiato:generate:transformer', [
+            '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => $containerName . 'Transformer',
             '--model' => $model,
@@ -177,6 +187,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
 
         foreach ($routes as $route) {
             $this->call('apiato:generate:route', [
+                '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => $route['name'],
                 '--ui' => $ui,
@@ -188,12 +199,14 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             ]);
 
             $this->call('apiato:generate:request', [
+                '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => $route['request'],
                 '--ui' => $ui,
             ]);
 
             $this->call('apiato:generate:action', [
+                '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => $route['action'],
                 '--model' => $model,
@@ -201,6 +214,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             ]);
 
             $this->call('apiato:generate:task', [
+                '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => $route['task'],
                 '--model' => $model,
@@ -211,6 +225,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         // finally generate the controller
         $this->printInfoMessage('Generating Controller to wire everything together');
         $this->call('apiato:generate:controller', [
+            '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => 'Controller',
             '--ui' => $ui,
@@ -224,7 +239,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
+                '_section-name' => $_sectionName,
                 'section-name' => $this->sectionName,
                 '_container-name' => $_containerName,
                 'container-name' => $containerName,

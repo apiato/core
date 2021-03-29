@@ -58,11 +58,16 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for this container', ['API', 'WEB', 'BOTH'], 0));
 
         // container name as inputted and lower
+        $sectionName = $this->sectionName;
+        $_sectionName = Str::lower($this->sectionName);
+
+        // container name as inputted and lower
         $containerName = $this->containerName;
         $_containerName = Str::lower($this->containerName);
 
         if ($ui === 'api' || $ui === 'both') {
             $this->call('apiato:generate:container:api', [
+                '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => 'composer'
             ]);
@@ -70,6 +75,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
 
         if ($ui === 'web' || $ui === 'both') {
             $this->call('apiato:generate:container:web', [
+                '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => 'composer'
             ]);
@@ -82,7 +88,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
+                '_section-name' => $_sectionName,
                 'section-name' => $this->sectionName,
                 '_container-name' => $_containerName,
                 'container-name' => $containerName,
