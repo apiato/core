@@ -9,6 +9,7 @@ use Apiato\Core\Generator\Traits\FormatterTrait;
 use Apiato\Core\Generator\Traits\ParserTrait;
 use Apiato\Core\Generator\Traits\PrinterTrait;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
@@ -19,35 +20,40 @@ abstract class GeneratorCommand extends Command
     use ParserTrait, PrinterTrait, FileSystemTrait, FormatterTrait;
 
     /**
-     * Root directory of all containers
+     * Root directory of all sections
      *
      * @var string
      */
-    const ROOT = 'app';
+    private const ROOT = 'app';
 
     /**
      * Relative path for the stubs (relative to this directory / file)
      *
      * @var string
      */
-    const STUB_PATH = 'Stubs/*';
+    private const STUB_PATH = 'Stubs/*';
 
     /**
      * Relative path for the custom stubs (relative to the app/Ship directory!
      */
-    const CUSTOM_STUB_PATH = 'Generators/CustomStubs/*';
+    private const CUSTOM_STUB_PATH = 'Generators/CustomStubs/*';
 
     /**
-     * Containers main folder
+     * Default section name
      *
      * @var string
      */
-    const CONTAINER_DIRECTORY_NAME = 'Containers';
+    private const DEFAULT_SECTION_NAME = 'Containers';
 
     /**
      * @var string
      */
     protected string $filePath;
+
+    /**
+     * @var string the name of the section to generate the stubs
+     */
+    protected string $sectionName;
 
     /**
      * @var string the name of the container to generate the stubs
@@ -69,7 +75,8 @@ abstract class GeneratorCommand extends Command
 
     private IlluminateFilesystem $fileSystem;
 
-    private $defaultInputs = [
+    private array $defaultInputs = [
+        ['section', null, InputOption::VALUE_OPTIONAL, 'The name of the section'],
         ['container', null, InputOption::VALUE_OPTIONAL, 'The name of the container'],
         ['file', null, InputOption::VALUE_OPTIONAL, 'The name of the file'],
     ];
@@ -84,21 +91,23 @@ abstract class GeneratorCommand extends Command
     /**
      * @void
      *
-     * @throws GeneratorErrorException
+     * @throws GeneratorErrorException|FileNotFoundException
      */
     public function handle()
     {
         $this->validateGenerator($this);
 
+        $this->sectionName = ucfirst($this->checkParameterOrAsk('section', 'Enter the name of the Section', self::DEFAULT_SECTION_NAME));
         $this->containerName = ucfirst($this->checkParameterOrAsk('container', 'Enter the name of the Container'));
         $this->fileName = $this->checkParameterOrAsk('file', 'Enter the name of the ' . $this->fileType . ' file', $this->getDefaultFileName());
 
-        // Now fix the container and file name
+        // Now fix the section, container and file name
+        $this->sectionName = $this->removeSpecialChars($this->sectionName);
         $this->containerName = $this->removeSpecialChars($this->containerName);
         $this->fileName = $this->removeSpecialChars($this->fileName);
 
         // And we are ready to start
-        $this->printStartedMessage($this->containerName, $this->fileName);
+        $this->printStartedMessage($this->sectionName . ':' . $this->containerName, $this->fileName);
 
         // Get user inputs
         $this->userData = $this->getUserInputs();
@@ -133,73 +142,13 @@ abstract class GeneratorCommand extends Command
      *
      * @throws GeneratorErrorException
      */
-    private function validateGenerator($generator)
+    private function validateGenerator($generator): void
     {
         if (!$generator instanceof ComponentsGenerator) {
             throw new GeneratorErrorException(
                 'Your component maker command should implement ComponentsGenerator interface.'
             );
         }
-    }
-
-    /**
-     * @param $path
-     *
-     * @return  string
-     */
-    protected function getFilePath($path)
-    {
-        // Complete the missing parts of the path
-        $path = base_path() . '/' .
-            str_replace('\\', '/', self::ROOT . '/' . self::CONTAINER_DIRECTORY_NAME . '/' . $path) . '.' . $this->getDefaultFileExtension();
-
-        // Try to create directory
-        $this->createDirectory($path);
-
-        // Return full path
-        return $path;
-    }
-
-    /**
-     * @return  mixed
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    protected function getStubContent()
-    {
-        // Check if there is a custom file that overrides the default stubs
-        $path = app_path() . '/Ship/' . self::CUSTOM_STUB_PATH;
-        $file = str_replace('*', $this->stubName, $path);
-
-        // Check if the custom file exists
-        if (!$this->fileSystem->exists($file)) {
-            // It does not exist - so take the default file!
-            $path = __DIR__ . '/' . self::STUB_PATH;
-            $file = str_replace('*', $this->stubName, $path);
-        }
-
-        // Now load the stub
-        $stub = $this->fileSystem->get($file);
-        return $stub;
-    }
-
-    /**
-     * Get all the console command arguments, from the components. The default arguments are prepended
-     */
-    protected function getOptions(): array
-    {
-        $arguments = array_merge($this->defaultInputs, $this->inputs);
-        return $arguments;
-    }
-
-    /**
-     * @param      $arg
-     * @param bool $trim
-     *
-     * @return  array|string
-     */
-    protected function getInput($arg, $trim = true)
-    {
-        return $trim ? $this->trimString($this->argument($arg)) : $this->argument($arg);
     }
 
     /**
@@ -220,6 +169,113 @@ abstract class GeneratorCommand extends Command
         }
 
         return $value;
+    }
+
+    /**
+     * Get the default file name for this component to be generated
+     */
+    protected function getDefaultFileName(): string
+    {
+        return 'Default' . Str::ucfirst($this->fileType);
+    }
+
+    /**
+     * Removes "special characters" from a string
+     * @param $str
+     * @return string
+     */
+    protected function removeSpecialChars($str): string
+    {
+        // remove everything that is NOT a character or digit
+        $str = preg_replace('/[^A-Za-z0-9]/', '', $str);
+
+        return $str;
+    }
+
+    /**
+     * Checks, if the data from the generator contains path, stub and file-parameters.
+     * Adds empty arrays, if they are missing
+     *
+     * @param $data
+     * @return mixed
+     */
+    private function sanitizeUserData($data)
+    {
+
+        if (!array_key_exists('path-parameters', $data)) {
+            $data['path-parameters'] = [];
+        }
+
+        if (!array_key_exists('stub-parameters', $data)) {
+            $data['stub-parameters'] = [];
+        }
+
+        if (!array_key_exists('file-parameters', $data)) {
+            $data['file-parameters'] = [];
+        }
+
+        return $data;
+    }
+
+    protected function getFilePath($path): string
+    {
+        // Complete the missing parts of the path
+        $path = base_path() . '/' .
+            str_replace('\\', '/', self::ROOT . '/' . $path) . '.' . $this->getDefaultFileExtension();
+
+        // Try to create directory
+        $this->createDirectory($path);
+
+        // Return full path
+        return $path;
+    }
+
+    /**
+     * Get the default file extension for the file to be created.
+     */
+    protected function getDefaultFileExtension(): string
+    {
+        return 'php';
+    }
+
+    /**
+     * @return  mixed
+     * @throws FileNotFoundException
+     */
+    protected function getStubContent()
+    {
+        // Check if there is a custom file that overrides the default stubs
+        $path = app_path() . '/Ship/' . self::CUSTOM_STUB_PATH;
+        $file = str_replace('*', $this->stubName, $path);
+
+        // Check if the custom file exists
+        if (!$this->fileSystem->exists($file)) {
+            // It does not exist - so take the default file!
+            $path = __DIR__ . '/' . self::STUB_PATH;
+            $file = str_replace('*', $this->stubName, $path);
+        }
+
+        // Now load the stub
+        return $this->fileSystem->get($file);
+    }
+
+    /**
+     * Get all the console command arguments, from the components. The default arguments are prepended
+     */
+    protected function getOptions(): array
+    {
+        return array_merge($this->defaultInputs, $this->inputs);
+    }
+
+    /**
+     * @param      $arg
+     * @param bool $trim
+     *
+     * @return  array|string
+     */
+    protected function getInput($arg, $trim = true)
+    {
+        return $trim ? $this->trimString($this->argument($arg)) : $this->argument($arg);
     }
 
     /**
@@ -261,57 +317,4 @@ abstract class GeneratorCommand extends Command
 
         return $value;
     }
-
-    /**
-     * Checks, if the data from the generator contains path, stub and file-parameters.
-     * Adds empty arrays, if they are missing
-     *
-     * @param $data
-     * @return mixed
-     */
-    private function sanitizeUserData($data)
-    {
-
-        if (!array_key_exists('path-parameters', $data)) {
-            $data['path-parameters'] = [];
-        }
-
-        if (!array_key_exists('stub-parameters', $data)) {
-            $data['stub-parameters'] = [];
-        }
-
-        if (!array_key_exists('file-parameters', $data)) {
-            $data['file-parameters'] = [];
-        }
-
-        return $data;
-    }
-
-    /**
-     * Get the default file name for this component to be generated
-     */
-    protected function getDefaultFileName(): string
-    {
-        return 'Default' . Str::ucfirst($this->fileType);
-    }
-
-    /**
-     * Get the default file extension for the file to be created.
-     */
-    protected function getDefaultFileExtension(): string
-    {
-        return 'php';
-    }
-
-    /**
-     * Removes "special characters" from a string
-     */
-    protected function removeSpecialChars($str): string
-    {
-        // remove everything that is NOT a character or digit
-        $str = preg_replace('/[^A-Za-z0-9]/', '', $str);
-
-        return $str;
-    }
-
 }

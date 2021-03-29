@@ -31,28 +31,20 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
     protected $description = 'Create a Container for apiato from scratch (WEB Part)';
     /**
      * The type of class being generated.
-     *
-     * @var string
      */
-    protected $fileType = 'Container';
+    protected string $fileType = 'Container';
     /**
      * The structure of the file path.
-     *
-     * @var  string
      */
-    protected $pathStructure = '{container-name}/*';
+    protected string $pathStructure = '{section-name}/{container-name}/*';
     /**
      * The structure of the file name.
-     *
-     * @var  string
      */
-    protected $nameStructure = '{file-name}';
+    protected string $nameStructure = '{file-name}';
     /**
      * The name of the stub file.
-     *
-     * @var  string
      */
-    protected $stubName = 'composer.stub';
+    protected string $stubName = 'composer.stub';
 
     /**
      * @return array
@@ -242,9 +234,12 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
         $this->printInfoMessage('Generating Composer File');
         return [
             'path-parameters' => [
-                'container-name' => $containerName,
+                'section-name' => $this->sectionName,
+                'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_section-name' => Str::lower($this->sectionName),
+                'section-name' => $this->sectionName,
                 '_container-name' => $_containerName,
                 'container-name' => $containerName,
                 'class-name' => $this->fileName,

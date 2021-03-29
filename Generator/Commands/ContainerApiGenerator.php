@@ -40,7 +40,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
     /**
      * The structure of the file path.
      */
-    protected string $pathStructure = '{container-name}/*';
+    protected string $pathStructure = '{section-name}/{container-name}/*';
     /**
      * The structure of the file name.
      */
@@ -220,9 +220,12 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         $this->printInfoMessage('Generating Composer File');
         return [
             'path-parameters' => [
-                'container-name' => $containerName,
+                'section-name' => $this->sectionName,
+                'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_section-name' => Str::lower($this->sectionName),
+                'section-name' => $this->sectionName,
                 '_container-name' => $_containerName,
                 'container-name' => $containerName,
                 'class-name' => $this->fileName,

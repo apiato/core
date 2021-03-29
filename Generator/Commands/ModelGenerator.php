@@ -12,48 +12,6 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
 {
 
     /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:model';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a new Model class';
-
-    /**
-     * The type of class being generated.
-     *
-     * @var string
-     */
-    protected $fileType = 'Model';
-
-    /**
-     * The structure of the file path.
-     *
-     * @var  string
-     */
-    protected $pathStructure = '{container-name}/Models/*';
-
-    /**
-     * The structure of the file name.
-     *
-     * @var  string
-     */
-    protected $nameStructure = '{file-name}';
-
-    /**
-     * The name of the stub file.
-     *
-     * @var  string
-     */
-    protected $stubName = 'model.stub';
-
-    /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
      *
@@ -62,6 +20,34 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
     public $inputs = [
         ['repository', null, InputOption::VALUE_OPTIONAL, 'Generate the corresponding Repository for this Model?'],
     ];
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'apiato:generate:model';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Create a new Model class';
+    /**
+     * The type of class being generated.
+     */
+    protected string $fileType = 'Model';
+    /**
+     * The structure of the file path.
+     */
+    protected string $pathStructure = '{section-name}/{container-name}/Models/*';
+    /**
+     * The structure of the file name.
+     */
+    protected string $nameStructure = '{file-name}';
+    /**
+     * The name of the stub file.
+     */
+    protected string $stubName = 'model.stub';
 
     /**
      * @return array
@@ -86,9 +72,12 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
 
         return [
             'path-parameters' => [
+                'section-name' => $this->sectionName,
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_section-name' => Str::lower($this->sectionName),
+                'section-name' => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,

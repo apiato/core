@@ -36,28 +36,20 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
     protected $description = 'Create an "empty" migration file for a Container';
     /**
      * The type of class being generated.
-     *
-     * @var string
      */
-    protected $fileType = 'Migration';
+    protected string $fileType = 'Migration';
     /**
      * The structure of the file path.
-     *
-     * @var  string
      */
-    protected $pathStructure = '{container-name}/Data/Migrations/*';
+    protected string $pathStructure = '{section-name}/{container-name}/Data/Migrations/*';
     /**
      * The structure of the file name.
-     *
-     * @var  string
      */
-    protected $nameStructure = '{date}_{file-name}';
+    protected string $nameStructure = '{date}_{file-name}';
     /**
      * The name of the stub file.
-     *
-     * @var  string
      */
-    protected $stubName = 'migration.stub';
+    protected string $stubName = 'migration.stub';
 
     /**
      * @return array|null
@@ -91,9 +83,12 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
 
         return [
             'path-parameters' => [
+                'section-name' => $this->sectionName,
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_section-name' => Str::lower($this->sectionName),
+                'section-name' => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => Str::studly($this->fileName),

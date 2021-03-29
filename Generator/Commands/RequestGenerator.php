@@ -39,7 +39,7 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * The structure of the file path.
      */
-    protected string $pathStructure = '{container-name}/UI/{user-interface}/Requests/*';
+    protected string $pathStructure = '{section-name}/{container-name}/UI/{user-interface}/Requests/*';
 
     /**
      * The structure of the file name.
@@ -48,8 +48,6 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
 
     /**
      * The name of the stub file.
-     *
-     * @var  string
      */
     protected string $stubName = 'request.stub';
 
@@ -59,10 +57,13 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
 
         return [
             'path-parameters' => [
+                'section-name' => $this->sectionName,
                 'container-name' => $this->containerName,
                 'user-interface' => Str::upper($ui),
             ],
             'stub-parameters' => [
+                '_section-name' => Str::lower($this->sectionName),
+                'section-name' => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
