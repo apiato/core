@@ -22,18 +22,18 @@
     "license": "MIT",
     "require": {
         "php": "^7.4|^8.0",
-        "illuminate/support": "^8.28.1",
         "apiato/containers-installer": "^1.0",
         "prettus/l5-repository": "^2.7.4",
         "fruitcake/laravel-cors": "^1.0.5",
         "spatie/laravel-fractal": "^5.8.1",
         "vinkla/hashids": "^9.1.0",
         "laravel/tinker": "^2.6.0",
-        "ext-json": "*"
+        "spatie/laravel-permission": "^4.0.0",
+        "ext-json": "*",
+        "laravel/framework": "^8.0.0",
+        "guzzlehttp/guzzle": "^7.2.0"
     },
     "require-dev": {
-        "laravel/framework": "^8.28.1",
-        "guzzlehttp/guzzle": "^7.2.0",
         "roave/security-advisories": "dev-latest"
     },
     "autoload": {
