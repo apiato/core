@@ -4,7 +4,7 @@ namespace Apiato\Core\Commands;
 
 use Apiato\Core\Abstracts\Commands\ConsoleCommand;
 use Apiato\Core\Foundation\Facades\Apiato;
-use File;
+use Illuminate\Support\Facades\File;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 class ListTasksCommand extends ConsoleCommand

@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Loaders;
 
-use File;
+use Illuminate\Support\Facades\File;
 
 trait LocalizationLoaderTrait
 {
