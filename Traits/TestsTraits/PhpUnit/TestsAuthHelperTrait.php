@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
 
-use Apiato\Core\Abstracts\Models\UserModel as User;
+use App\Containers\User\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 trait TestsAuthHelperTrait
