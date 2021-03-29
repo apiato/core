@@ -28,32 +28,34 @@ class ListActionsCommand extends ConsoleCommand
 
     public function handle()
     {
-        foreach (Apiato::getAllContainerNames() as $containerName) {
-            $this->console->writeln("<fg=yellow> [$containerName]</fg=yellow>");
+        foreach (Apiato::getSectionNames() as $sectionName) {
+            foreach (Apiato::getSectionContainerNames($sectionName) as $containerName) {
+                $this->console->writeln("<fg=yellow> [$containerName]</fg=yellow>");
 
-            $directory = base_path('app/Containers/' . $containerName . '/Actions');
+                $directory = base_path('app/' . $sectionName . '/' . $containerName . '/Actions');
 
-            if (File::isDirectory($directory)) {
-                $files = File::allFiles($directory);
+                if (File::isDirectory($directory)) {
+                    $files = File::allFiles($directory);
 
-                foreach ($files as $action) {
-                    // Get the file name as is
-                    $fileName = $originalFileName = $action->getFilename();
+                    foreach ($files as $action) {
+                        // Get the file name as is
+                        $fileName = $originalFileName = $action->getFilename();
 
-                    // Remove the Action.php postfix from each file name
-                    // Further, remove the `.php', if the file does not end on 'Action.php'
-                    $fileName = str_replace(array('Action.php', '.php'), '', $fileName);
+                        // Remove the Action.php postfix from each file name
+                        // Further, remove the `.php', if the file does not end on 'Action.php'
+                        $fileName = str_replace(array('Action.php', '.php'), '', $fileName);
 
-                    // UnCamelize the word and replace it with spaces
-                    $fileName = uncamelize($fileName);
+                        // UnCamelize the word and replace it with spaces
+                        $fileName = uncamelize($fileName);
 
-                    // Check if flag exists
-                    $includeFileName = '';
-                    if ($this->option('withfilename')) {
-                        $includeFileName = "<fg=red>($originalFileName)</fg=red>";
+                        // Check if flag exists
+                        $includeFileName = '';
+                        if ($this->option('withfilename')) {
+                            $includeFileName = "<fg=red>($originalFileName)</fg=red>";
+                        }
+
+                        $this->console->writeln("<fg=green>  - $fileName</fg=green>  $includeFileName");
                     }
-
-                    $this->console->writeln("<fg=green>  - $fileName</fg=green>  $includeFileName");
                 }
             }
         }
