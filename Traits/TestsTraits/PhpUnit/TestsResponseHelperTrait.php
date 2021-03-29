@@ -2,9 +2,8 @@
 
 namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
 
-use Illuminate\Support\Arr as LaravelArr;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Support\Str as LaravelStr;
 
 trait TestsResponseHelperTrait
 {
@@ -19,6 +18,20 @@ trait TestsResponseHelperTrait
         foreach ($keys as $key) {
             $this->assertTrue(array_key_exists($key, $arrayResponse));
         }
+    }
+
+    /**
+     * @param array $responseContent
+     *
+     * @return  array|mixed
+     */
+    private function removeDataKeyFromResponse(array $responseContent)
+    {
+        if (array_key_exists('data', $responseContent)) {
+            return $responseContent['data'];
+        }
+
+        return $responseContent;
     }
 
     public function assertResponseContainValues($values): void
@@ -37,21 +50,12 @@ trait TestsResponseHelperTrait
     public function assertResponseContainKeyValue($data): void
     {
         // `responseContentToArray` will remove the `data` node
-        $httpResponse = json_encode(LaravelArr::sortRecursive((array)$this->getResponseContentArray()));
+        $httpResponse = json_encode(Arr::sortRecursive((array)$this->getResponseContentArray()));
 
-        foreach (LaravelArr::sortRecursive($data) as $key => $value) {
+        foreach (Arr::sortRecursive($data) as $key => $value) {
             $expected = $this->formatToExpectedJson($key, $value);
-            $this->assertTrue(LaravelStr::contains($httpResponse, $expected),
+            $this->assertTrue(Str::contains($httpResponse, $expected),
                 "The JSON fragment [ {$expected} ] does not exist in the response [ {$httpResponse} ].");
-        }
-    }
-
-    public function assertValidationErrorContain(array $messages): void
-    {
-        $responseContent = $this->getResponseContentObject();
-
-        foreach ($messages as $key => $value) {
-            $this->assertEquals($responseContent->errors->{$key}[0], $value);
         }
     }
 
@@ -70,17 +74,12 @@ trait TestsResponseHelperTrait
         return trim($expected);
     }
 
-    /**
-     * @param array $responseContent
-     *
-     * @return  array|mixed
-     */
-    private function removeDataKeyFromResponse(array $responseContent)
+    public function assertValidationErrorContain(array $messages): void
     {
-        if (array_key_exists('data', $responseContent)) {
-            return $responseContent['data'];
-        }
+        $responseContent = $this->getResponseContentObject();
 
-        return $responseContent;
+        foreach ($messages as $key => $value) {
+            $this->assertEquals($responseContent->errors->{$key}[0], $value);
+        }
     }
 }
