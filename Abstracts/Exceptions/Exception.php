@@ -3,7 +3,6 @@
 namespace Apiato\Core\Abstracts\Exceptions;
 
 use Exception as BaseException;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Log;
 

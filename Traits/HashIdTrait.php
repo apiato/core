@@ -57,7 +57,6 @@ trait HashIdTrait
         }
 
         foreach ($subject as $key => $value) {
-
             if ($key == $findKey && isset($subject[$findKey])) {
                 $subject[$key] = $callback($subject[$findKey]);
                 break;
@@ -95,7 +94,6 @@ trait HashIdTrait
             Route::bind('id', function ($id, $route) {
                 // skip decoding some endpoints
                 if (!in_array($route->uri(), $this->skippedEndpoints)) {
-
                     // decode the ID in the URL
                     $decoded = $this->decoder($id);
 

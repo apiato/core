@@ -29,6 +29,5 @@ abstract class MiddlewareProvider extends MainProvider
      */
     public function register(): void
     {
-
     }
 }

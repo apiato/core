@@ -16,7 +16,6 @@ use League\Fractal\TransformerAbstract as FractalTransformer;
 
 abstract class Transformer extends FractalTransformer
 {
-
     /**
      * @return  mixed
      */
@@ -97,5 +96,4 @@ abstract class Transformer extends FractalTransformer
             throw new CoreInternalErrorException($exception->getMessage());
         }
     }
-
 }

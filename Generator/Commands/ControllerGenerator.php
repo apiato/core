@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ControllerGenerator extends GeneratorCommand implements ComponentsGenerator
 {
-
     /**
      * The options which can be passed to the command. All options are optional. You do not need to pass the
      * "--container" and "--file" options, as they are globally handled. Just use the options which are specific to
@@ -107,5 +106,4 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
     {
         return 'Controller';
     }
-
 }

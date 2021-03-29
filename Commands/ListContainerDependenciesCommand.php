@@ -2,8 +2,8 @@
 
 namespace Apiato\Core\Commands;
 
+use Apiato\Core\Abstracts\Commands\ConsoleCommand;
 use Apiato\Core\Transformers\ComposerTransformer;
-use App\Ship\Parents\Commands\ConsoleCommand;
 use Dotenv\Exception\InvalidPathException;
 use Exception;
 use GuzzleHttp\Utils;
@@ -20,7 +20,6 @@ use Spatie\Fractalistic\ArraySerializer;
  */
 class ListContainerDependenciesCommand extends ConsoleCommand
 {
-
     protected $signature = 'apiato:list:dependencies {containerPath}';
 
     protected $description = 'Lists all dependencies from the given container to other containers.';
@@ -217,5 +216,4 @@ class ListContainerDependenciesCommand extends ConsoleCommand
 
         return $filesInContainers;
     }
-
 }

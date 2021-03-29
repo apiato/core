@@ -16,5 +16,4 @@ class EventServiceProvider extends BaseEventServiceProvider
             });
         });
     }
-
 }

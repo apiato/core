@@ -25,6 +25,5 @@ abstract class MainProvider extends LaravelAppServiceProvider
      */
     public function register(): void
     {
-
     }
 }

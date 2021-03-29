@@ -18,7 +18,6 @@ trait ConfigsLoaderTrait
     private function loadConfigs($configFolder, $namespace = null): void
     {
         if (File::isDirectory($configFolder)) {
-
             $files = File::files($configFolder);
             $namespace = $namespace ? $namespace . '::' : '';
 

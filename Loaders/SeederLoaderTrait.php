@@ -12,7 +12,6 @@ use Illuminate\Support\Collection;
  */
 trait SeederLoaderTrait
 {
-
     /**
      * Default seeders directory for containers and port
      *
@@ -39,7 +38,6 @@ trait SeederLoaderTrait
         $containersDirectories = [];
 
         foreach (Apiato::getAllContainerNames() as $containerName) {
-
             $containersDirectories[] = base_path('app/Containers/' . $containerName . $this->seedersPath);
 
         }
@@ -59,15 +57,11 @@ trait SeederLoaderTrait
     private function findSeedersClasses(array $directories, $seedersClasses)
     {
         foreach ($directories as $directory) {
-
             if (File::isDirectory($directory)) {
-
                 $files = File::allFiles($directory);
 
                 foreach ($files as $seederClass) {
-
                     if (File::isFile($seederClass)) {
-
                         // do not seed the classes now, just store them in a collection and w
                         $seedersClasses->push(
                             Apiato::getClassFullNameFromFile(
@@ -150,5 +144,4 @@ trait SeederLoaderTrait
 //
 //        $this->loadSeeders($orderedSeederClasses);
     }
-
 }

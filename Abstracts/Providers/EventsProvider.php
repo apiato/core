@@ -6,7 +6,6 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as LaravelEvent
 
 class EventsProvider extends LaravelEventServiceProvider
 {
-
     /**
      * Register any other events for your application.
      */
@@ -14,5 +13,4 @@ class EventsProvider extends LaravelEventServiceProvider
     {
         parent::boot();
     }
-
 }

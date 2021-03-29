@@ -16,7 +16,6 @@ class Dispatcher extends EventDispatcher
     {
         // Handle event Async when ShouldHandle Interface is implemented
         if ($event instanceof ShouldHandle) {
-
             // Initialize delay & queue variables
             $delay = $event->jobDelay;
             $queue = $event->jobQueue;

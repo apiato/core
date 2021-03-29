@@ -7,7 +7,6 @@ use Illuminate\Contracts\Http\Kernel;
 
 trait MiddlewaresLoaderTrait
 {
-
     /**
      * @void
      */
@@ -76,5 +75,4 @@ trait MiddlewaresLoaderTrait
             $this->app['router']->aliasMiddleware($key, $routeMiddleware);
         }
     }
-
 }

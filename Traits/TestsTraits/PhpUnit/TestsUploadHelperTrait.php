@@ -6,7 +6,6 @@ use Illuminate\Http\UploadedFile;
 
 trait TestsUploadHelperTrait
 {
-
     /**
      * @param        $fileName
      * @param        $stubDirPath
@@ -34,5 +33,4 @@ trait TestsUploadHelperTrait
     {
         return $this->getTestingFile($imageName, $stubDirPath, $mimeType, $size);
     }
-
 }

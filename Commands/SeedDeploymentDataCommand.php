@@ -2,12 +2,11 @@
 
 namespace Apiato\Core\Commands;
 
-use App\Ship\Parents\Commands\ConsoleCommand;
+use Apiato\Core\Abstracts\Commands\ConsoleCommand;
 use App\Ship\Seeders\SeedDeploymentData;
 
 class SeedDeploymentDataCommand extends ConsoleCommand
 {
-
     /**
      * The name and signature of the console command.
      */
@@ -31,5 +30,4 @@ class SeedDeploymentDataCommand extends ConsoleCommand
 
         $this->info('Deployment Data Seeded Successfully.');
     }
-
 }

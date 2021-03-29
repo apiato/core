@@ -119,7 +119,6 @@ class Apiato
                 && $tokens[$i - 1][0] == T_WHITESPACE
                 && $tokens[$i][0] == T_STRING
             ) {
-
                 $class_name = $tokens[$i][1];
                 $classes[] = $class_name;
             }

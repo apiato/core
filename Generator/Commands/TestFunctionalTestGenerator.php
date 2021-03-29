@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class TestFunctionalTestGenerator extends GeneratorCommand implements ComponentsGenerator
 {
-
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
@@ -88,6 +87,5 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
     {
         return 'DefaultFunctionalTest';
     }
-
 }
 

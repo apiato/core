@@ -6,7 +6,6 @@ use Apiato\Core\Traits\ResponseTrait;
 
 abstract class ApiController extends Controller
 {
-
     use ResponseTrait;
 
     /**

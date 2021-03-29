@@ -4,7 +4,6 @@ namespace Apiato\Core\Generator\Traits;
 
 trait FormatterTrait
 {
-
     /**
      * @param $string
      *
@@ -39,5 +38,4 @@ trait FormatterTrait
 
         return $operation . $this->capitalize($className);
     }
-
 }

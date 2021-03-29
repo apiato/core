@@ -7,10 +7,8 @@ use Illuminate\Support\Facades\Config;
 
 class Notification extends LaravelNotification
 {
-
     public function via($notifiable): array
     {
         return Config::get('notification.channels');
     }
-
 }

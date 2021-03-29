@@ -2,12 +2,11 @@
 
 namespace Apiato\Core\Commands;
 
+use Apiato\Core\Abstracts\Commands\ConsoleCommand;
 use Apiato\Core\Foundation\Apiato;
-use App\Ship\Parents\Commands\ConsoleCommand;
 
 class GetApiatoVersionCommand extends ConsoleCommand
 {
-
     /**
      * The name and signature of the console command.
      */
@@ -27,5 +26,4 @@ class GetApiatoVersionCommand extends ConsoleCommand
     {
         $this->info(Apiato::VERSION);
     }
-
 }

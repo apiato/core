@@ -22,7 +22,6 @@ trait ValidationTrait
         // Example:    'values'               => 'required|unique_composite:item_variant_values,value,item_variant_name_id',
         //             'item_variant_name_id' => 'required',
         Validator::extend('unique_composite', function ($attribute, $value, $parameters, $validator) {
-
             $queryBuilder = DB::table($parameters[0]);
 
             $queryBuilder = is_array($value) ? $queryBuilder->whereIn($parameters[1],

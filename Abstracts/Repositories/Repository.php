@@ -58,7 +58,6 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      */
     public function boot()
     {
-
     }
 
     /**

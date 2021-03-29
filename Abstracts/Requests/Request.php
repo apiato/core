@@ -230,7 +230,6 @@ abstract class Request extends LaravelRequest
 
         // iterate all functions in the array
         foreach ($functions as $function) {
-
             // in case the value doesn't contains a separator (single function per key)
             if (!strpos($function, $orIndicator)) {
                 // simply call the single function and store the response.

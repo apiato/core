@@ -59,7 +59,6 @@ trait CallableTrait
     {
         // in case passing apiato style names such as containerName@classType
         if ($this->needsParsing($class)) {
-
             $parsedClass = $this->parseClassName($class);
 
             $containerName = $this->capitalizeFirstLetter($parsedClass[0]);

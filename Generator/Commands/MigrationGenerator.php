@@ -12,7 +12,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
 {
-
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".

@@ -16,7 +16,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 abstract class GeneratorCommand extends Command
 {
-
     use ParserTrait, PrinterTrait, FileSystemTrait, FormatterTrait;
 
     /**
@@ -123,7 +122,6 @@ abstract class GeneratorCommand extends Command
         $this->filePath = $this->getFilePath($this->parsePathStructure($this->pathStructure, $this->userData['path-parameters']));
 
         if (!$this->fileSystem->exists($this->filePath)) {
-
             // Prepare stub content
             $this->stubContent = $this->getStubContent();
             $this->renderedStubContent = $this->parseStubContent($this->stubContent, $this->userData['stub-parameters']);
@@ -201,7 +199,6 @@ abstract class GeneratorCommand extends Command
      */
     private function sanitizeUserData($data)
     {
-
         if (!array_key_exists('path-parameters', $data)) {
             $data['path-parameters'] = [];
         }
