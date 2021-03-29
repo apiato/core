@@ -10,8 +10,10 @@ trait FactoryLocatorTrait
     {
         $separator = '\\';
         $containersFactoriesPath = $separator . 'Data' . $separator . 'Factories' . $separator;
-        $containerName = explode($separator, static::class)[2];
-        $nameSpace = 'App' . $separator . 'Containers' . $separator . $containerName . $containersFactoriesPath;
+        $fullPathSections = explode($separator, static::class);
+        $sectionName = $fullPathSections[1];
+        $containerName = $fullPathSections[2];
+        $nameSpace = 'App' . $separator . $sectionName . $separator . $containerName . $containersFactoriesPath;
 
         Factory::useNamespace($nameSpace);
         $className = class_basename(static::class);
