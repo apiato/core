@@ -35,7 +35,8 @@
         "guzzlehttp/guzzle": "^7.2.0"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-latest"
+        "roave/security-advisories": "dev-latest",
+        "mockery/mockery": "^1.4.2"
     },
     "autoload": {
         "psr-4": {
