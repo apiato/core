@@ -3,16 +3,14 @@
 namespace App\{{section-name}}\{{container-name}}\Events\Events;
 
 use App\Ship\Parents\Events\Event;
+use App\{{section-name}}\{{container-name}}\Models\{{model}};
 use Illuminate\Queue\SerializesModels;
 
 class {{class-name}} extends Event
 {
     use SerializesModels;
 
-    /**
-     * @var \App\Containers\{{container-name}}\Models\{{model}}
-     */
-    public $entity;
+    public {{model}} $entity;
 
     /**
      * {{class-name}} constructor.
