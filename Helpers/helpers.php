@@ -15,10 +15,3 @@ if (!function_exists('uncamelize')) {
         return $uppercase ? ucwords($word) : $word;
     }
 }
-
-if (!function_exists('stringStartsWith')) {
-    function stringStartsWith(string $word, string $startsWith): bool
-    {
-        return (strpos($word, $startsWith) === 0);
-    }
-}

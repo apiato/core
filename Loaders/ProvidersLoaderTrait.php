@@ -5,6 +5,7 @@ namespace Apiato\Core\Loaders;
 use Apiato\Core\Foundation\Facades\Apiato;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 trait ProvidersLoaderTrait
 {
@@ -31,7 +32,7 @@ trait ProvidersLoaderTrait
             foreach ($files as $file) {
                 if (File::isFile($file)) {
                     // Check if this is the Main Service Provider
-                    if (stringStartsWith($file->getFilename(), $mainServiceProviderNameStartWith)) {
+                    if (Str::startsWith($file->getFilename(), $mainServiceProviderNameStartWith)) {
                         $serviceProviderClass = Apiato::getClassFullNameFromFile($file->getPathname());
                         $this->loadProvider($serviceProviderClass);
                     }
