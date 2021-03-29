@@ -2,8 +2,8 @@
 
 namespace Apiato\Core\Commands;
 
+use Apiato\Core\Abstracts\Commands\ConsoleCommand;
 use Apiato\Core\Foundation\Facades\Apiato;
-use App\Ship\Parents\Commands\ConsoleCommand;
 use File;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -45,13 +45,11 @@ class ListTasksCommand extends ConsoleCommand
                     $fileName = $originalFileName = $action->getFilename();
 
                     // Remove the Task.php postfix from each file name
-                    $fileName = str_replace('Task.php', '', $fileName);
-
                     // Further, remove the `.php', if the file does not end on 'Task.php'
-                    $fileName = str_replace('.php', '', $fileName);
+                    $fileName = str_replace(array('Task.php', '.php'), '', $fileName);
 
                     // UnCamelize the word and replace it with spaces
-                    $fileName = Apiato::uncamelize($fileName);
+                    $fileName = uncamelize($fileName);
 
                     // Check if flag exists
                     $includeFileName = '';
