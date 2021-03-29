@@ -8,7 +8,6 @@ use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsAuthHelperTrait;
 use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsMockHelperTrait;
 use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsRequestHelperTrait;
 use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsResponseHelperTrait;
-use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsUploadHelperTrait;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
@@ -21,7 +20,6 @@ abstract class TestCase extends LaravelTestCase
         TestsResponseHelperTrait,
         TestsMockHelperTrait,
         TestsAuthHelperTrait,
-        TestsUploadHelperTrait,
         HashIdTrait,
         RefreshDatabase;
 
