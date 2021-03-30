@@ -71,6 +71,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
                 'model' => $model,
+                '_model' => Str::lower($model),
                 'attributes' => $attributes,
             ],
             'file-parameters' => [
@@ -85,9 +86,10 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
         $fields = [
             'object' => "'$model'",
         ];
+        $_model = Str::lower($model);
 
         if ($full) {
-            $obj = 'App\\Containers\\' . $this->containerName . '\\Models\\' . $model;
+            $obj = 'App\\' . $this->sectionName . '\\' . $this->containerName . '\\Models\\' . $model;
             $obj = new $obj();
             $columns = Schema::getColumnListing($obj->getTable());
 
@@ -97,16 +99,16 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
                     continue;
                 }
 
-                $fields[$column] = '$entity->' . $column;
+                $fields[$column] = '$' . $_model . '->' . $column;
             }
         }
 
         $fields = array_merge($fields, [
-            'id' => '$entity->getHashedKey()',
-            'created_at' => '$entity->created_at',
-            'updated_at' => '$entity->updated_at',
-            'readable_created_at' => '$entity->created_at->diffForHumans()',
-            'readable_updated_at' => '$entity->updated_at->diffForHumans()'
+            'id' => '$' . $_model . '->getHashedKey()',
+            'created_at' => '$' . $_model . '->created_at',
+            'updated_at' => '$' . $_model . '->updated_at',
+            'readable_created_at' => '$' . $_model . '->created_at->diffForHumans()',
+            'readable_updated_at' => '$' . $_model . '->updated_at->diffForHumans()'
         ]);
 
         $attributes = "";
