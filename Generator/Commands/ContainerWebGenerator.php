@@ -212,6 +212,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                 '--container' => $containerName,
                 '--file' => $route['request'],
                 '--ui' => $ui,
+                '--stub' => $route['stub']
             ]);
 
             if ($route['action'] != null || $route['stub'] != null) {

@@ -203,6 +203,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 '--container' => $containerName,
                 '--file' => $route['request'],
                 '--ui' => $ui,
+                '--stub' => $route['stub']
             ]);
 
             $this->call('apiato:generate:action', [

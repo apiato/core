@@ -14,7 +14,8 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
      */
     public array $inputs = [
-        ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Request for.']
+        ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Request for.'],
+        ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.']
     ];
 
     /**
@@ -49,11 +50,15 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * The name of the stub file.
      */
-    protected string $stubName = 'request.stub';
+    protected string $stubName = 'requests/generic.stub';
 
     public function getUserInputs(): array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
+        $stub = $this->option('stub');
+
+        // Load a new stub-file if generating container otherwise use generic
+        $this->stubName = $stub ? 'requests/' . Str::lower($stub) . '.stub' : $this->stubName;
 
         return [
             'path-parameters' => [
