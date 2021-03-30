@@ -5,7 +5,7 @@ namespace Apiato\Core\Abstracts\Providers;
 use Apiato\Core\Loaders\RoutesLoaderTrait;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as LaravelRouteServiceProvider;
 
-class RoutesProvider extends LaravelRouteServiceProvider
+abstract class RoutesProvider extends LaravelRouteServiceProvider
 {
     use RoutesLoaderTrait;
 
