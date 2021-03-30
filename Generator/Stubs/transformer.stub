@@ -24,7 +24,7 @@ class {{class-name}} extends Transformer
     public function transform({{model}} ${{_model}}): array
     {
         $response = [
-            {{attributes}}
+{{attributes}}
         ];
 
         $response = $this->ifAdmin([
