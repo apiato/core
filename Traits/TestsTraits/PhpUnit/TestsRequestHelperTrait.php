@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -24,7 +25,7 @@ trait TestsRequestHelperTrait
      */
     protected bool $auth = true;
 
-    protected $response;
+    protected TestResponse $response;
 
     protected string $responseContent;
 
@@ -42,7 +43,7 @@ trait TestsRequestHelperTrait
      */
     protected string $overrideAuth;
 
-    public function makeCall(array $data = [], array $headers = [])
+    public function makeCall(array $data = [], array $headers = []): TestResponse
     {
         // Get or create a testing user. It will get your existing user if you already called this function from your
         // test. Or create one if you never called this function from your tests "Only if the endpoint is protected".
