@@ -16,7 +16,7 @@ abstract class RoutesProvider extends LaravelRouteServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/';
 
     /**
      * The controller namespace for the application.
