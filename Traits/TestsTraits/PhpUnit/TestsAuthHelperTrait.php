@@ -78,15 +78,6 @@ trait TestsAuthHelperTrait
 
     private function createTestingUser(?array $userDetails = null, ?array $access = null)
     {
-        // "inject" the confirmed status, if user details are submitted
-        if (is_array($userDetails)) {
-            $defaults = [
-                'confirmed' => true,
-            ];
-
-            $userDetails = array_merge($defaults, $userDetails);
-        }
-
         // create new user
         $user = $this->factoryCreateUser($userDetails);
 
