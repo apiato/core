@@ -19,7 +19,7 @@
 }
  */
 
-use App\{{section-name}}\{{container-name}}\UI\API\Controllers\Controller;
+use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 Route::{{http-verb}}('{{endpoint-url}}', [Controller::class, '{{operation}}'])

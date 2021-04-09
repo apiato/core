@@ -1,9 +1,9 @@
 <?php
 
-namespace App\{{section-name}}\{{container-name}}\Actions;
+namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use Apiato\Core\Foundation\Facades\Apiato;
-use App\{{section-name}}\{{container-name}}\Models\{{model}};
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Ship\Parents\Actions\Action;
 use App\Ship\Parents\Requests\Request;
 
