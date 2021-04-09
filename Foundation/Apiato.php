@@ -45,7 +45,7 @@ class Apiato
 
     private function getSectionPath(string $sectionName): string
     {
-        return app_path(self::CONTAINERS_DIRECTORY_NAME . '\\' . $sectionName);
+        return app_path(self::CONTAINERS_DIRECTORY_NAME . '/' . $sectionName);
     }
 
     /**
@@ -158,7 +158,7 @@ class Apiato
     public function getSectionNameByContainerName(string $containerName): ?string
     {
         foreach ($this->getSectionPaths() as $sectionPath) {
-            if (is_dir($sectionPath . '\\' . $containerName)) {
+            if (is_dir($sectionPath . '/' . $containerName)) {
                 return basename($sectionPath);
             }
         }
@@ -193,13 +193,13 @@ class Apiato
      */
     public function containerExist($containerName, $sectionName = null): bool
     {
-        if ($sectionName && is_dir('app\\' . self::CONTAINERS_DIRECTORY_NAME . '\\' . $sectionName . '\\' . $containerName)) {
+        if ($sectionName && is_dir('app/' . self::CONTAINERS_DIRECTORY_NAME . '/' . $sectionName . '/' . $containerName)) {
             return true;
         }
 
         $containersFound = 0;
         foreach ($this->getSectionPaths() as $sectionPath) {
-            if (is_dir($sectionPath . '\\' . $containerName)) {
+            if (is_dir($sectionPath . '/' . $containerName)) {
                 $containersFound++;
             }
         }
@@ -253,6 +253,6 @@ class Apiato
 
     public function getSectionContainerPaths(string $sectionName): array
     {
-        return File::directories(app_path(self::CONTAINERS_DIRECTORY_NAME . '\\' . $sectionName));
+        return File::directories(app_path(self::CONTAINERS_DIRECTORY_NAME . '/' . $sectionName));
     }
 }
