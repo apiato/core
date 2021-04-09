@@ -32,7 +32,7 @@ class ListActionsCommand extends ConsoleCommand
             foreach (Apiato::getSectionContainerNames($sectionName) as $containerName) {
                 $this->console->writeln("<fg=yellow> [$containerName]</fg=yellow>");
 
-                $directory = base_path('app/' . $sectionName . '/' . $containerName . '/Actions');
+                $directory = base_path('app/Containers/' . $sectionName . '/' . $containerName . '/Actions');
 
                 if (File::isDirectory($directory)) {
                     $files = File::allFiles($directory);

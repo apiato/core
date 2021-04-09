@@ -32,7 +32,7 @@ class ListTasksCommand extends ConsoleCommand
             foreach (Apiato::getSectionContainerNames($sectionName) as $containerName) {
                 $this->console->writeln("<fg=yellow> [$containerName]</fg=yellow>");
 
-                $directory = base_path('app/' . $sectionName . '/' . $containerName . '/Tasks');
+                $directory = base_path('app/Containers/' . $sectionName . '/' . $containerName . '/Tasks');
 
                 if (File::isDirectory($directory)) {
                     $files = File::allFiles($directory);
