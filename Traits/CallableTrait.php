@@ -2,6 +2,8 @@
 
 namespace Apiato\Core\Traits;
 
+use Apiato\Core\Exceptions\ClassDoesNotExistException;
+use Apiato\Core\Exceptions\MissingContainerException;
 use Apiato\Core\Foundation\Facades\Apiato;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -60,15 +62,25 @@ trait CallableTrait
         // in case passing apiato style names such as containerName@classType
         if ($this->needsParsing($class)) {
             $parsedClass = $this->parseClassName($class);
-
-            $containerName = $this->capitalizeFirstLetter($parsedClass[0]);
             $className = $parsedClass[1];
+            $sectionName = null;
 
-            Apiato::verifyContainerExist($containerName);
+            $parsedPath = explode(':', $parsedClass[0]);
+            if (count($parsedPath) > 1) {
+                $sectionName = $this->capitalizeFirstLetter($parsedPath[0]);
+                $containerName = $this->capitalizeFirstLetter($parsedPath[1]);
+            } else {
+                $containerName = $this->capitalizeFirstLetter($parsedPath[0]);
+            }
 
-            $class = $classFullName = Apiato::buildClassFullName($containerName, $className);
+            if (!Apiato::containerExist($containerName, $sectionName)) {
+                throw new MissingContainerException("($containerName) Container is not installed in ($sectionName) Section.");
+            }
 
-            Apiato::verifyClassExist($classFullName);
+            $class = $classFullName = Apiato::buildClassFullName($containerName, $className, $sectionName);
+            if (!class_exists($classFullName)) {
+                throw new ClassDoesNotExistException("Class ($classFullName) is not installed.");
+            }
         } else {
             if (Config::get('apiato.logging.log-wrong-apiato-caller-style', true)) {
                 Log::debug('It is recommended to use the apiato caller style (containerName@className) for ' . $class);
