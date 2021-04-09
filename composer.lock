@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "281cca8f0ccf1884c5b3eb35207430c6",
+    "content-hash": "5da4914394d51f10d83c10396c99dca1",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2009,16 +2009,16 @@
         },
         {
             "name": "mohammad-alavi/container-installer",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mohammad-Alavi/container-installer.git",
-                "reference": "370f49b66827f9fb62fdbfbfeeb2ecdcc283ecd1"
+                "reference": "5f55d7882a8d3ac8ef9127fe4d6630a41be51c2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mohammad-Alavi/container-installer/zipball/370f49b66827f9fb62fdbfbfeeb2ecdcc283ecd1",
-                "reference": "370f49b66827f9fb62fdbfbfeeb2ecdcc283ecd1",
+                "url": "https://api.github.com/repos/Mohammad-Alavi/container-installer/zipball/5f55d7882a8d3ac8ef9127fe4d6630a41be51c2a",
+                "reference": "5f55d7882a8d3ac8ef9127fe4d6630a41be51c2a",
                 "shasum": ""
             },
             "require": {
@@ -2034,12 +2034,15 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
             "description": "A Composer plugin for installing Apiato Containers (of type apiato-container).",
             "support": {
                 "issues": "https://github.com/Mohammad-Alavi/container-installer/issues",
-                "source": "https://github.com/Mohammad-Alavi/container-installer/tree/v2.0.2"
+                "source": "https://github.com/Mohammad-Alavi/container-installer/tree/v2.0.3"
             },
-            "time": "2021-04-09T13:42:08+00:00"
+            "time": "2021-04-09T15:07:59+00:00"
         },
         {
             "name": "monolog/monolog",
