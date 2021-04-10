@@ -4,7 +4,6 @@ namespace Apiato\Core\Generator\Traits;
 
 trait PrinterTrait
 {
-
     public function printStartedMessage($containerName, $fileName)
     {
         $this->printInfoMessage('> Generating (' . $fileName . ') in (' . $containerName . ') Container.');
@@ -35,5 +34,4 @@ trait PrinterTrait
     {
         $this->info($message);
     }
-
 }

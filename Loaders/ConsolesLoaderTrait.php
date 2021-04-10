@@ -3,30 +3,39 @@
 namespace Apiato\Core\Loaders;
 
 use Apiato\Core\Foundation\Facades\Apiato;
-use File;
+use Illuminate\Support\Facades\File;
 
-/**
- * Class ConsolesLoaderTrait.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
 trait ConsolesLoaderTrait
 {
-
-    /**
-     * @param $containerName
-     */
-    public function loadConsolesFromContainers($containerName)
+    public function loadConsolesFromContainers($containerPath): void
     {
-        $containerCommandsDirectory = base_path('app/Containers/' . $containerName . '/UI/CLI/Commands');
-
+        $containerCommandsDirectory = $containerPath . '/UI/CLI/Commands';
         $this->loadTheConsoles($containerCommandsDirectory);
     }
 
-    /**
-     * @void
-     */
-    public function loadConsolesFromShip()
+    private function loadTheConsoles($directory): void
+    {
+        if (File::isDirectory($directory)) {
+            $files = File::allFiles($directory);
+
+            foreach ($files as $consoleFile) {
+                // Do not load route files
+                if (!$this->isRouteFile($consoleFile)) {
+                    $consoleClass = Apiato::getClassFullNameFromFile($consoleFile->getPathname());
+                    // When user from the Main Service Provider, which extends Laravel
+                    // service provider you get access to `$this->commands`
+                    $this->commands([$consoleClass]);
+                }
+            }
+        }
+    }
+
+    private function isRouteFile($consoleFile): bool
+    {
+        return $consoleFile->getFilename() === "Routes.php";
+    }
+
+    public function loadConsolesFromShip(): void
     {
         $commandsFoldersPaths = [
             // ship commands
@@ -39,39 +48,4 @@ trait ConsolesLoaderTrait
             $this->loadTheConsoles($folderPath);
         }
     }
-
-    /**
-     * @param $directory
-     */
-    private function loadTheConsoles($directory)
-    {
-        if (File::isDirectory($directory)) {
-
-            $files = File::allFiles($directory);
-
-            foreach ($files as $consoleFile) {
-
-                // do not load route files
-                if (!$this->isRouteFile($consoleFile)) {
-                    $consoleClass = Apiato::getClassFullNameFromFile($consoleFile->getPathname());
-
-                    // when user from the Main Service Provider, which extends Laravel
-                    // service provider you get access to `$this->commands`
-                    $this->commands([$consoleClass]);
-                }
-            }
-
-        }
-    }
-
-    /**
-     * @param $consoleFile
-     *
-     * @return  bool
-     */
-    private function isRouteFile($consoleFile)
-    {
-        return $consoleFile->getFilename() === "Routes.php";
-    }
-
 }

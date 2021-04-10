@@ -2,14 +2,12 @@
 
 namespace Apiato\Core\Abstracts\Jobs;
 
-/**
- * Class Job
- *
- * A.K.A (app/Jobs/Job.php)
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
+use Illuminate\Bus\Queueable;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
 abstract class Job
 {
-
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 }

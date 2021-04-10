@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Containers\{{container-name}}\UI\CLI\Tests\Functional;
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\CLI\Tests\Functional;
 
-use App\Containers\{{container-name}}\Tests\CliTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\CliTestCase;
 
 /**
  * Class {{class-name}}.
@@ -12,15 +12,10 @@ use App\Containers\{{container-name}}\Tests\CliTestCase;
  */
 class {{class-name}} extends CliTestCase
 {
-
-    /**
-     * @test
-     */
     public function test_()
     {
         // make something here
 
         // assert basic stuff here
     }
-
 }

@@ -3,18 +3,10 @@
 namespace Apiato\Core\Traits;
 
 use Apiato\Core\Abstracts\Requests\Request;
-use Apiato\Core\Abstracts\Transporters\Transporter;
-use App\Ship\Exceptions\InternalErrorException;
+use Illuminate\Support\Arr;
 
-/**
- * Class SanitizerTrait.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 trait SanitizerTrait
 {
-
     /**
      * Sanitizes the data of a request. This is a superior version of php built-in array_filter() as it preserves
      * FALSE and NULL values as well.
@@ -23,33 +15,40 @@ trait SanitizerTrait
      *
      * @return array an array containing the values if the field was present in the request and the intersection array
      */
-    public function sanitizeInput(array $fields)
+    public function sanitizeInput(array $fields): array
     {
         $data = $this->getData();
 
-        $search = [];
-        foreach ($fields as $field) {
-            // create a multidimensional array based on $fields
-            // which was submitted as DOT notation (e.g., data.name)
-            array_set($search, $field, true);
+        $inputAsArray = [];
+        $fieldsWithDefaultValue = [];
+
+        // create a multidimensional array based on $fields
+        // which was submitted as DOT notation (e.g., data.name)
+        foreach ($fields as $key => $value) {
+            if (is_string($key)) {
+                // save fields with default values
+                $fieldsWithDefaultValue[$key] = $value;
+                Arr::set($inputAsArray, $key, $value);
+            } else {
+                Arr::set($inputAsArray, $value, true);
+            }
         }
 
         // check, if the keys exist in both arrays
-        $data = $this->recursiveArrayIntersectKey($data, $search);
+        $data = $this->recursiveArrayIntersectKey($data, $inputAsArray);
+
+        // set default values if key doesn't exist
+        foreach ($fieldsWithDefaultValue as $key => $value) {
+            $data = Arr::add($data, $key, $value);
+        }
 
         return $data;
     }
 
-    /**
-     * @return array
-     * @throws InternalErrorException
-     */
-    private function getData()
+    private function getData(): array
     {
         // get all request data
-        if ($this instanceof Transporter) {
-            $data = $this->toArray();
-        } elseif ($this instanceof Request) {
+        if ($this instanceof Request) {
             $data = $this->all();
         } else {
             throw new InternalErrorException('Unsupported class type for sanitization.');
@@ -66,7 +65,7 @@ trait SanitizerTrait
      *
      * @return array an array containing all keys that are present in $a and $b. Only values from $a are returned
      */
-    private function recursiveArrayIntersectKey(array $a, array $b)
+    private function recursiveArrayIntersectKey(array $a, array $b): array
     {
         $a = array_intersect_key($a, $b);
 

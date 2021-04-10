@@ -6,7 +6,6 @@ use Exception;
 
 trait FileSystemTrait
 {
-
     /**
      * Determine if the file already exists.
      *
@@ -38,7 +37,6 @@ trait FileSystemTrait
     public function createDirectory($path)
     {
         if ($this->alreadyExists($path)) {
-
             $this->printErrorMessage($this->fileType . ' already exists');
 
             // the file does exist - return but NOT exit
@@ -46,7 +44,6 @@ trait FileSystemTrait
         }
 
         try {
-
             if (!$this->fileSystem->isDirectory(dirname($path))) {
                 $this->fileSystem->makeDirectory(dirname($path), 0777, true, true);
             }
@@ -55,5 +52,4 @@ trait FileSystemTrait
             $this->printErrorMessage('Could not create ' . $path);
         }
     }
-
 }

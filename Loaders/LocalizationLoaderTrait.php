@@ -2,46 +2,27 @@
 
 namespace Apiato\Core\Loaders;
 
-use App;
-use File;
+use Illuminate\Support\Facades\File;
 
-/**
- * Class LocalizationLoaderTrait
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 trait LocalizationLoaderTrait
 {
-
-    /**
-     * @param $containerName
-     */
-    public function loadLocalsFromContainers($containerName)
+    public function loadLocalsFromContainers($containerPath): void
     {
-        $containerMigrationDirectory = base_path('app/Containers/' . $containerName . '/Resources/Languages');
-
-        $this->loadLocals($containerMigrationDirectory, $containerName);
+        $containerLocaleDirectory = $containerPath . '/Resources/Languages';
+        $this->loadLocals($containerLocaleDirectory, $containerPath);
     }
 
-    /**
-     * @void
-     */
-    public function loadLocalsFromShip()
-    {
-        // ..
-    }
-
-    /**
-     * @param $directory
-     * @param $containerName
-     */
-    private function loadLocals($directory, $containerName)
+    private function loadLocals($directory, $namespace = null): void
     {
         if (File::isDirectory($directory)) {
-
-            $this->loadTranslationsFrom($directory, strtolower($containerName));
-
+            $this->loadTranslationsFrom($directory, strtolower($namespace));
+            $this->loadJsonTranslationsFrom($directory);
         }
     }
 
+    public function loadLocalsFromShip(): void
+    {
+        $shipLocaleDirectory = base_path('app/Ship/Resources/Languages');
+        $this->loadLocals($shipLocaleDirectory, 'ship');
+    }
 }

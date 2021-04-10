@@ -2,79 +2,49 @@
 
 namespace Apiato\Core\Abstracts\Exceptions;
 
-use App\Ship\Exceptions\Codes\ErrorCodeManager;
 use Exception as BaseException;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\MessageBag;
 use Log;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException as SymfonyHttpException;
 
-/**
- * Class Exception.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
-abstract class Exception extends SymfonyHttpException
+abstract class Exception extends BaseException
 {
+    private const DEFAULT_STATUS_CODE = 500;
+    protected string $environment;
+    protected $message;
+    protected $code;
+    protected array $errors = [];
 
-    /**
-     * MessageBag errors.
-     *
-     * @var \Illuminate\Support\MessageBag
-     */
-    protected $errors;
-
-    /**
-     * Default status code.
-     *
-     * @var int
-     */
-    CONST DEFAULT_STATUS_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
-
-    /**
-     * @var string
-     */
-    protected $environment;
-
-    /**
-     * @var mixed
-     */
-    private $customData = null;
-
-    /**
-     * Exception constructor.
-     *
-     * @param null            $message
-     * @param null            $errors
-     * @param null            $statusCode
-     * @param int             $code
-     * @param \Exception|null $previous
-     * @param array           $headers
-     */
     public function __construct(
-        $message = null,
-        $errors = null,
-        $statusCode = null,
-        $code = 0,
-        BaseException $previous = null,
-        $headers = []
-    ) {
-
-        // detect and set the running environment
+        ?string $message = null,
+        ?int $code = null,
+        ?BaseException $previous = null
+    )
+    {
+        // Detect and set the running environment
         $this->environment = Config::get('app.env');
 
-        $message = $this->prepareMessage($message);
-        $error = $this->prepareError($errors);
-        $statusCode = $this->prepareStatusCode($statusCode);
+        $this->message = $this->prepareMessage($message);
+        $this->code = $this->prepareStatusCode($code);
+    }
 
-        $this->logTheError($statusCode, $message, $code);
+    /**
+     * @param string|null $message
+     *
+     * @return string|null
+     */
+    private function prepareMessage(?string $message = null): ?string
+    {
+        return is_null($message) ? $this->message : $message;
+    }
 
-        parent::__construct($statusCode, $message, $previous, $headers, $code);
+    private function prepareStatusCode(?int $code = null): int
+    {
+        return is_null($code) ? $this->findStatusCode() : $code;
+    }
 
-        $this->customData = $this->addCustomData();
-
-        $this->code = $this->evaluateErrorCode();
+    private function findStatusCode(): int
+    {
+        return $this->code ?? Self::DEFAULT_STATUS_CODE;
     }
 
     /**
@@ -86,7 +56,7 @@ abstract class Exception extends SymfonyHttpException
      *
      * @return $this
      */
-    public function debug($error, $force = false)
+    public function debug($error, bool $force = false): Exception
     {
         if ($error instanceof BaseException) {
             $error = $error->getMessage();
@@ -99,144 +69,36 @@ abstract class Exception extends SymfonyHttpException
         return $this;
     }
 
-    /**
-     * Get the errors message bag.
-     *
-     * @return \Illuminate\Support\MessageBag
-     */
-    public function getErrors()
+    public function withErrors(array $errors, bool $override = true): Exception
     {
-        return $this->errors;
-    }
-
-    /**
-     * Determine if message bag has any errors.
-     *
-     * @return bool
-     */
-    public function hasErrors()
-    {
-        return !$this->errors->isEmpty();
-    }
-
-    /**
-     * @param $statusCode
-     * @param $message
-     * @param $code
-     */
-    private function logTheError($statusCode, $message, $code)
-    {
-        // if not testing environment, log the error message
-        if ($this->environment != 'testing') {
-            Log::error('[ERROR] ' .
-                'Status Code: ' . $statusCode . ' | ' .
-                'Message: ' . $message . ' | ' .
-                'Errors: ' . $this->errors . ' | ' .
-                'Code: ' . $code
-            );
+        if ($override) {
+            $this->errors = $errors;
+        } else {
+            $this->errors = array_merge($this->errors, $errors);
         }
-    }
-
-    /**
-     * @param null $errors
-     *
-     * @return  \Illuminate\Support\MessageBag|null
-     */
-    private function prepareError($errors = null)
-    {
-        return is_null($errors) ? new MessageBag() : $this->prepareArrayError($errors);
-    }
-
-    /**
-     * @param array $errors
-     *
-     * @return  array|\Illuminate\Support\MessageBag
-     */
-    private function prepareArrayError(array $errors = [])
-    {
-        return is_array($errors) ? new MessageBag($errors) : $errors;
-    }
-
-    /**
-     * @param null $message
-     *
-     * @return  null
-     */
-    private function prepareMessage($message = null)
-    {
-        return is_null($message) && property_exists($this, 'message') ? $this->message : $message;
-    }
-
-    /**
-     * @param $statusCode
-     *
-     * @return  int
-     */
-    private function prepareStatusCode($statusCode = null)
-    {
-        return is_null($statusCode) ? $this->findStatusCode() : $statusCode;
-    }
-
-    /**
-     * @return  int
-     */
-    private function findStatusCode()
-    {
-        return property_exists($this, 'httpStatusCode') ? $this->httpStatusCode : Self::DEFAULT_STATUS_CODE;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCustomData()
-    {
-        return $this->customData;
-    }
-
-    /**
-     * @return void
-     */
-    protected function addCustomData()
-    {
-        $this->customData = null;
-    }
-
-    /**
-     * Append customData to the exception and return the Exception!
-     *
-     * @param $customData
-     *
-     * @return $this
-     */
-    public function overrideCustomData($customData)
-    {
-        $this->customData = $customData;
         return $this;
     }
 
-    /**
-     * Default value
-     *
-     * @return int
-     */
-    public function useErrorCode()
+    public function getErrors(): array
     {
-        return $this->code;
-    }
+        $translatedErrors = [];
 
-    /**
-     * Overrides the code with the application error code (if set)
-     *
-     * @return int
-     */
-    private function evaluateErrorCode()
-    {
-        $code = $this->useErrorCode();
+        foreach ($this->errors as $key => $value) {
+            $translatedValues = [];
+            // here we translate and mutate each error so all error values will be arrays (for consistency)
+            // e.g. error => value becomes error => [translated_value]
+            // e.g. error => [value1, value2] becomes error => [translated_value1, translated_value2]
+            if (is_array($value)) {
+                foreach ($value as $translationKey) {
+                    $translatedValues[] = __($translationKey);
+                }
+            } else {
+                $translatedValues[] = __($value);
+            }
 
-        if (is_array($code)) {
-            $code = ErrorCodeManager::getCode($code);
+            $translatedErrors[$key] = $translatedValues;
         }
 
-        return $code;
+        return $translatedErrors;
     }
 }

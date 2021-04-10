@@ -2,32 +2,17 @@
 
 namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
 
-use App;
+use Illuminate\Support\Facades\App;
 use Mockery;
+use Mockery\MockInterface;
 
-/**
- * Class TestsMockHelperTrait
- *
- * Tests helper for mocking objects and services.
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 trait TestsMockHelperTrait
 {
-
-    /**
-     * Mocking helper
-     *
-     * @param $class
-     *
-     * @return  \Mockery\MockInterface
-     */
-    public function mock($class)
+    public function mockIt($class): MockInterface
     {
         $mock = Mockery::mock($class);
         App::instance($class, $mock);
 
         return $mock;
     }
-
 }

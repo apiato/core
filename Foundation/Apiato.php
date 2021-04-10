@@ -2,57 +2,23 @@
 
 namespace Apiato\Core\Foundation;
 
-use Apiato\Core\Exceptions\ClassDoesNotExistException;
-use Apiato\Core\Exceptions\MissingContainerException;
-use Apiato\Core\Exceptions\WrongConfigurationsException;
+use Apiato\Core\Exceptions\AmbiguousContainerNameException;
 use Apiato\Core\Traits\CallableTrait;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 
-/**
- * Class Apiato
- *
- * Helper Class to serve Apiato (Ship/Containers).
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class Apiato
 {
-
     use CallableTrait;
 
     /**
-     * Get the containers namespace value from the containers config file
-     *
-     * @return  string
+     * The Apiato version.
      */
-    public function getContainersNamespace()
-    {
-        return Config::get('apiato.containers.namespace');
-    }
+    public const VERSION = '10.0.0';
 
-    /**
-     * Get the containers names
-     *
-     * @return  array
-     */
-    public function getContainersNames()
-    {
-        $containersNames = [];
+    private const SHIP_NAME = 'ship';
+    private const CONTAINERS_DIRECTORY_NAME = 'Containers';
 
-        foreach ($this->getContainersPaths() as $containersPath) {
-            $containersNames[] = basename($containersPath);
-        }
-
-        return $containersNames;
-    }
-
-    /**
-     * Get the port folders names
-     *
-     * @return  array
-     */
-    public function getShipFoldersNames()
+    public function getShipFoldersNames(): array
     {
         $portFoldersNames = [];
 
@@ -63,26 +29,27 @@ class Apiato
         return $portFoldersNames;
     }
 
-    /**
-     * get containers directories paths
-     *
-     * @return  mixed
-     */
-    public function getContainersPaths()
+    public function getShipPath(): array
     {
-        return File::directories(app_path('Containers'));
+        return File::directories(app_path(self::SHIP_NAME));
+    }
+
+    public function getSectionContainerNames(string $sectionName): array
+    {
+        $containerNames = [];
+        foreach (File::directories($this->getSectionPath($sectionName)) as $key => $name) {
+            $containerNames[] = basename($name);
+        }
+        return $containerNames;
+    }
+
+    private function getSectionPath(string $sectionName): string
+    {
+        return app_path(self::CONTAINERS_DIRECTORY_NAME . '/' . $sectionName);
     }
 
     /**
-     * @return  mixed
-     */
-    public function getShipPath()
-    {
-        return File::directories(app_path('Ship'));
-    }
-
-    /**
-     * build and return an object of a class from its file path
+     * Build and return an object of a class from its file path
      *
      * @param $filePathName
      *
@@ -92,32 +59,30 @@ class Apiato
     {
         $classString = $this->getClassFullNameFromFile($filePathName);
 
-        $object = new $classString;
-
-        return $object;
+        return new $classString;
     }
 
     /**
-     * get the full name (name \ namespace) of a class from its file path
+     * Get the full name (name \ namespace) of a class from its file path
      * result example: (string) "I\Am\The\Namespace\Of\This\Class"
      *
      * @param $filePathName
      *
      * @return  string
      */
-    public function getClassFullNameFromFile($filePathName)
+    public function getClassFullNameFromFile($filePathName): string
     {
         return $this->getClassNamespaceFromFile($filePathName) . '\\' . $this->getClassNameFromFile($filePathName);
     }
 
     /**
-     * get the class namespace form file path using token
+     * Get the class namespace form file path using token
      *
      * @param $filePathName
      *
      * @return  null|string
      */
-    protected function getClassNamespaceFromFile($filePathName)
+    protected function getClassNamespaceFromFile($filePathName): ?string
     {
         $src = file_get_contents($filePathName);
 
@@ -144,13 +109,13 @@ class Apiato
         }
         if (!$namespace_ok) {
             return null;
-        } else {
-            return $namespace;
         }
+
+        return $namespace;
     }
 
     /**
-     * get the class name form file path using token
+     * Get the class name from file path using token
      *
      * @param $filePathName
      *
@@ -160,7 +125,7 @@ class Apiato
     {
         $php_code = file_get_contents($filePathName);
 
-        $classes = array();
+        $classes = [];
         $tokens = token_get_all($php_code);
         $count = count($tokens);
         for ($i = 2; $i < $count; $i++) {
@@ -168,7 +133,6 @@ class Apiato
                 && $tokens[$i - 1][0] == T_WHITESPACE
                 && $tokens[$i][0] == T_STRING
             ) {
-
                 $class_name = $tokens[$i][1];
                 $classes[] = $class_name;
             }
@@ -178,60 +142,32 @@ class Apiato
     }
 
     /**
-     * check if a word starts with another word
-     *
-     * @param $word
-     * @param $startsWith
-     *
-     * @return  bool
-     */
-    public function stringStartsWith($word, $startsWith)
-    {
-        return (substr($word, 0, strlen($startsWith)) === $startsWith);
-    }
-
-    /**
-     * @param        $word
-     * @param string $splitter
-     * @param bool   $uppercase
-     *
-     * @return  mixed|string
-     */
-    public function uncamelize($word, $splitter = " ", $uppercase = true)
-    {
-        $word = preg_replace('/(?!^)[[:upper:]][[:lower:]]/', '$0',
-            preg_replace('/(?!^)[[:upper:]]+/', $splitter . '$0', $word));
-
-        return $uppercase ? ucwords($word) : $word;
-    }
-
-    /**
-     * @return mixed
-     * @throws WrongConfigurationsException
-     */
-    public function getLoginWebPageName()
-    {
-        $loginPage = Config::get('apiato.containers.login-page-url');
-
-        if (is_null($loginPage)) {
-            throw new WrongConfigurationsException();
-        }
-
-        return $loginPage;
-    }
-
-
-    /**
      * Build namespace for a class in Container.
      *
      * @param $containerName
      * @param $className
-     *
+     * @param null $sectionName
      * @return  string
      */
-    public function buildClassFullName($containerName, $className)
+    public function buildClassFullName($containerName, $className, $sectionName = null): string
     {
-        return 'App\Containers\\' . $containerName . '\\' . $this->getClassType($className) . 's\\' . $className;
+        return 'App\\' . self::CONTAINERS_DIRECTORY_NAME . '\\' . ($sectionName ?? $this->getSectionNameByContainerName($containerName))
+            . '\\' . $containerName . '\\' . $this->getClassType($className) . 's\\' . $className;
+    }
+
+    public function getSectionNameByContainerName(string $containerName): ?string
+    {
+        foreach ($this->getSectionPaths() as $sectionPath) {
+            if (is_dir($sectionPath . '/' . $containerName)) {
+                return basename($sectionPath);
+            }
+        }
+        return null;
+    }
+
+    public function getSectionPaths(): array
+    {
+        return File::directories(app_path(self::CONTAINERS_DIRECTORY_NAME));
     }
 
     /**
@@ -251,26 +187,72 @@ class Apiato
 
     /**
      * @param $containerName
-     *
-     * @throws MissingContainerException
+     * @param null $sectionName
+     * @return bool
+     * @throws AmbiguousContainerNameException
      */
-    public function verifyContainerExist($containerName)
+    public function containerExist($containerName, $sectionName = null): bool
     {
-        if (!is_dir(app_path('Containers/' . $containerName))) {
-            throw new MissingContainerException("Container ($containerName) is not installed.");
+        if ($sectionName && is_dir('app/' . self::CONTAINERS_DIRECTORY_NAME . '/' . $sectionName . '/' . $containerName)) {
+            return true;
         }
+
+        $containersFound = 0;
+        foreach ($this->getSectionPaths() as $sectionPath) {
+            if (is_dir($sectionPath . '/' . $containerName)) {
+                $containersFound++;
+            }
+        }
+
+        if ($containersFound === 0) {
+            return false;
+        }
+
+        if ($containersFound === 1) {
+            return true;
+        }
+
+        // if more than 1 container is found throw exception
+        throw new AmbiguousContainerNameException();
     }
 
-    /**
-     * @param $className
-     *
-     * @throws ClassDoesNotExistException
-     */
-    public function verifyClassExist($className)
+    public function getAllContainerNames(): array
     {
-        if (!class_exists($className)) {
-            throw new ClassDoesNotExistException("Class ($className) is not installed.");
+        $containersNames = [];
+
+        foreach ($this->getAllContainerPaths() as $containersPath) {
+            $containersNames[] = basename($containersPath);
         }
+
+        return $containersNames;
     }
 
+    public function getAllContainerPaths(): array
+    {
+        $sectionNames = $this->getSectionNames();
+        $containerPaths = [];
+        foreach ($sectionNames as $name) {
+            $sectionContainerPaths = $this->getSectionContainerPaths($name);
+            foreach ($sectionContainerPaths as $containerPath) {
+                $containerPaths[] = $containerPath;
+            }
+        }
+        return $containerPaths;
+    }
+
+    public function getSectionNames(): array
+    {
+        $sectionNames = [];
+
+        foreach ($this->getSectionPaths() as $sectionPath) {
+            $sectionNames[] = basename($sectionPath);
+        }
+
+        return $sectionNames;
+    }
+
+    public function getSectionContainerPaths(string $sectionName): array
+    {
+        return File::directories(app_path(self::CONTAINERS_DIRECTORY_NAME . '/' . $sectionName));
+    }
 }

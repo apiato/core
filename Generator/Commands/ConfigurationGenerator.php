@@ -6,56 +6,8 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-/**
- * Class ConfigurationGenerator
- *
- * @author  Johannes Schobel <johannes.schobel@googlemail.com>
- */
 class ConfigurationGenerator extends GeneratorCommand implements ComponentsGenerator
 {
-
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:configuration';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a Configuration file for a Container';
-
-    /**
-     * The type of class being generated.
-     *
-     * @var string
-     */
-    protected $fileType = 'Configuration';
-
-    /**
-     * The structure of the file path.
-     *
-     * @var  string
-     */
-    protected $pathStructure = '{container-name}/Configs/*';
-
-    /**
-     * The structure of the file name.
-     *
-     * @var  string
-     */
-    protected $nameStructure = '{file-name}-container';
-
-    /**
-     * The name of the stub file.
-     *
-     * @var  string
-     */
-    protected $stubName = 'config.stub';
-
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
@@ -64,6 +16,34 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
      */
     public $inputs = [
     ];
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'apiato:generate:configuration';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Create a Configuration file for a Container';
+    /**
+     * The type of class being generated.
+     */
+    protected string $fileType = 'Configuration';
+    /**
+     * The structure of the file path.
+     */
+    protected string $pathStructure = '{section-name}/{container-name}/Configs/*';
+    /**
+     * The structure of the file name.
+     */
+    protected string $nameStructure = '{file-name}-container';
+    /**
+     * The name of the stub file.
+     */
+    protected string $stubName = 'config.stub';
 
     /**
      * @return array
@@ -72,9 +52,12 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
     {
         return [
             'path-parameters' => [
+                'section-name' => $this->sectionName,
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_section-name' => Str::lower($this->sectionName),
+                'section-name' => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
@@ -87,10 +70,8 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
 
     /**
      * Get the default file name for this component to be generated
-     *
-     * @return string
      */
-    public function getDefaultFileName()
+    public function getDefaultFileName(): string
     {
         return Str::lower($this->containerName);
     }

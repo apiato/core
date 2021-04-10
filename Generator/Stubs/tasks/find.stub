@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Containers\{{container-name}}\Tasks;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 
-use App\Containers\{{container-name}}\Data\Repositories\{{model}}Repository;
+use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
 use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Tasks\Task;
 use Exception;
 
 class Find{{model}}ByIdTask extends Task
 {
-
-    protected $repository;
+    protected {{model}}Repository $repository;
 
     public function __construct({{model}}Repository $repository)
     {

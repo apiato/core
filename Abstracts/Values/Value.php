@@ -2,12 +2,9 @@
 
 namespace Apiato\Core\Abstracts\Values;
 
-/**
- * Class Value.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
+use Apiato\Core\Traits\HasResourceKeyTrait;
+
 abstract class Value
 {
-
+    use HasResourceKeyTrait;
 }

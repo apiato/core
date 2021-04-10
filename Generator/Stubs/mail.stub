@@ -1,14 +1,11 @@
 <?php
 
-namespace App\Containers\{{container-name}}\Mails;
+namespace App\Containers\{{section-name}}\{{container-name}}\Mails;
 
 use App\Containers\User\Models\User;
 use App\Ship\Parents\Mails\Mail;
 use Illuminate\Bus\Queueable;
 
-/**
- * Class {{class-name}}
- */
 class {{class-name}} extends Mail
 {
     use Queueable;

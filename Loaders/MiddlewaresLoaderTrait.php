@@ -5,14 +5,8 @@ namespace Apiato\Core\Loaders;
 use App;
 use Illuminate\Contracts\Http\Kernel;
 
-/**
- * Class MiddlewaresLoaderTrait.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
- */
 trait MiddlewaresLoaderTrait
 {
-
     /**
      * @void
      */
@@ -64,7 +58,7 @@ trait MiddlewaresLoaderTrait
     private function registerMiddlewarePriority(array $middlewarePriority = [])
     {
         foreach ($middlewarePriority as $key => $middleware) {
-            if (! in_array($middleware, $this->app['router']->middlewarePriority)) {
+            if (!in_array($middleware, $this->app['router']->middlewarePriority)) {
                 $this->app['router']->middlewarePriority[] = $middleware;
             }
         }
@@ -81,5 +75,4 @@ trait MiddlewaresLoaderTrait
             $this->app['router']->aliasMiddleware($key, $routeMiddleware);
         }
     }
-
 }

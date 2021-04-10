@@ -8,56 +8,8 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class ControllerGenerator
- *
- * @author  Johannes Schobel  <johannes.schobel@googlemail.com>
- */
 class ControllerGenerator extends GeneratorCommand implements ComponentsGenerator
 {
-
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:controller';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a controller for a container';
-
-    /**
-     * The type of class being generated.
-     *
-     * @var string
-     */
-    protected $fileType = 'Controller';
-
-    /**
-     * The structure of the file path.
-     *
-     * @var  string
-     */
-    protected $pathStructure = '{container-name}/UI/{user-interface}/Controllers/*';
-
-    /**
-     * The structure of the file name.
-     *
-     * @var  string
-     */
-    protected $nameStructure = '{file-name}';
-
-    /**
-     * The name of the stub file.
-     *
-     * @var  string
-     */
-    protected $stubName = 'controllers/generic.stub';
-
     /**
      * The options which can be passed to the command. All options are optional. You do not need to pass the
      * "--container" and "--file" options, as they are globally handled. Just use the options which are specific to
@@ -69,6 +21,34 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'apiato:generate:controller';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Create a controller for a container';
+    /**
+     * The type of class being generated.
+     */
+    protected string $fileType = 'Controller';
+    /**
+     * The structure of the file path.
+     */
+    protected string $pathStructure = '{section-name}/{container-name}/UI/{user-interface}/Controllers/*';
+    /**
+     * The structure of the file name.
+     */
+    protected string $nameStructure = '{file-name}';
+    /**
+     * The name of the stub file.
+     */
+    protected string $stubName = 'controllers/generic.stub';
 
     /**
      * @return  array
@@ -84,12 +64,12 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
             0)
         );
 
-        // load a new stub-file based on the users choice
+        // Load a new stub-file based on the users choice
         $this->stubName = 'controllers/' . $stub . '.stub';
 
         $basecontroller = Str::ucfirst($ui) . 'Controller';
 
-        // name of the model (singular and plural)
+        // Name of the model (singular and plural)
         $model = $this->containerName;
         $models = Pluralizer::plural($model);
 
@@ -98,10 +78,13 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
         return [
             'path-parameters' => [
+                'section-name' => $this->sectionName,
                 'container-name' => $this->containerName,
                 'user-interface' => Str::upper($ui),
             ],
             'stub-parameters' => [
+                '_section-name' => Str::lower($this->sectionName),
+                'section-name' => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
@@ -119,9 +102,8 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
         ];
     }
 
-    public function getDefaultFileName()
+    public function getDefaultFileName(): string
     {
         return 'Controller';
     }
-
 }

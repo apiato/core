@@ -2,83 +2,48 @@
 
 namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
 
-use App;
-use App\Ship\Exceptions\MissingTestEndpointException;
-use App\Ship\Exceptions\UndefinedMethodException;
-use App\Ship\Exceptions\WrongEndpointFormatException;
+use Apiato\Core\Exceptions\MissingTestEndpointException;
+use Apiato\Core\Exceptions\UndefinedMethodException;
+use Apiato\Core\Exceptions\WrongEndpointFormatException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
+use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class TestsRequestHelperTrait
- *
- * Tests helper for making HTTP requests.
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 trait TestsRequestHelperTrait
 {
+    /**
+     * property to be set on the user test class
+     */
+    protected string $endpoint = '';
 
     /**
      * property to be set on the user test class
-     *
-     * @var  string
      */
-    protected $endpoint = '';
+    protected bool $auth = true;
 
-    /**
-     * property to be set on the user test class
-     *
-     * @var  bool
-     */
-    protected $auth = true;
+    protected TestResponse $response;
 
-    /**
-     * Http response
-     *
-     * @var  \Illuminate\Foundation\Testing\TestResponse
-     */
-    protected $response;
+    protected string $responseContent;
 
-    /**
-     * @var string
-     */
-    protected $responseContent;
+    protected ?array $responseContentArray = null;
 
-    /**
-     * @var array
-     */
-    protected $responseContentArray;
-
-    /**
-     * @var \stdClass
-     */
-    protected $responseContentObject;
+    protected ?stdClass $responseContentObject = null;
 
     /**
      * Allows users to override the default class property `endpoint` directly before calling the `makeCall` function.
-     *
-     * @var string
      */
-    protected $overrideEndpoint;
+    protected ?string $overrideEndpoint = null;
 
     /**
      * Allows users to override the default class property `auth` directly before calling the `makeCall` function.
-     *
-     * @var string
      */
-    protected $overrideAuth;
+    protected string $overrideAuth;
 
-    /**
-     * @param array $data
-     * @param array $headers
-     *
-     * @throws \App\Ship\Exceptions\UndefinedMethodException
-     * 
-     * @return \Illuminate\Foundation\Testing\TestResponse
-     */
-    public function makeCall(array $data = [], array $headers = [])
+    public function makeCall(array $data = [], array $headers = []): TestResponse
     {
         // Get or create a testing user. It will get your existing user if you already called this function from your
         // test. Or create one if you never called this function from your tests "Only if the endpoint is protected".
@@ -105,212 +70,15 @@ trait TestsRequestHelperTrait
 
         $httpResponse = $this->json($verb, $url, $data, $headers);
 
+        $this->logResponseData($httpResponse);
+
         return $this->setResponseObjectAndContent($httpResponse);
     }
 
     /**
-     * @param $httpResponse
-     *
-     * @return  \Illuminate\Foundation\Testing\TestResponse
-     */
-    public function setResponseObjectAndContent($httpResponse)
-    {
-        $this->setResponseContent($httpResponse);
-
-        return $this->response = $httpResponse;
-    }
-
-    /**
-     * @param $httpResponse
-     *
-     * @return  mixed
-     */
-    public function setResponseContent($httpResponse)
-    {
-        return $this->responseContent = $httpResponse->getContent();
-    }
-
-    /**
-     * @return  string
-     */
-    public function getResponseContent()
-    {
-        return $this->responseContent;
-    }
-
-    /**
-     * @return  mixed
-     */
-    public function getResponseContentArray()
-    {
-        return $this->responseContentArray ? : $this->responseContentArray = json_decode($this->getResponseContent(),
-            true);
-    }
-
-    /**
-     * @return  mixed
-     */
-    public function getResponseContentObject()
-    {
-        return $this->responseContentObject ? : $this->responseContentObject = json_decode($this->getResponseContent(),
-            false);
-    }
-
-    /**
-     * Inject the ID in the Endpoint URI before making the call by
-     * overriding the `$this->endpoint` property
-     *
-     * Example: you give it ('users/{id}/stores', 100) it returns 'users/100/stores'
-     *
-     * @param        $id
-     * @param bool   $skipEncoding
-     * @param string $replace
-     *
-     * @return  $this
-     */
-    public function injectId($id, $skipEncoding = false, $replace = '{id}')
-    {
-        // In case Hash ID is enabled it will encode the ID first
-        $id = $this->hashEndpointId($id, $skipEncoding);
-        $this->endpoint = str_replace($replace, $id, $this->endpoint);
-
-        return $this;
-    }
-
-    /**
-     * Override the default class endpoint property before making the call
-     *
-     * to be used as follow: $this->endpoint('verb@uri')->makeCall($data);
-     *
-     * @param $endpoint
-     *
-     * @return  $this
-     */
-    public function endpoint($endpoint)
-    {
-        $this->overrideEndpoint = $endpoint;
-
-        return $this;
-    }
-
-    /**
-     * @return  string
-     */
-    public function getEndpoint()
-    {
-        return !is_null($this->overrideEndpoint) ? $this->overrideEndpoint : $this->endpoint;
-    }
-
-    /**
-     * Override the default class auth property before making the call
-     *
-     * to be used as follow: $this->auth('false')->makeCall($data);
-     *
-     * @param bool $auth
-     *
-     * @return  $this
-     */
-    public function auth(bool $auth)
-    {
-        $this->overrideAuth = $auth;
-
-        return $this;
-    }
-
-    /**
-     * @return  bool
-     */
-    public function getAuth()
-    {
-        return !is_null($this->overrideAuth) ? $this->overrideAuth : $this->auth;
-    }
-
-    /**
-     * @param $uri
-     *
-     * @return  string
-     */
-    private function buildUrlForUri($uri)
-    {
-        // add `/` at the beginning in case it doesn't exist
-        if (!Str::startsWith($uri, '/')) {
-            $uri = '/' . $uri;
-        }
-
-        return Config::get('apiato.api.url') . $uri;
-    }
-
-    /**
-     * Attach Authorization Bearer Token to the request headers
-     * if it does not exist already and the authentication is required
-     * for the endpoint `$this->auth = true`.
-     *
-     * @param $headers
-     *
-     * @return  mixed
-     */
-    private function injectAccessToken(array $headers = [])
-    {
-        // if endpoint is protected (requires token to access it's functionality)
-        if ($this->getAuth() && !$this->headersContainAuthorization($headers)) {
-            // append the token to the header
-            $headers['Authorization'] = 'Bearer ' . $this->getTestingUser()->token;
-        }
-
-        return $headers;
-    }
-
-    /**
-     * just check if headers array has an `Authorization` as key.
-     *
-     * @param $headers
-     *
-     * @return  bool
-     */
-    private function headersContainAuthorization($headers)
-    {
-        return array_has($headers, 'Authorization');
-    }
-
-    /**
-     * @param $data
-     * @param $url
-     *
-     * @return  string
-     */
-    private function dataArrayToQueryParam($data, $url)
-    {
-        return $data ? $url . '?' . http_build_query($data) : $url;
-    }
-
-    /**
-     * @param $text
-     *
-     * @return  string
-     */
-    private function getJsonVerb($text)
-    {
-        return Str::replaceFirst('json:', '', $text);
-    }
-
-
-    /**
-     * @param      $id
-     * @param bool $skipEncoding
-     *
-     * @return  mixed
-     */
-    private function hashEndpointId($id, $skipEncoding = false)
-    {
-        return (Config::get('apiato.hash-id') && !$skipEncoding) ? Hashids::encode($id) : $id;
-    }
-
-    /**
      * read `$this->endpoint` property from the test class (`verb@uri`) and convert it to usable data
-     *
-     * @return  array
      */
-    private function parseEndpoint()
+    private function parseEndpoint(): array
     {
         $this->validateEndpointExist();
 
@@ -323,32 +91,29 @@ trait TestsRequestHelperTrait
 
         // get the verb and uri values from the array
         extract(array_combine(['verb', 'uri'], $asArray));
-        /** @var TYPE_NAME $verb */
-        /** @var TYPE_NAME $uri */
+        /** @var string $verb */
+        /** @var string $uri */
 
         return [
             'verb' => $verb,
-            'uri'  => $uri,
-            'url'  => $this->buildUrlForUri($uri),
+            'uri' => $uri,
+            'url' => $this->buildUrlForUri($uri),
         ];
     }
 
-    /**
-     * @void
-     */
-    private function validateEndpointExist()
+    private function validateEndpointExist(): void
     {
         if (!$this->getEndpoint()) {
             throw new MissingTestEndpointException();
         }
     }
 
-    /**
-     * @param $separator
-     *
-     * @throws WrongEndpointFormatException
-     */
-    private function validateEndpointFormat($separator)
+    public function getEndpoint(): string
+    {
+        return !is_null($this->overrideEndpoint) ? $this->overrideEndpoint : $this->endpoint;
+    }
+
+    private function validateEndpointFormat($separator): void
     {
         // check if string contains the separator
         if (!strpos($this->getEndpoint(), $separator)) {
@@ -356,14 +121,123 @@ trait TestsRequestHelperTrait
         }
     }
 
+    private function buildUrlForUri($uri): string
+    {
+        // add `/` at the beginning in case it doesn't exist
+        if (!Str::startsWith($uri, '/')) {
+            $uri = '/' . $uri;
+        }
+
+        return Config::get('apiato.api.url') . $uri;
+    }
+
+    private function dataArrayToQueryParam($data, $url): string
+    {
+        return $data ? $url . '?' . http_build_query($data) : $url;
+    }
+
+    private function logResponseData($httpResponse): void
+    {
+        $responseLoggerEnabled = Config::get('debugger.tests.response_logger');
+
+        if ($responseLoggerEnabled) {
+            Log::notice(get_object_vars($httpResponse->getData()));
+        }
+    }
+
+    public function setResponseObjectAndContent($httpResponse)
+    {
+        $this->setResponseContent($httpResponse);
+        return $this->response = $httpResponse;
+    }
+
+
+    public function getResponseContentArray()
+    {
+        return $this->responseContentArray ?: $this->responseContentArray = json_decode($this->getResponseContent(), true);
+    }
+
+    public function getResponseContent(): string
+    {
+        return $this->responseContent;
+    }
+
+    public function setResponseContent($httpResponse)
+    {
+        return $this->responseContent = $httpResponse->getContent();
+    }
+
+    public function getResponseContentObject()
+    {
+        return $this->responseContentObject ?: $this->responseContentObject = json_decode($this->getResponseContent(), false);
+    }
+
+    /**
+     * Inject the ID in the Endpoint URI before making the call by
+     * overriding the `$this->endpoint` property
+     *
+     * Example: you give it ('users/{id}/stores', 100) it returns 'users/100/stores'
+     *
+     * @param        $id
+     * @param bool $skipEncoding
+     * @param string $replace
+     *
+     * @return  $this
+     */
+    public function injectId($id, $skipEncoding = false, $replace = '{id}'): self
+    {
+        // In case Hash ID is enabled it will encode the ID first
+        $id = $this->hashEndpointId($id, $skipEncoding);
+        $this->endpoint = str_replace($replace, $id, $this->endpoint);
+
+        return $this;
+    }
+
+    private function hashEndpointId($id, $skipEncoding = false): string
+    {
+        return (Config::get('apiato.hash-id') && !$skipEncoding) ? Hashids::encode($id) : $id;
+    }
+
+    /**
+     * Override the default class endpoint property before making the call
+     *
+     * to be used as follow: $this->endpoint('verb@uri')->makeCall($data);
+     *
+     * @param $endpoint
+     *
+     * @return  $this
+     */
+    public function endpoint($endpoint): self
+    {
+        $this->overrideEndpoint = $endpoint;
+
+        return $this;
+    }
+
+    /**
+     * Override the default class auth property before making the call
+     *
+     * to be used as follow: $this->auth('false')->makeCall($data);
+     *
+     * @param bool $auth
+     *
+     * @return  $this
+     */
+    public function auth(bool $auth): self
+    {
+        $this->overrideAuth = $auth;
+
+        return $this;
+    }
+
     /**
      * Transform headers array to array of $_SERVER vars with HTTP_* format.
      *
-     * @param  array $headers
+     * @param array $headers
      *
      * @return array
      */
-    protected function transformHeadersToServerVars(array $headers)
+    protected function transformHeadersToServerVars(array $headers): array
     {
         return collect($headers)->mapWithKeys(function ($value, $name) {
             $name = strtr(strtoupper($name), '-', '_');
@@ -372,4 +246,38 @@ trait TestsRequestHelperTrait
         })->all();
     }
 
+    /**
+     * Attach Authorization Bearer Token to the request headers
+     * if it does not exist already and the authentication is required
+     * for the endpoint `$this->auth = true`.
+     *
+     * @param $headers
+     *
+     * @return  mixed
+     */
+    private function injectAccessToken(array $headers = []): array
+    {
+        // if endpoint is protected (requires token to access it's functionality)
+        if ($this->getAuth() && !$this->headersContainAuthorization($headers)) {
+            // append the token to the header
+            $headers['Authorization'] = 'Bearer ' . $this->getTestingUser()->token;
+        }
+
+        return $headers;
+    }
+
+    public function getAuth(): bool
+    {
+        return !is_null($this->overrideAuth) ? $this->overrideAuth : $this->auth;
+    }
+
+    private function headersContainAuthorization($headers): bool
+    {
+        return Arr::has($headers, 'Authorization');
+    }
+
+    private function getJsonVerb($text): string
+    {
+        return Str::replaceFirst('json:', '', $text);
+    }
 }

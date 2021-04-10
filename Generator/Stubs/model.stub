@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Containers\{{container-name}}\Models;
+namespace App\Containers\{{section-name}}\{{container-name}}\Models;
 
 use App\Ship\Parents\Models\Model;
 
@@ -30,5 +30,5 @@ class {{class-name}} extends Model
     /**
      * A resource key to be used by the the JSON API Serializer responses.
      */
-    protected $resourceKey = '{{resource-key}}';
+    protected string $resourceKey = '{{resource-key}}';
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Containers\{{container-name}}\UI\API\Transformers;
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Transformers;
 
-use App\Containers\{{container-name}}\Models\{{model}};
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Ship\Parents\Transformers\Transformer;
 
 class {{class-name}} extends Transformer
@@ -21,20 +21,15 @@ class {{class-name}} extends Transformer
 
     ];
 
-    /**
-     * @param {{model}} $entity
-     *
-     * @return array
-     */
-    public function transform({{model}} $entity)
+    public function transform({{model}} ${{_model}}): array
     {
         $response = [
 {{attributes}}
         ];
 
         $response = $this->ifAdmin([
-            'real_id'    => $entity->id,
-            // 'deleted_at' => $entity->deleted_at,
+            'real_id'    => ${{_model}}->id,
+            // 'deleted_at' => ${{_model}}->deleted_at,
         ], $response);
 
         return $response;

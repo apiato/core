@@ -2,10 +2,8 @@
 
 namespace Apiato\Core\Abstracts\Events\Traits;
 
-/**
- * Created by PhpStorm.
- * User: Arthur Devious
- */
+use DateInterval;
+use DateTimeInterface;
 
 trait JobProperties
 {
@@ -13,7 +11,7 @@ trait JobProperties
      * If ShouldHandle interface is implemented this variable
      * sets the time to wait before a job is executed
      *
-     * @var \DateTimeInterface|\DateInterval|int|null $jobDelay
+     * @var DateTimeInterface|DateInterval|int|null $jobDelay
      */
 
     public $jobDelay;
@@ -22,9 +20,7 @@ trait JobProperties
     /**
      * If ShouldHandle interface is implemented this variable
      * sets the name of the queue to push the job on
-     *
-     * @var string $jobQueue
      */
 
-    public $jobQueue;
+    public string $jobQueue;
 }

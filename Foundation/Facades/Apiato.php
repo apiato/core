@@ -5,22 +5,30 @@ namespace Apiato\Core\Foundation\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class Apiato
+ * @method static array getShipFoldersNames()
+ * @method static array getShipPath()
+ * @method static array getSectionContainerNames(string $sectionName)
+ * @method static mixed getClassObjectFromFile($filePathName)
+ * @method static string getClassFullNameFromFile($filePathName)
+ * @method static string buildClassFullName($containerName, $className, $sectionName = null)
+ * @method static string|null getSectionNameByContainerName(string $containerName)
+ * @method static array getSectionPaths()
+ * @method static mixed getClassType($className)
+ * @method static bool containerExist($containerName, $sectionName = null)
+ * @method static array getAllContainerNames()
+ * @method static array getAllContainerPaths()
+ * @method static array getSectionNames()
+ * @method static array getSectionContainerPaths(string $sectionName)
+ * @method static void verifyClassExist(string $className)
+ * @method static mixed transactionalCall($class, $runMethodArguments = [], $extraMethodsToCall = [])
+ * @method static mixed call($class, $runMethodArguments = [], $extraMethodsToCall = [])
  *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
+ * @see \Apiato\Core\Foundation\Apiato
  */
 class Apiato extends Facade
 {
-
-    /**
-     * Get the registered name of the component.
-     *
-     * @return string
-     */
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return 'Apiato';
     }
-
 }
-

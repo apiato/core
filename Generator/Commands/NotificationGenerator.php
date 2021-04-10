@@ -6,56 +6,8 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-/**
- * Class NotificationGenerator
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class NotificationGenerator extends GeneratorCommand implements ComponentsGenerator
 {
-
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:notification';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a new Notification class';
-
-    /**
-     * The type of class being generated.
-     *
-     * @var string
-     */
-    protected $fileType = 'Notification';
-
-    /**
-     * The structure of the file path.
-     *
-     * @var  string
-     */
-    protected $pathStructure = '{container-name}/Notifications/*';
-
-    /**
-     * The structure of the file name.
-     *
-     * @var  string
-     */
-    protected $nameStructure = '{file-name}';
-
-    /**
-     * The name of the stub file.
-     *
-     * @var  string
-     */
-    protected $stubName = 'notification.stub';
-
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
@@ -64,6 +16,34 @@ class NotificationGenerator extends GeneratorCommand implements ComponentsGenera
      */
     public $inputs = [
     ];
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'apiato:generate:notification';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Create a new Notification class';
+    /**
+     * The type of class being generated.
+     */
+    protected string $fileType = 'Notification';
+    /**
+     * The structure of the file path.
+     */
+    protected string $pathStructure = '{section-name}/{container-name}/Notifications/*';
+    /**
+     * The structure of the file name.
+     */
+    protected string $nameStructure = '{file-name}';
+    /**
+     * The name of the stub file.
+     */
+    protected string $stubName = 'notification.stub';
 
     /**
      * @return array
@@ -72,9 +52,12 @@ class NotificationGenerator extends GeneratorCommand implements ComponentsGenera
     {
         return [
             'path-parameters' => [
+                'section-name' => $this->sectionName,
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
+                '_section-name' => Str::lower($this->sectionName),
+                'section-name' => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
@@ -84,5 +67,4 @@ class NotificationGenerator extends GeneratorCommand implements ComponentsGenera
             ],
         ];
     }
-
-  }
+}

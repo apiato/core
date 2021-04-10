@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Containers\{{container-name}}\UI\WEB\Tests\Functional;
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests\Functional;
 
-use App\Containers\{{container-name}}\Tests\WebTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\WebTestCase;
 
 /**
  * Class {{class-name}}.
@@ -12,19 +12,15 @@ use App\Containers\{{container-name}}\Tests\WebTestCase;
  */
 class {{class-name}} extends WebTestCase
 {
-
     // the endpoint to be called within this test (e.g., get@v1/users)
-    protected $endpoint = 'method@endpoint';
+    protected string $endpoint = 'method@endpoint';
 
     // fake some access rights
-    protected $access = [
+    protected array $access = [
         'permissions' => '',
         'roles'       => '',
     ];
 
-    /**
-     * @test
-     */
     public function test_()
     {
         $data = [
@@ -39,5 +35,4 @@ class {{class-name}} extends WebTestCase
 
         // make other asserts here
     }
-
 }
