@@ -38,6 +38,8 @@ trait CallableTrait
      * @param array $extraMethodsToCall
      *
      * @return  mixed
+     * @throws ClassDoesNotExistException
+     * @throws MissingContainerException
      */
     public function call($class, $runMethodArguments = [], $extraMethodsToCall = [])
     {
@@ -56,22 +58,16 @@ trait CallableTrait
      * @param $class
      *
      * @return  mixed
+     * @throws ClassDoesNotExistException
+     * @throws MissingContainerException
      */
     private function resolveClass($class)
     {
-        // in case passing apiato style names such as containerName@classType
         if ($this->needsParsing($class)) {
             $parsedClass = $this->parseClassName($class);
-            $className = $parsedClass[1];
-            $sectionName = null;
-
-            $parsedPath = explode(':', $parsedClass[0]);
-            if (count($parsedPath) > 1) {
-                $sectionName = $this->capitalizeFirstLetter($parsedPath[0]);
-                $containerName = $this->capitalizeFirstLetter($parsedPath[1]);
-            } else {
-                $containerName = $this->capitalizeFirstLetter($parsedPath[0]);
-            }
+            $sectionName = $parsedClass['section_name'];
+            $containerName = $parsedClass['container_name'];
+            $className = $parsedClass['class_name'];
 
             if (!Apiato::containerExist($containerName, $sectionName)) {
                 throw new MissingContainerException("($containerName) Container is not installed in ($sectionName) Section.");
@@ -93,27 +89,42 @@ trait CallableTrait
     /**
      * If it's apiato Style caller like this: containerName@someClass
      *
-     * @param        $class
+     * @param string $class
      * @param string $separator
      *
      * @return  int
      */
-    private function needsParsing($class, $separator = '@'): int
+    private function needsParsing(string $class, $separator = '@'): int
     {
         return preg_match('/' . $separator . '/', $class);
     }
 
     /**
-     * Split containerName@someClass into container name and class name
+     * Split sectionName:containerName@someClass into section name, container name and class name
      *
-     * @param        $class
-     * @param string $delimiter
-     *
+     * @param string $class
+     * @param string $sectionDelimeter
+     * @param string $classDelimiter
      * @return  array
      */
-    private function parseClassName($class, $delimiter = '@'): array
+    private function parseClassName(string $class, string $sectionDelimeter = ':', string $classDelimiter = '@'): array
     {
-        return explode($delimiter, $class);
+        $parsedContainerAndClass = explode($classDelimiter, $class);
+        $containerName = $this->capitalizeFirstLetter($parsedContainerAndClass[0]);
+        $className = $this->capitalizeFirstLetter($parsedContainerAndClass[1]);
+        $sectionName = null;
+        $parsedSectionAndContainer = explode($sectionDelimeter, $parsedContainerAndClass[0]);
+
+        if ($this->isCalledWithSection($parsedSectionAndContainer)) {
+            $sectionName = $this->capitalizeFirstLetter($parsedSectionAndContainer[0]);
+            $containerName = $this->capitalizeFirstLetter($parsedSectionAndContainer[1]);
+        }
+
+        return [
+            'section_name' => $sectionName,
+            'container_name' => $containerName,
+            'class_name' => $className,
+        ];
     }
 
     /**
@@ -124,6 +135,15 @@ trait CallableTrait
     private function capitalizeFirstLetter($string): string
     {
         return ucfirst($string);
+    }
+
+    /**
+     * @param $parsedClass
+     * @return bool
+     */
+    private function isCalledWithSection($parsedClass): bool
+    {
+        return count($parsedClass) > 2;
     }
 
     /**
