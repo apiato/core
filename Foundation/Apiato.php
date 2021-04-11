@@ -2,7 +2,6 @@
 
 namespace Apiato\Core\Foundation;
 
-use Apiato\Core\Exceptions\AmbiguousContainerNameException;
 use Apiato\Core\Traits\CallableTrait;
 use Illuminate\Support\Facades\File;
 
@@ -141,20 +140,6 @@ class Apiato
         return $classes[0];
     }
 
-    /**
-     * Build namespace for a class in Container.
-     *
-     * @param $containerName
-     * @param $className
-     * @param null $sectionName
-     * @return  string
-     */
-    public function buildClassFullName($containerName, $className, $sectionName = null): string
-    {
-        return 'App\\' . self::CONTAINERS_DIRECTORY_NAME . '\\' . ($sectionName ?? $this->getSectionNameByContainerName($containerName))
-            . '\\' . $containerName . '\\' . $this->getClassType($className) . 's\\' . $className;
-    }
-
     public function getSectionNameByContainerName(string $containerName): ?string
     {
         foreach ($this->getSectionPaths() as $sectionPath) {
@@ -183,37 +168,6 @@ class Apiato
         $array = preg_split('/(?=[A-Z])/', $className);
 
         return end($array);
-    }
-
-    /**
-     * @param $containerName
-     * @param null $sectionName
-     * @return bool
-     * @throws AmbiguousContainerNameException
-     */
-    public function containerExist($containerName, $sectionName = null): bool
-    {
-        if ($sectionName && is_dir('app/' . self::CONTAINERS_DIRECTORY_NAME . '/' . $sectionName . '/' . $containerName)) {
-            return true;
-        }
-
-        $containersFound = 0;
-        foreach ($this->getSectionPaths() as $sectionPath) {
-            if (is_dir($sectionPath . '/' . $containerName)) {
-                $containersFound++;
-            }
-        }
-
-        if ($containersFound === 0) {
-            return false;
-        }
-
-        if ($containersFound === 1) {
-            return true;
-        }
-
-        // if more than 1 container is found throw exception
-        throw new AmbiguousContainerNameException();
     }
 
     public function getAllContainerNames(): array
