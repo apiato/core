@@ -4,9 +4,10 @@ namespace Apiato\Core\Abstracts\Transformers;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\UnsupportedFractalIncludeException;
-use Apiato\Core\Foundation\Facades\Apiato;
 use ErrorException;
 use Exception;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -17,20 +18,12 @@ use League\Fractal\TransformerAbstract as FractalTransformer;
 abstract class Transformer extends FractalTransformer
 {
     /**
-     * @return  mixed
-     */
-    public function user()
-    {
-        return Apiato::call('Authentication@GetAuthenticatedUserTask');
-    }
-
-    /**
      * @param $adminResponse
      * @param $clientResponse
      *
      * @return  array
      */
-    public function ifAdmin($adminResponse, $clientResponse)
+    public function ifAdmin($adminResponse, $clientResponse): array
     {
         $user = $this->user();
 
@@ -42,13 +35,21 @@ abstract class Transformer extends FractalTransformer
     }
 
     /**
+     * @return  Authenticatable|null
+     */
+    public function user(): ?Authenticatable
+    {
+        return Auth::user();
+    }
+
+    /**
      * @param mixed $data
      * @param callable|FractalTransformer $transformer
      * @param null $resourceKey
      *
      * @return Item
      */
-    public function item($data, $transformer, $resourceKey = null)
+    public function item($data, $transformer, $resourceKey = null): Item
     {
         // set a default resource key if none is set
         if (!$resourceKey && $data) {
@@ -65,7 +66,7 @@ abstract class Transformer extends FractalTransformer
      *
      * @return Collection
      */
-    public function collection($data, $transformer, $resourceKey = null)
+    public function collection($data, $transformer, $resourceKey = null): Collection
     {
         // set a default resource key if none is set
         if (!$resourceKey && $data->isNotEmpty()) {
@@ -84,7 +85,7 @@ abstract class Transformer extends FractalTransformer
      * @throws CoreInternalErrorException
      * @throws UnsupportedFractalIncludeException
      */
-    protected function callIncludeMethod(Scope $scope, $includeName, $data)
+    protected function callIncludeMethod(Scope $scope, $includeName, $data): ResourceInterface
     {
         try {
             return parent::callIncludeMethod($scope, $includeName, $data);
