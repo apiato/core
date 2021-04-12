@@ -3,6 +3,7 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use Apiato\Core\Foundation\Facades\Apiato;
+use App\Containers\{{section-name}}\{{container-name}}\Tasks\GetAll{{models}}Task;
 use App\Ship\Parents\Actions\Action;
 use App\Ship\Parents\Requests\Request;
 
@@ -10,6 +11,6 @@ class GetAll{{models}}Action extends Action
 {
     public function run(Request $request)
     {
-        return Apiato::call('{{container-name}}@GetAll{{models}}Task', [], ['addRequestCriteria']);
+        return Apiato::call(GetAll{{models}}Task::class, [], ['addRequestCriteria']);
     }
 }

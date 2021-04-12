@@ -4,6 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use Apiato\Core\Foundation\Facades\Apiato;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
+use App\Containers\{{section-name}}\{{container-name}}\Tasks\Create{{model}}Task;
 use App\Ship\Parents\Actions\Action;
 use App\Ship\Parents\Requests\Request;
 
@@ -15,6 +16,6 @@ class Create{{model}}Action extends Action
             // add your request data here
         ]);
 
-        return Apiato::call('{{container-name}}@Create{{model}}Task', [$data]);
+        return Apiato::call(Create{{model}}Task::class, [$data]);
     }
 }

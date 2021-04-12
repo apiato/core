@@ -4,6 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use Apiato\Core\Foundation\Facades\Apiato;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
+use App\Containers\{{section-name}}\{{container-name}}\Tasks\Find{{model}}ByIdTask;
 use App\Ship\Parents\Actions\Action;
 use App\Ship\Parents\Requests\Request;
 
@@ -11,6 +12,6 @@ class Find{{model}}ByIdAction extends Action
 {
     public function run(Request $request): {{model}}
     {
-        return Apiato::call('{{container-name}}@Find{{model}}ByIdTask', [$request->id]);
+        return Apiato::call(Find{{model}}ByIdTask::class, [$request->id]);
     }
 }

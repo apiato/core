@@ -3,6 +3,7 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use Apiato\Core\Foundation\Facades\Apiato;
+use App\Containers\{{section-name}}\{{container-name}}\Tasks\Delete{{model}}Task;
 use App\Ship\Parents\Actions\Action;
 use App\Ship\Parents\Requests\Request;
 
@@ -10,6 +11,6 @@ class Delete{{model}}Action extends Action
 {
     public function run(Request $request)
     {
-        return Apiato::call('{{container-name}}@Delete{{model}}Task', [$request->id]);
+        return Apiato::call(Delete{{model}}Task::class, [$request->id]);
     }
 }
