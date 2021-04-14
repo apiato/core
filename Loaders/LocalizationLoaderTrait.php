@@ -3,21 +3,31 @@
 namespace Apiato\Core\Loaders;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 trait LocalizationLoaderTrait
 {
     public function loadLocalsFromContainers($containerPath): void
     {
         $containerLocaleDirectory = $containerPath . '/Resources/Languages';
-        $this->loadLocals($containerLocaleDirectory, $containerPath);
+        $containerName = basename($containerPath);
+        $pathParts = explode(DIRECTORY_SEPARATOR, $containerPath);
+        $sectionName = $pathParts[count($pathParts) - 2];
+
+        $this->loadLocals($containerLocaleDirectory, $containerName, $sectionName);
     }
 
-    private function loadLocals($directory, $namespace = null): void
+    private function loadLocals($directory, $containerName, $sectionName = null): void
     {
         if (File::isDirectory($directory)) {
-            $this->loadTranslationsFrom($directory, strtolower($namespace));
+            $this->loadTranslationsFrom($directory, $this->buildNamespace($sectionName, $containerName));
             $this->loadJsonTranslationsFrom($directory);
         }
+    }
+
+    private function buildNamespace(string $sectionName, string $containerName): string
+    {
+        return $sectionName ? (Str::camel($sectionName) . '@' . Str::camel($containerName)) : Str::camel($containerName);
     }
 
     public function loadLocalsFromShip(): void
