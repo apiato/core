@@ -3,6 +3,7 @@
 namespace Apiato\Core\Loaders;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 trait ViewsLoaderTrait
 {
@@ -12,15 +13,23 @@ trait ViewsLoaderTrait
         $containerMailTemplatesDirectory = $containerPath . '/Mails/Templates/';
 
         $containerName = basename($containerPath);
-        $this->loadViews($containerViewDirectory, $containerName);
-        $this->loadViews($containerMailTemplatesDirectory, $containerName);
+        $pathParts = explode(DIRECTORY_SEPARATOR, $containerPath);
+        $sectionName = $pathParts[count($pathParts) - 2];
+
+        $this->loadViews($containerViewDirectory, $containerName, $sectionName);
+        $this->loadViews($containerMailTemplatesDirectory, $containerName, $sectionName);
     }
 
-    private function loadViews($directory, $containerName): void
+    private function loadViews($directory, $containerName, $sectionName = null): void
     {
         if (File::isDirectory($directory)) {
-            $this->loadViewsFrom($directory, strtolower($containerName));
+            $this->loadViewsFrom($directory, $this->buildNamespace($sectionName, $containerName));
         }
+    }
+
+    private function buildNamespace(string $sectionName, string $containerName): string
+    {
+        return $sectionName ? (Str::camel($sectionName) . '@' . Str::camel($containerName)) : Str::camel($containerName);
     }
 
     public function loadViewsFromShip(): void
