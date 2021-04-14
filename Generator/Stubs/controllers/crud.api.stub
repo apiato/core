@@ -14,38 +14,37 @@ use App\Containers\{{section-name}}\{{container-name}}\Actions\GetAll{{models}}A
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Update{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Delete{{model}}Action;
 use App\Ship\Parents\Controllers\{{base-controller}};
-use Apiato\Core\Foundation\Facades\Apiato;
 use Illuminate\Http\JsonResponse;
 
 class {{class-name}} extends {{base-controller}}
 {
     public function create{{model}}(Create{{model}}Request $request): JsonResponse
     {
-        ${{entity}} = Apiato::call(Create{{model}}Action::class, [$request]);
+        ${{entity}} = app(Create{{model}}Action::class)->run($request);
         return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
     }
 
     public function find{{model}}ById(Find{{model}}ByIdRequest $request): array
     {
-        ${{entity}} = Apiato::call(Find{{model}}ByIdAction::class, [$request]);
+        ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
         return $this->transform(${{entity}}, {{model}}Transformer::class);
     }
 
     public function getAll{{models}}(GetAll{{models}}Request $request): array
     {
-        ${{entities}} = Apiato::call(GetAll{{models}}Action::class, [$request]);
+        ${{entities}} = app(GetAll{{models}}Action::class)->run($request);
         return $this->transform(${{entities}}, {{model}}Transformer::class);
     }
 
     public function update{{model}}(Update{{model}}Request $request): array
     {
-        ${{entity}} = Apiato::call(Update{{model}}Action::class, [$request]);
+        ${{entity}} = app(Update{{model}}Action::class)->run($request);
         return $this->transform(${{entity}}, {{model}}Transformer::class);
     }
 
     public function delete{{model}}(Delete{{model}}Request $request): JsonResponse
     {
-        Apiato::call(Delete{{model}}Action::class, [$request]);
+        app(Delete{{model}}Action::class)->run($request);
         return $this->noContent();
     }
 }

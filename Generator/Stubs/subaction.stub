@@ -3,12 +3,11 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use App\Ship\Parents\Actions\SubAction;
-use Apiato\Core\Foundation\Facades\Apiato;
 
 class {{class-name}} extends SubAction
 {
     public function run()
     {
-        // $var = Apiato::call(Task::class, [$arg1, $arg2, ...]);
+        // $var = app(Task::class)->run($arg1, $arg2);
     }
 }
