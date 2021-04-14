@@ -17,8 +17,6 @@ use Illuminate\Support\Facades\Facade;
  * @method static array getSectionNames()
  * @method static array getSectionContainerPaths(string $sectionName)
  * @method static void verifyClassExist(string $className)
- * @method static mixed transactionalCall($class, $runMethodArguments = [], $extraMethodsToCall = [])
- * @method static mixed call($class, $runMethodArguments = [], $extraMethodsToCall = [])
  *
  * @see \Apiato\Core\Foundation\Apiato
  */

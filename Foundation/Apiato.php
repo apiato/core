@@ -2,13 +2,10 @@
 
 namespace Apiato\Core\Foundation;
 
-use Apiato\Core\Traits\CallableTrait;
 use Illuminate\Support\Facades\File;
 
 class Apiato
 {
-    use CallableTrait;
-
     /**
      * The Apiato version.
      */
