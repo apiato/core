@@ -105,7 +105,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         $this->call('apiato:generate:migration', [
             '--section' => $sectionName,
             '--container' => $containerName,
-            '--file' => 'create_' . $models . '_table',
+            '--file' => 'create_' . Str::lower($models) . '_table',
             '--tablename' => $models,
         ]);
 

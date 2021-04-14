@@ -104,7 +104,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
         $this->call('apiato:generate:migration', [
             '--section' => $sectionName,
             '--container' => $containerName,
-            '--file' => 'create_' . $models . '_table',
+            '--file' => 'create_' . Str::lower($models) . '_table',
             '--tablename' => $models,
         ]);
 
@@ -185,7 +185,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             [
                 'stub' => 'Delete',
                 'name' => 'Delete' . $model,
-                'operation' => 'delete',
+                'operation' => 'destroy',
                 'verb' => 'DELETE',
                 'url' => $url . '/{id}',
                 'action' => 'Delete' . $model . 'Action',
