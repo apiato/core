@@ -20,12 +20,12 @@ trait LocalizationLoaderTrait
     private function loadLocals($directory, $containerName, $sectionName = null): void
     {
         if (File::isDirectory($directory)) {
-            $this->loadTranslationsFrom($directory, $this->buildNamespace($sectionName, $containerName));
+            $this->loadTranslationsFrom($directory, $this->buildLocaleNamespace($sectionName, $containerName));
             $this->loadJsonTranslationsFrom($directory);
         }
     }
 
-    private function buildNamespace(string $sectionName, string $containerName): string
+    private function buildLocaleNamespace(string $sectionName, string $containerName): string
     {
         return $sectionName ? (Str::camel($sectionName) . '@' . Str::camel($containerName)) : Str::camel($containerName);
     }

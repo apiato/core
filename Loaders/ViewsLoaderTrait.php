@@ -23,11 +23,11 @@ trait ViewsLoaderTrait
     private function loadViews($directory, $containerName, $sectionName = null): void
     {
         if (File::isDirectory($directory)) {
-            $this->loadViewsFrom($directory, $this->buildNamespace($sectionName, $containerName));
+            $this->loadViewsFrom($directory, $this->buildViewNamespace($sectionName, $containerName));
         }
     }
 
-    private function buildNamespace(string $sectionName, string $containerName): string
+    private function buildViewNamespace(string $sectionName, string $containerName): string
     {
         return $sectionName ? (Str::camel($sectionName) . '@' . Str::camel($containerName)) : Str::camel($containerName);
     }
