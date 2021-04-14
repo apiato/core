@@ -44,7 +44,7 @@ class Apiato
 
     private function getSectionPath(string $sectionName): string
     {
-        return app_path(self::CONTAINERS_DIRECTORY_NAME . '/' . $sectionName);
+        return app_path(self::CONTAINERS_DIRECTORY_NAME . DIRECTORY_SEPARATOR . $sectionName);
     }
 
     /**
@@ -143,7 +143,7 @@ class Apiato
     public function getSectionNameByContainerName(string $containerName): ?string
     {
         foreach ($this->getSectionPaths() as $sectionPath) {
-            if (is_dir($sectionPath . '/' . $containerName)) {
+            if (is_dir($sectionPath . DIRECTORY_SEPARATOR . $containerName)) {
                 return basename($sectionPath);
             }
         }
@@ -207,6 +207,6 @@ class Apiato
 
     public function getSectionContainerPaths(string $sectionName): array
     {
-        return File::directories(app_path(self::CONTAINERS_DIRECTORY_NAME . '/' . $sectionName));
+        return File::directories(app_path(self::CONTAINERS_DIRECTORY_NAME . DIRECTORY_SEPARATOR . $sectionName));
     }
 }
