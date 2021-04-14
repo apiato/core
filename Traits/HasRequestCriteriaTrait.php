@@ -8,18 +8,11 @@ use Prettus\Repository\Criteria\RequestCriteria;
 
 trait HasRequestCriteriaTrait
 {
-    public function addRequestCriteria($repository = null): void
+    public function addRequestCriteria($repository = null): self
     {
         $validatedRepository = $this->validateRepository($repository);
-
         $validatedRepository->pushCriteria(app(RequestCriteria::class));
-    }
-
-    public function removeRequestCriteria($repository = null): void
-    {
-        $validatedRepository = $this->validateRepository($repository);
-
-        $validatedRepository->popCriteria(RequestCriteria::class);
+        return $this;
     }
 
     /**
@@ -36,7 +29,7 @@ trait HasRequestCriteriaTrait
 
         // check if we have a "custom" repository
         if (null === $repository) {
-            if (! isset($this->repository)) {
+            if (!isset($this->repository)) {
                 throw new CoreInternalErrorException('No protected or public accessible repository available');
             }
             $validatedRepository = $this->repository;
@@ -48,10 +41,17 @@ trait HasRequestCriteriaTrait
         }
 
         // check if it is a Repository class
-        if (! ($validatedRepository instanceof Repository)) {
+        if (!($validatedRepository instanceof Repository)) {
             throw new CoreInternalErrorException();
         }
 
         return $validatedRepository;
+    }
+
+    public function removeRequestCriteria($repository = null): self
+    {
+        $validatedRepository = $this->validateRepository($repository);
+        $validatedRepository->popCriteria(RequestCriteria::class);
+        return $this;
     }
 }
