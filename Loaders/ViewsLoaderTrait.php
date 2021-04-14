@@ -27,7 +27,7 @@ trait ViewsLoaderTrait
         }
     }
 
-    private function buildViewNamespace(string $sectionName, string $containerName): string
+    private function buildViewNamespace(?string $sectionName, string $containerName): string
     {
         return $sectionName ? (Str::camel($sectionName) . '@' . Str::camel($containerName)) : Str::camel($containerName);
     }
