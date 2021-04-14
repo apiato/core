@@ -140,21 +140,6 @@ class Apiato
         return $classes[0];
     }
 
-    public function getSectionNameByContainerName(string $containerName): ?string
-    {
-        foreach ($this->getSectionPaths() as $sectionPath) {
-            if (is_dir($sectionPath . DIRECTORY_SEPARATOR . $containerName)) {
-                return basename($sectionPath);
-            }
-        }
-        return null;
-    }
-
-    public function getSectionPaths(): array
-    {
-        return File::directories(app_path(self::CONTAINERS_DIRECTORY_NAME));
-    }
-
     /**
      * Get the last part of a camel case string.
      * Example input = helloDearWorld | returns = World
@@ -203,6 +188,11 @@ class Apiato
         }
 
         return $sectionNames;
+    }
+
+    public function getSectionPaths(): array
+    {
+        return File::directories(app_path(self::CONTAINERS_DIRECTORY_NAME));
     }
 
     public function getSectionContainerPaths(string $sectionName): array
