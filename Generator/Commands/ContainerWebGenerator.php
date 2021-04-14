@@ -78,7 +78,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
         $this->call('apiato:generate:configuration', [
             '--section' => $sectionName,
             '--container' => $containerName,
-            '--file' => $_containerName,
+            '--file' => Str::camel($this->sectionName) . '-' . Str::camel($this->containerName),
         ]);
 
         // create the MainServiceProvider for the container
