@@ -28,7 +28,7 @@ class {{class-name}} extends Model
     ];
 
     /**
-     * A resource key to be used by the the JSON API Serializer responses.
+     * A resource key to be used in the serialized responses.
      */
     protected string $resourceKey = '{{resource-key}}';
 }

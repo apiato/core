@@ -83,10 +83,10 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
     private function getListOfAllAttributes($full, $model)
     {
         $indent = str_repeat(' ', 12);
-        $fields = [
-            'object' => "'$model'",
-        ];
         $_model = Str::lower($model);
+        $fields = [
+            'object' => '$' . $_model . '->getResourceKey()',
+        ];
 
         if ($full) {
             $obj = 'App\\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\\Models\\' . $model;

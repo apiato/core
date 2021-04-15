@@ -81,7 +81,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
-                'resource-key' => strtolower(Pluralizer::plural($this->fileName)),
+                'resource-key' => $this->fileName,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
