@@ -30,6 +30,6 @@ trait HelpersLoaderTrait
     public function loadHelpersFromShip(): void
     {
         $shipHelpersDirectory = base_path('app/Ship/Helpers');
-        $this->loadConfigs($shipHelpersDirectory);
+        $this->loadHelpers($shipHelpersDirectory);
     }
 }
