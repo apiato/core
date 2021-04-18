@@ -28,6 +28,7 @@ trait AutoLoaderTrait
         $this->loadViewsFromShip();
         $this->loadConsolesFromShip();
         $this->loadHelpersFromShip();
+        $this->loadOnlyShipProviderFromShip();
 
         // Iterate over all the containers folders and autoload most of the components
         foreach (Apiato::getAllContainerPaths() as $containerPath) {

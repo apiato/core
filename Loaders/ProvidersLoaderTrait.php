@@ -58,4 +58,9 @@ trait ProvidersLoaderTrait
             }
         }
     }
+
+    public function loadOnlyShipProviderFromShip(): void
+    {
+        $this->loadProvider('App\Ship\Providers\ShipProvider');
+    }
 }
