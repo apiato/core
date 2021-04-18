@@ -23,7 +23,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      * Conventions:
      *    - Repository name should be same like it's model name (model: Foo -> repository: FooRepository).
      *    - If the container contains Models with names different than the container name, the repository class must
-     *          set `$container='ContainerName'` property for this function to work properly
+     *          implement model() method and return the FQCN e.g. Role::class
      * Specify Model class name.
      */
     public function model(): string
