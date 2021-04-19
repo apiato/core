@@ -60,6 +60,7 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
         // We need to generate the generic testcase first!
         if ($ui != 'generic') {
             $this->call('apiato:generate:test:testcase', [
+                '--section' => $this->sectionName,
                 '--container' => $this->containerName,
                 '--file' => 'TestCase',
                 '--ui' => 'generic',
@@ -95,4 +96,3 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
         return 'TestCase';
     }
 }
-

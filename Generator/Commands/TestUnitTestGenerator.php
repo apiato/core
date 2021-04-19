@@ -52,6 +52,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
     {
         // We need to generate the TestCase class before
         $this->call('apiato:generate:test:testcase', [
+            '--section' => $this->sectionName,
             '--container' => $this->containerName,
             '--file' => 'TestCase',
             '--ui' => 'generic',
@@ -80,4 +81,3 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
         return 'DefaultUnitTest';
     }
 }
-
