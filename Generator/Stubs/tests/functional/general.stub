@@ -12,7 +12,7 @@ use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
  */
 class {{class-name}} extends TestCase
 {
-    public function test_()
+    public function test(): void
     {
     }
 }

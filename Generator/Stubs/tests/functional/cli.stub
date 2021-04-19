@@ -12,7 +12,7 @@ use App\Containers\{{section-name}}\{{container-name}}\Tests\CliTestCase;
  */
 class {{class-name}} extends CliTestCase
 {
-    public function test_()
+    public function test(): void
     {
         // make something here
 

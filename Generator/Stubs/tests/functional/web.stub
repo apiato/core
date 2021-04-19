@@ -21,7 +21,7 @@ class {{class-name}} extends WebTestCase
         'roles'       => '',
     ];
 
-    public function test_()
+    public function test(): void
     {
         $data = [
             // 'key' => 'value',
