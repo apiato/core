@@ -81,11 +81,11 @@ abstract class Transformer extends FractalTransformer
      * @param string $includeName
      * @param mixed $data
      *
-     * @return ResourceInterface
+     * @return ResourceInterface|bool
      * @throws CoreInternalErrorException
      * @throws UnsupportedFractalIncludeException
      */
-    protected function callIncludeMethod(Scope $scope, $includeName, $data): ResourceInterface
+    protected function callIncludeMethod(Scope $scope, $includeName, $data)
     {
         try {
             return parent::callIncludeMethod($scope, $includeName, $data);
