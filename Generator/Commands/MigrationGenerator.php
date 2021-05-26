@@ -55,7 +55,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getUserInputs()
     {
-        $tableName = Str::lower($this->checkParameterOrAsk('tablename', 'Enter the name of the database table', Pluralizer::plural(Str::lower($this->containerName))));
+        $tableName = Str::lower($this->checkParameterOrAsk('tablename', 'Enter the name of the database table', Str::snake(Pluralizer::plural($this->containerName))));
 
         // Now we need to check if there already exists a "default migration file" for this container!
         // We therefore search for a file that is named "xxxx_xx_xx_xxxxxx_NAME"
@@ -108,7 +108,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public function getDefaultFileName(): string
     {
-        return 'create_' . Pluralizer::plural(Str::lower($this->containerName)) . '_table';
+        return 'create_' . Str::snake(Pluralizer::plural($this->containerName)) . '_table';
     }
 
     /**
