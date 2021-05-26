@@ -63,9 +63,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
                 '--file' => $this->fileName . 'Repository'
             ]);
 
-            if ($status == 0) {
-                $this->printInfoMessage('The Repository was successfully generated');
-            } else {
+            if ($status != 0) {
                 $this->printErrorMessage('Could not generate the corresponding Repository!');
             }
         }
