@@ -20,7 +20,8 @@ trait ResponseTrait
         $transformerName = null,
         array $includes = [],
         array $meta = [],
-        $resourceKey = null
+        $resourceKey = null,
+        $enableDefaultMeta
     ): array
     {
         // first, we need to create the transformer
@@ -38,10 +39,11 @@ trait ResponseTrait
         }
 
         // add specific meta information to the response message
-        $this->metaData = [
-            'include' => $transformer->getAvailableIncludes(),
-            'custom' => $meta,
-        ];
+        $this->metaData = isset($this->metaData) ? $this->metaData : [];
+        if ($enableDefaultMeta) {
+            $this->metaData['include'] = $transformer->getAvailableIncludes();
+            $this->metaData['custom'] = $meta;
+        }
 
         // no resource key was set
         if (!$resourceKey) {
@@ -117,7 +119,7 @@ trait ResponseTrait
         return $responseArray;
     }
 
-    public function withMeta($data): self
+    public function withMeta(array $data = []): self
     {
         $this->metaData = $data;
 
