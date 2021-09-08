@@ -2,49 +2,67 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
-use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
-use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{models}}Request;
-use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Find{{model}}ByIdRequest;
-use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
-use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
+use Apiato\Core\Exceptions\InvalidTransformerException;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Create{{model}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\Actions\Delete{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Find{{model}}ByIdAction;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\GetAll{{models}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Update{{model}}Action;
-use App\Containers\{{section-name}}\{{container-name}}\Actions\Delete{{model}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Find{{model}}ByIdRequest;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{models}}Request;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
 use App\Ship\Parents\Controllers\{{base-controller}};
 use Illuminate\Http\JsonResponse;
 
 class {{class-name}} extends {{base-controller}}
 {
+    /**
+     * @throws InvalidTransformerException
+     */
     public function create{{model}}(Create{{model}}Request $request): JsonResponse
     {
         ${{entity}} = app(Create{{model}}Action::class)->run($request);
+
         return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
     }
 
+    /**
+     * @throws InvalidTransformerException
+     */
     public function find{{model}}ById(Find{{model}}ByIdRequest $request): array
     {
         ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
+
         return $this->transform(${{entity}}, {{model}}Transformer::class);
     }
 
+    /**
+     * @throws InvalidTransformerException
+     */
     public function getAll{{models}}(GetAll{{models}}Request $request): array
     {
         ${{entities}} = app(GetAll{{models}}Action::class)->run($request);
+
         return $this->transform(${{entities}}, {{model}}Transformer::class);
     }
 
+    /**
+     * @throws InvalidTransformerException
+     */
     public function update{{model}}(Update{{model}}Request $request): array
     {
         ${{entity}} = app(Update{{model}}Action::class)->run($request);
+
         return $this->transform(${{entity}}, {{model}}Transformer::class);
     }
 
     public function delete{{model}}(Delete{{model}}Request $request): JsonResponse
     {
         app(Delete{{model}}Action::class)->run($request);
+
         return $this->noContent();
     }
 }

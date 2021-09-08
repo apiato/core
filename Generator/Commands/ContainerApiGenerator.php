@@ -19,7 +19,8 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
     public array $inputs = [
         ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of all endpoints to be generated (1, 2, ...)'],
         ['doctype', null, InputOption::VALUE_OPTIONAL, 'The type of all endpoints to be generated (private, public)'],
-        ['url', null, InputOption::VALUE_OPTIONAL, 'The base URI of all endpoints (/stores, /cars, ...)']
+        ['url', null, InputOption::VALUE_OPTIONAL, 'The base URI of all endpoints (/stores, /cars, ...)'],
+        ['controllertype', null, InputOption::VALUE_OPTIONAL, 'The controller type (SAC, MAC)']
     ];
     /**
      * The console command name.
@@ -128,9 +129,12 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all endpoints (foo/bar)', Str::lower($models)));
         $url = ltrim($url, '/');
 
+        $controllertype = Str::lower($this->checkParameterOrChoice('controllertype', 'Select the controller type (Single or Multi Action Controller)', ['SAC', 'MAC'], 0));
+
         $this->printInfoMessage('Creating Requests for Routes');
         $this->printInfoMessage('Generating Default Actions');
         $this->printInfoMessage('Generating Default Tasks');
+        $this->printInfoMessage('Generating Default Controller/s');
 
         $routes = [
             [
@@ -142,6 +146,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'GetAll' . $models . 'Action',
                 'request' => 'GetAll' . $models . 'Request',
                 'task' => 'GetAll' . $models . 'Task',
+                'controller' => 'GetAll' . $models . 'Controller',
             ],
             [
                 'stub' => 'Find',
@@ -152,6 +157,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Find' . $model . 'ById' . 'Action',
                 'request' => 'Find' . $model . 'ById' . 'Request',
                 'task' => 'Find' . $model . 'ById' . 'Task',
+                'controller' => 'Find' . $model . 'ById' . 'Controller',
             ],
             [
                 'stub' => 'Create',
@@ -162,6 +168,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Create' . $model . 'Action',
                 'request' => 'Create' . $model . 'Request',
                 'task' => 'Create' . $model . 'Task',
+                'controller' => 'Create' . $model . 'Controller',
             ],
             [
                 'stub' => 'Update',
@@ -172,6 +179,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Update' . $model . 'Action',
                 'request' => 'Update' . $model . 'Request',
                 'task' => 'Update' . $model . 'Task',
+                'controller' => 'Update' . $model . 'Controller',
             ],
             [
                 'stub' => 'Delete',
@@ -182,22 +190,11 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Delete' . $model . 'Action',
                 'request' => 'Delete' . $model . 'Request',
                 'task' => 'Delete' . $model . 'Task',
+                'controller' => 'Delete' . $model . 'Controller',
             ],
         ];
 
         foreach ($routes as $route) {
-            $this->call('apiato:generate:route', [
-                '--section' => $sectionName,
-                '--container' => $containerName,
-                '--file' => $route['name'],
-                '--ui' => $ui,
-                '--operation' => $route['operation'],
-                '--doctype' => $doctype,
-                '--docversion' => $version,
-                '--url' => $route['url'],
-                '--verb' => $route['verb'],
-            ]);
-
             $this->call('apiato:generate:request', [
                 '--section' => $sectionName,
                 '--container' => $containerName,
@@ -221,17 +218,54 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 '--model' => $model,
                 '--stub' => $route['stub'],
             ]);
+
+            if ($controllertype === 'sac') {
+                $this->call('apiato:generate:route', [
+                    '--section' => $sectionName,
+                    '--container' => $containerName,
+                    '--file' => $route['name'],
+                    '--ui' => $ui,
+                    '--operation' => $route['operation'],
+                    '--doctype' => $doctype,
+                    '--docversion' => $version,
+                    '--url' => $route['url'],
+                    '--verb' => $route['verb'],
+                    '--controller' => $route['controller'],
+                ]);
+
+                $this->call('apiato:generate:controller', [
+                    '--section' => $sectionName,
+                    '--container' => $containerName,
+                    '--file' => $route['controller'],
+                    '--ui' => $ui,
+                    '--stub' => $route['stub'],
+                ]);
+            } else {
+                $this->call('apiato:generate:route', [
+                    '--section' => $sectionName,
+                    '--container' => $containerName,
+                    '--file' => $route['name'],
+                    '--ui' => $ui,
+                    '--operation' => $route['operation'],
+                    '--doctype' => $doctype,
+                    '--docversion' => $version,
+                    '--url' => $route['url'],
+                    '--verb' => $route['verb'],
+                    '--controller' => 'Controller',
+                ]);
+            }
         }
 
-        // finally generate the controller
-        $this->printInfoMessage('Generating Controller to wire everything together');
-        $this->call('apiato:generate:controller', [
-            '--section' => $sectionName,
-            '--container' => $containerName,
-            '--file' => 'Controller',
-            '--ui' => $ui,
-            '--stub' => 'crud.' . $ui,
-        ]);
+        if ($controllertype === 'mac') {
+            $this->printInfoMessage('Generating Controller to wire everything together');
+            $this->call('apiato:generate:controller', [
+                '--section' => $sectionName,
+                '--container' => $containerName,
+                '--file' => 'Controller',
+                '--ui' => $ui,
+                '--stub' => 'crud',
+            ]);
+        }
 
         $this->printInfoMessage('Generating Composer File');
         return [

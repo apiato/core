@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
+
+use Apiato\Core\Exceptions\InvalidTransformerException;
+use App\Containers\{{section-name}}\{{container-name}}\Actions\Create{{model}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
+use App\Ship\Parents\Controllers\{{base-controller}};
+use Illuminate\Http\JsonResponse;
+
+class {{class-name}} extends {{base-controller}}
+{
+    /**
+     * @throws InvalidTransformerException
+     */
+    public function create{{model}}(Create{{model}}Request $request): JsonResponse
+    {
+        ${{entity}} = app(Create{{model}}Action::class)->run($request);
+
+        return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
+    }
+}

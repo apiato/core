@@ -65,7 +65,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
         );
 
         // Load a new stub-file based on the users choice
-        $this->stubName = 'controllers/' . $stub . '.stub';
+        $this->stubName = 'controllers/' . $ui . '/' . $stub . '.stub';
 
         $basecontroller = Str::ucfirst($ui) . 'Controller';
 

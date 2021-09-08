@@ -22,6 +22,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
         ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of the endpoint (1, 2, ...)'],
         ['url', null, InputOption::VALUE_OPTIONAL, 'The URI of the endpoint (/stores, /cars, ...)'],
         ['verb', null, InputOption::VALUE_OPTIONAL, 'The HTTP verb of the endpoint (GET, POST, ...)'],
+        ['controller', null, InputOption::VALUE_OPTIONAL, 'The controller used in this route'],
     ];
     /**
      * The console command name.
@@ -66,7 +67,9 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
         $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the endpoint URI (foo/bar/{id})'));
         $url = ltrim($url, '/');
 
-        $docUrl = preg_replace('~\{(.+?)\}~', ':$1', $url);
+        $controllerName = $this->checkParameterOrAsk('controller', 'Enter the controller name', Str::studly($operation) . 'Controller');
+
+        $docUrl = preg_replace('~{(.+?)}~', ':$1', $url);
 
         $routeName = Str::lower($ui . '_' . $this->containerName . '_' . Str::snake($operation));
 
@@ -93,6 +96,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
                 'doc-http-verb' => Str::upper($verb),
                 'route-name' => $routeName,
                 'auth-middleware' => Str::lower($ui),
+                'controller-name' => $controllerName,
             ],
             'file-parameters' => [
                 'endpoint-name' => $this->fileName,
