@@ -10,6 +10,11 @@ abstract class Action
 
     protected string $ui;
 
+    public function __invoke(...$arguments)
+    {
+        return static::run(...$arguments);
+    }
+
     public function getUI()
     {
         return $this->ui;
