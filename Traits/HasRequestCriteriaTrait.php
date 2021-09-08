@@ -8,7 +8,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 
 trait HasRequestCriteriaTrait
 {
-    public function addRequestCriteria($repository = null): self
+    public function addRequestCriteria($repository = null): static
     {
         $validatedRepository = $this->validateRepository($repository);
         $validatedRepository->pushCriteria(app(RequestCriteria::class));
@@ -48,7 +48,7 @@ trait HasRequestCriteriaTrait
         return $validatedRepository;
     }
 
-    public function removeRequestCriteria($repository = null): self
+    public function removeRequestCriteria($repository = null): static
     {
         $validatedRepository = $this->validateRepository($repository);
         $validatedRepository->popCriteria(RequestCriteria::class);
