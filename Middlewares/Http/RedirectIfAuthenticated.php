@@ -23,7 +23,7 @@ class RedirectIfAuthenticated extends Middleware
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(config('apiato.web.home'));
+                return redirect(config('apiato.web.home-page-url'));
             }
         }
 

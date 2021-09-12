@@ -27,6 +27,6 @@ class Authenticate extends LaravelAuthenticate
 
     protected function redirectTo($request): ?string
     {
-        return route(config('appSection-authentication.login-page-url'));
+        return route(config('apiato.web.login-page-url'));
     }
 }
