@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Ship\Middlewares\Http;
+namespace Apiato\Core\Middlewares\Http;
 
 use Apiato\Core\Exceptions\AuthenticationException;
 use Exception;
 use Illuminate\Auth\Middleware\Authenticate as LaravelAuthenticate;
-use Illuminate\Support\Facades\Config;
 
 class Authenticate extends LaravelAuthenticate
 {
@@ -28,6 +27,6 @@ class Authenticate extends LaravelAuthenticate
 
     protected function redirectTo($request): ?string
     {
-        return route(Config::get('appSection-authentication.login-page-url'));
+        return route(config('appSection-authentication.login-page-url'));
     }
 }
