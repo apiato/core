@@ -44,7 +44,7 @@ abstract class Exception extends BaseException
 
     private function findStatusCode(): int
     {
-        return $this->code ?? Self::DEFAULT_STATUS_CODE;
+        return $this->code ?? self::DEFAULT_STATUS_CODE;
     }
 
     /**
@@ -52,7 +52,7 @@ abstract class Exception extends BaseException
      * Usage: `throw (new MyCustomException())->debug($e)`.
      *
      * @param $error
-     * @param $force
+     * @param bool $force
      *
      * @return $this
      */
@@ -62,7 +62,7 @@ abstract class Exception extends BaseException
             $error = $error->getMessage();
         }
 
-        if ($this->environment != 'testing' || $force === true) {
+        if ($this->environment !== 'testing' || $force === true) {
             Log::error('[DEBUG] ' . $error);
         }
 
