@@ -43,6 +43,11 @@ trait TestsRequestHelperTrait
      */
     protected string $overrideAuth;
 
+    /**
+     * @throws WrongEndpointFormatException
+     * @throws MissingTestEndpointException
+     * @throws UndefinedMethodException
+     */
     public function makeCall(array $data = [], array $headers = []): TestResponse
     {
         // Get or create a testing user. It will get your existing user if you already called this function from your
@@ -68,7 +73,7 @@ trait TestsRequestHelperTrait
                 throw new UndefinedMethodException('Unsupported HTTP Verb (' . $verb . ')!');
         }
 
-        $httpResponse = $this->json($verb, $url, $data, $headers);
+        $httpResponse = $this->json($verb, $url, $data, $this->injectAccessToken($headers));
 
         $this->logResponseData($httpResponse);
 
@@ -77,6 +82,8 @@ trait TestsRequestHelperTrait
 
     /**
      * read `$this->endpoint` property from the test class (`verb@uri`) and convert it to usable data
+     * @throws WrongEndpointFormatException
+     * @throws MissingTestEndpointException
      */
     private function parseEndpoint(): array
     {
@@ -91,9 +98,9 @@ trait TestsRequestHelperTrait
 
         // get the verb and uri values from the array
         extract(array_combine(['verb', 'uri'], $asArray));
+
         /** @var string $verb */
         /** @var string $uri */
-
         return [
             'verb' => $verb,
             'uri' => $uri,
@@ -101,6 +108,9 @@ trait TestsRequestHelperTrait
         ];
     }
 
+    /**
+     * @throws MissingTestEndpointException
+     */
     private function validateEndpointExist(): void
     {
         if (!$this->getEndpoint()) {
@@ -113,6 +123,9 @@ trait TestsRequestHelperTrait
         return !is_null($this->overrideEndpoint) ? $this->overrideEndpoint : $this->endpoint;
     }
 
+    /**
+     * @throws WrongEndpointFormatException
+     */
     private function validateEndpointFormat($separator): void
     {
         // check if string contains the separator
@@ -136,12 +149,42 @@ trait TestsRequestHelperTrait
         return $data ? $url . '?' . http_build_query($data) : $url;
     }
 
+    /**
+     * Attach Authorization Bearer Token to the request headers
+     * if it does not exist already and the authentication is required
+     * for the endpoint `$this->auth = true`.
+     *
+     * @param array $headers
+     *
+     * @return array
+     */
+    private function injectAccessToken(array $headers = []): array
+    {
+        // if endpoint is protected (requires token to access its functionality)
+        if ($this->getAuth() && !$this->headersContainAuthorization($headers)) {
+            // append the token to the header
+            $headers['Authorization'] = 'Bearer ' . $this->getTestingUser()->token();
+        }
+
+        return $headers;
+    }
+
+    public function getAuth(): bool
+    {
+        return !is_null($this->overrideAuth) ? $this->overrideAuth : $this->auth;
+    }
+
+    private function headersContainAuthorization($headers): bool
+    {
+        return Arr::has($headers, 'Authorization');
+    }
+
     private function logResponseData($httpResponse): void
     {
         $responseLoggerEnabled = Config::get('debugger.tests.response_logger');
 
         if ($responseLoggerEnabled) {
-            Log::notice(get_object_vars($httpResponse->getData()));
+            Log::notice((string)get_object_vars($httpResponse->getData()));
         }
     }
 
@@ -150,7 +193,6 @@ trait TestsRequestHelperTrait
         $this->setResponseContent($httpResponse);
         return $this->response = $httpResponse;
     }
-
 
     public function getResponseContentArray()
     {
@@ -167,9 +209,12 @@ trait TestsRequestHelperTrait
         return $this->responseContent = $httpResponse->getContent();
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function getResponseContentObject()
     {
-        return $this->responseContentObject ?: $this->responseContentObject = json_decode($this->getResponseContent(), false);
+        return $this->responseContentObject ?: $this->responseContentObject = json_decode($this->getResponseContent(), false, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -184,7 +229,7 @@ trait TestsRequestHelperTrait
      *
      * @return  $this
      */
-    public function injectId($id, $skipEncoding = false, $replace = '{id}'): self
+    public function injectId($id, bool $skipEncoding, string $replace = '{id}'): static
     {
         // In case Hash ID is enabled it will encode the ID first
         $id = $this->hashEndpointId($id, $skipEncoding);
@@ -207,7 +252,7 @@ trait TestsRequestHelperTrait
      *
      * @return  $this
      */
-    public function endpoint($endpoint): self
+    public function endpoint($endpoint): static
     {
         $this->overrideEndpoint = $endpoint;
 
@@ -217,13 +262,13 @@ trait TestsRequestHelperTrait
     /**
      * Override the default class auth property before making the call
      *
-     * to be used as follow: $this->auth('false')->makeCall($data);
+     * to be used as follows: $this->auth('false')->makeCall($data);
      *
      * @param bool $auth
      *
      * @return  $this
      */
-    public function auth(bool $auth): self
+    public function auth(bool $auth): static
     {
         $this->overrideAuth = $auth;
 
@@ -240,40 +285,10 @@ trait TestsRequestHelperTrait
     protected function transformHeadersToServerVars(array $headers): array
     {
         return collect($headers)->mapWithKeys(function ($value, $name) {
-            $name = strtr(strtoupper($name), '-', '_');
+            $name = str_replace('-', '_', strtoupper($name));
 
             return [$this->formatServerHeaderKey($name) => $value];
         })->all();
-    }
-
-    /**
-     * Attach Authorization Bearer Token to the request headers
-     * if it does not exist already and the authentication is required
-     * for the endpoint `$this->auth = true`.
-     *
-     * @param $headers
-     *
-     * @return  mixed
-     */
-    private function injectAccessToken(array $headers = []): array
-    {
-        // if endpoint is protected (requires token to access it's functionality)
-        if ($this->getAuth() && !$this->headersContainAuthorization($headers)) {
-            // append the token to the header
-            $headers['Authorization'] = 'Bearer ' . $this->getTestingUser()->token;
-        }
-
-        return $headers;
-    }
-
-    public function getAuth(): bool
-    {
-        return !is_null($this->overrideAuth) ? $this->overrideAuth : $this->auth;
-    }
-
-    private function headersContainAuthorization($headers): bool
-    {
-        return Arr::has($headers, 'Authorization');
     }
 
     private function getJsonVerb($text): string
