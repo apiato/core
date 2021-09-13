@@ -229,7 +229,7 @@ trait TestsRequestHelperTrait
      *
      * @return  $this
      */
-    public function injectId($id, bool $skipEncoding, string $replace = '{id}'): static
+    public function injectId($id, bool $skipEncoding = false, string $replace = '{id}'): static
     {
         // In case Hash ID is enabled it will encode the ID first
         $id = $this->hashEndpointId($id, $skipEncoding);
