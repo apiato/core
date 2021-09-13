@@ -41,7 +41,7 @@ trait TestsRequestHelperTrait
     /**
      * Allows users to override the default class property `auth` directly before calling the `makeCall` function.
      */
-    protected string $overrideAuth;
+    protected ?bool $overrideAuth = null;
 
     /**
      * @throws WrongEndpointFormatException
