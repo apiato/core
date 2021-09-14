@@ -84,7 +84,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      *
      * @return  mixed
      */
-    public function paginate($limit = null, $columns = ['*'], $method = "paginate")
+    public function paginate($limit = null, $columns = ['*'], $method = "paginate"): mixed
     {
         $limit = $this->setPaginationLimit($limit);
 
@@ -103,7 +103,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
     {
         // the priority is for the function parameter, if not available then take
         // it from the request if available and if not keep it null.
-        return isset($limit) ? $limit : Request::get('limit');
+        return $limit ?? Request::get('limit');
     }
 
     private function wantsToSkipPagination(mixed $limit): bool
