@@ -44,12 +44,12 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         return substr($fullName, strrpos($fullName, '\\') + 1);
     }
 
-    private function getModelName(string $className): string|array
+    private function getModelName(string $className)
     {
         return str_replace('Repository', '', $className);
     }
 
-    private function getModelNamespace(array|string $modelName): string
+    private function getModelNamespace($modelName): string
     {
         return 'App\\Containers\\' . $this->getCurrentSection() . '\\' . $this->getCurrentContainer() . '\\Models\\' . $modelName;
     }
@@ -99,29 +99,30 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         return $this->cacheablePaginate($limit, $columns, $method);
     }
 
-    private function setPaginationLimit($limit): mixed
+    private function setPaginationLimit($limit)
     {
         // the priority is for the function parameter, if not available then take
         // it from the request if available and if not keep it null.
-        return isset($limit) ? $limit : Request::get('limit');
+        return $limit ?? Request::get('limit');
     }
 
-    private function wantsToSkipPagination(mixed $limit): bool
+    private function wantsToSkipPagination($limit): bool
     {
         return $limit == "0";
     }
 
-    private function canSkipPagination(): mixed
+    private function canSkipPagination()
     {
         // check local (per repository) rule
-        if (!is_null($this->allowDisablePagination))
+        if (!is_null($this->allowDisablePagination)) {
             return $this->allowDisablePagination;
+        }
 
         // check global (.env) rule
         return config('repository.pagination.skip');
     }
 
-    private function exceedsMaxPaginationLimit(mixed $limit): bool
+    private function exceedsMaxPaginationLimit($limit): bool
     {
         return $this->maxPaginationLimit > 0 && $limit > $this->maxPaginationLimit;
     }
