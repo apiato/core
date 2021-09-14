@@ -114,8 +114,9 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
     private function canSkipPagination(): mixed
     {
         // check local (per repository) rule
-        if (!is_null($this->allowDisablePagination))
+        if (!is_null($this->allowDisablePagination)) {
             return $this->allowDisablePagination;
+        }
 
         // check global (.env) rule
         return config('repository.pagination.skip');
