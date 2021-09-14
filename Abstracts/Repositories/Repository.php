@@ -2,7 +2,6 @@
 
 namespace Apiato\Core\Abstracts\Repositories;
 
-use Illuminate\Support\Facades\Config;
 use Prettus\Repository\Contracts\CacheableInterface as PrettusCacheable;
 use Prettus\Repository\Eloquent\BaseRepository as PrettusRepository;
 use Prettus\Repository\Traits\CacheableRepository as PrettusCacheableRepository;
@@ -21,28 +20,38 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
     protected int $maxPaginationLimit = 0;
 
     /**
-     * This function relies on strict conventions.
-     * Conventions:
-     *    - Repository name should be same like it's model name (model: Foo -> repository: FooRepository).
-     *    - If the container contains Models with names different than the container name, the repository class must
-     *          implement model() method and return the FQCN e.g. Role::class
-     * Specify Model class name.
+     * Define the maximum amount of entries per page that is returned.
+     * Set to 0 to "disable" this feature
+     */
+    protected ?bool $allowDisablePagination = null;
+
+    /**
+     * This function relies on strict conventions:
+     *    - Repository name should be same as it's model name (model: Foo -> repository: FooRepository).
+     *    - If the container contains Models with names different from the container name, the repository class must
+     *      implement model() method and return the FQCN e.g. Role::class
      */
     public function model(): string
     {
-        // 1_ get the full namespace of the child class who's extending this class.
-        // 2_ remove the namespace and keep the class name
-        // 3_ remove the word Repository from the class name
-        // 4_ check if the container name is set on the repository to indicate that the
-        //    model has different name than the container holding it
-        // 5_ build the namespace of the Model based on the conventions
+        $className = $this->getClassName(); // e.g. UserRepository
+        $modelName = $this->getModelName($className); // e.g. User
+        return $this->getModelNamespace($modelName);
+    }
 
+    private function getClassName(): string
+    {
         $fullName = static::class;
-        $className = substr($fullName, strrpos($fullName, '\\') + 1);
-        $classOnly = str_replace('Repository', '', $className);
-        $modelNamespace = 'App\\Containers\\' . $this->getCurrentSection() . '\\' . $this->getCurrentContainer() . '\\Models\\' . $classOnly;
+        return substr($fullName, strrpos($fullName, '\\') + 1);
+    }
 
-        return $modelNamespace;
+    private function getModelName(string $className): string|array
+    {
+        return str_replace('Repository', '', $className);
+    }
+
+    private function getModelNamespace(array|string $modelName): string
+    {
+        return 'App\\Containers\\' . $this->getCurrentSection() . '\\' . $this->getCurrentContainer() . '\\Models\\' . $modelName;
     }
 
     private function getCurrentSection(): string
@@ -67,7 +76,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      *
      * Apply pagination to the response. Use ?limit= to specify the amount of entities in the response.
      * The client can request all data (skipping pagination) by applying ?limit=0 to the request, if
-     * PAGINATION_SKIP is set to true.
+     * skipping pagination is allowed.
      *
      * @param null $limit
      * @param array $columns
@@ -77,20 +86,43 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      */
     public function paginate($limit = null, $columns = ['*'], $method = "paginate")
     {
-        // the priority is for the function parameter, if not available then take
-        // it from the request if available and if not keep it null.
-        $limit = isset($limit) ? $limit : Request::get('limit');
+        $limit = $this->setPaginationLimit($limit);
 
-        // check, if skipping pagination is allowed and requested by the user
-        if ($limit == "0" && Config::get('repository.pagination.skip')) {
+        if ($this->wantsToSkipPagination($limit) && $this->canSkipPagination()) {
             return $this->all($columns);
         }
 
-        // check for the maximum entries per pagination
-        if (is_int($this->maxPaginationLimit) && $this->maxPaginationLimit > 0 && $limit > $this->maxPaginationLimit) {
+        if ($this->exceedsMaxPaginationLimit($limit)) {
             $limit = $this->maxPaginationLimit;
         }
 
         return $this->cacheablePaginate($limit, $columns, $method);
+    }
+
+    private function setPaginationLimit($limit): mixed
+    {
+        // the priority is for the function parameter, if not available then take
+        // it from the request if available and if not keep it null.
+        return isset($limit) ? $limit : Request::get('limit');
+    }
+
+    private function wantsToSkipPagination(mixed $limit): bool
+    {
+        return $limit == "0";
+    }
+
+    private function canSkipPagination(): mixed
+    {
+        // check local (per repository) rule
+        if (!is_null($this->allowDisablePagination))
+            return $this->allowDisablePagination;
+
+        // check global (.env) rule
+        return config('repository.pagination.skip');
+    }
+
+    private function exceedsMaxPaginationLimit(mixed $limit): bool
+    {
+        return $this->maxPaginationLimit > 0 && $limit > $this->maxPaginationLimit;
     }
 }
