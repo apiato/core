@@ -38,10 +38,9 @@ trait ResponseTrait
         }
 
         // add specific meta information to the response message
-        $this->metaData = [
-            'include' => $transformer->getAvailableIncludes(),
-            'custom' => $meta,
-        ];
+        $availableIncludes = $transformer->getAvailableIncludes();
+        (bool) $availableIncludes && $this->metaData['include'] = $availableIncludes;
+        (bool) $meta && $this->metaData['custom'] = $meta;
 
         // no resource key was set
         if (!$resourceKey) {
@@ -117,7 +116,7 @@ trait ResponseTrait
         return $responseArray;
     }
 
-    public function withMeta($data): self
+    public function withMeta(array $data = []): self
     {
         $this->metaData = $data;
 
