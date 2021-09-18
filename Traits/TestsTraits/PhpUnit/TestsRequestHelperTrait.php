@@ -75,8 +75,6 @@ trait TestsRequestHelperTrait
 
         $httpResponse = $this->json($verb, $url, $data, $this->injectAccessToken($headers));
 
-        $this->logResponseData($httpResponse);
-
         return $this->setResponseObjectAndContent($httpResponse);
     }
 
@@ -177,15 +175,6 @@ trait TestsRequestHelperTrait
     private function headersContainAuthorization($headers): bool
     {
         return Arr::has($headers, 'Authorization');
-    }
-
-    private function logResponseData($httpResponse): void
-    {
-        $responseLoggerEnabled = Config::get('debugger.tests.response_logger');
-
-        if ($responseLoggerEnabled) {
-            Log::notice((string)get_object_vars($httpResponse->getData()));
-        }
     }
 
     public function setResponseObjectAndContent($httpResponse)
