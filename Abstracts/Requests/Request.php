@@ -35,7 +35,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  static
      */
-    public static function injectData($parameters = [], User $user = null, $cookies = [], $files = [], $server = [])
+    public static function injectData(array $parameters = [], User $user = null, array $cookies = [], array $files = [], array $server = []): static
     {
         // if user is passed, will be returned when asking for the authenticated user using `\Auth::user()`
         if ($user) {
@@ -57,13 +57,13 @@ abstract class Request extends LaravelRequest
     /**
      * check if a user has permission to perform an action.
      * User can set multiple permissions (separated with "|") and if the user has
-     * any of the permissions, he will be authorize to proceed with this action.
+     * any of the permissions, he will be authorized to proceed with this action.
      *
      * @param User|null $user
      *
      * @return  bool
      */
-    public function hasAccess(User $user = null)
+    public function hasAccess(User $user = null): bool
     {
         // if not in parameters, take from the request object {$this}
         $user = $user ?: $this->user();
@@ -86,7 +86,7 @@ abstract class Request extends LaravelRequest
         );
 
         // allow access if user has access to any of the defined roles or permissions.
-        return empty($hasAccess) ? true : in_array(true, $hasAccess);
+        return empty($hasAccess) || in_array(true, $hasAccess, true);
     }
 
     /**
@@ -94,7 +94,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    private function hasAnyPermissionAccess($user)
+    private function hasAnyPermissionAccess($user): array
     {
         if (!array_key_exists('permissions', $this->access) || !$this->access['permissions']) {
             return [];
@@ -103,12 +103,9 @@ abstract class Request extends LaravelRequest
         $permissions = is_array($this->access['permissions']) ? $this->access['permissions'] :
             explode('|', $this->access['permissions']);
 
-        $hasAccess = array_map(function ($permission) use ($user) {
-            // Note: internal return
+        return array_map(static function ($permission) use ($user) {
             return $user->hasPermissionTo($permission);
         }, $permissions);
-
-        return $hasAccess;
     }
 
     /**
@@ -116,7 +113,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    private function hasAnyRoleAccess($user)
+    private function hasAnyRoleAccess($user): array
     {
         if (!array_key_exists('roles', $this->access) || !$this->access['roles']) {
             return [];
@@ -125,12 +122,9 @@ abstract class Request extends LaravelRequest
         $roles = is_array($this->access['roles']) ? $this->access['roles'] :
             explode('|', $this->access['roles']);
 
-        $hasAccess = array_map(function ($role) use ($user) {
-            // Note: internal return
+        return array_map(static function ($role) use ($user) {
             return $user->hasRole($role);
         }, $roles);
-
-        return $hasAccess;
     }
 
     /**
@@ -142,7 +136,7 @@ abstract class Request extends LaravelRequest
      *
      * @param array $fields
      */
-    public function mapInput(array $fields)
+    public function mapInput(array $fields): void
     {
         $data = $this->all();
 
@@ -169,7 +163,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    public function all($keys = null)
+    public function all($keys = null): array
     {
         $requestData = parent::all($keys);
 
@@ -190,7 +184,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    private function mergeUrlParametersWithRequestData(array $requestData)
+    private function mergeUrlParametersWithRequestData(array $requestData): array
     {
         if (isset($this->urlParameters) && !empty($this->urlParameters)) {
             foreach ($this->urlParameters as $param) {
@@ -209,7 +203,7 @@ abstract class Request extends LaravelRequest
      *
      * @return mixed
      */
-    public function getInputByKey($key = null, $default = null)
+    public function getInputByKey($key = null, $default = null): mixed
     {
         return data_get($this->all(), $key, $default);
     }
@@ -223,14 +217,14 @@ abstract class Request extends LaravelRequest
      *
      * @return  bool
      */
-    protected function check(array $functions)
+    protected function check(array $functions): bool
     {
         $orIndicator = '|';
         $returns = [];
 
         // iterate all functions in the array
         foreach ($functions as $function) {
-            // in case the value doesn't contains a separator (single function per key)
+            // in case the value doesn't contain a separator (single function per key)
             if (!strpos($function, $orIndicator)) {
                 // simply call the single function and store the response.
                 $returns[] = $this->{$function}();
@@ -247,13 +241,13 @@ abstract class Request extends LaravelRequest
                 // if in_array returned `true` means at least one function returned `true` thus return `true` to allow access.
                 // if in_array returned `false` means no function returned `true` thus return `false` to prevent access.
                 // return single boolean for all the functions found inside the same key.
-                $returns[] = in_array(true, $orReturns) ? true : false;
+                $returns[] = in_array(true, $orReturns, true);
             }
         }
 
         // if in_array returned `true` means a function returned `false` thus return `false` to prevent access.
         // if in_array returned `false` means all functions returned `true` thus return `true` to allow access.
         // return the final boolean
-        return in_array(false, $returns) ? false : true;
+        return !in_array(false, $returns, true);
     }
 }
