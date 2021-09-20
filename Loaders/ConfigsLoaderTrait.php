@@ -4,7 +4,6 @@ namespace Apiato\Core\Loaders;
 
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 
 trait ConfigsLoaderTrait
@@ -15,25 +14,18 @@ trait ConfigsLoaderTrait
         $this->loadConfigs($portConfigsDirectory);
     }
 
-    private function loadConfigs($configFolder, $namespace = null): void
+    private function loadConfigs($configFolder): void
     {
         if (File::isDirectory($configFolder)) {
             $files = File::files($configFolder);
-            $namespace = $namespace ? $namespace . '::' : '';
 
             foreach ($files as $file) {
                 try {
                     $config = File::getRequire($file);
                     $name = File::name($file);
+                    $path = $configFolder . '/' . $name . '.php';
 
-                    // special case for files named config.php (config keyword is omitted)
-                    if ($name === 'config') {
-                        foreach ($config as $key => $value) {
-                            Config::set($namespace . $key, $value);
-                        }
-                    }
-
-                    Config::set($namespace . $name, $config);
+                    $this->mergeConfigFrom($path, $name);
                 } catch (FileNotFoundException $e) {
                 }
             }
