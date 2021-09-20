@@ -3,13 +3,14 @@
 namespace Apiato\Core\Middlewares\Http;
 
 use Apiato\Core\Exceptions\AuthenticationException;
+use \Illuminate\Auth\AuthenticationException as LaravelAuthenticationException;
 use Exception;
 use Illuminate\Auth\Middleware\Authenticate as LaravelAuthenticate;
 
 class Authenticate extends LaravelAuthenticate
 {
     /**
-     * @throws \Illuminate\Auth\AuthenticationException
+     * @throws LaravelAuthenticationException
      * @throws AuthenticationException
      */
     protected function authenticate($request, array $guards): void
