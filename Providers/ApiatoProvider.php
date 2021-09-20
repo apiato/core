@@ -15,12 +15,12 @@ class ApiatoProvider extends AbstractMainProvider
     use AutoLoaderTrait;
     use ValidationTrait;
 
+
     public function boot(): void
     {
         parent::boot();
 
-        // Autoload most of the Containers and Ship Components
-        $this->runLoadersBoot();
+        $this->app->bind('Apiato', Apiato::class);
 
         // Solves the "specified key was too long" error, introduced in L5.4
         Schema::defaultStringLength(191);
@@ -33,11 +33,15 @@ class ApiatoProvider extends AbstractMainProvider
     {
         parent::register();
 
-        $this->overrideLaravelBaseProviders();
-
         // Register Core Facade Classes, should not be registered in the $aliases property, since they are used
         // by the auto-loading scripts, before the $aliases property is executed.
         $this->app->alias(Apiato::class, 'Apiato');
+
+        // Autoload most of the Containers and Ship Components
+        $this->runLoadersBoot();
+
+        $this->overrideLaravelBaseProviders();
+
     }
 
     /**
