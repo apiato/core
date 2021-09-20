@@ -122,11 +122,11 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
 
         // create the default routes for this container
         $this->printInfoMessage('Generating Default Routes');
-        $version = $this->checkParameterOrAsk('docversion', 'Enter the version for *all* API endpoints (integer)', 1);
-        $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for *all* endpoints', ['private', 'public'], 0);
+        $version = $this->checkParameterOrAsk('docversion', 'Enter the version for all API endpoints (integer)', 1);
+        $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for all API endpoints', ['private', 'public'], 0);
 
         // get the URI and remove the first trailing slash
-        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all endpoints (foo/bar)', Str::lower($models)));
+        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all API endpoints (foo/bar)', Str::lower($models)));
         $url = ltrim($url, '/');
 
         $controllertype = Str::lower($this->checkParameterOrChoice('controllertype', 'Select the controller type (Single or Multi Action Controller)', ['SAC', 'MAC'], 0));
