@@ -61,6 +61,8 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
         $this->call('apiato:generate:test:testcase', [
             '--section' => $this->sectionName,
             '--container' => $this->containerName,
+            // $ui will be prepended to this string while creating the file.
+            // So the final file name will become something like Api + TestCase => ApiTestCase
             '--file' => 'TestCase',
             '--ui' => $ui,
         ]);
