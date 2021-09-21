@@ -24,11 +24,8 @@
         "php": "^8.0",
         "apiato/container-installer": "^2.0.8",
         "prettus/l5-repository": "^2.7.4",
-        "fruitcake/laravel-cors": "^1.0.5",
         "spatie/laravel-fractal": "^5.8.1",
         "vinkla/hashids": "^9.1.0",
-        "laravel/tinker": "^2.6.0",
-        "spatie/laravel-permission": "^4.0.0",
         "ext-json": "*",
         "laravel/framework": "^8.0.0",
         "laravel/passport": "^10.0.0",
@@ -57,9 +54,7 @@
                 "Apiato\\Core\\Providers\\ApiatoProvider",
                 "Vinkla\\Hashids\\HashidsServiceProvider",
                 "Prettus\\Repository\\Providers\\RepositoryServiceProvider",
-                "Fruitcake\\Cors\\CorsServiceProvider",
                 "Spatie\\Fractal\\FractalServiceProvider",
-                "Laravel\\Tinker\\TinkerServiceProvider",
                 "Apiato\\Core\\Generator\\GeneratorsServiceProvider"
             ],
             "aliases": {
