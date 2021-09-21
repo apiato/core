@@ -30,6 +30,6 @@ class {{class-name}} extends TestCase
          */
 
         // assert something here
-        self::assertEquals(true, true);
+        $this->assertEquals(true, true);
     }
 }
