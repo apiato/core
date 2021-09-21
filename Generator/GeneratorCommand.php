@@ -16,7 +16,10 @@ use Symfony\Component\Console\Input\InputOption;
 
 abstract class GeneratorCommand extends Command
 {
-    use ParserTrait, PrinterTrait, FileSystemTrait, FormatterTrait;
+    use ParserTrait;
+    use PrinterTrait;
+    use FileSystemTrait;
+    use FormatterTrait;
 
     /**
      * Root directory of all sections
@@ -103,8 +106,9 @@ abstract class GeneratorCommand extends Command
         // Now fix the section, container and file name
         $this->sectionName = $this->removeSpecialChars($this->sectionName);
         $this->containerName = $this->removeSpecialChars($this->containerName);
-        if (!$this->fileType === 'Configuration')
+        if (!$this->fileType === 'Configuration') {
             $this->fileName = $this->removeSpecialChars($this->fileName);
+        }
 
         // And we are ready to start
         $this->printStartedMessage($this->sectionName . ':' . $this->containerName, $this->fileName);
@@ -155,15 +159,16 @@ abstract class GeneratorCommand extends Command
      *
      * @param $param
      * @param $question
-     * @param null $default
-     * @return array|string
+     * @param string|null $default
+     *
+     * @return mixed
      */
-    protected function checkParameterOrAsk($param, $question, $default = null)
+    protected function checkParameterOrAsk($param, $question, ?string $default = null): mixed
     {
-        // Check if we have already have a param set
+        // Check if we already have a param set
         $value = $this->option($param);
-        if ($value == null) {
-            // There was no value provided via CLI, so ask the user..
+        if ($value === null) {
+            // There was no value provided via CLI, so ask the user…
             $value = $this->ask($question, $default);
         }
 
@@ -186,9 +191,7 @@ abstract class GeneratorCommand extends Command
     protected function removeSpecialChars($str): string
     {
         // remove everything that is NOT a character or digit
-        $str = preg_replace('/[^A-Za-z0-9]/', '', $str);
-
-        return $str;
+        return preg_replace('/[^A-Za-z0-9]/', '', $str);
     }
 
     /**
@@ -198,7 +201,7 @@ abstract class GeneratorCommand extends Command
      * @param $data
      * @return mixed
      */
-    private function sanitizeUserData($data)
+    private function sanitizeUserData($data): mixed
     {
         if (!array_key_exists('path-parameters', $data)) {
             $data['path-parameters'] = [];
@@ -237,10 +240,10 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
-     * @return  mixed
+     * @return  string
      * @throws FileNotFoundException
      */
-    protected function getStubContent()
+    protected function getStubContent(): string
     {
         // Check if there is a custom file that overrides the default stubs
         $path = app_path() . '/Ship/' . self::CUSTOM_STUB_PATH;
@@ -269,9 +272,9 @@ abstract class GeneratorCommand extends Command
      * @param      $arg
      * @param bool $trim
      *
-     * @return  array|string
+     * @return array|string|null
      */
-    protected function getInput($arg, $trim = true)
+    protected function getInput($arg, bool $trim = true): array|string|null
     {
         return $trim ? $this->trimString($this->argument($arg)) : $this->argument($arg);
     }
@@ -282,15 +285,16 @@ abstract class GeneratorCommand extends Command
      * @param $param
      * @param $question
      * @param $choices
-     * @param null $default
-     * @return array|string
+     * @param mixed $default
+     *
+     * @return bool|array|string|null
      */
-    protected function checkParameterOrChoice($param, $question, $choices, $default = null)
+    protected function checkParameterOrChoice($param, $question, $choices, mixed $default = null): bool|array|string|null
     {
-        // Check if we have already have a param set
+        // Check if we already have a param set
         $value = $this->option($param);
-        if ($value == null) {
-            // There was no value provided via CLI, so ask the user..
+        if ($value === null) {
+            // There was no value provided via CLI, so ask the user…
             $value = $this->choice($question, $choices, $default);
         }
 
@@ -302,14 +306,14 @@ abstract class GeneratorCommand extends Command
      * @param      $question
      * @param bool $default
      *
-     * @return mixed
+     * @return string|array|bool|null
      */
-    protected function checkParameterOrConfirm($param, $question, $default = false)
+    protected function checkParameterOrConfirm($param, $question, bool $default = false): string|array|bool|null
     {
-        // Check if we have already have a param set
+        // Check if we already have a param set
         $value = $this->option($param);
         if ($value === null) {
-            // There was no value provided via CLI, so ask the user..
+            // There was no value provided via CLI, so ask the user...
             $value = $this->confirm($question, $default);
         }
 
