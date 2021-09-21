@@ -52,7 +52,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
     /**
      * @return array
      */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Transformer for');
         $full = $this->checkParameterOrConfirm('full', 'Generate a Transformer with all fields', false);
@@ -80,7 +80,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
         ];
     }
 
-    private function getListOfAllAttributes($full, $model)
+    private function getListOfAllAttributes($full, $model): string
     {
         $indent = str_repeat(' ', 12);
         $_model = Str::lower($model);
@@ -94,7 +94,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
             $columns = Schema::getColumnListing($obj->getTable());
 
             foreach ($columns as $column) {
-                if (in_array($column, $obj->getHidden())) {
+                if (in_array($column, $obj->getHidden(), false)) {
                     // Skip all hidden fields of respective model
                     continue;
                 }
@@ -108,7 +108,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
             'created_at' => '$' . $_model . '->created_at',
             'updated_at' => '$' . $_model . '->updated_at',
             'readable_created_at' => '$' . $_model . '->created_at->diffForHumans()',
-            'readable_updated_at' => '$' . $_model . '->updated_at->diffForHumans()'
+            'readable_updated_at' => '$' . $_model . '->updated_at->diffForHumans()',
         ]);
 
         $attributes = "";
