@@ -52,26 +52,13 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
      */
     public function getUserInputs()
     {
-        // We manually set the filename to TestCase as this is the preferred name within apiato
-        $this->fileName = 'TestCase';
-
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['Generic', 'API', 'WEB', 'CLI'], 0));
 
-        // We need to generate the generic testcase first!
-        if ($ui != 'generic') {
-            $this->call('apiato:generate:test:testcase', [
-                '--section' => $this->sectionName,
-                '--container' => $this->containerName,
-                '--file' => 'TestCase',
-                '--ui' => 'generic',
-            ]);
-
-            // However, as this generator here is NOT the one for the generic TestCase, we need to prepend the UI before
-            // this results in something like ApiTestCase
-            $this->fileName = Str::ucfirst($ui) . $this->fileName;
-        }
-
         $this->stubName = 'tests/testcase/' . $ui . '.stub';
+        if ($ui != 'generic') {
+            $this->fileName = Str::ucfirst($ui) . $this->fileName;
+            $this->pathStructure = '{section-name}/{container-name}/UI/' . Str::upper($ui) . '/Tests/*';
+        }
 
         return [
             'path-parameters' => [

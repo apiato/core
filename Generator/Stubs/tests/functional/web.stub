@@ -2,7 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests\Functional;
 
-use App\Containers\{{section-name}}\{{container-name}}\Tests\WebTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests\WebTestCase;
 
 /**
  * Class {{class-name}}.
@@ -18,7 +18,7 @@ class {{class-name}} extends WebTestCase
     // fake some access rights
     protected array $access = [
         'permissions' => '',
-        'roles'       => '',
+        'roles' => '',
     ];
 
     public function test(): void

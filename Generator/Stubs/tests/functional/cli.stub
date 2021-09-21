@@ -2,7 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\CLI\Tests\Functional;
 
-use App\Containers\{{section-name}}\{{container-name}}\Tests\CliTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\UI\CLI\Tests\CliTestCase;
 
 /**
  * Class {{class-name}}.

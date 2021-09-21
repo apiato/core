@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\Tests;
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests;
 
-use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase as BaseTestCase;
+use App\Ship\Parents\Tests\PhpUnit\TestCase as ShipTestCase;
 
 /**
  * Class {{class-name}}.
  *
  * This is the container API TestCase class. Use this class to add your container specific API related helper functions.
  */
-class {{class-name}} extends BaseTestCase
+class {{class-name}} extends ShipTestCase
 {
     // ..
 }

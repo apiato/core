@@ -2,7 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
 
-use App\Containers\{{section-name}}\{{container-name}}\Tests\ApiTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
 
 /**
  * Class {{class-name}}.
@@ -18,7 +18,7 @@ class {{class-name}} extends ApiTestCase
     // fake some access rights
     protected array $access = [
         'permissions' => '',
-        'roles'       => '',
+        'roles' => '',
     ];
 
     public function test(): void
