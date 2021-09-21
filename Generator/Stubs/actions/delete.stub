@@ -3,12 +3,16 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Delete{{model}}Task;
+use App\Ship\Exceptions\DeleteResourceFailedException;
 use App\Ship\Parents\Actions\Action;
 use App\Ship\Parents\Requests\Request;
 
 class Delete{{model}}Action extends Action
 {
-    public function run(Request $request)
+    /**
+     * @throws DeleteResourceFailedException
+     */
+    public function run(Request $request): ?int
     {
         return app(Delete{{model}}Task::class)->run($request->id);
     }

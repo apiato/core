@@ -27,8 +27,8 @@ class {{class-name}} extends Transformer
 {{attributes}}
         ];
 
-        return $response = $this->ifAdmin([
-            'real_id'    => ${{_model}}->id,
+        return $this->ifAdmin([
+            'real_id' => ${{_model}}->id,
             // 'deleted_at' => ${{_model}}->deleted_at,
         ], $response);
     }

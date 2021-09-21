@@ -10,21 +10,12 @@ class {{class-name}} extends Model
 
     ];
 
-    protected $attributes = [
-
-    ];
-
     protected $hidden = [
 
     ];
 
     protected $casts = [
 
-    ];
-
-    protected $dates = [
-        'created_at',
-        'updated_at',
     ];
 
     /**

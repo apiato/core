@@ -6,12 +6,13 @@ use Apiato\Core\Exceptions\InvalidTransformerException;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Update{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
+use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Controllers\{{base-controller}};
 
 class {{class-name}} extends {{base-controller}}
 {
     /**
-     * @throws InvalidTransformerException
+     * @throws InvalidTransformerException|UpdateResourceFailedException
      */
     public function update{{model}}(Update{{model}}Request $request): array
     {
