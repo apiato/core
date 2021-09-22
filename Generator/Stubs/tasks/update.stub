@@ -9,19 +9,19 @@ use Exception;
 
 class Update{{model}}Task extends Task
 {
-    protected {{model}}Repository $repository;
-
-    public function __construct({{model}}Repository $repository)
-    {
-        $this->repository = $repository;
+    public function __construct(
+        private {{model}}Repository $repository
+    ) {
     }
 
+    /**
+     * @throws UpdateResourceFailedException
+     */
     public function run($id, array $data)
     {
         try {
             return $this->repository->update($data, $id);
-        }
-        catch (Exception $exception) {
+        } catch (Exception) {
             throw new UpdateResourceFailedException();
         }
     }

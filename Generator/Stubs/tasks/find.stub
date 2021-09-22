@@ -9,19 +9,19 @@ use Exception;
 
 class Find{{model}}ByIdTask extends Task
 {
-    protected {{model}}Repository $repository;
-
-    public function __construct({{model}}Repository $repository)
-    {
-        $this->repository = $repository;
+    public function __construct(
+        private {{model}}Repository $repository
+    ) {
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function run($id)
     {
         try {
             return $this->repository->find($id);
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             throw new NotFoundException();
         }
     }

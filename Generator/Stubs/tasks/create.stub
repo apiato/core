@@ -9,19 +9,19 @@ use Exception;
 
 class Create{{model}}Task extends Task
 {
-    protected {{model}}Repository $repository;
-
-    public function __construct({{model}}Repository $repository)
-    {
-        $this->repository = $repository;
+    public function __construct(
+        private {{model}}Repository $repository
+    ) {
     }
 
+    /**
+     * @throws CreateResourceFailedException
+     */
     public function run(array $data)
     {
         try {
             return $this->repository->create($data);
-        }
-        catch (Exception $exception) {
+        } catch (Exception) {
             throw new CreateResourceFailedException();
         }
     }
