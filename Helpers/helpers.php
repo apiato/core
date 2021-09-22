@@ -7,7 +7,7 @@ if (!function_exists('uncamelize')) {
      * @param bool $uppercase
      * @return string|string[]|null
      */
-    function uncamelize($word, $splitter = " ", $uppercase = true)
+    function uncamelize($word, string $splitter = " ", bool $uppercase = true): array|string|null
     {
         $word = preg_replace('/(?!^)[[:upper:]][[:lower:]]/', '$0',
             preg_replace('/(?!^)[[:upper:]]+/', $splitter . '$0', $word));
