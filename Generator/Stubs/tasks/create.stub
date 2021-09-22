@@ -17,7 +17,7 @@ class Create{{model}}Task extends Task
     /**
      * @throws CreateResourceFailedException
      */
-    public function run(array $data)
+    public function run(array $data): {{model}}
     {
         try {
             return $this->repository->create($data);
