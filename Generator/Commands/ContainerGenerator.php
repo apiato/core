@@ -69,7 +69,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
             $this->call('apiato:generate:container:api', [
                 '--section' => $sectionName,
                 '--container' => $containerName,
-                '--file' => 'composer'
+                '--file' => 'composer',
             ]);
         }
 
@@ -77,7 +77,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
             $this->call('apiato:generate:container:web', [
                 '--section' => $sectionName,
                 '--container' => $containerName,
-                '--file' => 'composer'
+                '--file' => 'composer',
             ]);
         }
 
