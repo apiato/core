@@ -117,9 +117,17 @@ trait HasRequestCriteriaTrait
     private function arrayToSearchQuery(array $decodedSearchArray): string
     {
         $decodedSearchQuery = '';
-        foreach ($decodedSearchArray as $key => $value) {
-            $decodedSearchQuery .= "$key:$value;";
+
+        $fields = array_keys($decodedSearchArray);
+        $length = count($fields);
+        for ($i = 0; $i < $length; $i++) {
+            $field = $fields[$i];
+            $decodedSearchQuery .= "$field:$decodedSearchArray[$field]";
+            if ($length !== 1 && $i < $length - 1) {
+                $decodedSearchQuery .= ';';
+            }
         }
+
         return $decodedSearchQuery;
     }
 
