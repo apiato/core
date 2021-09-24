@@ -10,6 +10,15 @@ abstract class RoutesProvider extends LaravelRouteServiceProvider
     use RoutesLoaderTrait;
 
     /**
+     * The path to the "home" route for your application.
+     *
+     * This is used by Laravel authentication to redirect users after login.
+     *
+     * @var string
+     */
+    public const HOME = '/home';
+
+    /**
      * The controller namespace for the application.
      *
      * When present, controller route declarations will automatically be prefixed with this namespace.
@@ -18,13 +27,39 @@ abstract class RoutesProvider extends LaravelRouteServiceProvider
      */
     // protected $namespace = 'App\\Http\\Controllers';
 
-    /**
-     * Define your route model bindings, pattern filters, etc.
-     */
-    public function boot(): void
-    {
-        parent::boot();
-    }
+// TODO update to new laravel rate limitter
+//    /**
+//     * Define your route model bindings, pattern filters, etc.
+//     *
+//     * @return void
+//     */
+//    public function boot(): void
+//    {
+//        $this->configureRateLimiting();
+//
+//        $this->routes(function () {
+//            Route::prefix('api')
+//                ->middleware('api')
+//                ->namespace($this->namespace)
+//                ->group(base_path('routes/api.php'));
+//
+//            Route::middleware('web')
+//                ->namespace($this->namespace)
+//                ->group(base_path('routes/web.php'));
+//        });
+//    }
+//
+//    /**
+//     * Configure the rate limiters for the application.
+//     *
+//     * @return void
+//     */
+//    protected function configureRateLimiting(): void
+//    {
+//        RateLimiter::for('api', function (Request $request) {
+//            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+//        });
+//    }
 
     /**
      * Define the routes for the application.
