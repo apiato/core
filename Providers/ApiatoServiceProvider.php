@@ -2,13 +2,13 @@
 
 namespace Apiato\Core\Providers;
 
-use Apiato\Core\Abstracts\Providers\MainProvider as AbstractMainProvider;
+use Apiato\Core\Abstracts\Providers\MainServiceProvider as AbstractMainServiceProvider;
 use Apiato\Core\Foundation\Apiato;
 use Apiato\Core\Loaders\AutoLoaderTrait;
 use Apiato\Core\Traits\ValidationTrait;
 use Illuminate\Support\Facades\Schema;
 
-class ApiatoProvider extends AbstractMainProvider
+class ApiatoServiceProvider extends AbstractMainServiceProvider
 {
     use AutoLoaderTrait;
     use ValidationTrait;

@@ -51,7 +51,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Apiato\\Core\\Providers\\ApiatoProvider",
+                "Apiato\\Core\\Providers\\ApiatoServiceProvider",
                 "Vinkla\\Hashids\\HashidsServiceProvider",
                 "Prettus\\Repository\\Providers\\RepositoryServiceProvider",
                 "Spatie\\Fractal\\FractalServiceProvider",

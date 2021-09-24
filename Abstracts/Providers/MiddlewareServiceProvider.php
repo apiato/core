@@ -4,7 +4,7 @@ namespace Apiato\Core\Abstracts\Providers;
 
 use Apiato\Core\Loaders\MiddlewaresLoaderTrait;
 
-abstract class MiddlewareProvider extends MainProvider
+abstract class MiddlewareServiceProvider extends MainServiceProvider
 {
     use MiddlewaresLoaderTrait;
 

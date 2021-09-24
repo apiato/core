@@ -4,7 +4,7 @@ namespace Apiato\Core\Abstracts\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as LaravelAuthServiceProvider;
 
-abstract class AuthProvider extends LaravelAuthServiceProvider
+abstract class AuthServiceProvider extends LaravelAuthServiceProvider
 {
     /**
      * The policy mappings for the application.

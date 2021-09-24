@@ -6,7 +6,7 @@ use Apiato\Core\Loaders\AliasesLoaderTrait;
 use Apiato\Core\Loaders\ProvidersLoaderTrait;
 use Illuminate\Support\ServiceProvider as LaravelAppServiceProvider;
 
-abstract class MainProvider extends LaravelAppServiceProvider
+abstract class MainServiceProvider extends LaravelAppServiceProvider
 {
     use ProvidersLoaderTrait;
     use AliasesLoaderTrait;
