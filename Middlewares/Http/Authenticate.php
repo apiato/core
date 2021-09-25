@@ -3,11 +3,11 @@
 namespace Apiato\Core\Middlewares\Http;
 
 use Apiato\Core\Exceptions\AuthenticationException;
-use \Illuminate\Auth\AuthenticationException as LaravelAuthenticationException;
 use Exception;
-use Illuminate\Auth\Middleware\Authenticate as LaravelAuthenticate;
+use Illuminate\Auth\AuthenticationException as LaravelAuthenticationException;
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
-class Authenticate extends LaravelAuthenticate
+class Authenticate extends Middleware
 {
     /**
      * @throws LaravelAuthenticationException
@@ -24,10 +24,5 @@ class Authenticate extends LaravelAuthenticate
                 $this->unauthenticated($request, $guards);
             }
         }
-    }
-
-    protected function redirectTo($request): ?string
-    {
-        return route(config('apiato.web.login-page-url'));
     }
 }
