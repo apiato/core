@@ -39,18 +39,12 @@ trait AutoLoaderTrait
 
     public function runLoaderRegister(): void
     {
+        $this->loadConfigsFromShip();
         $this->loadOnlyShipProviderFromShip();
 
         foreach (Apiato::getAllContainerPaths() as $containerPath) {
             $this->loadConfigsFromContainers($containerPath);
             $this->loadOnlyMainProvidersFromContainers($containerPath);
         }
-        // NOTE: Ship configs should be loaded after Container configs are loaded.
-        // This allows us to override configs of Vendor Section Containers by publishing their configs to the Ship
-        // Configs folder.
-        // So this is what happens:
-        // 1. Configs from Vendor Section Containers are loaded
-        // 2. Configs from Ship Configs folder are loaded and will override their counterparts from Containers
-        $this->loadConfigsFromShip();
     }
 }
