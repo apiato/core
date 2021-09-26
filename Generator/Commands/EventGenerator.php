@@ -76,11 +76,11 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
 
         $this->printInfoMessage('!!! Do not forget to register the Event and/or EventListener !!!');
 
-        $stub = Str::lower($this->option('stub')) ?? 'generic';
-            
+        $stub = Str::lower($this->option('stub')) ?: 'generic';
+
         // Load a new stub-file based on the users choice
         $this->stubName = 'events/' . $stub . '.stub';
-        
+
         return [
             'path-parameters' => [
                 'section-name' => $this->sectionName,
