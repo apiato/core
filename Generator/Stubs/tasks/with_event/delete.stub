@@ -22,7 +22,7 @@ class Delete{{model}}Task extends Task
     {
         try {
             $result =  $this->repository->delete($id);
-            OrderDeletedEvent::dispatch($result);
+            {{event}}::dispatch($result);
 
             return $result;
         } catch (Exception) {
