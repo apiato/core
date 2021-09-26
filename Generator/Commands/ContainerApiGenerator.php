@@ -120,6 +120,15 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--full' => false,
         ]);
 
+        // create a factory for the model
+        $this->printInfoMessage('Generating Factory for the Model');
+        $this->call('apiato:generate:factory', [
+            '--section' => $sectionName,
+            '--container' => $containerName,
+            '--file' => $containerName . 'Factory',
+            '--model' => $model,
+        ]);
+
         // create the default routes for this container
         $this->printInfoMessage('Generating Default Routes');
         $version = $this->checkParameterOrAsk('docversion', 'Enter the version for all API endpoints (integer)', 1);
