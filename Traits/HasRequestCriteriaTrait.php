@@ -64,9 +64,8 @@ trait HasRequestCriteriaTrait
 
         $query = request()->query();
 
-        if (array_key_exists('search', $query)) {
+        if (array_key_exists('search', $query) && $query['search']) {
             $query['search'] = $this->decodeSearchFields($fieldsToDecode, $query['search']);
-
             request()->query->replace($query);
         }
     }
@@ -79,6 +78,13 @@ trait HasRequestCriteriaTrait
     private function decodeSearchFields(array $fieldsToDecode, string $searchQuery): string
     {
         $searchArray = $this->searchQueryToArray($searchQuery);
+        if (!$searchArray) {
+            if (Hashids::decode($searchQuery)) {
+                $searchQuery .= ';id:' . Hashids::decode($searchQuery)[0];
+            }
+            return $searchQuery;
+        }
+
         foreach ($fieldsToDecode as $field) {
             if (array_key_exists($field, $searchArray)) {
                 $searchArray[$field] = Hashids::decode($searchArray[$field])[0];
