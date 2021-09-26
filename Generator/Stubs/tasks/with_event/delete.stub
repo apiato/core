@@ -21,7 +21,7 @@ class Delete{{model}}Task extends Task
     public function run($id): int
     {
         try {
-            $result =  $this->repository->delete($id);
+            $result = $this->repository->delete($id);
             {{event}}::dispatch($result);
 
             return $result;
