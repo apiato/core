@@ -67,9 +67,6 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
 
         $models = Pluralizer::plural($model);
 
-        $entity = Str::lower($model);
-        $entities = Pluralizer::plural($entity);
-
         return [
             'path-parameters' => [
                 'section-name' => $this->sectionName,
@@ -83,8 +80,6 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
                 'class-name' => $this->fileName,
                 'model' => $model,
                 'models' => $models,
-                'entity' => $entity,
-                'entities' => $entities,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
