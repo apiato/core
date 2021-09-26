@@ -4,17 +4,14 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Events;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Ship\Parents\Events\Event;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\PrivateChannel;
 
 class {{class-name}} extends Event
 {
-    use SerializesModels;
-
-    public {{model}} ${{_model}};
-
-    public function __construct({{model}} ${{_model}})
-    {
-        $this->{{_model}} = ${{_model}};
+    public function __construct(
+        public {{model}} ${{_model}}
+    ) {
     }
 
     /**
@@ -23,5 +20,10 @@ class {{class-name}} extends Event
     public function broadcastOn()
     {
         // return
+    }
+
+    public function broadcastOn(): Channel|array
+    {
+        return new PrivateChannel('channel-name');
     }
 }
