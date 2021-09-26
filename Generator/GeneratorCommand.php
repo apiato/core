@@ -36,7 +36,7 @@ abstract class GeneratorCommand extends Command
     private const STUB_PATH = 'Stubs/*';
 
     /**
-     * Relative path for the custom stubs (relative to the app/Ship directory!
+     * Relative path for the custom stubs (relative to the app/Ship directory!)
      */
     private const CUSTOM_STUB_PATH = 'Generators/CustomStubs/*';
 
