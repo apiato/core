@@ -26,7 +26,7 @@ class Find{{model}}ByIdTask extends Task
             {{event}}::dispatch(${{_model}});
 
             return ${{_model}}
-        } catch (Exception $exception) {
+        } catch (Exception) {
             throw new NotFoundException();
         }
     }
