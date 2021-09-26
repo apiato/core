@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
+
+use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
+use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
+use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Parents\Tasks\Task;
+use Exception;
+
+class Find{{model}}ByIdTask extends Task
+{
+    public function __construct(
+        private {{model}}Repository $repository
+    ) {
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function run($id): {{model}}
+    {
+        try {
+            ${{_model}} = $this->repository->find($id);
+            {{event}}::dispatch(${{_model}});
+
+            return ${{_model}}
+        } catch (Exception $exception) {
+            throw new NotFoundException();
+        }
+    }
+}

@@ -241,6 +241,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 '--file' => $route['task'],
                 '--model' => $model,
                 '--stub' => $route['stub'],
+                '--event' => $generateEvents ? $route['event'] : false,
             ]);
 
             if ($generateEvents) {

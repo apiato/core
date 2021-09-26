@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
+
+use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
+use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
+use App\Ship\Exceptions\DeleteResourceFailedException;
+use App\Ship\Parents\Tasks\Task;
+use Exception;
+
+class Delete{{model}}Task extends Task
+{
+    public function __construct(
+        private {{model}}Repository $repository
+    ) {
+    }
+
+    /**
+     * @throws DeleteResourceFailedException
+     */
+    public function run($id): ?int
+    {
+        try {
+            $result =  $this->repository->delete($id);
+            OrderDeletedEvent::dispatch($result);
+
+            return $result;
+        } catch (Exception) {
+            throw new DeleteResourceFailedException();
+        }
+    }
+}

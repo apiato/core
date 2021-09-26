@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
+
+use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
+use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
+use App\Ship\Parents\Tasks\Task;
+
+class GetAll{{models}}Task extends Task
+{
+    public function __construct(
+        private {{model}}Repository $repository
+    ) {
+    }
+
+    public function run(): mixed
+    {
+        $result = $this->repository->paginate();
+        {{event}}::dispatch($result);
+
+        return $result;
+    }
+}

@@ -19,6 +19,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
     public $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this task is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
+        ['event', null, InputOption::VALUE_OPTIONAL, 'The Event this task fires'],
     ];
     /**
      * The console command name.
@@ -62,8 +63,10 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
             0)
         );
 
+
+        $event = $this->option('event');
         // load a new stub-file based on the users choice
-        $this->stubName = 'tasks/' . $stub . '.stub';
+        $this->stubName = ($event ? 'tasks/with_event' : 'tasks/') . $stub . '.stub';
 
         $models = Pluralizer::plural($model);
 
@@ -80,6 +83,8 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
                 'class-name' => $this->fileName,
                 'model' => $model,
                 'models' => $models,
+                '_model' => Str::lower($model),
+                'event' => $event,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
