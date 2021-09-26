@@ -17,7 +17,7 @@ class Delete{{model}}Task extends Task
     /**
      * @throws DeleteResourceFailedException
      */
-    public function run($id): ?int
+    public function run($id): int
     {
         try {
             return $this->repository->delete($id);

@@ -12,7 +12,7 @@ class Delete{{model}}Action extends Action
     /**
      * @throws DeleteResourceFailedException
      */
-    public function run(Request $request): ?int
+    public function run(Request $request): int
     {
         return app(Delete{{model}}Task::class)->run($request->id);
     }
