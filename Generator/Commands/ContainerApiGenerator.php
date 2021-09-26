@@ -20,7 +20,9 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of all endpoints to be generated (1, 2, ...)'],
         ['doctype', null, InputOption::VALUE_OPTIONAL, 'The type of all endpoints to be generated (private, public)'],
         ['url', null, InputOption::VALUE_OPTIONAL, 'The base URI of all endpoints (/stores, /cars, ...)'],
-        ['controllertype', null, InputOption::VALUE_OPTIONAL, 'The controller type (SAC, MAC)']
+        ['controllertype', null, InputOption::VALUE_OPTIONAL, 'The controller type (SAC, MAC)'],
+        ['events', null, InputOption::VALUE_OPTIONAL, 'Generate Events?'],
+        ['listeners', null, InputOption::VALUE_OPTIONAL, 'The controller type (SAC, MAC)'],
     ];
     /**
      * The console command name.
@@ -141,6 +143,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         $controllertype = Str::lower($this->checkParameterOrChoice('controllertype', 'Select the controller type (Single or Multi Action Controller)', ['SAC', 'MAC'], 0));
 
         $generateEvents = $this->checkParameterOrConfirm('events', 'Do you want to generate the corresponding CRUD Events for this Container?', false);
+        $generateListeners = false;
         if ($generateEvents) {
             $generateListeners = $this->checkParameterOrConfirm('listeners', 'Do you want to generate the corresponding Event Listeners for this Events?', false);
         }
