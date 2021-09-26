@@ -44,7 +44,7 @@ class EventListenerGenerator extends GeneratorCommand implements ComponentsGener
     /**
      * The name of the stub file.
      */
-    protected string $stubName = 'events/listener.stub';
+    protected string $stubName = 'listeners/listener.stub';
 
     /**
      * @return array

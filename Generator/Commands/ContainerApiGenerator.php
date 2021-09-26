@@ -250,6 +250,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--container' => $containerName,
                     '--file' => $route['event'],
                     '--model' => $model,
+                    '--stub' => $route['stub'],
                     '--listener' => $generateListeners,
                 ]);
             }

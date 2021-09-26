@@ -10,16 +10,8 @@ use Illuminate\Broadcasting\PrivateChannel;
 class {{class-name}} extends Event
 {
     public function __construct(
-        public {{model}} ${{_model}}
+        public int $result
     ) {
-    }
-
-    /**
-     * Get the channels the event should be broadcast on.
-     */
-    public function broadcastOn()
-    {
-        // return
     }
 
     public function broadcastOn(): Channel|array
