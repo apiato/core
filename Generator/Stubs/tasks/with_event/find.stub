@@ -25,7 +25,7 @@ class Find{{model}}ByIdTask extends Task
             ${{_model}} = $this->repository->find($id);
             {{event}}::dispatch(${{_model}});
 
-            return ${{_model}}
+            return ${{_model}};
         } catch (Exception) {
             throw new NotFoundException();
         }

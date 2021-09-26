@@ -25,7 +25,7 @@ class Create{{model}}Task extends Task
             ${{_model}} = $this->repository->create($data);
             {{event}}::dispatch(${{_model}});
 
-            return ${{_model}}
+            return ${{_model}};
         } catch (Exception) {
             throw new CreateResourceFailedException();
         }
