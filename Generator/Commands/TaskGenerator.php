@@ -66,7 +66,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
 
         $event = $this->option('event');
         // load a new stub-file based on the users choice
-        $this->stubName = ($event ? 'tasks/with_event' : 'tasks/') . $stub . '.stub';
+        $this->stubName = ($event ? 'tasks/with_event/' : 'tasks/') . $stub . '.stub';
 
         $models = Pluralizer::plural($model);
 
