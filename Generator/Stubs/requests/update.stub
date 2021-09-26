@@ -11,7 +11,7 @@ class {{class-name}} extends Request
      */
     protected array $access = [
         'permissions' => '',
-        'roles'       => '',
+        'roles' => '',
     ];
 
     /**
@@ -35,7 +35,7 @@ class {{class-name}} extends Request
     public function rules(): array
     {
         return [
-            'id' => 'required'
+            // 'id' => 'required'
         ];
     }
 
