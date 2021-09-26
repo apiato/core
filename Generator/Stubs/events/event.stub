@@ -12,14 +12,9 @@ class {{class-name}} extends Event
 
     public {{model}} ${{_model}};
 
-    /**
-     * {{class-name}} constructor.
-     *
-     * @param ${{_model}}
-     */
     public function __construct({{model}} ${{_model}})
     {
-        $this->_model = ${{_model}};
+        $this->{{_model}} = ${{_model}};
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\Events;
+namespace App\Containers\{{section-name}}\{{container-name}}\Listeners;
 
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{model}};
 use App\Ship\Parents\Listeners\Listener;
@@ -13,7 +13,7 @@ class {{class-name}} extends Listener implements ShouldQueue
         //
     }
 
-    public function handle({{model}} $event)
+    public function handle({{model}} $event): void
     {
         //
     }
