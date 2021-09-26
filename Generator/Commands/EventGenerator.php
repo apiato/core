@@ -17,7 +17,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model to generate this Event for'],
-        ['handler', null, InputOption::VALUE_OPTIONAL, 'Generate a Handler for this Event?'],
+        ['listener', null, InputOption::VALUE_OPTIONAL, 'Generate a Listener for this Event?'],
     ];
     /**
      * The console command name.
@@ -30,7 +30,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $description = 'Create a new Event class and its corresponding Handler';
+    protected $description = 'Create a new Event class and its corresponding Listener';
     /**
      * The type of class being generated.
      */
@@ -38,7 +38,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * The structure of the file path.
      */
-    protected string $pathStructure = '{section-name}/{container-name}/Events/Events/*';
+    protected string $pathStructure = '{section-name}/{container-name}/Events/*';
     /**
      * The structure of the file name.
      */
@@ -55,25 +55,25 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Event for', Str::ucfirst($this->containerName));
 
-        $handler = $this->checkParameterOrConfirm('handler', 'Do you want to generate a Handler for this Event?', true);
-        if ($handler) {
-            // We need to generate a corresponding handler
+        $listener = $this->checkParameterOrConfirm('listener', 'Do you want to generate a Listener for this Event?', false);
+        if ($listener) {
+            // We need to generate a corresponding listener
             // so call the other command
-            $status = $this->call('apiato:generate:eventhandler', [
+            $status = $this->call('apiato:generate:listener', [
                 '--section' => $this->sectionName,
                 '--container' => $this->containerName,
-                '--file' => $this->fileName . 'Handler',
-                '--event' => $this->fileName
+                '--file' => $this->fileName . 'Listener',
+                '--event' => $this->fileName,
             ]);
 
             if ($status == 0) {
-                $this->printInfoMessage('The Handler for Event was successfully generated');
+                $this->printInfoMessage('The Listener for Event was successfully generated');
             } else {
-                $this->printErrorMessage('Could not generate the corresponding Handler!');
+                $this->printErrorMessage('Could not generate the corresponding Listener!');
             }
         }
 
-        $this->printInfoMessage('!!! Do not forget to register the Event and/or EventHandler !!!');
+        $this->printInfoMessage('!!! Do not forget to register the Event and/or EventListener !!!');
 
         return [
             'path-parameters' => [
@@ -87,6 +87,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
                 'model' => $model,
+                '_model' => Str::lower($model),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

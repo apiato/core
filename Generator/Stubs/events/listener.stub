@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Events;
+
+use App\Containers\{{section-name}}\{{container-name}}\Events\{{model}};
+use App\Ship\Parents\Listeners\Listener;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class {{class-name}} extends Listener implements ShouldQueue
+{
+    public function __construct()
+    {
+        //
+    }
+
+    public function handle({{model}} $event)
+    {
+        //
+    }
+}

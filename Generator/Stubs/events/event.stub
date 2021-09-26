@@ -1,32 +1,32 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\Events\Events;
+namespace App\Containers\{{section-name}}\{{container-name}}\Events;
 
-use App\Ship\Parents\Events\Event;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
+use App\Ship\Parents\Events\Event;
 use Illuminate\Queue\SerializesModels;
 
 class {{class-name}} extends Event
 {
     use SerializesModels;
 
-    public {{model}} $entity;
+    public {{model}} ${{_model}};
 
     /**
      * {{class-name}} constructor.
      *
-     * @param $entity
+     * @param ${{_model}}
      */
-    public function __construct($entity)
+    public function __construct({{model}} ${{_model}})
     {
-        $this->entity = $entity;
+        $this->_model = ${{_model}};
     }
 
     /**
      * Get the channels the event should be broadcast on.
      */
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
-        return [];
+        // return
     }
 }

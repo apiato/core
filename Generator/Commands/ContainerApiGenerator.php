@@ -140,6 +140,13 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
 
         $controllertype = Str::lower($this->checkParameterOrChoice('controllertype', 'Select the controller type (Single or Multi Action Controller)', ['SAC', 'MAC'], 0));
 
+        $generateEvents = $this->checkParameterOrConfirm('events', 'Do you want to generate the corresponding CRUD Events for this Container?', false);
+        if ($generateEvents) {
+            $generateListeners = $this->checkParameterOrConfirm('listeners', 'Do you want to generate the corresponding Event Listeners for this Events?', false);
+        }
+
+        $generateEvents ?: $this->printInfoMessage('Generating CRUD Events');
+        $generateListeners ?: $this->printInfoMessage('Generating Event Listeners');
         $this->printInfoMessage('Creating Requests for Routes');
         $this->printInfoMessage('Generating Default Actions');
         $this->printInfoMessage('Generating Default Tasks');
@@ -155,6 +162,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'GetAll' . $models . 'Action',
                 'request' => 'GetAll' . $models . 'Request',
                 'task' => 'GetAll' . $models . 'Task',
+                'event' => $models . 'ListedEvent',
                 'controller' => 'GetAll' . $models . 'Controller',
             ],
             [
@@ -166,6 +174,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Find' . $model . 'ById' . 'Action',
                 'request' => 'Find' . $model . 'ById' . 'Request',
                 'task' => 'Find' . $model . 'ById' . 'Task',
+                'event' => $model . 'FoundById' . 'Event',
                 'controller' => 'Find' . $model . 'ById' . 'Controller',
             ],
             [
@@ -177,6 +186,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Create' . $model . 'Action',
                 'request' => 'Create' . $model . 'Request',
                 'task' => 'Create' . $model . 'Task',
+                'event' => $model . 'CreatedEvent',
                 'controller' => 'Create' . $model . 'Controller',
             ],
             [
@@ -188,6 +198,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Update' . $model . 'Action',
                 'request' => 'Update' . $model . 'Request',
                 'task' => 'Update' . $model . 'Task',
+                'event' => $model . 'UpdatedEvent',
                 'controller' => 'Update' . $model . 'Controller',
             ],
             [
@@ -199,6 +210,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Delete' . $model . 'Action',
                 'request' => 'Delete' . $model . 'Request',
                 'task' => 'Delete' . $model . 'Task',
+                'event' => $model . 'DeletedEvent',
                 'controller' => 'Delete' . $model . 'Controller',
             ],
         ];
@@ -209,7 +221,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 '--container' => $containerName,
                 '--file' => $route['request'],
                 '--ui' => $ui,
-                '--stub' => $route['stub']
+                '--stub' => $route['stub'],
             ]);
 
             $this->call('apiato:generate:action', [
@@ -227,6 +239,16 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 '--model' => $model,
                 '--stub' => $route['stub'],
             ]);
+
+            if ($generateEvents) {
+                $this->call('apiato:generate:event', [
+                    '--section' => $sectionName,
+                    '--container' => $containerName,
+                    '--file' => $route['event'],
+                    '--model' => $model,
+                    '--listener' => $generateListeners,
+                ]);
+            }
 
             if ($controllertype === 'sac') {
                 $this->call('apiato:generate:route', [

@@ -6,7 +6,7 @@ use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Symfony\Component\Console\Input\InputOption;
 
-class EventHandlerGenerator extends GeneratorCommand implements ComponentsGenerator
+class EventListenerGenerator extends GeneratorCommand implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -15,28 +15,28 @@ class EventHandlerGenerator extends GeneratorCommand implements ComponentsGenera
      * @var  array
      */
     public $inputs = [
-        ['event', null, InputOption::VALUE_OPTIONAL, 'The Event to generate this Handler for'],
+        ['event', null, InputOption::VALUE_OPTIONAL, 'The Event to generate this Listener for'],
     ];
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'apiato:generate:eventhandler';
+    protected $name = 'apiato:generate:listener';
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new EventHandler class';
+    protected $description = 'Create a new Event Listener class';
     /**
      * The type of class being generated.
      */
-    protected string $fileType = 'EventHandler';
+    protected string $fileType = 'Listener';
     /**
      * The structure of the file path.
      */
-    protected string $pathStructure = '{section-name}/{container-name}/Events/Handlers/*';
+    protected string $pathStructure = '{section-name}/{container-name}/Listeners/*';
     /**
      * The structure of the file name.
      */
@@ -44,16 +44,16 @@ class EventHandlerGenerator extends GeneratorCommand implements ComponentsGenera
     /**
      * The name of the stub file.
      */
-    protected string $stubName = 'events/eventhandler.stub';
+    protected string $stubName = 'events/listener.stub';
 
     /**
      * @return array
      */
     public function getUserInputs()
     {
-        $event = $this->checkParameterOrAsk('event', 'Enter the name of the Event to generate this Handler for');
+        $event = $this->checkParameterOrAsk('event', 'Enter the name of the Event to generate this Listener for');
 
-        $this->printInfoMessage('!!! Do not forget to register the Event and/or EventHandler !!!');
+        $this->printInfoMessage('!!! Do not forget to register the Event and/or Event Listener !!!');
 
         return [
             'path-parameters' => [
