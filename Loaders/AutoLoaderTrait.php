@@ -21,24 +21,30 @@ trait AutoLoaderTrait
      */
     public function runLoadersBoot(): void
     {
-        // The config files should be loaded first from all the directories in their own loop
-        $this->loadConfigsFromShip();
-        $this->loadLocalsFromShip();
         $this->loadMigrationsFromShip();
+        $this->loadLocalsFromShip();
         $this->loadViewsFromShip();
         $this->loadConsolesFromShip();
         $this->loadHelpersFromShip();
-        $this->loadOnlyShipProviderFromShip();
 
         // Iterate over all the containers folders and autoload most of the components
         foreach (Apiato::getAllContainerPaths() as $containerPath) {
-            $this->loadConfigsFromContainers($containerPath);
-            $this->loadLocalsFromContainers($containerPath);
-            $this->loadOnlyMainProvidersFromContainers($containerPath);
             $this->loadMigrationsFromContainers($containerPath);
-            $this->loadConsolesFromContainers($containerPath);
+            $this->loadLocalsFromContainers($containerPath);
             $this->loadViewsFromContainers($containerPath);
+            $this->loadConsolesFromContainers($containerPath);
             $this->loadHelpersFromContainers($containerPath);
+        }
+    }
+
+    public function runLoaderRegister(): void
+    {
+        $this->loadConfigsFromShip();
+        $this->loadOnlyShipProviderFromShip();
+
+        foreach (Apiato::getAllContainerPaths() as $containerPath) {
+            $this->loadConfigsFromContainers($containerPath);
+            $this->loadOnlyMainProvidersFromContainers($containerPath);
         }
     }
 }
