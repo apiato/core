@@ -70,7 +70,7 @@ trait HasRequestCriteriaTrait
         return config('apiato.hash-id');
     }
 
-    private function isSearching(array|string|null $query): bool
+    private function isSearching(array $query): bool
     {
         return array_key_exists('search', $query) && $query['search'];
     }
