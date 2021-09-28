@@ -27,7 +27,7 @@ trait HashIdTrait
      * @param null $field The field of the model to be hashed
      * @return  mixed
      */
-    public function getHashedKey($field = null)
+    public function getHashedKey($field = null): mixed
     {
         // if no key is set, use the default key name (i.e., id)
         if ($field === null) {
@@ -35,7 +35,7 @@ trait HashIdTrait
         }
 
         // hash the ID only if hash-id enabled in the config
-        if (Config::get('apiato.hash-id')) {
+        if (config('apiato.hash-id')) {
             // we need to get the VALUE for this KEY (model field)
             $value = $this->getAttribute($field);
             return $this->encoder($value);
@@ -129,11 +129,12 @@ trait HashIdTrait
      * validation features like `exists:table,id`
      * @param array $requestData
      * @return array
+     * @throws IncorrectIdException
      */
     protected function decodeHashedIdsBeforeValidation(array $requestData): array
     {
         // the hash ID feature must be enabled to use this decoder feature.
-        if (Config::get('apiato.hash-id') && isset($this->decode) && !empty($this->decode)) {
+        if (isset($this->decode) && !empty($this->decode) && Config::get('apiato.hash-id')) {
             // iterate over each key (ID that needs to be decoded) and call keys locator to decode them
             foreach ($this->decode as $key) {
                 $requestData = $this->locateAndDecodeIds($requestData, $key);
@@ -150,30 +151,36 @@ trait HashIdTrait
      * @param $key
      *
      * @return  mixed
+     * @throws IncorrectIdException
      */
-    private function locateAndDecodeIds($requestData, $key)
+    private function locateAndDecodeIds($requestData, $key): mixed
     {
         // split the key based on the "."
         $fields = explode('.', $key);
         // loop through all elements of the key.
-        $transformedData = $this->processField($requestData, $fields);
-
-        return $transformedData;
+        return $this->processField($requestData, $fields, $key);
     }
 
     /**
      * Recursive function to process (decode) the request data with a given key
      * @param $data
      * @param $keysTodo
-     * @return array|mixed
+     * @param $currentFieldName
+     * @return mixed
+     * @throws IncorrectIdException
      */
-    private function processField($data, $keysTodo)
+    private function processField($data, $keysTodo, $currentFieldName): mixed
     {
         // check if there are no more fields to be processed
         if (empty($keysTodo)) {
             // there are no more keys left - so basically we need to decode this entry
-            $decodedId = $this->decode($data);
-            return $decodedId;
+            $decodedField = $this->decode($data);
+
+            if (empty($decodedField)) {
+                throw new IncorrectIdException('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
+            }
+
+            return $decodedField;
         }
 
         // take the first element from the field
@@ -187,20 +194,21 @@ trait HashIdTrait
             // process each field of the array (and go down one level!)
             $fields = $data;
             foreach ($fields as $key => $value) {
-                $data[$key] = $this->processField($value, $keysTodo);
+                $data[$key] = $this->processField($value, $keysTodo, $currentFieldName . '[' . $key . ']');
             }
             return $data;
 
-        } else {
-            // check if the key we are looking for does, in fact, really exist
-            if (!array_key_exists($field, $data)) {
-                return $data;
-            }
+        }
 
-            // go down one level
-            $value = $data[$field];
-            $data[$field] = $this->processField($value, $keysTodo);
+        // check if the key we are looking for does, in fact, really exist
+        if (!array_key_exists($field, $data)) {
             return $data;
         }
+
+        // go down one level
+        $value = $data[$field];
+        $data[$field] = $this->processField($value, $keysTodo, $field);
+
+        return $data;
     }
 }

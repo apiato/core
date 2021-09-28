@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Requests;
 
+use Apiato\Core\Exceptions\IncorrectIdException;
 use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\SanitizerTrait;
 use Apiato\Core\Traits\StateKeeperTrait;
@@ -162,6 +163,7 @@ abstract class Request extends LaravelRequest
      * @param null $keys
      *
      * @return  array
+     * @throws IncorrectIdException
      */
     public function all($keys = null): array
     {
