@@ -19,6 +19,6 @@ class Update{{model}}Action extends Action
             // add your request data here
         ]);
 
-        return app(Update{{model}}Task::class)->run($request->id, $data);
+        return app(Update{{model}}Task::class)->run($data, $request->id);
     }
 }

@@ -18,7 +18,7 @@ class Update{{model}}Task extends Task
     /**
      * @throws UpdateResourceFailedException
      */
-    public function run($id, array $data): {{model}}
+    public function run(array $data, $id): {{model}}
     {
         try {
             return $this->repository->update($data, $id);
