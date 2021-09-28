@@ -87,13 +87,13 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
 
         // create the MainServiceProvider for the container
         $this->printInfoMessage('Generating MainServiceProvider');
-        $this->call('apiato:generate:serviceprovider', [
+        $this->call('apiato:generate:provider', [
             '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => 'MainServiceProvider',
             '--stub' => 'mainserviceprovider',
         ]);
-
+        
         // create the model and repository for this container
         $this->printInfoMessage('Generating Model and Repository');
         $this->call('apiato:generate:model', [
@@ -252,6 +252,15 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--model' => $model,
                     '--stub' => $route['stub'],
                     '--listener' => $generateListeners,
+                ]);
+
+                // create the EventServiceProvider for the container
+                $this->printInfoMessage('Generating EventServiceProvider');
+                $this->call('apiato:generate:provider', [
+                    '--section' => $sectionName,
+                    '--container' => $containerName,
+                    '--file' => 'EventServiceProvider',
+                    '--stub' => 'eventserviceprovider',
                 ]);
             }
 

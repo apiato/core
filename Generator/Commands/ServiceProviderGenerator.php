@@ -23,13 +23,13 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
      *
      * @var string
      */
-    protected $name = 'apiato:generate:serviceprovider';
+    protected $name = 'apiato:generate:provider';
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a ServiceProvider for a Container';
+    protected $description = 'Create a Service Provider for a Container';
     /**
      * The type of class being generated.
      */
@@ -55,7 +55,7 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
         $stub = Str::lower($this->checkParameterOrChoice(
             'stub',
             'Select the Stub you want to load',
-            ['Generic', 'MainServiceProvider'],
+            ['Generic', 'MainServiceProvider', 'EventServiceProvider', 'MiddlewareServiceProvider'],
             0)
         );
 

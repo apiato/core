@@ -84,7 +84,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
 
         // create the MainServiceProvider for the container
         $this->printInfoMessage('Generating MainServiceProvider');
-        $this->call('apiato:generate:serviceprovider', [
+        $this->call('apiato:generate:provider', [
             '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => 'MainServiceProvider',
