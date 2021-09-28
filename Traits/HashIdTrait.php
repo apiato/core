@@ -4,11 +4,7 @@ namespace Apiato\Core\Traits;
 
 use Apiato\Core\Exceptions\IncorrectIdException;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
-use function is_null;
-use function strtolower;
-
 
 trait HashIdTrait
 {
@@ -16,7 +12,7 @@ trait HashIdTrait
      * endpoint to be skipped from decoding their ID's (example for external ID's)
      */
     private array $skippedEndpoints = [
-//        'orders/{id}/external',
+        // 'orders/{id}/external',
     ];
 
     /**
@@ -38,6 +34,7 @@ trait HashIdTrait
         if (config('apiato.hash-id')) {
             // we need to get the VALUE for this KEY (model field)
             $value = $this->getAttribute($field);
+
             return $this->encoder($value);
         }
 
@@ -47,24 +44,6 @@ trait HashIdTrait
     public function encoder($id): string
     {
         return Hashids::encode($id);
-    }
-
-    public function findKeyAndReturnValue(&$subject, $findKey, $callback)
-    {
-        // if the value is not an array, then you have reached the deepest point of the branch, so return the value.
-        if (!is_array($subject)) {
-            return $subject;
-        }
-
-        foreach ($subject as $key => $value) {
-            if ($key == $findKey && isset($subject[$findKey])) {
-                $subject[$key] = $callback($subject[$findKey]);
-                break;
-            }
-
-            // add the value with the recursive call
-            $this->findKeyAndReturnValue($value, $findKey, $callback);
-        }
     }
 
     public function decodeArray(array $ids): array
@@ -77,7 +56,7 @@ trait HashIdTrait
         return $result;
     }
 
-    public function decode($id, $parameter = null)
+    public function decode($id)
     {
         // check if passed as null, (could be an optional decodable variable)
         if (is_null($id) || strtolower($id) == 'null') {
@@ -96,32 +75,6 @@ trait HashIdTrait
     public function encode($id): string
     {
         return $this->encoder($id);
-    }
-
-    /**
-     * Automatically decode any found `id` in the URL, no need to be used anymore.
-     * Since now the user will define what needs to be decoded in the request.
-     *
-     * All ID's passed with all endpoints will be decoded before entering the Application
-     */
-    public function runHashedIdsDecoder(): void
-    {
-        if (Config::get('apiato.hash-id')) {
-            Route::bind('id', function ($id, $route) {
-                // skip decoding some endpoints
-                if (!in_array($route->uri(), $this->skippedEndpoints)) {
-                    // decode the ID in the URL
-                    $decoded = $this->decoder($id);
-
-                    if (empty($decoded)) {
-                        throw new IncorrectIdException('ID (' . $id . ') is incorrect, consider using the hashed ID
-                        instead of the numeric ID.');
-                    }
-
-                    return $decoded[0];
-                }
-            });
-        }
     }
 
     /**
