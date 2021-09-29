@@ -4,16 +4,16 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Find{{model}}ByIdTask;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Find{{model}}Request;
 use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Actions\Action;
-use App\Ship\Parents\Requests\Request;
 
 class Find{{model}}ByIdAction extends Action
 {
     /**
      * @throws NotFoundException
      */
-    public function run(Request $request): {{model}}
+    public function run(Find{{model}}Request $request): {{model}}
     {
         return app(Find{{model}}ByIdTask::class)->run($request->id);
     }

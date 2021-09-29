@@ -19,6 +19,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
     public $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this action is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
+        ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Action for.'],
     ];
     /**
      * The console command name.
@@ -55,6 +56,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
     public function getUserInputs()
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this action is for.', $this->containerName);
+        $ui = Str::upper($this->checkParameterOrChoice('ui', 'Which UI is this Action for?', ['API', 'WEB'], 0));
         $stub = Str::lower($this->checkParameterOrChoice(
             'stub',
             'Select the Stub you want to load',
@@ -80,6 +82,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
                 'class-name' => $this->fileName,
                 'model' => $model,
                 'models' => $models,
+                'ui' => $ui,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

@@ -4,16 +4,16 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Update{{model}}Task;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Update{{model}}Request;
 use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Actions\Action;
-use App\Ship\Parents\Requests\Request;
 
 class Update{{model}}Action extends Action
 {
     /**
      * @throws UpdateResourceFailedException
      */
-    public function run(Request $request): {{model}}
+    public function run(Update{{model}}Request $request): {{model}}
     {
         $data = $request->sanitizeInput([
             // add your request data here

@@ -4,8 +4,8 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\GetAll{{models}}Task;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\GetAll{{models}}Request;
 use App\Ship\Parents\Actions\Action;
-use App\Ship\Parents\Requests\Request;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class GetAll{{models}}Action extends Action
@@ -14,7 +14,7 @@ class GetAll{{models}}Action extends Action
      * @throws CoreInternalErrorException
      * @throws RepositoryException
      */
-    public function run(Request $request): mixed
+    public function run(GetAll{{models}}Request $request): mixed
     {
         return app(GetAll{{models}}Task::class)->addRequestCriteria()->run();
     }

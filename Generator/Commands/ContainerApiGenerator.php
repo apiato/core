@@ -231,6 +231,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => $route['action'],
+                '--ui' => $ui,
                 '--model' => $model,
                 '--stub' => $route['stub'],
             ]);
