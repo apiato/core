@@ -6,8 +6,6 @@ use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\UnsupportedFractalIncludeException;
 use ErrorException;
 use Exception;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -17,31 +15,6 @@ use League\Fractal\TransformerAbstract as FractalTransformer;
 
 abstract class Transformer extends FractalTransformer
 {
-    /**
-     * @param $adminResponse
-     * @param $clientResponse
-     *
-     * @return  array
-     */
-    public function ifAdmin($adminResponse, $clientResponse): array
-    {
-        $user = $this->user();
-
-        if (!is_null($user) && $user->hasAdminRole()) {
-            return array_merge($clientResponse, $adminResponse);
-        }
-
-        return $clientResponse;
-    }
-
-    /**
-     * @return  Authenticatable|null
-     */
-    public function user(): ?Authenticatable
-    {
-        return Auth::user();
-    }
-
     /**
      * @param mixed $data
      * @param callable|FractalTransformer $transformer
