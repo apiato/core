@@ -6,7 +6,7 @@ use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
 use App\Ship\Parents\Tasks\Task;
 
-class GetAll{{models}}Task extends Task
+class {{class-name}} extends Task
 {
     public function __construct(
         protected {{model}}Repository $repository

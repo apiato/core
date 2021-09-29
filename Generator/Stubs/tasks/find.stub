@@ -8,7 +8,7 @@ use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Tasks\Task;
 use Exception;
 
-class Find{{model}}ByIdTask extends Task
+class {{class-name}} extends Task
 {
     public function __construct(
         protected {{model}}Repository $repository

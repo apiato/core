@@ -7,7 +7,7 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Delete
 use App\Ship\Exceptions\DeleteResourceFailedException;
 use App\Ship\Parents\Actions\Action;
 
-class Delete{{model}}Action extends Action
+class {{class-name}} extends Action
 {
     /**
      * @throws DeleteResourceFailedException

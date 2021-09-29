@@ -8,7 +8,7 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Update
 use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Actions\Action;
 
-class Update{{model}}Action extends Action
+class {{class-name}} extends Action
 {
     /**
      * @throws UpdateResourceFailedException

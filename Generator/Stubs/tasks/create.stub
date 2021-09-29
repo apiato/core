@@ -8,7 +8,7 @@ use App\Ship\Exceptions\CreateResourceFailedException;
 use App\Ship\Parents\Tasks\Task;
 use Exception;
 
-class Create{{model}}Task extends Task
+class {{class-name}} extends Task
 {
     public function __construct(
         protected {{model}}Repository $repository

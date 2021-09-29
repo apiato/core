@@ -7,7 +7,7 @@ use App\Ship\Exceptions\DeleteResourceFailedException;
 use App\Ship\Parents\Tasks\Task;
 use Exception;
 
-class Delete{{model}}Task extends Task
+class {{class-name}} extends Task
 {
     public function __construct(
         protected {{model}}Repository $repository

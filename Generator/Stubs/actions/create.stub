@@ -8,7 +8,7 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Create
 use App\Ship\Exceptions\CreateResourceFailedException;
 use App\Ship\Parents\Actions\Action;
 
-class Create{{model}}Action extends Action
+class {{class-name}} extends Action
 {
     /**
      * @throws CreateResourceFailedException

@@ -8,7 +8,7 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\GetAll
 use App\Ship\Parents\Actions\Action;
 use Prettus\Repository\Exceptions\RepositoryException;
 
-class GetAll{{models}}Action extends Action
+class {{class-name}} extends Action
 {
     /**
      * @throws CoreInternalErrorException
