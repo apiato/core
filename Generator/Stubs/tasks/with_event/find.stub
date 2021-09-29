@@ -12,7 +12,7 @@ use Exception;
 class Find{{model}}ByIdTask extends Task
 {
     public function __construct(
-        private {{model}}Repository $repository
+        protected {{model}}Repository $repository
     ) {
     }
 

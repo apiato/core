@@ -12,7 +12,7 @@ use Exception;
 class Update{{model}}Task extends Task
 {
     public function __construct(
-        private {{model}}Repository $repository
+        protected {{model}}Repository $repository
     ) {
     }
 
