@@ -4,7 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Find{{model}}ByIdTask;
-use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Find{{model}}}ByIdRequest;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Find{{model}}ByIdRequest;
 use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Actions\Action;
 
@@ -13,7 +13,7 @@ class {{class-name}} extends Action
     /**
      * @throws NotFoundException
      */
-    public function run(Find{{model}}}ByIdRequest $request): {{model}}
+    public function run(Find{{model}}ByIdRequest $request): {{model}}
     {
         return app(Find{{model}}ByIdTask::class)->run($request->id);
     }
