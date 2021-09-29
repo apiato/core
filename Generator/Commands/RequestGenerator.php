@@ -15,7 +15,7 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Request for.'],
-        ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.']
+        ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
 
     /**
@@ -72,7 +72,7 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
-                'user-interface' => Str::upper($ui)
+                'user-interface' => Str::upper($ui),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
