@@ -24,16 +24,17 @@ trait AutoLoaderTrait
         $this->loadMigrationsFromShip();
         $this->loadLocalsFromShip();
         $this->loadViewsFromShip();
-        $this->loadConsolesFromShip();
         $this->loadHelpersFromShip();
+        $this->loadCommandsFromShip();
+        $this->loadCommandsFromCore();
 
         // Iterate over all the containers folders and autoload most of the components
         foreach (Apiato::getAllContainerPaths() as $containerPath) {
             $this->loadMigrationsFromContainers($containerPath);
             $this->loadLocalsFromContainers($containerPath);
             $this->loadViewsFromContainers($containerPath);
-            $this->loadConsolesFromContainers($containerPath);
             $this->loadHelpersFromContainers($containerPath);
+            $this->loadCommandsFromContainers($containerPath);
         }
     }
 
