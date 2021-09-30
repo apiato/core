@@ -32,7 +32,7 @@ trait ConsolesLoaderTrait
 
     private function isRouteFile($consoleFile): bool
     {
-        return $consoleFile->getFilename() === "Routes.php";
+        return $consoleFile->getFilename() === "closures.php";
     }
 
     public function loadCommandsFromShip(): void
