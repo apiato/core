@@ -12,7 +12,7 @@ trait AutoLoaderTrait
     use MigrationsLoaderTrait;
     use ViewsLoaderTrait;
     use ProvidersLoaderTrait;
-    use ConsolesLoaderTrait;
+    use CommandsLoaderTrait;
     use AliasesLoaderTrait;
     use HelpersLoaderTrait;
 

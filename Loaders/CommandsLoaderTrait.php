@@ -5,7 +5,7 @@ namespace Apiato\Core\Loaders;
 use Apiato\Core\Foundation\Facades\Apiato;
 use Illuminate\Support\Facades\File;
 
-trait ConsolesLoaderTrait
+trait CommandsLoaderTrait
 {
     public function loadCommandsFromContainers($containerPath): void
     {
