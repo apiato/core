@@ -43,9 +43,9 @@ trait TestsAuthHelperTrait
      * @param null $userDetails
      * @return mixed
      */
-    public function getTestingUserWithoutAccess($userDetails = null)
+    public function getTestingUserWithoutAccess($userDetails = null, bool $createUserAsAdmin = false): mixed
     {
-        return $this->getTestingUser($userDetails, $this->getNullAccess());
+        return $this->getTestingUser($userDetails, $this->getNullAccess(), $createUserAsAdmin);
     }
 
     /**
