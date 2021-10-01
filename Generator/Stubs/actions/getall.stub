@@ -16,6 +16,6 @@ class {{class-name}} extends Action
      */
     public function run(GetAll{{models}}Request $request): mixed
     {
-        return app(GetAll{{models}}Task::class)->addRequestCriteria()->run();
+        return app(GetAll{{models}}Task::class)->run();
     }
 }

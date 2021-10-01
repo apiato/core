@@ -2,8 +2,10 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
 use App\Ship\Parents\Tasks\Task;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 class {{class-name}} extends Task
 {
@@ -12,8 +14,12 @@ class {{class-name}} extends Task
     ) {
     }
 
+    /**
+     * @throws CoreInternalErrorException
+     * @throws RepositoryException
+     */
     public function run(): mixed
     {
-        return $this->repository->paginate();
+        return $this->addRequestCriteria()->repository->paginate();
     }
 }
