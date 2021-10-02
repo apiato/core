@@ -5,6 +5,7 @@ namespace Apiato\Core\Generator\Commands;
 use Apiato\Core\Generator\GeneratorCommand;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Input\InputOption;
 
 class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenerator
 {
@@ -15,6 +16,8 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
      * @var  array
      */
     public $inputs = [
+        ['model', null, InputOption::VALUE_OPTIONAL, 'The model this tests is for.'],
+        ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
     /**
      * The console command name.
@@ -43,13 +46,22 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
     /**
      * The name of the stub file.
      */
-    protected string $stubName = 'tests/unit/general.stub';
+    protected string $stubName = 'tests/unit/generic.stub';
 
     /**
      * @return array
      */
     public function getUserInputs()
     {
+        $model = $this->option('model');
+        $stub = $this->option('stub');
+
+        // Load a new stub-file if generating container otherwise use generic
+        $this->stubName = $stub ? 'tests/unit/' . Str::lower($stub) . '.stub' : $this->stubName;
+
+        $model = $model ?? $this->containerName;
+        $models = Str::plural($model);
+        
         // We need to generate the TestCase class before
         $this->call('apiato:generate:test:testcase', [
             '--section' => $this->sectionName,
@@ -69,6 +81,9 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
+                'model' => $model,
+                '_model' => Str::lower($model),
+                'models' => $models,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

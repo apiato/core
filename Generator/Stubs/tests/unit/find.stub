@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
+
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
+use App\Containers\{{section-name}}\{{container-name}}\Tasks\Find{{model}}ByIdTask;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
+use App\Ship\Exceptions\NotFoundException;
+
+/**
+ * Class {{class-name}}.
+ *
+ * @group {{_container-name}}
+ * @group unit
+ */
+class {{class-name}} extends TestCase
+{
+    public function testFind{{model}}ById(): void
+    {
+        ${{_model}} = {{model}}::factory()->create();
+
+        $found{{model}} = app(Find{{model}}ByIdTask::class)->run(${{_model}}->id);
+
+        $this->assertEquals(${{_model}}->id, $found{{model}}->id);
+    }
+
+    public function testFind{{model}}WithInvalidId(): void
+    {
+        $this->expectException(NotFoundException::class);
+
+        $noneExistingId = 777777;
+
+        app(Find{{model}}ByIdTask::class)->run($noneExistingId);
+    }
+}
