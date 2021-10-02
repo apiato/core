@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
+
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
+use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
+
+/**
+ * Class {{class-name}}.
+ *
+ * @group {{_container-name}}
+ * @group api
+ */
+class {{class-name}} extends ApiTestCase
+{
+    protected string $endpoint = 'delete@v1/{{_models}}/{id}';
+
+    protected array $access = [
+        'roles' => '',
+        'permissions' => '',
+    ];
+
+    public function testDeleteExisting{{model}}(): void
+    {
+        ${{_model}} = {{model}}::factory()->create();
+
+        $response = $this->injectId(${{_model}}->id)->makeCall();
+
+        $response->assertStatus(204);
+    }
+
+    public function testDeleteNonExisting{{model}}(): void
+    {
+        $invalidId = 7777;
+
+        $response = $this->injectId($invalidId)->makeCall([]);
+
+        $response->assertStatus(404);
+    }
+
+    // TODO TEST
+    // add some roles and permissions to this route's request
+    // then add them to the $access array above
+    // uncomment this test to test accesses
+//    public function testGivenHaveNoAccess_CannotDelete{{model}}(): void
+//    {
+//        $this->getTestingUserWithoutAccess();
+//        ${{_model}} = {{model}}::factory()->create();
+//
+//        $response = $this->injectId(${{_model}}->id)->makeCall();
+//
+//        $response->assertStatus(403);
+//    }
+}

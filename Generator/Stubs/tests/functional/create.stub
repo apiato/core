@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
+
+use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
+use Illuminate\Testing\Fluent\AssertableJson;
+
+/**
+ * Class {{class-name}}.
+ *
+ * @group {{_container-name}}
+ * @group api
+ */
+class {{class-name}} extends ApiTestCase
+{
+    protected string $endpoint = 'post@v1/{{_models}}';
+
+    protected array $access = [
+        'roles' => '',
+        'permissions' => '',
+    ];
+
+    // TODO TEST
+    public function testCreate{{model}}(): void
+    {
+        $data = [
+            // 'something' => 'value',
+        ];
+
+        $response = $this->makeCall($data);
+
+        $response->assertStatus(201);
+        $response->assertJson(
+            fn (AssertableJson $json) =>
+                $json->has('data')
+                    ->where('data.object', '{{model}}')
+                    // ->where('data.something', $data['something'])
+                    ->etc()
+        );
+    }
+
+    // TODO TEST
+//    public function testCreate{{model}}WithInvalidFields(): void
+//    {
+//        $data = [
+//            // add some invalid field data here
+//            // 'something' => 'invalid',
+//        ];
+//
+//        $response = $this->makeCall($data);
+//
+//        $response->assertStatus(422);
+//        // validate errors and their messages here
+//        // $response->assertJson(
+//        //     fn (AssertableJson $json) =>
+//        //        $json->has('message')
+//        //            ->has('errors')
+//        //            ->where('errors.something.0', 'Some validation error message.')
+//        // );
+//    }
+
+    // TODO TEST
+    // add some roles and permissions to this route's request
+    // then add them to the $access array above
+    // uncomment this test to test accesses
+//    public function testGivenHaveNoAccess_CannotCreate{{model}}(): void
+//    {
+//        $this->getTestingUserWithoutAccess();
+//
+//        $response = $this->makeCall([]);
+//
+//        $response->assertStatus(403);
+//        $response->assertJson(
+//            fn (AssertableJson $json) =>
+//                $json->has('message')
+//                    ->where('message', 'This action is unauthorized.')
+//                    ->etc()
+//        );
+//    }
+}

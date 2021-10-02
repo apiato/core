@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
+
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
+use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
+use Illuminate\Testing\Fluent\AssertableJson;
+
+/**
+ * Class {{class-name}}.
+ *
+ * @group {{_container-name}}
+ * @group api
+ */
+class {{class-name}} extends ApiTestCase
+{
+    protected string $endpoint = 'patch@v1/{{_models}}/{id}';
+
+    protected array $access = [
+        'roles' => '',
+        'permissions' => '',
+    ];
+
+    // TODO TEST
+    public function testUpdateExisting{{model}}(): void
+    {
+        ${{_model}} = {{model}}::factory()->create();
+        $data = [
+            // add some fillable fields here
+            // 'some_field' => 'new_field_data',
+        ];
+
+        $response = $this->injectId(${{_model}}->id)->makeCall($data);
+
+        $response->assertStatus(200);
+        $response->assertJson(
+            fn (AssertableJson $json) =>
+                $json->has('data')
+                    ->where('data.object', '{{model}}')
+                    ->where('data.id', ${{_model}}->getHashedKey())
+                    // ->where('data.some_field', $data['some_field'])
+                    ->etc()
+        );
+    }
+
+    public function testUpdateNonExisting{{model}}(): void
+    {
+        $invalidId = 7777;
+
+        $response = $this->injectId($invalidId)->makeCall([]);
+
+        $response->assertStatus(404);
+    }
+
+    // TODO TEST
+//    public function testUpdateExisting{{model}}WithEmptyValues(): void
+//    {
+//        ${{_model}} = {{model}}::factory()->create();
+//        $data = [
+//            // add some fillable fields here
+//            // 'first_field' => '',
+//            // 'second_field' => '',
+//        ];
+//
+//        $response = $this->injectId(${{_model}}->id)->makeCall($data);
+//
+//        $response->assertStatus(422);
+//        $response->assertJson(
+//            fn (AssertableJson $json) =>
+//            $json->has('errors')
+//                // ->where('errors.first_field.0', 'assert validation errors')
+//                // ->where('errors.second_field.0', 'assert validation errors')
+//                ->etc()
+//        );
+//    }
+}
