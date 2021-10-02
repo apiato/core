@@ -54,10 +54,19 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['Generic', 'API', 'WEB', 'CLI'], 0));
 
+        $type = match ($ui) {
+            'api', 'web', 'cli' => 'functional',
+            default => 'unit',
+        };
+
         $this->stubName = 'tests/testcase/' . $ui . '.stub';
-        if ($ui != 'generic') {
+        if ($type === 'functional') {
             $this->fileName = Str::ucfirst($ui) . $this->fileName;
             $this->pathStructure = '{section-name}/{container-name}/UI/' . Str::upper($ui) . '/Tests/*';
+        }
+
+        if ($type === 'unit') {
+            $this->pathStructure = '{section-name}/{container-name}/Tests/*';
         }
 
         return [
