@@ -45,7 +45,7 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
     /**
      * The name of the stub file.
      */
-    protected string $stubName = 'tests/functional/general.stub';
+    protected string $stubName = 'tests/functional/generic.stub';
 
     /**
      * @return array
