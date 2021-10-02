@@ -18,6 +18,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
     public $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this tests is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
+        ['event', null, InputOption::VALUE_OPTIONAL, 'The Event to generate tests for'],
     ];
     /**
      * The console command name.
@@ -55,9 +56,15 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
     {
         $model = $this->option('model');
         $stub = $this->option('stub');
+        $event = $this->option('event');
 
-        // Load a new stub-file if generating container otherwise use generic
-        $this->stubName = $stub ? 'tests/unit/' . Str::lower($stub) . '.stub' : $this->stubName;
+        if ($stub) {
+            if ($event) {
+                $this->stubName = 'tests/unit/with_event/'. Str::lower($stub) . '.stub';
+            } else {
+                $this->stubName = 'tests/unit/' . Str::lower($stub) . '.stub';
+            }
+        }
 
         $model = $model ?? $this->containerName;
         $models = Str::plural($model);
@@ -84,6 +91,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
                 'model' => $model,
                 '_model' => Str::lower($model),
                 'models' => $models,
+                'event' => $event,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
