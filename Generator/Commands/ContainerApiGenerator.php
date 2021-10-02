@@ -286,6 +286,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--file' => $route['unittest'],
                     '--model' => $model,
                     '--stub' => $route['stub'],
+                    '--event' => $generateEvents ? $route['event'] : false,
                 ]);
 
                 $this->call('apiato:generate:test:functional', [
