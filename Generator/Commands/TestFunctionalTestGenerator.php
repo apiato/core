@@ -55,16 +55,16 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
     public function getUserInputs()
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the Test', ['API', 'WEB', 'CLI'], 0));
-        
+
         $model = $this->option('model');
         $stub = $this->option('stub');
-        
+
         // Load a new stub-file if generating container otherwise use generic
         $this->stubName = $stub ? 'tests/functional/' . Str::lower($stub) . '.stub' : 'tests/functional/' . $ui . '.stub';
 
         $model = $model ?? $this->containerName;
         $models = Str::plural($model);
-        
+
         // We need to generate the TestCase class before
         $this->call('apiato:generate:test:testcase', [
             '--section' => $this->sectionName,

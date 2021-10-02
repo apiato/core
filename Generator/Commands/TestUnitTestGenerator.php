@@ -61,7 +61,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
 
         $model = $model ?? $this->containerName;
         $models = Str::plural($model);
-        
+
         // We need to generate the TestCase class before
         $this->call('apiato:generate:test:testcase', [
             '--section' => $this->sectionName,
