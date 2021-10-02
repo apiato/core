@@ -120,7 +120,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
 
         $controllertype = Str::lower($this->checkParameterOrChoice('controllertype', 'Select the controller type (Single or Multi Action Controller)', ['SAC', 'MAC'], 0));
 
-        $this->printInfoMessage('Creating Requests for Routes');
+        $this->printInfoMessage('Generating Requests for Routes');
         $this->printInfoMessage('Generating Default Actions');
         $this->printInfoMessage('Generating Default Tasks');
         $this->printInfoMessage('Generating Default Controller/s');
