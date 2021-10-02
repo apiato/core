@@ -5,8 +5,10 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
 use App\Ship\Exceptions\DeleteResourceFailedException;
+use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Tasks\Task;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class {{class-name}} extends Task
 {
@@ -17,6 +19,7 @@ class {{class-name}} extends Task
 
     /**
      * @throws DeleteResourceFailedException
+     * @throws NotFoundException
      */
     public function run($id): int
     {
@@ -25,6 +28,8 @@ class {{class-name}} extends Task
             {{event}}::dispatch($result);
 
             return $result;
+        } catch (ModelNotFoundException) {
+            throw new NotFoundException();
         } catch (Exception) {
             throw new DeleteResourceFailedException();
         }

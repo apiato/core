@@ -2,9 +2,11 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
 use App\Ship\Parents\Tasks\Task;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 class {{class-name}} extends Task
 {
@@ -13,9 +15,13 @@ class {{class-name}} extends Task
     ) {
     }
 
+    /**
+     * @throws CoreInternalErrorException
+     * @throws RepositoryException
+     */
     public function run(): mixed
     {
-        $result = $this->repository->paginate();
+        $result = $this->addRequestCriteria()->repository->paginate();
         {{event}}::dispatch($result);
 
         return $result;
