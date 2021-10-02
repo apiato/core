@@ -154,7 +154,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         $generateEvents ?: $this->printInfoMessage('Generating CRUD Events');
         $generateListeners ?: $this->printInfoMessage('Generating Event Listeners');
         $generateListeners ?: $this->printInfoMessage('Generating Tests for Container');
-        $this->printInfoMessage('Creating Requests for Routes');
+        $this->printInfoMessage('Generating Requests for Routes');
         $this->printInfoMessage('Generating Default Actions');
         $this->printInfoMessage('Generating Default Tasks');
         $this->printInfoMessage('Generating Default Controller/s');
@@ -293,6 +293,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--container' => $containerName,
                     '--file' => $route['functionaltest'],
                     '--model' => $model,
+                    '--ui' => $ui,
                     '--stub' => $route['stub'],
                 ]);
             }
