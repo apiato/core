@@ -298,6 +298,15 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--event' => false,
                 ]);
 
+                $this->call('apiato:generate:test:unit', [
+                    '--section' => $sectionName,
+                    '--container' => $containerName,
+                    '--file' => $models . 'MigrationTest',
+                    '--model' => $model,
+                    '--stub' => 'migration',
+                    '--event' => false,
+                ]);
+
                 $this->call('apiato:generate:test:functional', [
                     '--section' => $sectionName,
                     '--container' => $containerName,

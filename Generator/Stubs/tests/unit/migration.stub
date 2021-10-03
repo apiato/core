@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
+
+use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
+use Illuminate\Support\Facades\Schema;
+
+/**
+ * Class {{class-name}}.
+ *
+ * @group {{_container-name}}
+ * @group unit
+ */
+class {{class-name}} extends TestCase
+{
+    public function test_{{_models}}_table_has_expected_columns(): void
+    {
+        $columns = [
+            'id',
+            // add your migration columns
+            'created_at',
+            'updated_at',
+        ];
+
+        foreach ($columns as $column) {
+            $this->assertTrue(Schema::hasColumn({{_models}}, $column));
+        }
+    }
+}
