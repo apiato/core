@@ -23,7 +23,7 @@ class {{class-name}} extends TestCase
         ];
 
         foreach ($columns as $column) {
-            $this->assertTrue(Schema::hasColumn({{_models}}, $column));
+            $this->assertTrue(Schema::hasColumn('{{_models}}', $column));
         }
     }
 }
