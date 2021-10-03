@@ -91,6 +91,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
                 'model' => $model,
                 '_model' => Str::lower($model),
                 'models' => $models,
+                '_models' => Str::lower($models),
                 'event' => $event,
             ],
             'file-parameters' => [
