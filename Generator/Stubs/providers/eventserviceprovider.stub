@@ -7,7 +7,7 @@ use App\Ship\Parents\Providers\EventServiceProvider as ParentEventServiceProvide
 /**
  * The Main Service Provider of this container, it will be automatically registered in the framework.
  */
-class EventServiceProvider extends ParentEventServiceProvider
+class {{class-name}} extends ParentEventServiceProvider
 {
     /**
      * The event listener mappings for the container.

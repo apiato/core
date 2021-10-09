@@ -4,7 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Providers;
 
 use App\Ship\Parents\Providers\MiddlewareServiceProvider as ParentMiddlewareServiceProvider;
 
-class MiddlewareServiceProvider extends ParentMiddlewareServiceProvider
+class {{class-name}} extends ParentMiddlewareServiceProvider
 {
     protected array $middlewares = [];
 
