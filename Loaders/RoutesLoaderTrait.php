@@ -3,6 +3,7 @@
 namespace Apiato\Core\Loaders;
 
 use Apiato\Core\Foundation\Facades\Apiato;
+use Illuminate\Routing\RouteCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
@@ -22,6 +23,8 @@ trait RoutesLoaderTrait
             $this->loadApiContainerRoutes($containerPath);
             $this->loadWebContainerRoutes($containerPath);
         }
+
+        $this->sortRouting();
     }
 
     /**
@@ -189,5 +192,20 @@ trait RoutesLoaderTrait
         ], function ($router) use ($file) {
             require $file->getPathname();
         });
+    }
+
+    /**
+     * Sorting routes to avoid nesting problems
+     * @return void
+     */
+    private function sortRouting(): void
+    {
+        $routes = Route::getRoutes()->getRoutes();
+        usort($routes, fn($a, $b) => $a->uri <=> $b->uri);
+        $routeCollection = new RouteCollection();
+        foreach ($routes as $route) {
+            $routeCollection->add($route);
+        }
+        Route::setRoutes($routeCollection);
     }
 }
