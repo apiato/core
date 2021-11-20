@@ -30,7 +30,7 @@
         "laravel/tinker": "^2.6.0",
         "spatie/laravel-permission": "^4.0.0",
         "ext-json": "*",
-        "laravel/framework": "^8.0.0",
+        "laravel/framework": "^8.73.0",
         "laravel/passport": "^10.0.0",
         "guzzlehttp/guzzle": "^7.2.0"
     },
