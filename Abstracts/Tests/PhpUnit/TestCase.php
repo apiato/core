@@ -9,7 +9,7 @@ use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsMockHelperTrait;
 use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsRequestHelperTrait;
 use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsResponseHelperTrait;
 use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 
@@ -21,7 +21,7 @@ abstract class TestCase extends LaravelTestCase
         TestsMockHelperTrait,
         TestsAuthHelperTrait,
         HashIdTrait,
-        RefreshDatabase;
+        LazilyRefreshDatabase;
 
     /**
      * The base URL to use while testing the application.
