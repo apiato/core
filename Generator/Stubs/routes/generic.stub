@@ -4,6 +4,5 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\{{cont
 use Illuminate\Support\Facades\Route;
 
 Route::{{http-verb}}('{{endpoint-url}}', [{{controller-name}}::class, '{{operation}}'])
-    ->name('{{route-name}}')
     ->middleware(['auth:{{auth-middleware}}']);
 

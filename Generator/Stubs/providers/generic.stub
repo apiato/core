@@ -9,6 +9,11 @@ use Illuminate\Support\ServiceProvider;
  */
 class {{class-name}} extends ServiceProvider
 {
+    public function boot(): void
+    {
+
+    }
+}
     /**
      * Register anything in the container.
      */

@@ -4,25 +4,24 @@
  * @apiGroup           {{container-name}}
  * @apiName            {{operation}}
  *
- * @api                {{{doc-http-verb}}} {{doc-endpoint-url}} Endpoint title here..
- * @apiDescription     Endpoint description here..
+ * @api                {{{doc-http-verb}}} {{doc-endpoint-url}} Endpoint title here...
+ * @apiDescription     Endpoint description here...
  *
  * @apiVersion         {{endpoint-version}}.0.0
  * @apiPermission      none
  *
- * @apiParam           {String}  parameters here..
+ * @apiParam           {String} parameters here...
  *
- * @apiSuccessExample  {json}  Success-Response:
+ * @apiSuccessExample  {json} Success-Response:
  * HTTP/1.1 200 OK
-{
-  // Insert the response of the request here...
-}
+ * {
+ *     // Insert the response of the request here...
+ * }
  */
 
 use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\{{controller-name}};
 use Illuminate\Support\Facades\Route;
 
 Route::{{http-verb}}('{{endpoint-url}}', [{{controller-name}}::class, '{{operation}}'])
-    ->name('{{route-name}}')
     ->middleware(['auth:{{auth-middleware}}']);
 

@@ -62,8 +62,10 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
             'stub-parameters' => [
                 '_section-name' => Str::lower($this->sectionName),
                 'section-name' => $this->sectionName,
+                'sectionName' => Str::camel($this->sectionName),
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
+                'containerName' => Str::camel($this->containerName),
                 'class-name' => $this->fileName,
                 'view' => $view,
             ],

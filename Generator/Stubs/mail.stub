@@ -2,29 +2,23 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Mails;
 
-use App\Containers\User\Models\User;
+use App\Containers\AppSection\User\Models\User;
 use App\Ship\Parents\Mails\Mail;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class {{class-name}} extends Mail
+class {{class-name}} extends Mail implements ShouldQueue
 {
     use Queueable;
 
-    protected $recipient;
-
-    /**
-     * {{class-name}} constructor.
-     *
-     * @param $recipient
-     */
-    public function __construct(User $recipient)
-    {
-        $this->recipient = $recipient;
+    public function __construct(
+        protected User $recipient
+    ) {
     }
 
-    public function build()
+    public function build(): static
     {
-        return $this->view('{{_container-name}}::{{view}}')
+        return $this->view('{{sectionName}}@{{containerName}}::{{view}}')
             ->to($this->recipient->email, $this->recipient->name)
             ->with([
                 // place your replacement variables here...

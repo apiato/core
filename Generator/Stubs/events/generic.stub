@@ -10,7 +10,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 class {{class-name}} extends Event
 {
     public function __construct(
-        public ${{_model}}
+        public {{model}} ${{_model}}
     ) {
     }
 
