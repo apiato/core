@@ -2,14 +2,14 @@
 
 namespace Apiato\Core\Abstracts\Requests;
 
+use Apiato\Core\Abstracts\Models\UserModel as User;
 use Apiato\Core\Exceptions\IncorrectIdException;
 use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\SanitizerTrait;
 use Apiato\Core\Traits\StateKeeperTrait;
-use Illuminate\Support\Facades\App;
-use Apiato\Core\Abstracts\Models\UserModel as User;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
 /**

@@ -7,9 +7,9 @@ use Apiato\Core\Exceptions\UndefinedMethodException;
 use Apiato\Core\Exceptions\WrongEndpointFormatException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
+use JsonException;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -199,7 +199,7 @@ trait TestsRequestHelperTrait
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getResponseContentObject()
     {

@@ -15,8 +15,8 @@ abstract class Exception extends BaseException
     protected array $errors = [];
 
     public function __construct(
-        ?string $message = null,
-        ?int $code = null,
+        ?string        $message = null,
+        ?int           $code = null,
         ?BaseException $previous = null
     )
     {

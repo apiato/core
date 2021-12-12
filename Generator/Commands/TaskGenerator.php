@@ -62,7 +62,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
             ['Generic', 'GetAll', 'Find', 'Create', 'Update', 'Delete'],
             0)
         );
-        
+
         $event = $this->option('event');
         // load a new stub-file based on the users choice
         $this->stubName = ($event ? 'tasks/with_event/' : 'tasks/') . $stub . '.stub';

@@ -206,13 +206,13 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
         ];
 
         foreach ($routes as $route) {
-                $this->call('apiato:generate:request', [
-                    '--section' => $sectionName,
-                    '--container' => $containerName,
-                    '--file' => $route['request'],
-                    '--ui' => $ui,
-                    '--stub' => $route['stub'],
-                ]);
+            $this->call('apiato:generate:request', [
+                '--section' => $sectionName,
+                '--container' => $containerName,
+                '--file' => $route['request'],
+                '--ui' => $ui,
+                '--stub' => $route['stub'],
+            ]);
 
             if ($route['action'] != null) {
                 $this->call('apiato:generate:action', [

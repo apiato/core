@@ -7,18 +7,6 @@ use Exception;
 trait FileSystemTrait
 {
     /**
-     * Determine if the file already exists.
-     *
-     * @param $path
-     *
-     * @return bool
-     */
-    protected function alreadyExists($path)
-    {
-        return $this->fileSystem->exists($path);
-    }
-
-    /**
      * @param $filePath
      * @param $stubContent
      *
@@ -51,5 +39,17 @@ trait FileSystemTrait
         } catch (Exception $e) {
             $this->printErrorMessage('Could not create ' . $path);
         }
+    }
+
+    /**
+     * Determine if the file already exists.
+     *
+     * @param $path
+     *
+     * @return bool
+     */
+    protected function alreadyExists($path)
+    {
+        return $this->fileSystem->exists($path);
     }
 }

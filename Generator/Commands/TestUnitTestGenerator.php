@@ -60,7 +60,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
 
         if ($stub) {
             if ($event) {
-                $this->stubName = 'tests/unit/with_event/'. Str::lower($stub) . '.stub';
+                $this->stubName = 'tests/unit/with_event/' . Str::lower($stub) . '.stub';
             } else {
                 $this->stubName = 'tests/unit/' . Str::lower($stub) . '.stub';
             }
