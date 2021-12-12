@@ -10,6 +10,14 @@ trait PrinterTrait
     }
 
     /**
+     * @param $message
+     */
+    public function printInfoMessage($message)
+    {
+        $this->info($message);
+    }
+
+    /**
      * @param $type
      *
      * @return void
@@ -25,13 +33,5 @@ trait PrinterTrait
     public function printErrorMessage($message)
     {
         $this->error($message);
-    }
-
-    /**
-     * @param $message
-     */
-    public function printInfoMessage($message)
-    {
-        $this->info($message);
     }
 }

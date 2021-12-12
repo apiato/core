@@ -36,7 +36,9 @@
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "mockery/mockery": "^1.4.2"
+        "mockery/mockery": "^1.4.2",
+        "friendsofphp/php-cs-fixer": "^3.1.0",
+        "vimeo/psalm": "^4.10"
     },
     "autoload": {
         "psr-4": {

@@ -5,15 +5,17 @@ namespace Apiato\Core\Generator\Traits;
 trait FormatterTrait
 {
     /**
-     * @param $string
+     * @param $operation
+     * @param $class
      *
      * @return  string
      */
-    protected function trimString($string)
+    public function prependOperationToName($operation, $class)
     {
-        return trim($string);
-    }
+        $className = ($operation == 'list') ? ngettext($class) : $class;
 
+        return $operation . $this->capitalize($className);
+    }
 
     /**
      * @param $word
@@ -25,17 +27,13 @@ trait FormatterTrait
         return ucfirst($word);
     }
 
-
     /**
-     * @param $operation
-     * @param $class
+     * @param $string
      *
      * @return  string
      */
-    public function prependOperationToName($operation, $class)
+    protected function trimString($string)
     {
-        $className = ($operation == 'list') ? ngettext($class) : $class;
-
-        return $operation . $this->capitalize($className);
+        return trim($string);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace Apiato\Core\Traits;
 
-use Request;
 use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Exceptions\InvalidTransformerException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 use ReflectionClass;
+use Request;
 use Spatie\Fractal\Facades\Fractal;
 
 trait ResponseTrait

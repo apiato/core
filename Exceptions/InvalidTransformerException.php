@@ -2,8 +2,8 @@
 
 namespace Apiato\Core\Exceptions;
 
-use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Abstracts\Exceptions\Exception;
+use Apiato\Core\Abstracts\Transformers\Transformer;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class InvalidTransformerException extends Exception

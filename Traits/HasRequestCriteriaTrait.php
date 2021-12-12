@@ -4,6 +4,7 @@ namespace Apiato\Core\Traits;
 
 use Apiato\Core\Abstracts\Repositories\Repository;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
+use Exception;
 use Hashids\HashidsException;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
@@ -155,7 +156,7 @@ trait HasRequestCriteriaTrait
                 try {
                     [$field, $value] = explode(':', $row);
                     $searchData[$field] = $value;
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     //Surround offset error
                 }
             }
