@@ -42,9 +42,9 @@ class ApiatoProvider extends AbstractMainProvider
         // parent::register() should be called AFTER we bind 'Apiato'
         parent::register();
 
-        $this->runLoaderRegister();
-
         $this->overrideLaravelBaseProviders();
+
+        $this->runLoaderRegister();
     }
 
     /**
