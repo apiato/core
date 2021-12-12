@@ -34,8 +34,8 @@
     "require-dev": {
         "roave/security-advisories": "dev-latest",
         "mockery/mockery": "^1.4.2",
-        "friendsofphp/php-cs-fixer": "^3.0.x-dev",
-        "vimeo/psalm": "^4.9"
+        "friendsofphp/php-cs-fixer": "^3.4.0",
+        "vimeo/psalm": "^4.15"
     },
     "autoload": {
         "psr-4": {
