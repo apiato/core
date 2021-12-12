@@ -2,11 +2,12 @@
 
 $finder = Symfony\Component\Finder\Finder::create()
     ->in([
-        __DIR__ . '/app',
+        __DIR__ . '/',
     ])
     ->name('*.php')
     ->notName('*.blade.php')
     ->ignoreDotFiles(true)
+    ->notPath('/vendor')
     ->ignoreVCS(true);
 
 return (new PhpCsFixer\Config())
