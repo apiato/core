@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
 <psalm
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     errorLevel="4"
     findUnusedVariablesAndParams="true"
-    resolveFromConfigFile="true"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
     cacheDirectory="./psalm_cache"
 >
     <projectFiles>
-        <directory name="/"/>
+        <directory name="./"/>
         <ignoreFiles>
             <directory name="vendor"/>
         </ignoreFiles>
