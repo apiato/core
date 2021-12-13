@@ -29,7 +29,8 @@
         "ext-json": "*",
         "laravel/framework": "^8.73.0",
         "laravel/passport": "^10.0.0",
-        "guzzlehttp/guzzle": "^7.2.0"
+        "guzzlehttp/guzzle": "^7.2.0",
+        "ext-gettext": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
@@ -62,6 +63,9 @@
                 "Fractal": "Spatie\\Fractal\\FractalFacade"
             }
         }
+    },
+    "scripts": {
+        "php-cs-fixer": "php-cs-fixer --config=./php_cs.dist.php"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
