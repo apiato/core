@@ -2,13 +2,14 @@
 
 namespace Apiato\Core\Loaders;
 
-use App;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Http\Kernel;
 
 trait MiddlewaresLoaderTrait
 {
     /**
      * @void
+     * @throws BindingResolutionException
      */
     public function loadMiddlewares()
     {
@@ -22,6 +23,7 @@ trait MiddlewaresLoaderTrait
      * Registering Route Group's
      *
      * @param array $middlewares
+     * @throws BindingResolutionException
      */
     private function registerMiddleware(array $middlewares = [])
     {
@@ -71,8 +73,8 @@ trait MiddlewaresLoaderTrait
      */
     private function registerRouteMiddleware(array $routeMiddleware = [])
     {
-        foreach ($routeMiddleware as $key => $routeMiddleware) {
-            $this->app['router']->aliasMiddleware($key, $routeMiddleware);
+        foreach ($routeMiddleware as $key => $value) {
+            $this->app['router']->aliasMiddleware($key, $value);
         }
     }
 }

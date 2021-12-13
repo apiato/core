@@ -136,6 +136,7 @@ abstract class Request extends LaravelRequest
      * Be sure you know what you do!
      *
      * @param array $fields
+     * @throws IncorrectIdException
      */
     public function mapInput(array $fields): void
     {
@@ -204,6 +205,7 @@ abstract class Request extends LaravelRequest
      * @param $default
      *
      * @return mixed
+     * @throws IncorrectIdException
      */
     public function getInputByKey($key = null, $default = null): mixed
     {

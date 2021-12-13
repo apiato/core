@@ -10,5 +10,8 @@ use Illuminate\Routing\Controller as LaravelBaseController;
 
 abstract class Controller extends LaravelBaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, HashIdTrait;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
+    use HashIdTrait;
 }

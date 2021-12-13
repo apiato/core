@@ -9,5 +9,5 @@ interface ComponentsGenerator
      *
      * @return  mixed
      */
-    public function getUserInputs();
+    public function getUserInputs(): array;
 }

@@ -18,7 +18,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['tablename', null, InputOption::VALUE_OPTIONAL, 'The name for the database table'],
     ];
     /**
@@ -50,10 +50,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'migration.stub';
 
-    /**
-     * @return array|null
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $tableName = Str::lower($this->checkParameterOrAsk('tablename', 'Enter the name of the database table', Str::snake(Pluralizer::plural($this->containerName))));
 
@@ -63,7 +60,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
 
         $folder = $this->parsePathStructure($this->pathStructure, [
             'section-name' => $this->sectionName,
-            'container-name' => $this->containerName
+            'container-name' => $this->containerName,
         ]);
         $folder = $this->getFilePath($folder);
         $folder = rtrim($folder, $this->parsedFileName . '.' . $this->getDefaultFileExtension());
@@ -94,7 +91,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => Str::studly($this->fileName),
-                'table-name' => $tableName
+                'table-name' => $tableName,
             ],
             'file-parameters' => [
                 'date' => Carbon::now()->format('Y_m_d_His'),

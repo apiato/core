@@ -43,9 +43,9 @@ trait TestsAuthHelperTrait
      *
      * @param null $userDetails
      * @param bool $createUserAsAdmin
-     * @return mixed
+     * @return UserModel
      */
-    public function getTestingUserWithoutAccess($userDetails = null, bool $createUserAsAdmin = false): mixed
+    public function getTestingUserWithoutAccess($userDetails = null, bool $createUserAsAdmin = false): UserModel
     {
         return $this->getTestingUser($userDetails, $this->getNullAccess(), $createUserAsAdmin);
     }

@@ -16,7 +16,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this task is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['event', null, InputOption::VALUE_OPTIONAL, 'The Event this task fires'],
@@ -50,17 +50,16 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'tasks/generic.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this task is for.', $this->containerName);
-        $stub = Str::lower($this->checkParameterOrChoice(
-            'stub',
-            'Select the Stub you want to load',
-            ['Generic', 'GetAll', 'Find', 'Create', 'Update', 'Delete'],
-            0)
+        $stub = Str::lower(
+            $this->checkParameterOrChoice(
+                'stub',
+                'Select the Stub you want to load',
+                ['Generic', 'GetAll', 'Find', 'Create', 'Update', 'Delete'],
+                0
+            )
         );
 
         $event = $this->option('event');

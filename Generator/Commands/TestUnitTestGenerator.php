@@ -15,7 +15,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this tests is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['event', null, InputOption::VALUE_OPTIONAL, 'The Event to generate tests for'],
@@ -49,10 +49,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'tests/unit/generic.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $model = $this->option('model');
         $stub = $this->option('stub');

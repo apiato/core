@@ -48,8 +48,15 @@ class GeneratorsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // all generators ordered by name
-        $this->registerGenerators([
+        $this->registerGenerators();
+    }
+
+    /**
+     * Register the generators.
+     */
+    private function registerGenerators(): void
+    {
+        $classes = [
             ActionGenerator::class,
             ConfigurationGenerator::class,
             ContainerGenerator::class,
@@ -59,8 +66,8 @@ class GeneratorsServiceProvider extends ServiceProvider
             EventGenerator::class,
             EventListenerGenerator::class,
             ExceptionGenerator::class,
-            ModelFactoryGenerator::class,
             JobGenerator::class,
+            ModelFactoryGenerator::class,
             MailGenerator::class,
             MiddlewareGenerator::class,
             MigrationGenerator::class,
@@ -79,15 +86,7 @@ class GeneratorsServiceProvider extends ServiceProvider
             TaskGenerator::class,
             TransformerGenerator::class,
             ValueGenerator::class,
-        ]);
-    }
-
-    /**
-     * Register the generators.
-     * @param array $classes
-     */
-    private function registerGenerators(array $classes): void
-    {
+        ];
         foreach ($classes as $class) {
             $lowerClass = strtolower($class);
 

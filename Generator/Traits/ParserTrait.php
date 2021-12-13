@@ -10,9 +10,9 @@ trait ParserTrait
      * @param $path
      * @param $data
      *
-     * @return mixed
+     * @return string|array
      */
-    public function parsePathStructure($path, $data)
+    public function parsePathStructure($path, $data): string|array
     {
         $path = str_replace(array_map([$this, 'maskPathVariables'], array_keys($data)), array_values($data), $path);
         $path = str_replace('*', $this->parsedFileName, $path);
@@ -26,9 +26,9 @@ trait ParserTrait
      * @param $filename
      * @param $data
      *
-     * @return mixed
+     * @return string|array
      */
-    public function parseFileStructure($filename, $data)
+    public function parseFileStructure($filename, $data): string|array
     {
         $filename = str_replace(array_map([$this, 'maskFileVariables'], array_keys($data)), array_values($data), $filename);
         return $filename;
@@ -40,9 +40,9 @@ trait ParserTrait
      * @param $stub
      * @param $data
      *
-     * @return mixed
+     * @return string|array
      */
-    public function parseStubContent($stub, $data)
+    public function parseStubContent($stub, $data): string|array
     {
         $stub = str_replace(array_map([$this, 'maskStubVariables'], array_keys($data)), array_values($data), $stub);
         return $stub;

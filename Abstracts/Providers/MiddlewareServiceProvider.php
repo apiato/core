@@ -3,6 +3,7 @@
 namespace Apiato\Core\Abstracts\Providers;
 
 use Apiato\Core\Loaders\MiddlewaresLoaderTrait;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 abstract class MiddlewareServiceProvider extends MainServiceProvider
 {
@@ -18,6 +19,7 @@ abstract class MiddlewareServiceProvider extends MainServiceProvider
 
     /**
      * Perform post-registration booting of services.
+     * @throws BindingResolutionException
      */
     public function boot(): void
     {

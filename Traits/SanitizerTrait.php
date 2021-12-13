@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
-use Apiato\Core\Abstracts\Requests\Request;
+use Apiato\Core\Exceptions\IncorrectIdException;
 use Illuminate\Support\Arr;
 
 trait SanitizerTrait
@@ -14,10 +14,11 @@ trait SanitizerTrait
      * @param array $fields a list of fields to be checked in the Dot-Notation (e.g., ['data.name', 'data.description'])
      *
      * @return array an array containing the values if the field was present in the request and the intersection array
+     * @throws IncorrectIdException
      */
     public function sanitizeInput(array $fields): array
     {
-        $data = $this->getData();
+        $data = $this->all();
 
         $inputAsArray = [];
         $fieldsWithDefaultValue = [];
@@ -40,18 +41,6 @@ trait SanitizerTrait
         // set default values if key doesn't exist
         foreach ($fieldsWithDefaultValue as $key => $value) {
             $data = Arr::add($data, $key, $value);
-        }
-
-        return $data;
-    }
-
-    private function getData(): array
-    {
-        // get all request data
-        if ($this instanceof Request) {
-            $data = $this->all();
-        } else {
-            throw new InternalErrorException('Unsupported class type for sanitization.');
         }
 
         return $data;

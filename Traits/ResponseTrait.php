@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 use ReflectionClass;
+use ReflectionException;
 use Request;
 use Spatie\Fractal\Facades\Fractal;
 
@@ -15,21 +16,23 @@ trait ResponseTrait
 {
     protected array $metaData = [];
 
+    /**
+     * @throws InvalidTransformerException
+     */
     public function transform(
         $data,
         $transformerName = null,
         array $includes = [],
         array $meta = [],
         $resourceKey = null
-    ): array
-    {
+    ): array {
         // first, we need to create the transformer
         if ($transformerName instanceof Transformer) {
             // check, if we have provided a respective TRANSFORMER class
             $transformer = $transformerName;
         } else {
             // of if we just passed the classname
-            $transformer = new $transformerName;
+            $transformer = new $transformerName();
         }
 
         // now, finally check, if the class is really a TRANSFORMER
@@ -104,12 +107,10 @@ trait ResponseTrait
                 } else {
                     $responseArray[$k] = $v;
                 }
-                continue;
             } else {
                 // check if the array is not in our filter-list
                 if (!in_array($k, $filters)) {
                     unset($responseArray[$k]);
-                    continue;
                 }
             }
         }
@@ -134,6 +135,9 @@ trait ResponseTrait
         return new JsonResponse($message, $status, $headers, $options);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function deleted($responseArray = null): JsonResponse
     {
         if (!$responseArray) {

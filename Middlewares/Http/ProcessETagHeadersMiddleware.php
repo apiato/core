@@ -33,7 +33,7 @@ class ProcessETagHeadersMiddleware extends Middleware
             }
         }
 
-        // everything is fine, just call the next middleware. We will process the ETag later on..
+        // everything is fine, just call the next middleware. We will process the ETag later on…
         $response = $next($request);
 
         // now we have processed the request and have a response that is sent back to the client.

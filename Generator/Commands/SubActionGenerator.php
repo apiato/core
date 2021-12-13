@@ -14,7 +14,7 @@ class SubActionGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
     ];
     /**
      * The console command name.
@@ -45,10 +45,7 @@ class SubActionGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'subaction.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         return [
             'path-parameters' => [

@@ -15,7 +15,7 @@ class ModelFactoryGenerator extends GeneratorCommand implements ComponentsGenera
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model to generate this Factory for'],
     ];
     /**
@@ -47,9 +47,6 @@ class ModelFactoryGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'factory.stub';
 
-    /**
-     * @return array
-     */
     public function getUserInputs(): array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Factory for');

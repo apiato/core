@@ -22,10 +22,10 @@ class SeedTestingDataCommand extends ConsoleCommand
         parent::__construct();
     }
 
-    public function handle()
+    public function handle(): void
     {
         $this->call('db:seed', [
-            '--class' => Config::get('apiato.seeders.testing')
+            '--class' => Config::get('apiato.seeders.testing'),
         ]);
 
         $this->info('Testing Data Seeded Successfully.');

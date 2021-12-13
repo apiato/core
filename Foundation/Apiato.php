@@ -36,6 +36,7 @@ class Apiato
         foreach (File::directories($this->getSectionPath($sectionName)) as $key => $name) {
             $containerNames[] = basename($name);
         }
+
         return $containerNames;
     }
 
@@ -47,38 +48,38 @@ class Apiato
     /**
      * Build and return an object of a class from its file path
      *
-     * @param $filePathName
+     * @param string $filePathName
      *
      * @return  mixed
      */
-    public function getClassObjectFromFile($filePathName)
+    public function getClassObjectFromFile(string $filePathName): mixed
     {
         $classString = $this->getClassFullNameFromFile($filePathName);
 
-        return new $classString;
+        return new $classString();
     }
 
     /**
      * Get the full name (name \ namespace) of a class from its file path
      * result example: (string) "I\Am\The\Namespace\Of\This\Class"
      *
-     * @param $filePathName
+     * @param string $filePathName
      *
      * @return  string
      */
-    public function getClassFullNameFromFile($filePathName): string
+    public function getClassFullNameFromFile(string $filePathName): string
     {
-        return $this->getClassNamespaceFromFile($filePathName) . '\\' . $this->getClassNameFromFile($filePathName);
+        return "{$this->getClassNamespaceFromFile($filePathName)}\\{$this->getClassNameFromFile($filePathName)}";
     }
 
     /**
      * Get the class namespace form file path using token
      *
-     * @param $filePathName
+     * @param string $filePathName
      *
      * @return  null|string
      */
-    protected function getClassNamespaceFromFile($filePathName): ?string
+    protected function getClassNamespaceFromFile(string $filePathName): ?string
     {
         $src = file_get_contents($filePathName);
 
@@ -95,10 +96,12 @@ class Apiato
                     if ($tokens[$i] === ';') {
                         $namespace_ok = true;
                         $namespace = trim($namespace);
+
                         break;
                     }
                     $namespace .= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
                 }
+
                 break;
             }
             $i++;
@@ -113,11 +116,11 @@ class Apiato
     /**
      * Get the class name from file path using token
      *
-     * @param $filePathName
+     * @param string $filePathName
      *
      * @return  mixed
      */
-    protected function getClassNameFromFile($filePathName)
+    protected function getClassNameFromFile(string $filePathName): mixed
     {
         $php_code = file_get_contents($filePathName);
 
@@ -141,11 +144,11 @@ class Apiato
      * Get the last part of a camel case string.
      * Example input = helloDearWorld | returns = World
      *
-     * @param $className
+     * @param string $className
      *
      * @return  mixed
      */
-    public function getClassType($className)
+    public function getClassType(string $className): mixed
     {
         $array = preg_split('/(?=[A-Z])/', $className);
 
@@ -173,6 +176,7 @@ class Apiato
                 $containerPaths[] = $containerPath;
             }
         }
+
         return $containerPaths;
     }
 

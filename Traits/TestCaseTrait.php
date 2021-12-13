@@ -33,8 +33,10 @@ trait TestCaseTrait
 
         $array = explode('.', $info['host']);
 
-        $withoutDomain = (array_key_exists(count($array) - 2,
-                $array) ? $array[count($array) - 2] : '') . '.' . $array[count($array) - 1];
+        $withoutDomain = (array_key_exists(
+            count($array) - 2,
+            $array
+        ) ? $array[count($array) - 2] : '') . '.' . $array[count($array) - 1];
 
         $newSubDomain = $info['scheme'] . '://' . $this->subDomain . '.' . $withoutDomain;
 

@@ -10,9 +10,9 @@ trait FileSystemTrait
      * @param $filePath
      * @param $stubContent
      *
-     * @return mixed
+     * @return bool|int
      */
-    public function generateFile($filePath, $stubContent)
+    public function generateFile($filePath, $stubContent): bool|int
     {
         return $this->fileSystem->put($filePath, $stubContent);
     }

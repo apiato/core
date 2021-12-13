@@ -122,9 +122,9 @@ trait RoutesLoaderTrait
     /**
      * @param $file
      *
-     * @return  mixed
+     * @return  string|bool
      */
-    private function getRouteFileVersionFromFileName($file)
+    private function getRouteFileVersionFromFileName($file): string|bool
     {
         $fileNameWithoutExtension = $this->getRouteFileNameWithoutExtension($file);
 
@@ -147,11 +147,9 @@ trait RoutesLoaderTrait
      *
      * @return  mixed
      */
-    private function getRouteFileNameWithoutExtension(SplFileInfo $file)
+    private function getRouteFileNameWithoutExtension(SplFileInfo $file): mixed
     {
-        $fileInfo = pathinfo($file->getFileName());
-
-        return $fileInfo['filename'];
+        return pathinfo($file->getFileName())['filename'];
     }
 
     /**

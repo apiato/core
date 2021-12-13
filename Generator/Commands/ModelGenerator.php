@@ -15,7 +15,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['repository', null, InputOption::VALUE_OPTIONAL, 'Generate the corresponding Repository for this Model?'],
     ];
     /**
@@ -47,10 +47,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'model.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $repository = $this->checkParameterOrConfirm('repository', 'Do you want to generate the corresponding Repository for this Model?', true);
         if ($repository) {
@@ -59,7 +56,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
             $status = $this->call('apiato:generate:repository', [
                 '--section' => $this->sectionName,
                 '--container' => $this->containerName,
-                '--file' => $this->fileName . 'Repository'
+                '--file' => $this->fileName . 'Repository',
             ]);
 
             if ($status != 0) {

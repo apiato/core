@@ -15,7 +15,7 @@ trait ValidationTrait
         // Validate String contains no space.
         Validator::extend('no_spaces', function ($attribute, $value, $parameters, $validator) {
             return preg_match('/^\S*$/u', $value);
-        }, ['String should not contain space.']);
+        }, 'String should not contain space.');
 
         // Validate composite unique ID.
         // Usage: unique_composite:table,this-attribute-column,the-other-attribute-column
@@ -24,14 +24,13 @@ trait ValidationTrait
         Validator::extend('unique_composite', function ($attribute, $value, $parameters, $validator) {
             $queryBuilder = DB::table($parameters[0]);
 
-            $queryBuilder = is_array($value) ? $queryBuilder->whereIn($parameters[1],
-                $value) : $queryBuilder->where($parameters[1], $value);
+            $queryBuilder = is_array($value) ? $queryBuilder->whereIn($parameters[1], $value) : $queryBuilder->where($parameters[1], $value);
 
             $queryBuilder->where($parameters[2], $validator->getData()[$parameters[2]]);
 
             $queryResult = $queryBuilder->get();
 
             return $queryResult->isEmpty();
-        }, ["Duplicated record. This record has composite ID and it must be unique."]);
+        }, 'Duplicated record. This record has composite ID and it must be unique.');
     }
 }

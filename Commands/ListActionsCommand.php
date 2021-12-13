@@ -26,7 +26,7 @@ class ListActionsCommand extends ConsoleCommand
         $this->console = $console;
     }
 
-    public function handle()
+    public function handle(): void
     {
         foreach (Apiato::getSectionNames() as $sectionName) {
             foreach (Apiato::getSectionContainerNames($sectionName) as $containerName) {
@@ -43,7 +43,7 @@ class ListActionsCommand extends ConsoleCommand
 
                         // Remove the Action.php postfix from each file name
                         // Further, remove the `.php', if the file does not end on 'Action.php'
-                        $fileName = str_replace(array('Action.php', '.php'), '', $fileName);
+                        $fileName = str_replace(['Action.php', '.php'], '', $fileName);
 
                         // UnCamelize the word and replace it with spaces
                         $fileName = uncamelize($fileName);

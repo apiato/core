@@ -15,7 +15,7 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Test for.'],
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this tests is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
@@ -49,10 +49,7 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
      */
     protected string $stubName = 'tests/functional/generic.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the Test', ['API', 'WEB', 'CLI'], 0));
 

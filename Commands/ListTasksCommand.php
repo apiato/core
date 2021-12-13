@@ -26,7 +26,7 @@ class ListTasksCommand extends ConsoleCommand
         $this->console = $console;
     }
 
-    public function handle()
+    public function handle(): void
     {
         foreach (Apiato::getSectionNames() as $sectionName) {
             foreach (Apiato::getSectionContainerNames($sectionName) as $containerName) {
@@ -43,7 +43,7 @@ class ListTasksCommand extends ConsoleCommand
 
                         // Remove the Task.php postfix from each file name
                         // Further, remove the `.php', if the file does not end on 'Task.php'
-                        $fileName = str_replace(array('Task.php', '.php'), '', $fileName);
+                        $fileName = str_replace(['Task.php', '.php'], '', $fileName);
 
                         // UnCamelize the word and replace it with spaces
                         $fileName = uncamelize($fileName);

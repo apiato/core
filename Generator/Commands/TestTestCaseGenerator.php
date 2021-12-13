@@ -15,7 +15,7 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the TestCase for.'],
     ];
     /**
@@ -47,10 +47,7 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'tests/testcase/generic.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['Generic', 'API', 'WEB', 'CLI'], 0));
 

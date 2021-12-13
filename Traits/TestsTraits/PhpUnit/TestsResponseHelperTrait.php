@@ -4,6 +4,7 @@ namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use JsonException;
 
 trait TestsResponseHelperTrait
 {
@@ -23,9 +24,9 @@ trait TestsResponseHelperTrait
     /**
      * @param array $responseContent
      *
-     * @return  array|mixed
+     * @return mixed
      */
-    private function removeDataKeyFromResponse(array $responseContent)
+    private function removeDataKeyFromResponse(array $responseContent): mixed
     {
         if (array_key_exists('data', $responseContent)) {
             return $responseContent['data'];
@@ -54,8 +55,10 @@ trait TestsResponseHelperTrait
 
         foreach (Arr::sortRecursive($data) as $key => $value) {
             $expected = $this->formatToExpectedJson($key, $value);
-            $this->assertTrue(Str::contains($httpResponse, $expected),
-                "The JSON fragment [ {$expected} ] does not exist in the response [ {$httpResponse} ].");
+            $this->assertTrue(
+                Str::contains($httpResponse, $expected),
+                "The JSON fragment [ $expected ] does not exist in the response [ $httpResponse ]."
+            );
         }
     }
 
@@ -74,6 +77,9 @@ trait TestsResponseHelperTrait
         return trim($expected);
     }
 
+    /**
+     * @throws JsonException
+     */
     public function assertValidationErrorContain(array $messages): void
     {
         $responseContent = $this->getResponseContentObject();

@@ -15,7 +15,7 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['view', null, InputOption::VALUE_OPTIONAL, 'The name of the view (blade template) to be loaded.'],
     ];
     /**
@@ -47,10 +47,7 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'mail.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $view = $this->checkParameterOrAsk('view', 'Enter the name of the view to be loaded when sending this Mail');
 

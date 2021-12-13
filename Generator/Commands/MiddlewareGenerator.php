@@ -14,7 +14,7 @@ class MiddlewareGenerator extends GeneratorCommand implements ComponentsGenerato
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
     ];
     /**
      * The console command name.
@@ -45,10 +45,7 @@ class MiddlewareGenerator extends GeneratorCommand implements ComponentsGenerato
      */
     protected string $stubName = 'middleware.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         return [
             'path-parameters' => [

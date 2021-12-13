@@ -14,7 +14,7 @@ class NotificationGenerator extends GeneratorCommand implements ComponentsGenera
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
     ];
     /**
      * The console command name.
@@ -45,10 +45,7 @@ class NotificationGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'notification.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         return [
             'path-parameters' => [

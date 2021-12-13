@@ -15,13 +15,13 @@ use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 
 abstract class TestCase extends LaravelTestCase
 {
-    use TestCaseTrait,
-        TestsRequestHelperTrait,
-        TestsResponseHelperTrait,
-        TestsMockHelperTrait,
-        TestsAuthHelperTrait,
-        HashIdTrait,
-        LazilyRefreshDatabase;
+    use TestCaseTrait;
+    use TestsRequestHelperTrait;
+    use TestsResponseHelperTrait;
+    use TestsMockHelperTrait;
+    use TestsAuthHelperTrait;
+    use HashIdTrait;
+    use LazilyRefreshDatabase;
 
     /**
      * The base URL to use while testing the application.

@@ -10,7 +10,7 @@ trait FormatterTrait
      *
      * @return  string
      */
-    public function prependOperationToName($operation, $class)
+    public function prependOperationToName($operation, $class): string
     {
         $className = ($operation == 'list') ? ngettext($class) : $class;
 
@@ -22,7 +22,7 @@ trait FormatterTrait
      *
      * @return  string
      */
-    public function capitalize($word)
+    public function capitalize($word): string
     {
         return ucfirst($word);
     }
@@ -32,7 +32,7 @@ trait FormatterTrait
      *
      * @return  string
      */
-    protected function trimString($string)
+    protected function trimString($string): string
     {
         return trim($string);
     }

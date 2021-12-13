@@ -15,12 +15,12 @@ abstract class Action
         return static::run(...$arguments);
     }
 
-    public function getUI()
+    public function getUI(): string
     {
         return $this->ui;
     }
 
-    public function setUI($interface)
+    public function setUI(string $interface): static
     {
         $this->ui = $interface;
 

@@ -14,7 +14,7 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
     ];
     /**
      * The console command name.
@@ -45,10 +45,7 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
      */
     protected string $stubName = 'config.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         return [
             'path-parameters' => [

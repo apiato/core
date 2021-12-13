@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\File;
  */
 trait SeederLoaderTrait
 {
-    protected $seedersPath = '/Data/Seeders';
+    protected string $seedersPath = '/Data/Seeders';
 
     public function runLoadingSeeders(): void
     {
@@ -49,7 +49,8 @@ trait SeederLoaderTrait
                         // do not seed the classes now, just store them in a collection and w
                         $seedersClasses->push(
                             Apiato::getClassFullNameFromFile(
-                                $seederClass->getPathname())
+                                $seederClass->getPathname()
+                            )
                         );
                     }
                 }
@@ -69,7 +70,7 @@ trait SeederLoaderTrait
 
         foreach ($seedersClasses as $key => $seederFullClassName) {
             // if the class full namespace contain "_" it means it needs to be seeded in order
-            if (false !== strpos($seederFullClassName, "_")) {
+            if (str_contains($seederFullClassName, "_")) {
                 // move all the seeder classes that needs to be seeded in order to their own Collection
                 $orderedSeederClasses->push($seederFullClassName);
                 // delete the moved classes from the original collection

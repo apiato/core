@@ -15,7 +15,7 @@ class ValueGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
     ];
     /**
      * The console command name.
@@ -46,10 +46,7 @@ class ValueGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'value.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         return [
             'path-parameters' => [

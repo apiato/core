@@ -16,7 +16,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
      */
     public array $inputs = [
         ['url', null, InputOption::VALUE_OPTIONAL, 'The base URI of all endpoints (/stores, /cars, ...)'],
-        ['controllertype', null, InputOption::VALUE_OPTIONAL, 'The controller type (SAC, MAC)']
+        ['controllertype', null, InputOption::VALUE_OPTIONAL, 'The controller type (SAC, MAC)'],
     ];
     /**
      * The console command name.
@@ -47,10 +47,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'composer.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $ui = 'web';
 
@@ -284,6 +281,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
         }
 
         $this->printInfoMessage('Generating Composer File');
+
         return [
             'path-parameters' => [
                 'section-name' => $this->sectionName,

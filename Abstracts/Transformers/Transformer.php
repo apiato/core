@@ -9,19 +9,11 @@ use Exception;
 use Illuminate\Support\Facades\Config;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Scope;
 use League\Fractal\TransformerAbstract as FractalTransformer;
 
 abstract class Transformer extends FractalTransformer
 {
-    /**
-     * @param mixed $data
-     * @param callable|FractalTransformer $transformer
-     * @param null $resourceKey
-     *
-     * @return Item
-     */
     public function item($data, $transformer, $resourceKey = null): Item
     {
         // set a default resource key if none is set
@@ -32,13 +24,6 @@ abstract class Transformer extends FractalTransformer
         return parent::item($data, $transformer, $resourceKey);
     }
 
-    /**
-     * @param mixed $data
-     * @param callable|FractalTransformer $transformer
-     * @param null $resourceKey
-     *
-     * @return Collection
-     */
     public function collection($data, $transformer, $resourceKey = null): Collection
     {
         // set a default resource key if none is set
@@ -49,15 +34,6 @@ abstract class Transformer extends FractalTransformer
         return parent::collection($data, $transformer, $resourceKey);
     }
 
-    /**
-     * @param Scope $scope
-     * @param string $includeName
-     * @param mixed $data
-     *
-     * @return ResourceInterface|bool
-     * @throws CoreInternalErrorException
-     * @throws UnsupportedFractalIncludeException
-     */
     protected function callIncludeMethod(Scope $scope, $includeName, $data)
     {
         try {

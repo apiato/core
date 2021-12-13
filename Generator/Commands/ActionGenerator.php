@@ -16,7 +16,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this action is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Action for.'],
@@ -50,18 +50,17 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'actions/generic.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this action is for.', $this->containerName);
         $ui = Str::upper($this->checkParameterOrChoice('ui', 'Which UI is this Action for?', ['API', 'WEB'], 0));
-        $stub = Str::lower($this->checkParameterOrChoice(
-            'stub',
-            'Select the Stub you want to load',
-            ['Generic', 'GetAll', 'Find', 'Create', 'Update', 'Delete'],
-            0)
+        $stub = Str::lower(
+            $this->checkParameterOrChoice(
+                'stub',
+                'Select the Stub you want to load',
+                ['Generic', 'GetAll', 'Find', 'Create', 'Update', 'Delete'],
+                0
+            )
         );
 
         // Load a new stub-file based on the users choice

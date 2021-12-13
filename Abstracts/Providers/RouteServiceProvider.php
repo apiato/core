@@ -18,7 +18,7 @@ abstract class RouteServiceProvider extends LaravelRouteServiceProvider
      */
     // protected $namespace = 'App\\Http\\Controllers';
 
-// TODO update to new laravel rate limitter
+    // TODO update to new laravel rate limiter
 //    /**
 //     * Define your route model bindings, pattern filters, etc.
 //     *

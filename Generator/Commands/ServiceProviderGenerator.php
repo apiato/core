@@ -15,7 +15,7 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
     /**
@@ -47,16 +47,15 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
      */
     protected string $stubName = 'providers/mainserviceprovider.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
-        $stub = Str::lower($this->checkParameterOrChoice(
-            'stub',
-            'Select the Stub you want to load',
-            ['Generic', 'MainServiceProvider', 'EventServiceProvider', 'MiddlewareServiceProvider'],
-            0)
+        $stub = Str::lower(
+            $this->checkParameterOrChoice(
+                'stub',
+                'Select the Stub you want to load',
+                ['Generic', 'MainServiceProvider', 'EventServiceProvider', 'MiddlewareServiceProvider'],
+                0
+            )
         );
 
         // load a new stub-file based on the users choice

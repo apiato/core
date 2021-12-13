@@ -15,7 +15,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
         ['operation', null, InputOption::VALUE_OPTIONAL, 'The operation from the Controller to be called (e.g., index)'],
         ['doctype', null, InputOption::VALUE_OPTIONAL, 'The type of the endpoint (private, public)'],
@@ -53,10 +53,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'routes/generic.stub';
 
-    /**
-     * @return  array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
         $version = $this->checkParameterOrAsk('docversion', 'Enter the endpoint version (integer)', 1);

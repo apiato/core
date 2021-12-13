@@ -17,7 +17,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
     ];
@@ -50,18 +50,17 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
      */
     protected string $stubName = 'controllers/generic.stub';
 
-    /**
-     * @return  array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
 
-        $stub = Str::lower($this->checkParameterOrChoice(
-            'stub',
-            'Select the Stub you want to load',
-            ['Generic', 'CRUD.API', 'CRUD.WEB'],
-            0)
+        $stub = Str::lower(
+            $this->checkParameterOrChoice(
+                'stub',
+                'Select the Stub you want to load',
+                ['Generic', 'CRUD.API', 'CRUD.WEB'],
+                0
+            )
         );
 
         // Load a new stub-file based on the users choice

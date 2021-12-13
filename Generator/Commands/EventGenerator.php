@@ -15,7 +15,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model to generate this Event for'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['listener', null, InputOption::VALUE_OPTIONAL, 'Generate a Listener for this Event?'],
@@ -49,10 +49,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'events/generic.stub';
 
-    /**
-     * @return array
-     */
-    public function getUserInputs()
+    public function getUserInputs(): array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Event for', Str::ucfirst($this->containerName));
 

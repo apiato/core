@@ -87,9 +87,9 @@ trait HasRequestCriteriaTrait
         $decodedQuery = $this->arrayToSearchQuery($decodedData);
 
         if ($decodedValue) {
-            if (empty($decodedQuery))
+            if (empty($decodedQuery)) {
                 $decodedQuery .= $decodedValue;
-            else {
+            } else {
                 $decodedQuery .= (';' . $decodedValue);
             }
         }
@@ -142,6 +142,7 @@ trait HasRequestCriteriaTrait
                 $searchArray[$field] = Hashids::decode($searchArray[$field])[0];
             }
         }
+
         return $searchArray;
     }
 

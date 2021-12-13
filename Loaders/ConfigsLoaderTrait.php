@@ -20,14 +20,10 @@ trait ConfigsLoaderTrait
             $files = File::files($configFolder);
 
             foreach ($files as $file) {
-                try {
-                    $config = File::getRequire($file);
-                    $name = File::name($file);
-                    $path = $configFolder . '/' . $name . '.php';
+                $name = File::name($file);
+                $path = $configFolder . '/' . $name . '.php';
 
-                    $this->mergeConfigFrom($path, $name);
-                } catch (FileNotFoundException $e) {
-                }
+                $this->mergeConfigFrom($path, $name);
             }
         }
     }

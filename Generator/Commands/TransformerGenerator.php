@@ -16,7 +16,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
      *
      * @var  array
      */
-    public $inputs = [
+    public array $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model to generate this Transformer for'],
         ['full', null, InputOption::VALUE_OPTIONAL, 'Generate a Transformer with all fields of the model'],
     ];
@@ -49,9 +49,6 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
      */
     protected string $stubName = 'transformer.stub';
 
-    /**
-     * @return array
-     */
     public function getUserInputs(): array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Transformer for');
