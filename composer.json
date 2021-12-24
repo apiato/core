@@ -27,7 +27,7 @@
         "spatie/laravel-fractal": "^5.8.1",
         "vinkla/hashids": "^9.1.0",
         "ext-json": "*",
-        "laravel/framework": "^8.76.1",
+        "laravel/framework": "^8.77.0",
         "laravel/passport": "^10.2.2",
         "guzzlehttp/guzzle": "^7.4.1",
         "ext-gettext": "*"
