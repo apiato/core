@@ -125,7 +125,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for *all* endpoints', ['private', 'public'], 0);
 
         // get the URI and remove the first trailing slash
-        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all endpoints (foo/bar)', Str::lower($models)));
+        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all endpoints (foo/bar)', Str::snake($models)));
         $url = ltrim($url, '/');
 
         $this->printInfoMessage('Creating Requests for Routes');
