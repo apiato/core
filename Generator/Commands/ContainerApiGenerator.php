@@ -54,13 +54,13 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
     {
         $ui = 'api';
 
-        // section name as inputted and lower
+        // section name as inputted and snake
         $sectionName = $this->sectionName;
-        $_sectionName = Str::lower($this->sectionName);
+        $_sectionName = Str::snake($this->sectionName);
 
-        // container name as inputted and lower
+        // container name as inputted and snake
         $containerName = $this->containerName;
-        $_containerName = Str::lower($this->containerName);
+        $_containerName = Str::snake($this->containerName);
 
         // name of the model (singular and plural)
         $model = $this->containerName;
@@ -125,7 +125,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for *all* endpoints', ['private', 'public'], 0);
 
         // get the URI and remove the first trailing slash
-        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all endpoints (foo/bar)', Str::lower($models)));
+        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all endpoints (foo/bar)', Str::snake($models)));
         $url = ltrim($url, '/');
 
         $this->printInfoMessage('Creating Requests for Routes');

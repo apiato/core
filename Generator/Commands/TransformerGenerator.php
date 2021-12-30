@@ -71,7 +71,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
                 'model' => $model,
-                '_model' => Str::lower($model),
+                '_model' => Str::camel($model),
                 'attributes' => $attributes,
             ],
             'file-parameters' => [
