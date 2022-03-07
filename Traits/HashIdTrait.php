@@ -127,13 +127,17 @@ trait HashIdTrait
         // check if there are no more fields to be processed
         if (empty($keysTodo)) {
             // there are no more keys left - so basically we need to decode this entry
-            $decodedField = $this->decode($data);
+            if ($this->skipHashIdDecode($data)) {
+                return $data;
+            } else {
+                $decodedField = $this->decode($data);
 
-            if (empty($decodedField)) {
-                throw new IncorrectIdException('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
+                if (empty($decodedField)) {
+                    throw new IncorrectIdException('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
+                }
+
+                return $decodedField;
             }
-
-            return $decodedField;
         }
 
         // take the first element from the field
@@ -163,5 +167,10 @@ trait HashIdTrait
         $data[$field] = $this->processField($value, $keysTodo, $field);
 
         return $data;
+    }
+
+    public function skipHashIdDecode($field): bool
+    {
+        return empty($field);
     }
 }
