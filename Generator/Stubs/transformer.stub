@@ -7,17 +7,11 @@ use App\Ship\Parents\Transformers\Transformer;
 
 class {{class-name}} extends Transformer
 {
-    /**
-     * @var  array
-     */
-    protected $defaultIncludes = [
+    protected array $defaultIncludes = [
 
     ];
 
-    /**
-     * @var  array
-     */
-    protected $availableIncludes = [
+    protected array $availableIncludes = [
 
     ];
 
