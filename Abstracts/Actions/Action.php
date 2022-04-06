@@ -11,11 +11,6 @@ abstract class Action
 
     protected string $ui;
 
-    public function __invoke(...$arguments)
-    {
-        return static::run(...$arguments);
-    }
-
     public function transactionalRun(...$arguments)
     {
         return DB::transaction(function () use ($arguments) {
