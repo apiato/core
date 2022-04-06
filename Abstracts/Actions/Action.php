@@ -3,6 +3,7 @@
 namespace Apiato\Core\Abstracts\Actions;
 
 use Apiato\Core\Traits\HasRequestCriteriaTrait;
+use Illuminate\Support\Facades\DB;
 
 abstract class Action
 {
@@ -13,6 +14,13 @@ abstract class Action
     public function __invoke(...$arguments)
     {
         return static::run(...$arguments);
+    }
+
+    public function transactionalRun(...$arguments)
+    {
+        return DB::transaction(function () use ($arguments) {
+            return static::run(...$arguments);
+        });
     }
 
     public function getUI(): string
