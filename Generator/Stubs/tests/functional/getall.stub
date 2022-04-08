@@ -59,12 +59,12 @@ class {{class-name}} extends ApiTestCase
 //    {
 //        {{model}}::factory()->count(3)->create();
 //        // create a model with specific field values
-//        ${{_model}} = $this->getTestingUser([
+//        ${{_model}} = {{model}}::factory()->create([
 //            // 'name' => 'something',
 //        ]);
 //
 //        // search by the above values
-//        $response = $this->endpoint($this->endpoint . "?search=name:${{_model}}->name")->makeCall();
+//        $response = $this->endpoint($this->endpoint . "?search=name:" . urlencode(${{_model}}->name))->makeCall();
 //
 //        $response->assertStatus(200);
 //        $response->assertJson(
