@@ -16,13 +16,13 @@ class Apiato
 
     public function getShipFoldersNames(): array
     {
-        $portFoldersNames = [];
+        $shipFoldersNames = [];
 
-        foreach ($this->getShipPath() as $portFoldersPath) {
-            $portFoldersNames[] = basename($portFoldersPath);
+        foreach ($this->getShipPath() as $shipFoldersPath) {
+            $shipFoldersNames[] = basename($shipFoldersPath);
         }
 
-        return $portFoldersNames;
+        return $shipFoldersNames;
     }
 
     public function getShipPath(): array
