@@ -10,6 +10,9 @@
  * @apiVersion         {{endpoint-version}}.0.0
  * @apiPermission      none
  *
+ * @apiHeader          {String} accept=application/json
+ * @apiHeader          {String} authorization=Bearer
+ *
  * @apiParam           {String} parameters here...
  *
  * @apiSuccessExample  {json} Success-Response:
