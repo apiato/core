@@ -2,7 +2,7 @@
 
 /**
  * @apiGroup           {{container-name}}
- * @apiName            {{operation}}
+ * @apiName            {{doc-api-name}}
  *
  * @api                {{{doc-http-verb}}} {{doc-endpoint-url}} {{endpoint-title}}
  * @apiDescription     Endpoint description here...
