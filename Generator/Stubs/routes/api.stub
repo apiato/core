@@ -4,7 +4,7 @@
  * @apiGroup           {{container-name}}
  * @apiName            {{operation}}
  *
- * @api                {{{doc-http-verb}}} {{doc-endpoint-url}} Endpoint title here...
+ * @api                {{{doc-http-verb}}} {{doc-endpoint-url}} {{endpoint-title}}
  * @apiDescription     Endpoint description here...
  *
  * @apiVersion         {{endpoint-version}}.0.0

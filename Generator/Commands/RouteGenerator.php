@@ -88,6 +88,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
                 'doc-api-name' => Str::studly($operation),
                 'user-interface' => Str::upper($ui),
                 'endpoint-url' => $url,
+                'endpoint-title' => Str::headline($operation),
                 'doc-endpoint-url' => '/v' . $version . '/' . $docUrl,
                 'endpoint-version' => $version,
                 'http-verb' => Str::lower($verb),
