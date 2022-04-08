@@ -38,25 +38,17 @@ class GeneratorsServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
+    public function boot()
     {
-        //
+        if ($this->app->runningInConsole()) {
+            $this->commands($this->getGeneratorCommands());
+        }
     }
 
-    /**
-     * Register the application services.
-     */
-    public function register(): void
+    private function getGeneratorCommands(): array
     {
-        $this->registerGenerators();
-    }
-
-    /**
-     * Register the generators.
-     */
-    private function registerGenerators(): void
-    {
-        $classes = [
+        // add your generators here
+        return $generatorCommands = [
             ActionGenerator::class,
             ConfigurationGenerator::class,
             ContainerGenerator::class,
@@ -87,14 +79,5 @@ class GeneratorsServiceProvider extends ServiceProvider
             TransformerGenerator::class,
             ValueGenerator::class,
         ];
-        foreach ($classes as $class) {
-            $lowerClass = strtolower($class);
-
-            $this->app->singleton("command.porto.$lowerClass", function ($app) use ($class) {
-                return $app[$class];
-            });
-
-            $this->commands("command.porto.$lowerClass");
-        }
     }
 }
