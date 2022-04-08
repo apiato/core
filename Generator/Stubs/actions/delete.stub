@@ -5,12 +5,16 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Delete{{model}}Task;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Delete{{model}}Request;
 use App\Ship\Exceptions\DeleteResourceFailedException;
+use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Actions\Action;
 
 class {{class-name}} extends Action
 {
     /**
+     * @param Delete{{model}}Request $request
+     * @return int
      * @throws DeleteResourceFailedException
+     * @throws NotFoundException
      */
     public function run(Delete{{model}}Request $request): int
     {

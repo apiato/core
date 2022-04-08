@@ -16,8 +16,8 @@ class {{class-name}} extends ApiTestCase
     protected string $endpoint = 'post@v1/{{_models}}';
 
     protected array $access = [
-        'roles' => '',
         'permissions' => '',
+        'roles' => '',
     ];
 
     // TODO TEST

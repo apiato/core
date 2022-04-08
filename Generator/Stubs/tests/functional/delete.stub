@@ -16,8 +16,8 @@ class {{class-name}} extends ApiTestCase
     protected string $endpoint = 'delete@v1/{{_models}}/{id}';
 
     protected array $access = [
-        'roles' => '',
         'permissions' => '',
+        'roles' => '',
     ];
 
     public function testDeleteExisting{{model}}(): void

@@ -22,8 +22,8 @@ trait TestsAuthHelperTrait
      * Roles and permissions, to be attached on the user
      */
     protected array $access = [
-        'roles' => '',
         'permissions' => '',
+        'roles' => '',
     ];
 
     /**

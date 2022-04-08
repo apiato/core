@@ -2,16 +2,22 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
+use Apiato\Core\Exceptions\IncorrectIdException;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Update{{model}}Task;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Update{{model}}Request;
+use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Actions\Action;
 
 class {{class-name}} extends Action
 {
     /**
+     * @param Update{{model}}Request $request
+     * @return {{model}}
      * @throws UpdateResourceFailedException
+     * @throws IncorrectIdException
+     * @throws NotFoundException
      */
     public function run(Update{{model}}Request $request): {{model}}
     {

@@ -2,6 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
+use Apiato\Core\Exceptions\IncorrectIdException;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Create{{model}}Task;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Create{{model}}Request;
@@ -11,7 +12,10 @@ use App\Ship\Parents\Actions\Action;
 class {{class-name}} extends Action
 {
     /**
+     * @param Create{{model}}Request $request
+     * @return {{model}}
      * @throws CreateResourceFailedException
+     * @throws IncorrectIdException
      */
     public function run(Create{{model}}Request $request): {{model}}
     {

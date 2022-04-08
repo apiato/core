@@ -17,8 +17,8 @@ class {{class-name}} extends ApiTestCase
     protected string $endpoint = 'get@v1/{{_models}}';
 
     protected array $access = [
-        'roles' => '',
         'permissions' => '',
+        'roles' => '',
     ];
 
     public function testGetAll{{models}}ByAdmin(): void

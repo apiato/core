@@ -2,6 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\InvalidTransformerException;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Create{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Delete{{model}}Action;
@@ -14,13 +15,21 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Req
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\GetAll{{models}}Request;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
+use App\Ship\Exceptions\CreateResourceFailedException;
+use App\Ship\Exceptions\DeleteResourceFailedException;
+use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Controllers\{{base-controller}};
 use Illuminate\Http\JsonResponse;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 class {{class-name}} extends {{base-controller}}
 {
     /**
+     * @param Create{{model}}Request $request
+     * @return JsonResponse
      * @throws InvalidTransformerException
+     * @throws CreateResourceFailedException
      */
     public function create{{model}}(Create{{model}}Request $request): JsonResponse
     {
@@ -30,7 +39,10 @@ class {{class-name}} extends {{base-controller}}
     }
 
     /**
+     * @param Find{{model}}ByIdRequest $request
+     * @return array
      * @throws InvalidTransformerException
+     * @throws NotFoundException
      */
     public function find{{model}}ById(Find{{model}}ByIdRequest $request): array
     {
@@ -40,7 +52,11 @@ class {{class-name}} extends {{base-controller}}
     }
 
     /**
+     * @param GetAll{{models}}Request $request
+     * @return array
      * @throws InvalidTransformerException
+     * @throws CoreInternalErrorException
+     * @throws RepositoryException
      */
     public function getAll{{models}}(GetAll{{models}}Request $request): array
     {
@@ -50,7 +66,10 @@ class {{class-name}} extends {{base-controller}}
     }
 
     /**
+     * @param Update{{model}}Request $request
+     * @return array
      * @throws InvalidTransformerException
+     * @throws UpdateResourceFailedException
      */
     public function update{{model}}(Update{{model}}Request $request): array
     {
@@ -59,6 +78,11 @@ class {{class-name}} extends {{base-controller}}
         return $this->transform(${{entity}}, {{model}}Transformer::class);
     }
 
+    /**
+     * @param Delete{{model}}Request $request
+     * @return JsonResponse
+     * @throws DeleteResourceFailedException
+     */
     public function delete{{model}}(Delete{{model}}Request $request): JsonResponse
     {
         app(Delete{{model}}Action::class)->run($request);

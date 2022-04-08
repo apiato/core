@@ -2,6 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
+use Apiato\Core\Exceptions\IncorrectIdException;
 use Apiato\Core\Exceptions\InvalidTransformerException;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Create{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
@@ -13,7 +14,11 @@ use Illuminate\Http\JsonResponse;
 class {{class-name}} extends {{base-controller}}
 {
     /**
-     * @throws InvalidTransformerException|CreateResourceFailedException
+     * @param Create{{model}}Request $request
+     * @return JsonResponse
+     * @throws CreateResourceFailedException
+     * @throws InvalidTransformerException
+     * @throws IncorrectIdException
      */
     public function create{{model}}(Create{{model}}Request $request): JsonResponse
     {
