@@ -45,7 +45,7 @@ class ReadmeGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'readme.stub';
 
-    public function getUserInputs(): array
+    public function getUserInputs(): ?array
     {
         return [
             'path-parameters' => [

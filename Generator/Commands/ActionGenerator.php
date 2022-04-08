@@ -50,7 +50,7 @@ class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'actions/generic.stub';
 
-    public function getUserInputs(): array
+    public function getUserInputs(): ?array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this action is for.', $this->containerName);
         $ui = Str::upper($this->checkParameterOrChoice('ui', 'Which UI is this Action for?', ['API', 'WEB'], 0));

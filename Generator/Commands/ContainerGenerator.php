@@ -53,7 +53,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'composer.stub';
 
-    public function getUserInputs(): array
+    public function getUserInputs(): ?array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for this container', ['API', 'WEB', 'BOTH'], 0));
 

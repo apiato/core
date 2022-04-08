@@ -45,7 +45,7 @@ class ExceptionGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'exception.stub';
 
-    public function getUserInputs(): array
+    public function getUserInputs(): ?array
     {
         return [
             'path-parameters' => [

@@ -49,7 +49,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
      */
     protected string $stubName = 'transformer.stub';
 
-    public function getUserInputs(): array
+    public function getUserInputs(): ?array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Transformer for');
         $full = $this->checkParameterOrConfirm('full', 'Generate a Transformer with all fields', false);

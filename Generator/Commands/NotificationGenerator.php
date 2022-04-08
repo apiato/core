@@ -45,7 +45,7 @@ class NotificationGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'notification.stub';
 
-    public function getUserInputs(): array
+    public function getUserInputs(): ?array
     {
         return [
             'path-parameters' => [

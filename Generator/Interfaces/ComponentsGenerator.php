@@ -7,7 +7,7 @@ interface ComponentsGenerator
     /**
      * Reads all data for the component to be generated (as well as the mappings for path, file and stubs)
      *
-     * @return  mixed
+     * @return  array|null
      */
-    public function getUserInputs(): array;
+    public function getUserInputs(): ?array;
 }

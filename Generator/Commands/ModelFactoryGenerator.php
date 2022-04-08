@@ -47,7 +47,7 @@ class ModelFactoryGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'factory.stub';
 
-    public function getUserInputs(): array
+    public function getUserInputs(): ?array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Factory for');
 

@@ -49,7 +49,7 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
      */
     protected string $stubName = 'tests/functional/generic.stub';
 
-    public function getUserInputs(): array
+    public function getUserInputs(): ?array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the Test', ['API', 'WEB', 'CLI'], 0));
 
