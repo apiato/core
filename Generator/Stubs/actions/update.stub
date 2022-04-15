@@ -8,9 +8,9 @@ use App\Containers\{{section-name}}\{{container-name}}\Tasks\Update{{model}}Task
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Update{{model}}Request;
 use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Exceptions\UpdateResourceFailedException;
-use App\Ship\Parents\Actions\Action;
+use App\Ship\Parents\Actions\Action as ParentAction;
 
-class {{class-name}} extends Action
+class {{class-name}} extends ParentAction
 {
     /**
      * @param Update{{model}}Request $request

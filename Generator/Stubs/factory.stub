@@ -3,9 +3,9 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Data\Factories;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
-use App\Ship\Parents\Factories\Factory;
+use App\Ship\Parents\Factories\Factory ParentFactory;
 
-class {{class-name}} extends Factory
+class {{class-name}} extends ParentFactory
 {
     protected $model = {{model}}::class;
 

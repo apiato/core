@@ -6,9 +6,9 @@ use App\Containers\{{section-name}}\{{container-name}}\Tasks\Delete{{model}}Task
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Delete{{model}}Request;
 use App\Ship\Exceptions\DeleteResourceFailedException;
 use App\Ship\Exceptions\NotFoundException;
-use App\Ship\Parents\Actions\Action;
+use App\Ship\Parents\Actions\Action as ParentAction;
 
-class {{class-name}} extends Action
+class {{class-name}} extends ParentAction
 {
     /**
      * @param Delete{{model}}Request $request

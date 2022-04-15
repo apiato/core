@@ -2,9 +2,9 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Notifications;
 
-use App\Ship\Parents\Notifications\Notification;
+use App\Ship\Parents\Notifications\Notification as ParentNotification;
 
-class {{class-name}} extends Notification
+class {{class-name}} extends ParentNotification
 {
     public function __construct()
     {

@@ -2,9 +2,9 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Data\Seeders;
 
-use App\Ship\Parents\Seeders\Seeder;
+use App\Ship\Parents\Seeders\Seeder as ParentSeeder;
 
-class {{class-name}} extends Seeder
+class {{class-name}} extends ParentSeeder
 {
     public function run()
     {

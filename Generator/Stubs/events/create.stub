@@ -3,11 +3,11 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Events;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
-use App\Ship\Parents\Events\Event;
+use App\Ship\Parents\Events\Event as ParentEvent;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 
-class {{class-name}} extends Event
+class {{class-name}} extends ParentEvent
 {
     public function __construct(
         public {{model}} ${{_model}}

@@ -2,9 +2,9 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Models;
 
-use App\Ship\Parents\Models\Model;
+use App\Ship\Parents\Models\Model as ParentModel;
 
-class {{class-name}} extends Model
+class {{class-name}} extends ParentModel
 {
     protected $fillable = [
 

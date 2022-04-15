@@ -2,9 +2,9 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
-use App\Ship\Parents\Actions\Action;
+use App\Ship\Parents\Actions\Action as ParentAction;
 
-class {{class-name}} extends Action
+class {{class-name}} extends ParentAction
 {
     public function run()
     {

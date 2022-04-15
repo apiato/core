@@ -3,9 +3,9 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Transformers;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
-use App\Ship\Parents\Transformers\Transformer;
+use App\Ship\Parents\Transformers\Transformer as ParentTransformer;
 
-class {{class-name}} extends Transformer
+class {{class-name}} extends ParentTransformer
 {
     protected array $defaultIncludes = [
 

@@ -2,9 +2,9 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Data\Repositories;
 
-use App\Ship\Parents\Repositories\Repository;
+use App\Ship\Parents\Repositories\Repository as ParentRepository;
 
-class {{class-name}} extends Repository
+class {{class-name}} extends ParentRepository
 {
     /**
      * @var array

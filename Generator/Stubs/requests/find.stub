@@ -2,9 +2,9 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests;
 
-use App\Ship\Parents\Requests\Request;
+use App\Ship\Parents\Requests\Request as ParentRequest;
 
-class {{class-name}} extends Request
+class {{class-name}} extends ParentRequest
 {
     /**
      * Define which Roles and/or Permissions has access to this request.

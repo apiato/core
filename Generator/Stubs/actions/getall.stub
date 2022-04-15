@@ -5,10 +5,10 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\GetAll{{models}}Task;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\GetAll{{models}}Request;
-use App\Ship\Parents\Actions\Action;
+use App\Ship\Parents\Actions\Action as ParentAction;
 use Prettus\Repository\Exceptions\RepositoryException;
 
-class {{class-name}} extends Action
+class {{class-name}} extends ParentAction
 {
     /**
      * @throws CoreInternalErrorException

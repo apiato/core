@@ -3,10 +3,10 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Listeners;
 
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{model}};
-use App\Ship\Parents\Listeners\Listener;
+use App\Ship\Parents\Listeners\Listener as ParentListener;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class {{class-name}} extends Listener implements ShouldQueue
+class {{class-name}} extends ParentListener implements ShouldQueue
 {
     public function __construct()
     {
