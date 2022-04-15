@@ -112,7 +112,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
         $doctype = 'private';
 
         // get the URI and remove the first trailing slash
-        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all WEB endpoints (foo/bar/{id})', Str::snake($models)));
+        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all WEB endpoints (foo/bar/{id})', Str::kebab($models)));
         $url = ltrim($url, '/');
 
         $controllertype = Str::lower($this->checkParameterOrChoice('controllertype', 'Select the controller type (Single or Multi Action Controller)', ['SAC', 'MAC'], 0));
