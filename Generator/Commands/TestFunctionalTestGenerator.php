@@ -19,6 +19,7 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Test for.'],
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this tests is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
+        ['url', null, InputOption::VALUE_OPTIONAL, 'The URL of the endpoint (/stores, /cars, ...)'],
     ];
     /**
      * The console command name.
@@ -55,6 +56,7 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
 
         $model = $this->option('model');
         $stub = $this->option('stub');
+        $url = $this->option('url');
 
         // Load a new stub-file if generating container otherwise use generic
         $this->stubName = $stub ? 'tests/functional/' . Str::lower($stub) . '.stub' : 'tests/functional/' . $ui . '.stub';
@@ -85,9 +87,10 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
                 'model' => $model,
-                '_model' => Str::lower($model),
+                '_model' => Str::camel($model),
                 'models' => $models,
                 '_models' => Str::lower($models),
+                'url' => $url,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

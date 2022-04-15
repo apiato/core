@@ -13,7 +13,7 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
  */
 class {{class-name}} extends ApiTestCase
 {
-    protected string $endpoint = 'delete@v1/{{_models}}/{id}';
+    protected string $endpoint = 'delete@v1/{{url}}/{id}';
 
     protected array $access = [
         'permissions' => '',

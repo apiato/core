@@ -18,10 +18,11 @@ class {{class-name}} extends TestCase
     // TODO TEST
     public function testUpdate{{model}}(): void
     {
-        ${{_model}} = {{model}}::factory()->create();
+        ${{_model}} = {{model}}::factory()->create([
+            // 'some_field' => 'new_field_value',
+        ]);
         $data = [
-            // add some fillable fields here
-            // 'some_field' => 'new_field_data',
+            // 'some_field' => 'new_field_value',
         ];
 
         $updated{{model}} = app(Update{{model}}Task::class)->run($data, ${{_model}}->id);

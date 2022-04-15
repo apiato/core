@@ -14,7 +14,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
  */
 class {{class-name}} extends ApiTestCase
 {
-    protected string $endpoint = 'patch@v1/{{_models}}/{id}';
+    protected string $endpoint = 'patch@v1/{{url}}/{id}';
 
     protected array $access = [
         'permissions' => '',
@@ -24,10 +24,11 @@ class {{class-name}} extends ApiTestCase
     // TODO TEST
     public function testUpdateExisting{{model}}(): void
     {
-        ${{_model}} = {{model}}::factory()->create();
+        ${{_model}} = {{model}}::factory()->create([
+            // 'some_field' => 'new_field_value',
+        ]);
         $data = [
-            // add some fillable fields here
-            // 'some_field' => 'new_field_data',
+            // 'some_field' => 'new_field_value',
         ];
 
         $response = $this->injectId(${{_model}}->id)->makeCall($data);

@@ -15,7 +15,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
  */
 class {{class-name}} extends ApiTestCase
 {
-    protected string $endpoint = 'get@v1/{{_models}}/{id}';
+    protected string $endpoint = 'get@v1/{{url}}/{id}';
 
     protected array $access = [
         'permissions' => '',

@@ -20,7 +20,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
         ['operation', null, InputOption::VALUE_OPTIONAL, 'The operation from the Controller to be called (e.g., index)'],
         ['doctype', null, InputOption::VALUE_OPTIONAL, 'The type of the endpoint (private, public)'],
         ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of the endpoint (1, 2, ...)'],
-        ['url', null, InputOption::VALUE_OPTIONAL, 'The URI of the endpoint (/stores, /cars, ...)'],
+        ['url', null, InputOption::VALUE_OPTIONAL, 'The URL of the endpoint (/stores, /cars, ...)'],
         ['verb', null, InputOption::VALUE_OPTIONAL, 'The HTTP verb of the endpoint (GET, POST, ...)'],
         ['controller', null, InputOption::VALUE_OPTIONAL, 'The controller used in this route'],
     ];
