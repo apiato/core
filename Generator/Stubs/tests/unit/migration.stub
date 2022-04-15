@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schema;
  */
 class {{class-name}} extends TestCase
 {
-    public function test_{{_models}}_table_has_expected_columns(): void
+    public function test_{{table-name}}_table_has_expected_columns(): void
     {
         $columns = [
             'id',
@@ -23,7 +23,7 @@ class {{class-name}} extends TestCase
         ];
 
         foreach ($columns as $column) {
-            $this->assertTrue(Schema::hasColumn('{{_models}}', $column));
+            $this->assertTrue(Schema::hasColumn('{{table-name}}', $column));
         }
     }
 }
