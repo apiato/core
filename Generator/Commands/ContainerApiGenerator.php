@@ -305,6 +305,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--model' => $model,
                     '--stub' => 'migration',
                     '--event' => false,
+                    '--tablename' => Str::snake(Pluralizer::plural($containerName)),
                 ]);
 
                 $this->call('apiato:generate:test:functional', [
