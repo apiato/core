@@ -1,6 +1,14 @@
 {
     "name": "apiato/core",
     "description": "Core package for Apiato.",
+    "keywords": [
+        "apiato",
+        "apiato core",
+        "core",
+        "Porto",
+        "Porto SAP"
+    ],
+    "license": "MIT",
     "homepage": "http://apiato.io/",
     "support": {
         "issues": "https://github.com/apiato/core/issues",
@@ -12,31 +20,23 @@
             "email": "mahmoud@zalt.me"
         }
     ],
-    "keywords": [
-        "apiato",
-        "apiato core",
-        "core",
-        "Porto",
-        "Porto SAP"
-    ],
-    "license": "MIT",
     "require": {
-        "php": "^8.0",
+        "php": "^8.0.2",
         "apiato/container-installer": "^2.0.8",
-        "prettus/l5-repository": "^2.7.9",
-        "spatie/laravel-fractal": "^5.8.1",
-        "vinkla/hashids": "^9.1.0",
+        "prettus/l5-repository": "^2.8.0",
+        "spatie/laravel-fractal": "^6.0",
+        "vinkla/hashids": "^10.0",
         "ext-json": "*",
-        "laravel/framework": "^8.77.0",
-        "laravel/passport": "^10.2.2",
-        "guzzlehttp/guzzle": "^7.4.1",
+        "guzzlehttp/guzzle": "^7.2",
+        "laravel/framework": "^9.0",
+        "laravel/passport": "^10.3.0",
         "ext-gettext": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "mockery/mockery": "^1.4.2",
-        "friendsofphp/php-cs-fixer": "^3.4.0",
-        "vimeo/psalm": "^4.15.0"
+        "mockery/mockery": "^1.4.4",
+        "friendsofphp/php-cs-fixer": "^3.8.0",
+        "vimeo/psalm": "^4.22.0"
     },
     "autoload": {
         "psr-4": {
@@ -68,5 +68,11 @@
         "php-cs-fixer": "php-cs-fixer --config=./php_cs.dist.php"
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "apiato/container-installer": true,
+            "composer/package-versions-deprecated": true
+        }
+    }
 }
