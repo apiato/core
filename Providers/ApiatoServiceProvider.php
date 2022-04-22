@@ -13,20 +13,6 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
     use AutoLoaderTrait;
     use ValidationTrait;
 
-    public function boot(): void
-    {
-        parent::boot();
-
-        // Autoload most of the Containers and Ship Components
-        $this->runLoadersBoot();
-
-        // Solves the "specified key was too long" error, introduced in L5.4
-        Schema::defaultStringLength(191);
-
-        // Registering custom validation rules
-        $this->extendValidationRules();
-    }
-
     public function register(): void
     {
         // NOTE: function order of this calls bellow are important. Do not change it.
@@ -40,5 +26,19 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
         parent::register();
 
         $this->runLoaderRegister();
+    }
+    
+    public function boot(): void
+    {
+        parent::boot();
+
+        // Autoload most of the Containers and Ship Components
+        $this->runLoadersBoot();
+
+        // Solves the "specified key was too long" error, introduced in L5.4
+        Schema::defaultStringLength(191);
+
+        // Registering custom validation rules
+        $this->extendValidationRules();
     }
 }

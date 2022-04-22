@@ -19,32 +19,30 @@ abstract class RouteServiceProvider extends LaravelRouteServiceProvider
     // protected $namespace = 'App\\Http\\Controllers';
 
     // TODO update to new laravel rate limiter
-//    /**
-//     * Define your route model bindings, pattern filters, etc.
-//     *
-//     * @return void
-//     */
-//    public function boot(): void
-//    {
+    /**
+     * Define your route model bindings, pattern filters, etc.
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
 //        $this->configureRateLimiting();
-//
+
 //        $this->routes(function () {
-//            Route::prefix('api')
-//                ->middleware('api')
-//                ->namespace($this->namespace)
+//            Route::middleware('api')
+//                ->prefix('api')
 //                ->group(base_path('routes/api.php'));
 //
 //            Route::middleware('web')
-//                ->namespace($this->namespace)
 //                ->group(base_path('routes/web.php'));
 //        });
-//    }
-//
-//    /**
-//     * Configure the rate limiters for the application.
-//     *
-//     * @return void
-//     */
+    }
+
+    /**
+     * Configure the rate limiters for the application.
+     *
+     * @return void
+     */
 //    protected function configureRateLimiting(): void
 //    {
 //        RateLimiter::for('api', function (Request $request) {
