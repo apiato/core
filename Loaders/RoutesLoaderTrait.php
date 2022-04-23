@@ -3,9 +3,12 @@
 namespace Apiato\Core\Loaders;
 
 use Apiato\Core\Foundation\Facades\Apiato;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -95,7 +98,11 @@ trait RoutesLoaderTrait
         $rateLimitMiddleware = null;
 
         if (Config::get('apiato.api.throttle.enabled')) {
-            $rateLimitMiddleware = 'throttle:' . Config::get('apiato.api.throttle.attempts') . ',' . Config::get('apiato.api.throttle.expires');
+            RateLimiter::for('api', function (Request $request) {
+                return Limit::perMinutes(Config::get('apiato.api.throttle.expires'), Config::get('apiato.api.throttle.attempts'))->by($request->user()?->id ?: $request->ip());
+            });
+
+            $rateLimitMiddleware = 'throttle:api';
         }
 
         return $rateLimitMiddleware;
