@@ -1,18 +1,10 @@
-# CHANGELOG
+## [v7.0.0](https://github.com/apiato/core/compare/v10.0.15...v11.0.0) - 2022-04-27
+Apiato Core 7 includes a variety of changes to the application skeleton. Please consult the diff to see what's new.
 
-## v2.3.*
+For a more details please see [Apiato 11 Release Notes]().
 
-This is `apiato/core` that works with `laravel 5.6`
+# Release Notes
 
 ### Added
 
-### Fixed
-
-- Fixed a small issue with the `HashIdTrait`
-
-### Changed
-
-- Updated Dependencies in `composer.json` file to the latest versions
-
-### Removed
-
+- Added support for `Laravel 9.0`
