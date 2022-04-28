@@ -5,7 +5,6 @@ namespace Apiato\Core\Abstracts\Exceptions;
 use Exception as BaseException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
-use stdClass;
 use Throwable;
 
 abstract class Exception extends BaseException
@@ -71,7 +70,7 @@ abstract class Exception extends BaseException
         return $this;
     }
 
-    public function getErrors(): array|stdClass
+    public function getErrors(): array
     {
         $translatedErrors = [];
 
@@ -91,6 +90,6 @@ abstract class Exception extends BaseException
             $translatedErrors[$key] = $translatedValues;
         }
 
-        return empty($translatedErrors) ? new stdClass(): $translatedErrors;
+        return $translatedErrors;
     }
 }
