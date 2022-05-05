@@ -2,17 +2,11 @@
 
 namespace Apiato\Core\Traits;
 
-use Illuminate\Support\Facades\Artisan;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\PersonalAccessClient;
 
 trait TestCaseTrait
 {
-    public function migrateDatabase(): void
-    {
-        Artisan::call('migrate');
-    }
-
     /**
      * Override default URL subDomain in case you want to change it for some tests
      *
@@ -34,9 +28,9 @@ trait TestCaseTrait
         $array = explode('.', $info['host']);
 
         $withoutDomain = (array_key_exists(
-            count($array) - 2,
-            $array
-        ) ? $array[count($array) - 2] : '') . '.' . $array[count($array) - 1];
+                count($array) - 2,
+                $array
+            ) ? $array[count($array) - 2] : '') . '.' . $array[count($array) - 1];
 
         $newSubDomain = $info['scheme'] . '://' . $this->subDomain . '.' . $withoutDomain;
 
