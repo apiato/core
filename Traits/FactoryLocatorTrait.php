@@ -18,7 +18,7 @@ trait FactoryLocatorTrait
         Factory::useNamespace($nameSpace);
         $className = class_basename(static::class);
 
-        if (!class_exists($nameSpace . $className . 'Factory')) {
+        if (!class_exists($nameSpace . $className . 'Factory', false)) {
             return null;
         }
 
