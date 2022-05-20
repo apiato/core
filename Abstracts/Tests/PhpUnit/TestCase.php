@@ -29,6 +29,11 @@ abstract class TestCase extends LaravelTestCase
     protected string $baseUrl;
 
     /**
+     * Seed the DB on migrations
+     */
+    protected bool $seed = true;
+
+    /**
      * Setup the test environment, before each test.
      */
     protected function setUp(): void
@@ -46,15 +51,10 @@ abstract class TestCase extends LaravelTestCase
 
     /**
      * Refresh the in-memory database.
-     * Overridden refreshTestDatabase Trait
      */
     protected function refreshInMemoryDatabase(): void
     {
-        // Migrate the database
-        $this->migrateDatabase();
-
-        // Seed the database
-        $this->seed();
+        $this->artisan('migrate', $this->migrateUsing());
 
         // Install Passport Client for Testing
         $this->setupPassportOAuth2();
@@ -64,13 +64,11 @@ abstract class TestCase extends LaravelTestCase
 
     /**
      * Refresh a conventional test database.
-     * Overridden refreshTestDatabase Trait
      */
     protected function refreshTestDatabase(): void
     {
         if (!RefreshDatabaseState::$migrated) {
-            $this->artisan('migrate:fresh');
-            $this->seed();
+            $this->artisan('migrate:fresh', $this->migrateFreshUsing());
             $this->setupPassportOAuth2();
 
             $this->app[Kernel::class]->setArtisan(null);
