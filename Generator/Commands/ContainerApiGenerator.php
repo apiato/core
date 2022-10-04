@@ -24,6 +24,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         ['events', null, InputOption::VALUE_OPTIONAL, 'Generate Events for this Container?'],
         ['listeners', null, InputOption::VALUE_OPTIONAL, 'Generate Event Listeners for Events of this Container?'],
         ['tests', null, InputOption::VALUE_OPTIONAL, 'Generate Tests for this Container?'],
+        ['maincalled', false, InputOption::VALUE_NONE],
     ];
     /**
      * The console command name.
@@ -367,8 +368,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             ]);
         }
 
-        $this->printInfoMessage('Generating Composer File');
-        return [
+       $generateComposerFile = [
             'path-parameters' => [
                 'section-name' => $this->sectionName,
                 'container-name' => $this->containerName,
@@ -384,6 +384,14 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'file-name' => $this->fileName,
             ],
         ];
+
+        if (!$this->option('maincalled')){
+            $this->printInfoMessage('Generating Composer File');
+            return $generateComposerFile;
+        }
+
+        return null;
+        
     }
 
     /**
