@@ -79,7 +79,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
                 '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => 'composer',
-                '--maincalled' => true,G
+                '--maincalled' => true,
             ]);
         }
 
