@@ -17,6 +17,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
     public array $inputs = [
         ['url', null, InputOption::VALUE_OPTIONAL, 'The base URI of all endpoints (/stores, /cars, ...)'],
         ['controllertype', null, InputOption::VALUE_OPTIONAL, 'The controller type (SAC, MAC)'],
+        ['maincalled', false, InputOption::VALUE_NONE],
     ];
     /**
      * The console command name.
@@ -280,9 +281,8 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             ]);
         }
 
-        $this->printInfoMessage('Generating Composer File');
 
-        return [
+        $generateComposerFile = [
             'path-parameters' => [
                 'section-name' => $this->sectionName,
                 'container-name' => $this->containerName,
@@ -298,6 +298,13 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                 'file-name' => $this->fileName,
             ],
         ];
+
+        if (!$this->option('maincalled')){
+            $this->printInfoMessage('Generating Composer File');
+            return $generateComposerFile;
+        }
+        
+        return null;
     }
 
     /**
