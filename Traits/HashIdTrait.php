@@ -66,7 +66,7 @@ trait HashIdTrait
      *
      * if the id is not decodable, null will be returned
      */
-    public function decode(?string $id): int|null
+    public function decode(?string $id): ?int
     {
         // check if passed as null, (could be an optional decodable variable)
         if (is_null($id) || strtolower($id) === 'null') {
