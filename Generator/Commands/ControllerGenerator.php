@@ -58,7 +58,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
             $this->checkParameterOrChoice(
                 'stub',
                 'Select the Stub you want to load',
-                ['Generic', 'CRUD.API', 'CRUD.WEB'],
+                ['Generic', 'CRUD', 'Create', 'Delete', 'Find', 'GetAll', 'Update'],
                 0
             )
         );
