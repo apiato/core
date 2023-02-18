@@ -33,45 +33,51 @@ trait RoutesLoaderTrait
      */
     private function loadApiContainerRoutes(string $containerPath): void
     {
-        // Build the container api routes path
-        $apiRoutesPath = $containerPath . '/UI/API/Routes';
-        // Build the namespace from the path
-        $controllerNamespace = $containerPath . '\\UI\API\Controllers';
+        $apiRoutesPath = $this->getRoutesPathForUI($containerPath, 'API');
 
         if (File::isDirectory($apiRoutesPath)) {
-            $files = File::allFiles($apiRoutesPath);
-            $files = Arr::sort($files, function ($file) {
-                return $file->getFilename();
-            });
+            $files = $this->getFilesSortedByName($apiRoutesPath);
             foreach ($files as $file) {
-                $this->loadApiRoute($file, $controllerNamespace);
+                $this->loadApiRoute($file);
             }
         }
     }
 
-    /**
-     * @param $file
-     * @param $controllerNamespace
-     */
-    private function loadApiRoute($file, $controllerNamespace): void
+    private function getRoutesPathForUI(string $containerPath, string $ui): string
     {
-        $routeGroupArray = $this->getRouteGroup($file, $controllerNamespace);
+        return $this->getUIPathForContainer($containerPath, $ui) . DIRECTORY_SEPARATOR . 'Routes';
+    }
+
+    private function getUIPathForContainer(string $containerPath, string $ui): string
+    {
+        return $containerPath . DIRECTORY_SEPARATOR . 'UI' . DIRECTORY_SEPARATOR . $ui;
+    }
+
+    /**
+     * @param string $apiRoutesPath
+     * @return array|SplFileInfo[]
+     */
+    private function getFilesSortedByName(string $apiRoutesPath): array
+    {
+        $files = File::allFiles($apiRoutesPath);
+        $files = Arr::sort($files, function ($file) {
+            return $file->getFilename();
+        });
+        return $files;
+    }
+
+    private function loadApiRoute(SplFileInfo $file): void
+    {
+        $routeGroupArray = $this->getApiRouteGroup($file);
 
         Route::group($routeGroupArray, function ($router) use ($file) {
             require $file->getPathname();
         });
     }
 
-    /**
-     * @param      $endpointFileOrPrefixString
-     * @param null $controllerNamespace
-     *
-     * @return  array
-     */
-    public function getRouteGroup($endpointFileOrPrefixString, $controllerNamespace = null): array
+    public function getApiRouteGroup(SplFileInfo|string $endpointFileOrPrefixString): array
     {
         return [
-            'namespace' => $controllerNamespace,
             'middleware' => $this->getMiddlewares(),
             'domain' => $this->getApiUrl(),
             // If $endpointFileOrPrefixString is a file then get the version name from the file name, else if string use that string as prefix
@@ -79,9 +85,6 @@ trait RoutesLoaderTrait
         ];
     }
 
-    /**
-     * @return  array
-     */
     private function getMiddlewares(): array
     {
         return array_filter([
@@ -90,9 +93,6 @@ trait RoutesLoaderTrait
         ]);
     }
 
-    /**
-     * @return  null|string
-     */
     private function getRateLimitMiddleware(): ?string
     {
         $rateLimitMiddleware = null;
@@ -108,30 +108,17 @@ trait RoutesLoaderTrait
         return $rateLimitMiddleware;
     }
 
-    /**
-     * @return  mixed
-     */
-    private function getApiUrl()
+    private function getApiUrl(): string
     {
         return Config::get('apiato.api.url');
     }
 
-    /**
-     * @param $file
-     *
-     * @return  string
-     */
-    private function getApiVersionPrefix($file): string
+    private function getApiVersionPrefix(SplFileInfo $file): string
     {
         return Config::get('apiato.api.prefix') . (Config::get('apiato.api.enable_version_prefix') ? $this->getRouteFileVersionFromFileName($file) : '');
     }
 
-    /**
-     * @param $file
-     *
-     * @return  string|bool
-     */
-    private function getRouteFileVersionFromFileName($file): string|bool
+    private function getRouteFileVersionFromFileName(SplFileInfo $file): string|bool
     {
         $fileNameWithoutExtension = $this->getRouteFileNameWithoutExtension($file);
 
@@ -149,14 +136,9 @@ trait RoutesLoaderTrait
         return $apiVersion;
     }
 
-    /**
-     * @param SplFileInfo $file
-     *
-     * @return  mixed
-     */
-    private function getRouteFileNameWithoutExtension(SplFileInfo $file): mixed
+    private function getRouteFileNameWithoutExtension(SplFileInfo $file): string
     {
-        return pathinfo($file->getFileName())['filename'];
+        return pathinfo($file->getFilename(), PATHINFO_FILENAME);
     }
 
     /**
@@ -166,30 +148,19 @@ trait RoutesLoaderTrait
      */
     private function loadWebContainerRoutes($containerPath): void
     {
-        // build the container web routes path
-        $webRoutesPath = $containerPath . '/UI/WEB/Routes';
-        // build the namespace from the path
-        $controllerNamespace = $containerPath . '\\UI\WEB\Controllers';
+        $webRoutesPath = $this->getRoutesPathForUI($containerPath, 'WEB');
 
         if (File::isDirectory($webRoutesPath)) {
-            $files = File::allFiles($webRoutesPath);
-            $files = Arr::sort($files, function ($file) {
-                return $file->getFilename();
-            });
+            $files = $this->getFilesSortedByName($webRoutesPath);
             foreach ($files as $file) {
-                $this->loadWebRoute($file, $controllerNamespace);
+                $this->loadWebRoute($file);
             }
         }
     }
 
-    /**
-     * @param $file
-     * @param $controllerNamespace
-     */
-    private function loadWebRoute($file, $controllerNamespace): void
+    private function loadWebRoute(SplFileInfo $file): void
     {
         Route::group([
-            'namespace' => $controllerNamespace,
             'middleware' => ['web'],
         ], function ($router) use ($file) {
             require $file->getPathname();
