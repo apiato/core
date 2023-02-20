@@ -2,13 +2,10 @@
 
 namespace Apiato\Core\Abstracts\Actions;
 
-use Apiato\Core\Traits\HasRequestCriteriaTrait;
 use Illuminate\Support\Facades\DB;
 
 abstract class Action
 {
-    use HasRequestCriteriaTrait;
-
     protected string $ui;
 
     public function transactionalRun(...$arguments)

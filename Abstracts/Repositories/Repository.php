@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Repositories;
 
+use Apiato\Core\Traits\HasRequestCriteriaTrait;
 use Prettus\Repository\Contracts\CacheableInterface as PrettusCacheable;
 use Prettus\Repository\Eloquent\BaseRepository as PrettusRepository;
 use Prettus\Repository\Traits\CacheableRepository as PrettusCacheableRepository;
@@ -9,6 +10,7 @@ use Request;
 
 abstract class Repository extends PrettusRepository implements PrettusCacheable
 {
+    use HasRequestCriteriaTrait;
     use PrettusCacheableRepository {
         PrettusCacheableRepository::paginate as cacheablePaginate;
     }
