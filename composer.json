@@ -21,22 +21,22 @@
         }
     ],
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.1",
         "apiato/container-installer": "^2.0.8",
-        "prettus/l5-repository": "^2.8.0",
+        "prettus/l5-repository": "^2.9.0",
         "spatie/laravel-fractal": "^6.0",
-        "vinkla/hashids": "^10.0",
+        "vinkla/hashids": "^11.0",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^9.0",
-        "laravel/passport": "^10.3.0",
+        "laravel/framework": "^10.0",
+        "laravel/passport": "^11.0.0",
         "ext-gettext": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
         "mockery/mockery": "^1.4.4",
         "friendsofphp/php-cs-fixer": "^3.8.0",
-        "vimeo/psalm": "^4.22.0"
+        "vimeo/psalm": "^5.8.0"
     },
     "autoload": {
         "psr-4": {
@@ -67,12 +67,18 @@
     "scripts": {
         "php-cs-fixer": "php-cs-fixer --config=./php_cs.dist.php"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
         "allow-plugins": {
             "apiato/container-installer": true,
-            "composer/package-versions-deprecated": true
+            "composer/package-versions-deprecated": true,
+            "wikimedia/composer-merge-plugin": true,
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
