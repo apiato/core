@@ -20,7 +20,7 @@ trait HashIdTrait
      *
      * Will be used by the Eloquent Models (since it's used as trait there).
      *
-     * @param null $field The field of the model to be hashed
+     * @param ?string $field The field of the model to be hashed
      * @return  mixed
      */
     public function getHashedKey($field = null): mixed
