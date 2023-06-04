@@ -2,7 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
 
-use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use Illuminate\Support\Facades\Schema;
 
 /**
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
  * @group {{_container-name}}
  * @group unit
  */
-class {{class-name}} extends TestCase
+class {{class-name}} extends UnitTestCase
 {
     public function test_{{table-name}}_table_has_expected_columns(): void
     {

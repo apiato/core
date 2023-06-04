@@ -4,7 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Delete{{model}}Task;
-use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use App\Ship\Exceptions\NotFoundException;
 
 /**
@@ -13,7 +13,7 @@ use App\Ship\Exceptions\NotFoundException;
  * @group {{_container-name}}
  * @group unit
  */
-class {{class-name}} extends TestCase
+class {{class-name}} extends UnitTestCase
 {
     public function testDelete{{model}}(): void
     {

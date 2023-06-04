@@ -3,7 +3,7 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
-use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 
 /**
  * Class {{class-name}}.
@@ -11,7 +11,7 @@ use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
  * @group {{_container-name}}
  * @group unit
  */
-class {{class-name}} extends TestCase
+class {{class-name}} extends UnitTestCase
 {
     public function testCreate{{model}}(): void
     {

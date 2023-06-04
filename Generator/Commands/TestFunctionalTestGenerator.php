@@ -58,7 +58,6 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
         $stub = $this->option('stub');
         $url = $this->option('url');
 
-        // Load a new stub-file if generating container otherwise use generic
         $this->stubName = $stub ? 'tests/functional/' . Str::lower($stub) . '.stub' : 'tests/functional/' . $ui . '.stub';
 
         $model = $model ?? $this->containerName;
@@ -71,6 +70,7 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
             // $ui will be prepended to this string while creating the file.
             // So the final file name will become something like Api + TestCase => ApiTestCase
             '--file' => 'TestCase',
+            '--type' => 'functional',
             '--ui' => $ui,
         ]);
 

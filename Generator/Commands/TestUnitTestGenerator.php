@@ -73,7 +73,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
             '--section' => $this->sectionName,
             '--container' => $this->containerName,
             '--file' => 'TestCase',
-            '--ui' => 'generic',
+            '--type' => 'unit',
         ]);
 
         return [

@@ -4,7 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\GetAll{{models}}Task;
-use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
@@ -13,7 +13,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
  * @group {{_container-name}}
  * @group unit
  */
-class {{class-name}} extends TestCase
+class {{class-name}} extends UnitTestCase
 {
     public function testGetAll{{models}}(): void
     {

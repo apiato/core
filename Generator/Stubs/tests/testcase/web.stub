@@ -2,14 +2,14 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests;
 
-use App\Ship\Parents\Tests\PhpUnit\TestCase as ShipTestCase;
+use App\Ship\Parents\Tests\PhpUnit\TestCase as ParentTestCase;
 
 /**
  * Class {{class-name}}.
  *
  * Use this class to add your container specific WEB related test helper functions.
  */
-class {{class-name}} extends ShipTestCase
+class {{class-name}} extends ParentTestCase
 {
     // ..
 }

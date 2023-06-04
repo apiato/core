@@ -3,7 +3,8 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Create{{model}}Task;
-use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
+
 use App\Ship\Exceptions\CreateResourceFailedException;
 
 /**
@@ -12,7 +13,7 @@ use App\Ship\Exceptions\CreateResourceFailedException;
  * @group {{_container-name}}
  * @group unit
  */
-class {{class-name}} extends TestCase
+class {{class-name}} extends UnitTestCase
 {
     public function testCreate{{model}}(): void
     {
