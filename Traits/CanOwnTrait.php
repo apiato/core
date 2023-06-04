@@ -32,7 +32,7 @@ trait CanOwnTrait
         return $ownerKey == ($localKey ?? $this->getKey());
     }
 
-    private function guessForeignKeyName(): string
+    protected function guessForeignKeyName(): string
     {
         $className = Str::snake(class_basename($this));
 
@@ -62,7 +62,7 @@ trait CanOwnTrait
      * @param Model $ownable
      * @return array
      */
-    private function guessMorphs(Model $ownable): array
+    protected function guessMorphs(Model $ownable): array
     {
         $className = Str::snake(class_basename($ownable));
 
