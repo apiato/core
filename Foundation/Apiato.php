@@ -9,7 +9,7 @@ class Apiato
     /**
      * The Apiato version.
      */
-    public const VERSION = '11.0.0';
+    public const VERSION = '12.0.0';
 
     private const SHIP_NAME = 'ship';
     private const CONTAINERS_DIRECTORY_NAME = 'Containers';
