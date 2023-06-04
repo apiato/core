@@ -6,7 +6,6 @@ use Apiato\Core\Abstracts\Models\UserModel as User;
 use Apiato\Core\Exceptions\IncorrectIdException;
 use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\SanitizerTrait;
-use Apiato\Core\Traits\StateKeeperTrait;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
@@ -22,7 +21,6 @@ use Illuminate\Support\Facades\Config;
 abstract class Request extends LaravelRequest
 {
     use HashIdTrait;
-    use StateKeeperTrait;
     use SanitizerTrait;
 
     /**
