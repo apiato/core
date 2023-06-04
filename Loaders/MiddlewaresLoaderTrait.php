@@ -8,24 +8,20 @@ use Illuminate\Contracts\Http\Kernel;
 trait MiddlewaresLoaderTrait
 {
     /**
-     * @void
      * @throws BindingResolutionException
      */
-    public function loadMiddlewares()
+    public function loadMiddlewares(): void
     {
         $this->registerMiddleware($this->middlewares);
         $this->registerMiddlewareGroups($this->middlewareGroups);
         $this->registerMiddlewarePriority($this->middlewarePriority);
-        $this->registerRouteMiddleware($this->routeMiddleware);
+        $this->registerMiddlewareAliases($this->middlewareAliases);
     }
 
     /**
-     * Registering Route Group's
-     *
-     * @param array $middlewares
      * @throws BindingResolutionException
      */
-    private function registerMiddleware(array $middlewares = [])
+    private function registerMiddleware(array $middlewares = []): void
     {
         $httpKernel = $this->app->make(Kernel::class);
 
@@ -34,12 +30,7 @@ trait MiddlewaresLoaderTrait
         }
     }
 
-    /**
-     * Registering Route Group's
-     *
-     * @param array $middlewareGroups
-     */
-    private function registerMiddlewareGroups(array $middlewareGroups = [])
+    private function registerMiddlewareGroups(array $middlewareGroups = []): void
     {
         foreach ($middlewareGroups as $key => $middleware) {
             if (!is_array($middleware)) {
@@ -52,12 +43,7 @@ trait MiddlewaresLoaderTrait
         }
     }
 
-    /**
-     * Registering Route Middleware's priority
-     *
-     * @param array $middlewarePriority
-     */
-    private function registerMiddlewarePriority(array $middlewarePriority = [])
+    private function registerMiddlewarePriority(array $middlewarePriority = []): void
     {
         foreach ($middlewarePriority as $key => $middleware) {
             if (!in_array($middleware, $this->app['router']->middlewarePriority)) {
@@ -66,12 +52,7 @@ trait MiddlewaresLoaderTrait
         }
     }
 
-    /**
-     * Registering Route Middleware's
-     *
-     * @param array $routeMiddleware
-     */
-    private function registerRouteMiddleware(array $routeMiddleware = [])
+    private function registerMiddlewareAliases(array $routeMiddleware = []): void
     {
         foreach ($routeMiddleware as $key => $value) {
             $this->app['router']->aliasMiddleware($key, $value);
