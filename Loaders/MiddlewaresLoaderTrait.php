@@ -52,9 +52,9 @@ trait MiddlewaresLoaderTrait
         }
     }
 
-    private function registerMiddlewareAliases(array $routeMiddleware = []): void
+    private function registerMiddlewareAliases(array $middlewareAlias = []): void
     {
-        foreach ($routeMiddleware as $key => $value) {
+        foreach ($middlewareAlias as $key => $value) {
             $this->app['router']->aliasMiddleware($key, $value);
         }
     }
