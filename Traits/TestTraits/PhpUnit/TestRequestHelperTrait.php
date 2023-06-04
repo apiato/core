@@ -13,7 +13,7 @@ use JsonException;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
-trait TestsRequestHelperTrait
+trait TestRequestHelperTrait
 {
     /**
      * property to be set on the user test class

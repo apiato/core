@@ -6,7 +6,7 @@ use Apiato\Core\Abstracts\Models\UserModel;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 
-trait TestsAuthHelperTrait
+trait TestAuthHelperTrait
 {
     /**
      * Logged in user object.

@@ -56,6 +56,38 @@ abstract class Request extends LaravelRequest
     }
 
     /**
+     * Add properties to the request that are not part of the request data
+     * but are needed for the request to be processed.
+     * For example, in the unit tests, we can add the url parameters to the request which is not part of the request data.
+     * It is best used with the `injectData` method.
+     * @param array $properties
+     * @return $this
+     */
+    public function withUrlParameters(array $properties): self
+    {
+        foreach ($properties as $key => $value) {
+            $this->{$key} = $value;
+        }
+
+        return $this;
+    }
+
+    public function getAccessArray(): array
+    {
+        return $this->access ?? [];
+    }
+
+    public function getDecodeArray(): array
+    {
+        return $this->decode ?? [];
+    }
+
+    public function getUrlParametersArray(): array
+    {
+        return $this->urlParameters ?? [];
+    }
+
+    /**
      * check if a user has permission to perform an action.
      * User can set multiple permissions (separated with "|") and if the user has
      * any of the permissions, he will be authorized to proceed with this action.
