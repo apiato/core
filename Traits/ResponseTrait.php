@@ -41,10 +41,10 @@ trait ResponseTrait
         }
 
         // add specific meta information to the response message
-        $this->metaData = [
+        $this->metaData = array_merge($this->metaData, [
             'include' => $transformer->getAvailableIncludes(),
             'custom' => $meta,
-        ];
+        ]);
 
         // no resource key was set
         if (!$resourceKey) {
