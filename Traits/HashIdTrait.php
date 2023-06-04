@@ -20,10 +20,10 @@ trait HashIdTrait
      *
      * Will be used by the Eloquent Models (since it's used as trait there).
      *
-     * @param null $field The field of the model to be hashed
+     * @param string|null $field The field of the model to be hashed
      * @return string|null
      */
-    public function getHashedKey($field = null): ?string
+    public function getHashedKey(?string $field = null): ?string
     {
         // if no key is set, use the default key name (i.e., id)
         if ($field === null) {
