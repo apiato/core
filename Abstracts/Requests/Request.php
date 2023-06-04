@@ -95,7 +95,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    private function hasAnyPermissionAccess($user): array
+    protected function hasAnyPermissionAccess($user): array
     {
         if (!array_key_exists('permissions', $this->access) || !$this->access['permissions']) {
             return [];
@@ -114,7 +114,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    private function hasAnyRoleAccess($user): array
+    protected function hasAnyRoleAccess($user): array
     {
         if (!array_key_exists('roles', $this->access) || !$this->access['roles']) {
             return [];
@@ -187,7 +187,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    private function mergeUrlParametersWithRequestData(array $requestData): array
+    protected function mergeUrlParametersWithRequestData(array $requestData): array
     {
         if (isset($this->urlParameters) && !empty($this->urlParameters)) {
             foreach ($this->urlParameters as $param) {
