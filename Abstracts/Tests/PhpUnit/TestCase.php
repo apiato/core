@@ -4,9 +4,9 @@ namespace Apiato\Core\Abstracts\Tests\PhpUnit;
 
 use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\TestCaseTrait;
-use Apiato\Core\Traits\TestsTraits\PhpUnit\TestAssertionHelperTrait;
-use Apiato\Core\Traits\TestsTraits\PhpUnit\TestAuthHelperTrait;
-use Apiato\Core\Traits\TestsTraits\PhpUnit\TestRequestHelperTrait;
+use Apiato\Core\Traits\TestTraits\PhpUnit\TestAssertionHelperTrait;
+use Apiato\Core\Traits\TestTraits\PhpUnit\TestAuthHelperTrait;
+use Apiato\Core\Traits\TestTraits\PhpUnit\TestRequestHelperTrait;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;

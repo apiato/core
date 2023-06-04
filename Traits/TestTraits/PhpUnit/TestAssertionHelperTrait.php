@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
+namespace Apiato\Core\Traits\TestTraits\PhpUnit;
 
 use Apiato\Core\Abstracts\Models\Model;
 use Apiato\Core\Abstracts\Requests\Request;
