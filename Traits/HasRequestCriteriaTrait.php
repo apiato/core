@@ -5,7 +5,7 @@ namespace Apiato\Core\Traits;
 use Apiato\Core\Abstracts\Repositories\Repository;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Exception;
-use Hashids\HashidsException;
+use InvalidArgumentException;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Vinkla\Hashids\Facades\Hashids;
@@ -137,7 +137,7 @@ trait HasRequestCriteriaTrait
         foreach ($fieldsToDecode as $field) {
             if (array_key_exists($field, $searchArray)) {
                 if (empty(Hashids::decode($searchArray[$field]))) {
-                    throw new HashidsException("Only hash ids are allowed. $field:$searchArray[$field]");
+                    throw new InvalidArgumentException("Only hash ids are allowed. $field:$searchArray[$field]");
                 }
                 $searchArray[$field] = Hashids::decode($searchArray[$field])[0];
             }
