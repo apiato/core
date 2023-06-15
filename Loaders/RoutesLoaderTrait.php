@@ -19,12 +19,25 @@ trait RoutesLoaderTrait
      */
     public function runRoutesAutoLoader(): void
     {
+        if (!$this->shouldRegisterRoutes()) {
+            return;
+        }
+
         $allContainerPaths = Apiato::getAllContainerPaths();
 
         foreach ($allContainerPaths as $containerPath) {
             $this->loadApiContainerRoutes($containerPath);
             $this->loadWebContainerRoutes($containerPath);
         }
+    }
+
+    private function shouldRegisterRoutes(): bool
+    {
+        if ($this->app->routesAreCached()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
