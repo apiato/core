@@ -33,9 +33,11 @@
         "ext-gettext": "*"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-latest",
-        "mockery/mockery": "^1.4.4",
+        "fakerphp/faker": "^1.19.1",
         "friendsofphp/php-cs-fixer": "^3.8.0",
+        "mockery/mockery": "^1.4.4",
+        "phpunit/phpunit": "^10.0",
+        "roave/security-advisories": "dev-latest",
         "vimeo/psalm": "^5.8.0"
     },
     "autoload": {
