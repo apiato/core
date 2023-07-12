@@ -134,6 +134,7 @@ trait TestRequestHelperTrait
 
     private function buildUrlForUri($uri): string
     {
+        $uri = Config::get('apiato.api.prefix') . $uri;
         // add `/` at the beginning in case it doesn't exist
         if (!Str::startsWith($uri, '/')) {
             $uri = '/' . $uri;
