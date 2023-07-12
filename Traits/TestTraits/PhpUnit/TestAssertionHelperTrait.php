@@ -17,6 +17,7 @@ trait TestAssertionHelperTrait
     {
         $defaultCasts = [
             'id' => 'int',
+            'deleted_at' => 'datetime',
         ];
 
         $casts = [...$defaultCasts, ...$extraDefaultField];
