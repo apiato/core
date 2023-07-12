@@ -3,10 +3,32 @@
 namespace Apiato\Core\Traits\TestTraits\PhpUnit;
 
 use Apiato\Core\Abstracts\Models\Model;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 
 trait TestAssertionHelperTrait
 {
+    /**
+     * Assert that the Gate::allows() method is called once with the given arguments.
+     *
+     * @param string $policyMethodName
+     * @param ...$args
+     * @return Gate|(Gate&MockObject)|MockObject
+     * @throws Exception
+     */
+    protected function getGateMock(string $policyMethodName, ...$args)
+    {
+        $gateMock = $this->createMock(Gate::class);
+        $gateMock->expects($this->once())
+            ->method('allows')
+            ->with($policyMethodName, ...$args)
+            ->willReturn(true);
+
+        return $gateMock;
+    }
+
     /**
      * Assert that the model casts field is empty.
      * By default, the model casts will have 'id' and 'deleted_at' fields (given model is soft deletable).
