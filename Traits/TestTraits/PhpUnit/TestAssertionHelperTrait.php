@@ -13,7 +13,7 @@ trait TestAssertionHelperTrait
      * This method will exclude those fields from the assertion.
      * If you want to add more fields, you can pass them as an array.
      */
-    public function assertModelCastsIsEmpty(Model $model, array ...$extraDefaultField): void
+    protected function assertModelCastsIsEmpty(Model $model, array ...$extraDefaultField): void
     {
         $defaultCasts = [
             'id' => 'int',
@@ -31,7 +31,7 @@ trait TestAssertionHelperTrait
      * @param Collection $collection
      * @return bool
      */
-    public function inIds($id, Collection $collection): bool
+    protected function inIds($id, Collection $collection): bool
     {
         return in_array($id, $collection->map(fn ($item) => $item->getHashedKey())->toArray());
     }
