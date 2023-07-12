@@ -19,11 +19,9 @@ trait TestAssertionHelperTrait
             'id' => 'int',
         ];
 
-        foreach ($extraDefaultField as $field) {
-            $defaultCasts = array_merge($defaultCasts, $field);
-        }
+        $casts = [...$defaultCasts, ...$extraDefaultField];
 
-        $this->assertEmpty(array_diff($model->getCasts(), $defaultCasts));
+        $this->assertEmpty(array_diff($model->getCasts(), $casts));
     }
 
     /**
