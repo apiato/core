@@ -9,8 +9,8 @@ trait TestAssertionHelperTrait
 {
     /**
      * Assert that the model casts field is empty.
-     * By default, the model casts will have the 'id' field as 'int'.
-     * This method will exclude this field from the assertion.
+     * By default, the model casts will have 'id' and 'deleted_at' fields (given model is soft deletable).
+     * This method will exclude those fields from the assertion.
      * If you want to add more fields, you can pass them as an array.
      */
     public function assertModelCastsIsEmpty(Model $model, array ...$extraDefaultField): void
