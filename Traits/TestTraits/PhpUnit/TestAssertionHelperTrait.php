@@ -56,7 +56,7 @@ trait TestAssertionHelperTrait
      */
     protected function inIds($id, Collection $collection): bool
     {
-        return in_array($id, $collection->map(fn ($item) => $item->getHashedKey())->toArray());
+        return in_array($this->decode($id), $collection->pluck('id')->toArray(), true);
     }
 
     /**
