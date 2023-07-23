@@ -146,8 +146,8 @@ trait HashIdTrait
             } else {
                 $decodedField = $this->decode($data);
 
-                if (empty($decodedField)) {
-                    throw new IncorrectIdException('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
+                if (is_null($decodedField)) {
+                    throw new IncorrectIdException();
                 }
 
                 return $decodedField;
