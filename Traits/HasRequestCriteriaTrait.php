@@ -6,6 +6,7 @@ use Apiato\Core\Abstracts\Repositories\Repository;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Exception;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Deprecated;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Vinkla\Hashids\Facades\Hashids;
@@ -16,6 +17,10 @@ trait HasRequestCriteriaTrait
      * @throws CoreInternalErrorException
      * @throws RepositoryException
      */
+    #[Deprecated(
+        reason: 'since Apiato 12.2.0, Use addRequestCriteria() on the Repository instead.
+        Will be removed from Tasks and Actions.',
+        replacement: '%class%->repository->addRequestCriteria();')]
     public function addRequestCriteria($repository = null, array $fieldsToDecode = ['id']): static
     {
         $validatedRepository = $this->validateRepository($repository);
@@ -41,7 +46,7 @@ trait HasRequestCriteriaTrait
         $validatedRepository = $repository;
 
         // check if we have a "custom" repository
-        if (null === $repository) {
+        if (is_null($repository)) {
             if (!isset($this->repository)) {
                 throw new CoreInternalErrorException('No protected or public accessible repository available');
             }
@@ -49,7 +54,7 @@ trait HasRequestCriteriaTrait
         }
 
         // check, if the validated repository is null
-        if (null === $validatedRepository) {
+        if (is_null($validatedRepository)) {
             throw new CoreInternalErrorException();
         }
 
@@ -137,7 +142,7 @@ trait HasRequestCriteriaTrait
         foreach ($fieldsToDecode as $field) {
             if (array_key_exists($field, $searchArray)) {
                 if (empty(Hashids::decode($searchArray[$field]))) {
-                    throw new InvalidArgumentException("Only hash ids are allowed. $field:$searchArray[$field]");
+                    throw new InvalidArgumentException("Only hash ids are allowed. {$field}:$searchArray[$field]");
                 }
                 $searchArray[$field] = Hashids::decode($searchArray[$field])[0];
             }
@@ -174,7 +179,7 @@ trait HasRequestCriteriaTrait
         $length = count($fields);
         for ($i = 0; $i < $length; $i++) {
             $field = $fields[$i];
-            $decodedSearchQuery .= "$field:$decodedSearchArray[$field]";
+            $decodedSearchQuery .= "{$field}:$decodedSearchArray[$field]";
             if ($length !== 1 && $i < $length - 1) {
                 $decodedSearchQuery .= ';';
             }
