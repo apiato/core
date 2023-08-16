@@ -135,9 +135,9 @@ trait RoutesLoaderTrait
     private function getRouteFileVersionFromFileName(SplFileInfo $file): string|bool
     {
         $fileNameWithoutExtension = $this->getRouteFileNameWithoutExtension($file);
-        
+
         $fileNameWithoutExtensionExploded = explode('.', $fileNameWithoutExtension);
-    
+
         end($fileNameWithoutExtensionExploded);
     
         $version = prev($fileNameWithoutExtensionExploded);
