@@ -135,13 +135,23 @@ trait RoutesLoaderTrait
     private function getRouteFileVersionFromFileName(SplFileInfo $file): string|bool
     {
         $fileNameWithoutExtension = $this->getRouteFileNameWithoutExtension($file);
-
+        
         $fileNameWithoutExtensionExploded = explode('.', $fileNameWithoutExtension);
-
+    
         end($fileNameWithoutExtensionExploded);
-
-        // get the array before the last one
-        return prev($fileNameWithoutExtensionExploded);
+    
+        $version = prev($fileNameWithoutExtensionExploded);
+    
+        if ($version === 'noversion') {
+            return false;
+        }
+    
+        // Replace underscore with period for decimal versioning
+        return str_replace(
+          Config::get('apiato.api.multiple_segment_version_file_seperator', '-'), 
+          Config::get('apiato.api.multiple_segment_version_route_seperator', '.'), 
+          $version
+        );
     }
 
     private function getRouteFileNameWithoutExtension(SplFileInfo $file): string
