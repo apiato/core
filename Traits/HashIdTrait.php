@@ -20,10 +20,10 @@ trait HashIdTrait
      *
      * Will be used by the Eloquent Models (since it's used as trait there).
      *
-     * @param null $field The field of the model to be hashed
-     * @return  mixed
+     * @param string|null $field The field of the model to be hashed
+     * @return string|null
      */
-    public function getHashedKey($field = null): mixed
+    public function getHashedKey(?string $field = null): ?string
     {
         // if no key is set, use the default key name (i.e., id)
         if ($field === null) {
@@ -35,7 +35,7 @@ trait HashIdTrait
             // we need to get the VALUE for this KEY (model field)
             $value = $this->getAttribute($field);
 
-            return $this->encoder($value);
+            return is_null($value) ? null : $this->encoder($value);
         }
 
         return $this->getAttribute($field);
@@ -44,6 +44,11 @@ trait HashIdTrait
     public function encoder($id): string
     {
         return Hashids::encode($id);
+    }
+
+    public function encode($id): string
+    {
+        return $this->encoder($id);
     }
 
     public function decodeArray(array $ids): array
@@ -84,11 +89,6 @@ trait HashIdTrait
     private function decoder($id): array
     {
         return Hashids::decode($id);
-    }
-
-    public function encode($id): string
-    {
-        return $this->encoder($id);
     }
 
     /**
@@ -146,8 +146,8 @@ trait HashIdTrait
             } else {
                 $decodedField = $this->decode($data);
 
-                if (empty($decodedField)) {
-                    throw new IncorrectIdException('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
+                if (is_null($decodedField)) {
+                    throw new IncorrectIdException();
                 }
 
                 return $decodedField;

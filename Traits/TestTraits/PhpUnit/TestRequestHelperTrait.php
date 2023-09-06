@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Traits\TestsTraits\PhpUnit;
+namespace Apiato\Core\Traits\TestTraits\PhpUnit;
 
 use Apiato\Core\Exceptions\MissingTestEndpointException;
 use Apiato\Core\Exceptions\UndefinedMethodException;
@@ -13,7 +13,7 @@ use JsonException;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
-trait TestsRequestHelperTrait
+trait TestRequestHelperTrait
 {
     /**
      * property to be set on the user test class
@@ -134,6 +134,7 @@ trait TestsRequestHelperTrait
 
     private function buildUrlForUri($uri): string
     {
+        $uri = Config::get('apiato.api.prefix') . $uri;
         // add `/` at the beginning in case it doesn't exist
         if (!Str::startsWith($uri, '/')) {
             $uri = '/' . $uri;

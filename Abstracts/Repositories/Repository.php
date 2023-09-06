@@ -3,10 +3,11 @@
 namespace Apiato\Core\Abstracts\Repositories;
 
 use Apiato\Core\Traits\HasRequestCriteriaTrait;
+use Illuminate\Support\Facades\Request;
 use Prettus\Repository\Contracts\CacheableInterface as PrettusCacheable;
+use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Eloquent\BaseRepository as PrettusRepository;
 use Prettus\Repository\Traits\CacheableRepository as PrettusCacheableRepository;
-use Request;
 
 abstract class Repository extends PrettusRepository implements PrettusCacheable
 {
@@ -127,5 +128,22 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
     private function exceedsMaxPaginationLimit(mixed $limit): bool
     {
         return $this->maxPaginationLimit > 0 && $limit > $this->maxPaginationLimit;
+    }
+
+    public function addRequestCriteria(array $fieldsToDecode = ['id']): static
+    {
+        $this->pushCriteria(app(RequestCriteria::class));
+        if ($this->shouldDecodeSearch()) {
+            $this->decodeSearchQueryString($fieldsToDecode);
+        }
+
+        return $this;
+    }
+
+    public function removeRequestCriteria(): static
+    {
+        $this->popCriteria(RequestCriteria::class);
+
+        return $this;
     }
 }

@@ -19,12 +19,25 @@ trait RoutesLoaderTrait
      */
     public function runRoutesAutoLoader(): void
     {
-        $containersPaths = Apiato::getAllContainerPaths();
+        if (!$this->shouldRegisterRoutes()) {
+            return;
+        }
 
-        foreach ($containersPaths as $containerPath) {
+        $allContainerPaths = Apiato::getAllContainerPaths();
+
+        foreach ($allContainerPaths as $containerPath) {
             $this->loadApiContainerRoutes($containerPath);
             $this->loadWebContainerRoutes($containerPath);
         }
+    }
+
+    private function shouldRegisterRoutes(): bool
+    {
+        if ($this->app->routesAreCached()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -33,7 +46,7 @@ trait RoutesLoaderTrait
      */
     private function loadApiContainerRoutes(string $containerPath): void
     {
-        $apiRoutesPath = $this->getRoutesPathForUI($containerPath, 'API');
+        $apiRoutesPath = $this->getRoutePathsForUI($containerPath, 'API');
 
         if (File::isDirectory($apiRoutesPath)) {
             $files = $this->getFilesSortedByName($apiRoutesPath);
@@ -43,7 +56,7 @@ trait RoutesLoaderTrait
         }
     }
 
-    private function getRoutesPathForUI(string $containerPath, string $ui): string
+    private function getRoutePathsForUI(string $containerPath, string $ui): string
     {
         return $this->getUIPathForContainer($containerPath, $ui) . DIRECTORY_SEPARATOR . 'Routes';
     }
@@ -80,7 +93,8 @@ trait RoutesLoaderTrait
         return [
             'middleware' => $this->getMiddlewares(),
             'domain' => $this->getApiUrl(),
-            // If $endpointFileOrPrefixString is a file then get the version name from the file name, else if string use that string as prefix
+            // If $endpointFileOrPrefixString is a string, use that string as prefix
+            // else, if it is a file then get the version name from the file name, and use it as prefix
             'prefix' => is_string($endpointFileOrPrefixString) ? $endpointFileOrPrefixString : $this->getApiVersionPrefix($endpointFileOrPrefixString),
         ];
     }
@@ -126,14 +140,8 @@ trait RoutesLoaderTrait
 
         end($fileNameWithoutExtensionExploded);
 
-        $apiVersion = prev($fileNameWithoutExtensionExploded); // get the array before the last one
-
-        // Skip versioning the API's root route
-        if ($apiVersion === 'ApisRoot') {
-            $apiVersion = '';
-        }
-
-        return $apiVersion;
+        // get the array before the last one
+        return prev($fileNameWithoutExtensionExploded);
     }
 
     private function getRouteFileNameWithoutExtension(SplFileInfo $file): string
@@ -148,7 +156,7 @@ trait RoutesLoaderTrait
      */
     private function loadWebContainerRoutes($containerPath): void
     {
-        $webRoutesPath = $this->getRoutesPathForUI($containerPath, 'WEB');
+        $webRoutesPath = $this->getRoutePathsForUI($containerPath, 'WEB');
 
         if (File::isDirectory($webRoutesPath)) {
             $files = $this->getFilesSortedByName($webRoutesPath);

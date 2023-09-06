@@ -4,7 +4,8 @@ namespace Apiato\Core\Traits;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Exception;
-use Hashids\HashidsException;
+use InvalidArgumentException;
+use JetBrains\PhpStorm\Deprecated;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Vinkla\Hashids\Facades\Hashids;
@@ -16,7 +17,11 @@ trait HasRequestCriteriaTrait
      * @return HasRequestCriteriaTrait
      * @throws RepositoryException
      */
-    public function addRequestCriteria(array $fieldsToDecode = ['id']): static
+    #[Deprecated(
+        reason: 'since Apiato 12.2.0, Use addRequestCriteria() on the Repository instead.
+        Will be removed from Tasks and Actions.',
+        replacement: '%class%->repository->addRequestCriteria();')]
+    public function addRequestCriteria($repository = null, array $fieldsToDecode = ['id']): static
     {
         $this->pushCriteria(app(RequestCriteria::class));
         if ($this->shouldDecodeSearch()) {
@@ -24,6 +29,40 @@ trait HasRequestCriteriaTrait
         }
 
         return $this;
+    }
+
+    /**
+     * Validates, if the given Repository exists or uses $this->repository on the Task/Action to apply functions
+     *
+     * @param $repository
+     *
+     * @return Repository
+     *
+     * @throws CoreInternalErrorException
+     */
+    private function validateRepository($repository): Repository
+    {
+        $validatedRepository = $repository;
+
+        // check if we have a "custom" repository
+        if (is_null($repository)) {
+            if (!isset($this->repository)) {
+                throw new CoreInternalErrorException('No protected or public accessible repository available');
+            }
+            $validatedRepository = $this->repository;
+        }
+
+        // check, if the validated repository is null
+        if (is_null($validatedRepository)) {
+            throw new CoreInternalErrorException();
+        }
+
+        // check if it is a Repository class
+        if (!($validatedRepository instanceof Repository)) {
+            throw new CoreInternalErrorException();
+        }
+
+        return $validatedRepository;
     }
 
     private function shouldDecodeSearch(): bool
@@ -102,7 +141,7 @@ trait HasRequestCriteriaTrait
         foreach ($fieldsToDecode as $field) {
             if (array_key_exists($field, $searchArray)) {
                 if (empty(Hashids::decode($searchArray[$field]))) {
-                    throw new HashidsException("Only hash ids are allowed. $field:$searchArray[$field]");
+                    throw new InvalidArgumentException("Only hash ids are allowed. {$field}:$searchArray[$field]");
                 }
                 $searchArray[$field] = Hashids::decode($searchArray[$field])[0];
             }
@@ -139,7 +178,7 @@ trait HasRequestCriteriaTrait
         $length = count($fields);
         for ($i = 0; $i < $length; $i++) {
             $field = $fields[$i];
-            $decodedSearchQuery .= "$field:$decodedSearchArray[$field]";
+            $decodedSearchQuery .= "{$field}:$decodedSearchArray[$field]";
             if ($length !== 1 && $i < $length - 1) {
                 $decodedSearchQuery .= ';';
             }

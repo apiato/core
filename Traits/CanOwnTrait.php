@@ -5,67 +5,64 @@ namespace Apiato\Core\Traits;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Throwable;
 
 trait CanOwnTrait
 {
     /**
-     * Checks if the model is the owner of the $ownable model
-     * by comparing IDs
+     * Checks if the model is the owned by the $owner model.
      *
-     * can be used for OO and OM relations
+     * It tries to guess the relation by the name of the $owner model.
+     * e.g., if the $owner model is called User, then the first guess would be `user()`.
+     * If the `user()` relation does not exist, then it tries to use the plural version `users()`.
+     * Else it throws an exception.
      *
-     * @param Model $ownable
-     * @param null $foreignKeyName
-     * @param null $localKey
-     * @return bool
-     * @throws Throwable
+     * If the relation name is different, you can pass it as the second parameter.
+     *
+     * @throws CoreInternalErrorException
      */
-    public function owns(Model $ownable, $foreignKeyName = null, $localKey = null): bool
+    public function isOwnedBy(Model $owner, string|null $relation = null): bool
     {
-        $foreignKeyName = $foreignKeyName ?: $this->guessForeignKeyName();
-
-        $ownerKey = $ownable->$foreignKeyName;
-
-        throw_if(is_null($ownerKey), (new CoreInternalErrorException())->withErrors(['foreign_key_name' => 'Foreign key name is invalid.']));
-
-        return $ownerKey == ($localKey ?? $this->getKey());
-    }
-
-    private function guessForeignKeyName(): string
-    {
-        $className = Str::snake(class_basename($this));
-
-        return $className . '_id';
+        return $this->owns($owner, $relation);
     }
 
     /**
-     * Checks if the model is the owner of the $ownable model
-     * can be used for polymorphic relations
+     * Checks if the model is the owner of the $ownable model.
      *
-     * @param Model $ownable
-     * @param null $morphableKeyName
-     * @param null $morphableTypeName
-     * @param null $localKey
-     * @return bool
+     * It tries to guess the relation by the name of the $ownable model.
+     * e.g. if the $ownable model is called Post, then the first guess would be `post()`.
+     * If the `post()` relation does not exist, then it tries to use the plural version `posts()`.
+     * Else it throws an exception.
+     *
+     * If the relation name is different, you can pass it as the second parameter.
+     *
+     * @throws CoreInternalErrorException
      */
-    public function ownsMorph(Model $ownable, $morphableKeyName = null, $morphableTypeName = null, $localKey = null): bool
+    public function owns(Model $ownable, string|null $relation = null): bool
     {
-        [$keyName, $typeName] = $this->guessMorphs($ownable);
-        $morphableKeyName = $morphableKeyName ?: $keyName;
-        $morphableTypeName = $morphableTypeName ?: $typeName;
+        if ($relation) {
+            return !is_null($this->$relation()->find($ownable));
+        }
 
-        return $ownable->$morphableKeyName == ($localKey ?? $this->getKey()) && $ownable->$morphableTypeName == get_class($this);
+        $relation = $this->guessSingularRelationshipName($ownable);
+        if (method_exists($this, $relation)) {
+            return !is_null($this->$relation()->find($ownable));
+        }
+
+        $relation = $this->guessPlurarRelationshipName($ownable);
+        if (method_exists($this, $relation)) {
+            return !is_null($this->$relation()->find($ownable));
+        }
+
+        throw new CoreInternalErrorException('No relationship found. Please pass the relationship name as the second parameter.');
     }
 
-    /**
-     * @param Model $ownable
-     * @return array
-     */
-    private function guessMorphs(Model $ownable): array
+    protected function guessSingularRelationshipName(Model $ownable): string
     {
-        $className = Str::snake(class_basename($ownable));
+        return Str::camel(class_basename($ownable));
+    }
 
-        return [$className . 'able_id', $className . 'able_type'];
+    protected function guessPlurarRelationshipName(Model $ownable): string
+    {
+        return Str::plural(Str::camel(class_basename($ownable)));
     }
 }

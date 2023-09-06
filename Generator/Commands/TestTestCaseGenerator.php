@@ -16,6 +16,7 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
      * @var  array
      */
     public array $inputs = [
+        ['type', null, InputOption::VALUE_OPTIONAL, 'The TestCase type.'],
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the TestCase for.'],
     ];
     /**
@@ -49,20 +50,18 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
 
     public function getUserInputs(): ?array
     {
-        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['Generic', 'API', 'WEB', 'CLI'], 0));
+        $type = Str::lower($this->checkParameterOrChoice('type', 'Select the TestCase type', ['Unit', 'Functional'], 0));
 
-        $type = match ($ui) {
-            'api', 'web', 'cli' => 'functional',
-            default => 'unit',
-        };
-
-        $this->stubName = 'tests/testcase/' . $ui . '.stub';
         if ($type === 'functional') {
+            $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the TestCase', ['API', 'WEB', 'CLI'], 0));
+            $this->stubName = 'tests/testcase/' . $ui . '.stub';
             $this->fileName = Str::ucfirst($ui) . $this->fileName;
             $this->pathStructure = '{section-name}/{container-name}/UI/' . Str::upper($ui) . '/Tests/*';
         }
 
         if ($type === 'unit') {
+            $this->stubName = 'tests/testcase/unit.stub';
+            $this->fileName = 'Unit' . $this->fileName;
             $this->pathStructure = '{section-name}/{container-name}/Tests/*';
         }
 

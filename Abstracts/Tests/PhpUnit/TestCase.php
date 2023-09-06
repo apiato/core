@@ -4,10 +4,9 @@ namespace Apiato\Core\Abstracts\Tests\PhpUnit;
 
 use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\TestCaseTrait;
-use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsAuthHelperTrait;
-use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsMockHelperTrait;
-use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsRequestHelperTrait;
-use Apiato\Core\Traits\TestsTraits\PhpUnit\TestsResponseHelperTrait;
+use Apiato\Core\Traits\TestTraits\PhpUnit\TestAssertionHelperTrait;
+use Apiato\Core\Traits\TestTraits\PhpUnit\TestAuthHelperTrait;
+use Apiato\Core\Traits\TestTraits\PhpUnit\TestRequestHelperTrait;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
@@ -16,10 +15,9 @@ use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 abstract class TestCase extends LaravelTestCase
 {
     use TestCaseTrait;
-    use TestsRequestHelperTrait;
-    use TestsResponseHelperTrait;
-    use TestsMockHelperTrait;
-    use TestsAuthHelperTrait;
+    use TestAuthHelperTrait;
+    use TestRequestHelperTrait;
+    use TestAssertionHelperTrait;
     use HashIdTrait;
     use LazilyRefreshDatabase;
 

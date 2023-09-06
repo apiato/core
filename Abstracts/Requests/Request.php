@@ -6,7 +6,6 @@ use Apiato\Core\Abstracts\Models\UserModel as User;
 use Apiato\Core\Exceptions\IncorrectIdException;
 use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\SanitizerTrait;
-use Apiato\Core\Traits\StateKeeperTrait;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
@@ -22,7 +21,6 @@ use Illuminate\Support\Facades\Config;
 abstract class Request extends LaravelRequest
 {
     use HashIdTrait;
-    use StateKeeperTrait;
     use SanitizerTrait;
 
     /**
@@ -53,6 +51,38 @@ abstract class Request extends LaravelRequest
         });
 
         return $request;
+    }
+
+    /**
+     * Add properties to the request that are not part of the request data
+     * but are needed for the request to be processed.
+     * For example, in the unit tests, we can add the url parameters to the request which is not part of the request data.
+     * It is best used with the `injectData` method.
+     * @param array $properties
+     * @return $this
+     */
+    public function withUrlParameters(array $properties): self
+    {
+        foreach ($properties as $key => $value) {
+            $this->{$key} = $value;
+        }
+
+        return $this;
+    }
+
+    public function getAccessArray(): array
+    {
+        return $this->access ?? [];
+    }
+
+    public function getDecodeArray(): array
+    {
+        return $this->decode ?? [];
+    }
+
+    public function getUrlParametersArray(): array
+    {
+        return $this->urlParameters ?? [];
     }
 
     /**
@@ -95,7 +125,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    private function hasAnyPermissionAccess($user): array
+    protected function hasAnyPermissionAccess($user): array
     {
         if (!array_key_exists('permissions', $this->access) || !$this->access['permissions']) {
             return [];
@@ -114,7 +144,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    private function hasAnyRoleAccess($user): array
+    protected function hasAnyRoleAccess($user): array
     {
         if (!array_key_exists('roles', $this->access) || !$this->access['roles']) {
             return [];
@@ -187,7 +217,7 @@ abstract class Request extends LaravelRequest
      *
      * @return  array
      */
-    private function mergeUrlParametersWithRequestData(array $requestData): array
+    protected function mergeUrlParametersWithRequestData(array $requestData): array
     {
         if (isset($this->urlParameters) && !empty($this->urlParameters)) {
             foreach ($this->urlParameters as $param) {

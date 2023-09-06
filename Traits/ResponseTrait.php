@@ -41,10 +41,10 @@ trait ResponseTrait
         }
 
         // add specific meta information to the response message
-        $this->metaData = [
+        $this->metaData = array_merge($this->metaData, [
             'include' => $transformer->getAvailableIncludes(),
             'custom' => $meta,
-        ];
+        ]);
 
         // no resource key was set
         if (!$resourceKey) {
@@ -87,7 +87,7 @@ trait ResponseTrait
 
     protected function parseRequestedIncludes(): array
     {
-        return explode(',', Request::get('include'));
+        return explode(',', Request::get('include') ?? '');
     }
 
     private function filterResponse(array $responseArray, array $filters): array

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests;
 
 use App\Ship\Parents\Tests\PhpUnit\TestCase as ParentTestCase;
 
 /**
  * Class {{class-name}}.
  *
- * Use this class to add your container specific API related test helper functions.
+ * Use this class to add your container specific unit test helper functions.
  */
 class {{class-name}} extends ParentTestCase
 {
