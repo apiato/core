@@ -54,9 +54,9 @@ abstract class Request extends LaravelRequest
     }
 
     /**
-     * Add properties to the request that are not part of the request data
+     * Add properties to the request that are not part of the request body
      * but are needed for the request to be processed.
-     * For example, in the unit tests, we can add the url parameters to the request which is not part of the request data.
+     * For example, in the unit tests, we can add the url parameters to the request which is not part of the request body.
      * It is best used with the `injectData` method.
      * @param array $properties
      * @return $this
