@@ -2,6 +2,8 @@
 
 namespace Apiato\Core\Traits;
 
+use Apiato\Core\Abstracts\Models\Model;
+use Apiato\Core\Abstracts\Models\UserModel;
 use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Exceptions\InvalidTransformerException;
 use Illuminate\Http\JsonResponse;
@@ -125,36 +127,36 @@ trait ResponseTrait
         return $this;
     }
 
-    public function json($message, $status = 200, array $headers = [], $options = 0): JsonResponse
+    public function json($data, $status = 200, array $headers = [], $options = 0): JsonResponse
     {
-        return new JsonResponse($message, $status, $headers, $options);
+        return new JsonResponse($data, $status, $headers, $options);
     }
 
-    public function created($message = null, $status = 201, array $headers = [], $options = 0): JsonResponse
+    public function created($data = null, $status = 201, array $headers = [], $options = 0): JsonResponse
     {
-        return new JsonResponse($message, $status, $headers, $options);
+        return new JsonResponse($data, $status, $headers, $options);
     }
 
     /**
      * @throws ReflectionException
      */
-    public function deleted($responseArray = null): JsonResponse
+    public function deleted(Model $deletedModel = null): JsonResponse
     {
-        if (!$responseArray) {
+        if (!$deletedModel) {
             return $this->accepted();
         }
 
-        $id = $responseArray->getHashedKey();
-        $className = (new ReflectionClass($responseArray))->getShortName();
+        $id = $deletedModel->getHashedKey();
+        $className = (new ReflectionClass($deletedModel))->getShortName();
 
         return $this->accepted([
             'message' => "$className ($id) Deleted Successfully.",
         ]);
     }
 
-    public function accepted($message = null, $status = 202, array $headers = [], $options = 0): JsonResponse
+    public function accepted($data = null, $status = 202, array $headers = [], $options = 0): JsonResponse
     {
-        return new JsonResponse($message, $status, $headers, $options);
+        return new JsonResponse($data, $status, $headers, $options);
     }
 
     public function noContent($status = 204): JsonResponse
