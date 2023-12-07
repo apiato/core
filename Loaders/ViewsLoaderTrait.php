@@ -35,6 +35,8 @@ trait ViewsLoaderTrait
     public function loadViewsFromShip(): void
     {
         $shipMailTemplatesDirectory = base_path('app/Ship/Mails/Templates/');
-        $this->loadViews($shipMailTemplatesDirectory, 'ship'); // Ship views accessible via `ship::`.
+        $this->loadViews($shipMailTemplatesDirectory, 'ship');
+        $shipViewDirectory = base_path('app/Ship/Views/');
+        $this->loadViews($shipViewDirectory, 'ship');
     }
 }
