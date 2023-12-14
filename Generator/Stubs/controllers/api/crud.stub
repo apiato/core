@@ -3,6 +3,7 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
+use Apiato\Core\Exceptions\IncorrectIdException;
 use Apiato\Core\Exceptions\InvalidTransformerException;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Create{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Delete{{model}}Action;
@@ -26,17 +27,18 @@ use Prettus\Repository\Exceptions\RepositoryException;
 class {{class-name}} extends {{base-controller}}
 {
     public function __construct(
-        private readonly Create{{model}}Action $create{{model}}Action
-        private readonly Update{{model}}Action $update{{model}}Action
-        private readonly Find{{model}}ByIdAction $find{{model}}ByIdAction
-        private readonly List{{models}}Action $list{{models}}Action
-        private readonly Delete{{model}}Action $delete{{model}}Action
+        private readonly Create{{model}}Action $create{{model}}Action,
+        private readonly Update{{model}}Action $update{{model}}Action,
+        private readonly Find{{model}}ByIdAction $find{{model}}ByIdAction,
+        private readonly List{{models}}Action $list{{models}}Action,
+        private readonly Delete{{model}}Action $delete{{model}}Action,
     ) {
     }
 
     /**
      * @throws InvalidTransformerException
      * @throws CreateResourceFailedException
+     * @throws IncorrectIdException
      */
     public function create{{model}}(Create{{model}}Request $request): JsonResponse
     {
@@ -69,7 +71,9 @@ class {{class-name}} extends {{base-controller}}
     }
 
     /**
+     * @throws IncorrectIdException
      * @throws InvalidTransformerException
+     * @throws NotFoundException
      * @throws UpdateResourceFailedException
      */
     public function update{{model}}(Update{{model}}Request $request): array
@@ -81,6 +85,7 @@ class {{class-name}} extends {{base-controller}}
 
     /**
      * @throws DeleteResourceFailedException
+     * @throws NotFoundException
      */
     public function delete{{model}}(Delete{{model}}Request $request): JsonResponse
     {

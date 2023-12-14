@@ -21,7 +21,7 @@ class {{class-name}} extends ParentTask
      */
     public function run(): mixed
     {
-        $result = $this->addRequestCriteria()->repository->paginate();
+        $result = $this->repository->addRequestCriteria()->paginate();
         {{event}}::dispatch($result);
 
         return $result;
