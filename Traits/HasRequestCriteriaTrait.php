@@ -4,8 +4,6 @@ namespace Apiato\Core\Traits;
 
 use Apiato\Core\Abstracts\Repositories\Repository;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
-use Exception;
-use InvalidArgumentException;
 use JetBrains\PhpStorm\Deprecated;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
@@ -101,7 +99,7 @@ trait HasRequestCriteriaTrait
         request()->query->replace($query);
     }
 
-    private function decodeValue(string $searchQuery): ?string
+    private function decodeValue(string $searchQuery): null|string
     {
         $searchValue = $this->parserSearchValue($searchQuery);
 
@@ -139,7 +137,7 @@ trait HasRequestCriteriaTrait
         foreach ($fieldsToDecode as $field) {
             if (array_key_exists($field, $searchArray)) {
                 if (empty(Hashids::decode($searchArray[$field]))) {
-                    throw new InvalidArgumentException("Only hash ids are allowed. {$field}:$searchArray[$field]");
+                    throw new \InvalidArgumentException("Only hash ids are allowed. {$field}:$searchArray[$field]");
                 }
                 $searchArray[$field] = Hashids::decode($searchArray[$field])[0];
             }
@@ -159,7 +157,7 @@ trait HasRequestCriteriaTrait
                 try {
                     [$field, $value] = explode(':', $row);
                     $searchData[$field] = $value;
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     // Surround offset error
                 }
             }

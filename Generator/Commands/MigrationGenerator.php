@@ -48,7 +48,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'migration.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         $tableName = Str::lower($this->checkParameterOrAsk('tablename', 'Enter the name of the database table', Str::snake(Pluralizer::plural($this->containerName))));
 

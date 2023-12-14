@@ -67,7 +67,7 @@ class Apiato
     /**
      * Get the class namespace form file path using token.
      */
-    protected function getClassNamespaceFromFile(string $filePathName): ?string
+    protected function getClassNamespaceFromFile(string $filePathName): null|string
     {
         $src = file_get_contents($filePathName);
 

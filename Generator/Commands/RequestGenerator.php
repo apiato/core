@@ -52,7 +52,7 @@ class RequestGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'requests/generic.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
         $stub = $this->option('stub');

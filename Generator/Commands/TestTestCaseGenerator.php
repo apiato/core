@@ -46,7 +46,7 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'tests/testcase/generic.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         $type = Str::lower($this->checkParameterOrChoice('type', 'Select the TestCase type', ['Unit', 'Functional'], 0));
 

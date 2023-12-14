@@ -48,7 +48,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'tasks/generic.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this task is for.', $this->containerName);
         $stub = Str::lower(

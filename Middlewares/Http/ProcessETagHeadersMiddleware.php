@@ -3,13 +3,12 @@
 namespace Apiato\Core\Middlewares\Http;
 
 use Apiato\Core\Abstracts\Middlewares\Middleware;
-use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 
 class ProcessETagHeadersMiddleware extends Middleware
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         /*
          * This middleware will add the "ETag" HTTP Header to a Response. The ETag, in turn, is a

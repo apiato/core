@@ -43,7 +43,7 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
      */
     protected string $stubName = 'config.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         return [
             'path-parameters' => [
