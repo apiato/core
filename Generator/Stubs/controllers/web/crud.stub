@@ -21,13 +21,13 @@ class {{class-name}} extends WebController
     public function index(List{{models}}Request $request)
     {
         ${{entities}} = app(List{{models}}Action::class)->run($request);
-        // ..
+        // ...
     }
 
     public function show(Find{{model}}ByIdRequest $request)
     {
         ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
-        // ..
+        // ...
     }
 
     public function create(Create{{model}}Request $request)
@@ -38,24 +38,24 @@ class {{class-name}} extends WebController
     public function store(Store{{model}}Request $request)
     {
         ${{entity}} = app(Create{{model}}Action::class)->run($request);
-        // ..
+        // ...
     }
 
     public function edit(Edit{{model}}Request $request)
     {
         ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
-        // ..
+        // ...
     }
 
     public function update(Update{{model}}Request $request)
     {
         ${{entity}} = app(Update{{model}}Action::class)->run($request);
-        // ..
+        // ...
     }
 
     public function destroy(Delete{{model}}Request $request)
     {
-         $result = app(Delete{{model}}Action::class)->run($request);
-         // ..
+        $result = app(Delete{{model}}Action::class)->run($request);
+        // ...
     }
 }

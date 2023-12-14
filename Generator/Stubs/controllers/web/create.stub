@@ -17,6 +17,6 @@ class {{class-name}} extends WebController
     public function store(Store{{model}}Request $request)
     {
         ${{entity}} = app(Create{{model}}Action::class)->run($request);
-        // ..
+        // ...
     }
 }

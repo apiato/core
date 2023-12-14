@@ -11,6 +11,6 @@ class {{class-name}} extends WebController
     public function show(Find{{model}}ByIdRequest $request)
     {
         ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
-        // ..
+        // ...
     }
 }

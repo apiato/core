@@ -11,6 +11,6 @@ class {{class-name}} extends WebController
     public function index(List{{models}}Request $request)
     {
         ${{entities}} = app(List{{models}}Action::class)->run($request);
-        // ..
+        // ...
     }
 }

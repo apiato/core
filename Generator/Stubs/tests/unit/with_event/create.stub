@@ -26,15 +26,15 @@ class {{class-name}} extends UnitTestCase
     }
 
     // TODO TEST
-//    public function testCreate{{model}}WithInvalidData(): void
-//    {
-//        $this->expectException(CreateResourceFailedException::class);
-//
-//        $data = [
-//            // put some invalid data here
-//            // 'invalid' => 'data',
-//        ];
-//
-//        app(Create{{model}}Task::class)->run($data);
-//    }
+    // public function testCreate{{model}}WithInvalidData(): void
+    // {
+    //     $this->expectException(CreateResourceFailedException::class);
+    //
+    //     $data = [
+    //         // put some invalid data here
+    //         // 'invalid' => 'data',
+    //     ];
+    //
+    //     app(Create{{model}}Task::class)->run($data);
+    // }
 }
