@@ -13,8 +13,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of all endpoints to be generated (1, 2, ...)'],
@@ -181,13 +179,13 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'operation' => 'find' . $model . 'ById',
                 'verb' => 'GET',
                 'url' => $url . '/{id}',
-                'action' => 'Find' . $model . 'ById' . 'Action',
-                'request' => 'Find' . $model . 'ById' . 'Request',
-                'task' => 'Find' . $model . 'ById' . 'Task',
-                'unittest' => 'Find' . $model . 'ById' . 'TaskTest',
-                'functionaltest' => 'Find' . $model . 'ById' . 'Test',
-                'event' => $model . 'FoundById' . 'Event',
-                'controller' => 'Find' . $model . 'ById' . 'Controller',
+                'action' => 'Find' . $model . 'ByIdAction',
+                'request' => 'Find' . $model . 'ByIdRequest',
+                'task' => 'Find' . $model . 'ByIdTask',
+                'unittest' => 'Find' . $model . 'ByIdTaskTest',
+                'functionaltest' => 'Find' . $model . 'ByIdTest',
+                'event' => $model . 'FoundByIdEvent',
+                'controller' => 'Find' . $model . 'ByIdController',
             ],
             [
                 'stub' => 'Create',
@@ -320,7 +318,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 ]);
             }
 
-            if ($controllertype === 'sac') {
+            if ('sac' === $controllertype) {
                 $this->call('apiato:generate:route', [
                     '--section' => $sectionName,
                     '--container' => $containerName,
@@ -357,7 +355,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             }
         }
 
-        if ($controllertype === 'mac') {
+        if ('mac' === $controllertype) {
             $this->printInfoMessage('Generating Controller to wire everything together');
             $this->call('apiato:generate:controller', [
                 '--section' => $sectionName,
@@ -368,34 +366,34 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             ]);
         }
 
-       $generateComposerFile = [
-            'path-parameters' => [
-                'section-name' => $this->sectionName,
-                'container-name' => $this->containerName,
-            ],
-            'stub-parameters' => [
-                '_section-name' => $_sectionName,
-                'section-name' => $this->sectionName,
-                '_container-name' => $_containerName,
-                'container-name' => $containerName,
-                'class-name' => $this->fileName,
-            ],
-            'file-parameters' => [
-                'file-name' => $this->fileName,
-            ],
-        ];
+        $generateComposerFile = [
+             'path-parameters' => [
+                 'section-name' => $this->sectionName,
+                 'container-name' => $this->containerName,
+             ],
+             'stub-parameters' => [
+                 '_section-name' => $_sectionName,
+                 'section-name' => $this->sectionName,
+                 '_container-name' => $_containerName,
+                 'container-name' => $containerName,
+                 'class-name' => $this->fileName,
+             ],
+             'file-parameters' => [
+                 'file-name' => $this->fileName,
+             ],
+         ];
 
-        if (!$this->option('maincalled')){
+        if (!$this->option('maincalled')) {
             $this->printInfoMessage('Generating Composer File');
+
             return $generateComposerFile;
         }
 
         return null;
-        
     }
 
     /**
-     * Get the default file name for this component to be generated
+     * Get the default file name for this component to be generated.
      */
     public function getDefaultFileName(): string
     {

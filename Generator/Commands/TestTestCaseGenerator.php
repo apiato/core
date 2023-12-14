@@ -12,8 +12,6 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['type', null, InputOption::VALUE_OPTIONAL, 'The TestCase type.'],
@@ -52,14 +50,14 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
     {
         $type = Str::lower($this->checkParameterOrChoice('type', 'Select the TestCase type', ['Unit', 'Functional'], 0));
 
-        if ($type === 'functional') {
+        if ('functional' === $type) {
             $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the TestCase', ['API', 'WEB', 'CLI'], 0));
             $this->stubName = 'tests/testcase/' . $ui . '.stub';
             $this->fileName = Str::ucfirst($ui) . $this->fileName;
             $this->pathStructure = '{section-name}/{container-name}/UI/' . Str::upper($ui) . '/Tests/*';
         }
 
-        if ($type === 'unit') {
+        if ('unit' === $type) {
             $this->stubName = 'tests/testcase/unit.stub';
             $this->fileName = 'Unit' . $this->fileName;
             $this->pathStructure = '{section-name}/{container-name}/Tests/*';

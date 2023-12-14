@@ -13,9 +13,9 @@ abstract class Exception extends BaseException
     protected array $errors = [];
 
     public function __construct(
-        ?string   $message = null,
-        ?int      $code = null,
-        Throwable $previous = null
+        string $message = null,
+        int $code = null,
+        Throwable $previous = null,
     ) {
         // Detect and set the running environment
         $this->environment = Config::get('app.env');
@@ -23,16 +23,12 @@ abstract class Exception extends BaseException
         parent::__construct($this->prepareMessage($message), $this->prepareStatusCode($code), $previous);
     }
 
-    /**
-     * @param string|null $message
-     * @return string
-     */
-    private function prepareMessage(?string $message = null): string
+    private function prepareMessage(string $message = null): string
     {
         return is_null($message) ? $this->message : $message;
     }
 
-    private function prepareStatusCode(?int $code = null): int
+    private function prepareStatusCode(int $code = null): int
     {
         return is_null($code) ? $this->code : $code;
     }
@@ -40,9 +36,6 @@ abstract class Exception extends BaseException
     /**
      * Help developers debug the error without showing these details to the end user.
      * Usage: `throw (new MyCustomException())->debug($e)`.
-     *
-     * @param $error
-     * @param bool $force
      *
      * @return $this
      */
@@ -52,7 +45,7 @@ abstract class Exception extends BaseException
             $error = $error->getMessage();
         }
 
-        if ($this->environment !== 'testing' || $force === true) {
+        if ('testing' !== $this->environment || true === $force) {
             Log::error('[DEBUG] ' . $error);
         }
 

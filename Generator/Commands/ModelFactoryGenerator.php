@@ -12,8 +12,6 @@ class ModelFactoryGenerator extends GeneratorCommand implements ComponentsGenera
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model to generate this Factory for'],

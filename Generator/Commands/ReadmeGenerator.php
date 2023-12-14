@@ -11,8 +11,6 @@ class ReadmeGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
     ];
@@ -66,7 +64,7 @@ class ReadmeGenerator extends GeneratorCommand implements ComponentsGenerator
     }
 
     /**
-     * Get the default file name for this component to be generated
+     * Get the default file name for this component to be generated.
      */
     public function getDefaultFileName(): string
     {

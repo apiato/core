@@ -18,13 +18,13 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
 
     /**
      * Define the maximum amount of entries per page that is returned.
-     * Set to 0 to "disable" this feature
+     * Set to 0 to "disable" this feature.
      */
     protected int $maxPaginationLimit = 0;
 
     /**
      * Define the maximum amount of entries per page that is returned.
-     * Set to 0 to "disable" this feature
+     * Set to 0 to "disable" this feature.
      */
     protected ?bool $allowDisablePagination = null;
 
@@ -38,12 +38,14 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
     {
         $className = $this->getClassName(); // e.g. UserRepository
         $modelName = $this->getModelName($className); // e.g. User
+
         return $this->getModelNamespace($modelName);
     }
 
     private function getClassName(): string
     {
         $fullName = static::class;
+
         return substr($fullName, strrpos($fullName, '\\') + 1);
     }
 
@@ -75,7 +77,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
     }
 
     /**
-     * Paginate the response
+     * Paginate the response.
      *
      * Apply pagination to the response. Use ?limit= to specify the amount of entities in the response.
      * The client can request all data (skipping pagination) by applying ?limit=0 to the request, if
@@ -84,10 +86,8 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      * @param null $limit
      * @param array $columns
      * @param string $method
-     *
-     * @return  mixed
      */
-    public function paginate($limit = null, $columns = ['*'], $method = "paginate"): mixed
+    public function paginate($limit = null, $columns = ['*'], $method = 'paginate'): mixed
     {
         $limit = $this->setPaginationLimit($limit);
 
@@ -111,7 +111,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
 
     private function wantsToSkipPagination(mixed $limit): bool
     {
-        return $limit == "0";
+        return '0' == $limit;
     }
 
     private function canSkipPagination(): mixed

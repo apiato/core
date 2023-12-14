@@ -6,21 +6,13 @@ use Exception;
 
 trait FileSystemTrait
 {
-    /**
-     * @param $filePath
-     * @param $stubContent
-     *
-     * @return bool|int
-     */
     public function generateFile($filePath, $stubContent): bool|int
     {
         return $this->fileSystem->put($filePath, $stubContent);
     }
 
     /**
-     * If path is for a directory, create it otherwise do nothing
-     *
-     * @param $path
+     * If path is for a directory, create it otherwise do nothing.
      */
     public function createDirectory($path)
     {
@@ -35,7 +27,6 @@ trait FileSystemTrait
             if (!$this->fileSystem->isDirectory(dirname($path))) {
                 $this->fileSystem->makeDirectory(dirname($path), 0777, true, true);
             }
-
         } catch (Exception $e) {
             $this->printErrorMessage('Could not create ' . $path);
         }
@@ -43,8 +34,6 @@ trait FileSystemTrait
 
     /**
      * Determine if the file already exists.
-     *
-     * @param $path
      *
      * @return bool
      */

@@ -27,7 +27,7 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
 
         $this->runLoaderRegister();
     }
-    
+
     public function boot(): void
     {
         parent::boot();

@@ -30,26 +30,18 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
     protected $description = 'Create a Container for apiato from scratch';
     /**
      * The type of class being generated.
-     *
-     * @var string
      */
     protected string $fileType = 'Container';
     /**
      * The structure of the file path.
-     *
-     * @var  string
      */
     protected string $pathStructure = '{section-name}/{container-name}/*';
     /**
      * The structure of the file name.
-     *
-     * @var  string
      */
     protected string $nameStructure = '{file-name}';
     /**
      * The name of the stub file.
-     *
-     * @var  string
      */
     protected string $stubName = 'composer.stub';
 
@@ -65,7 +57,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
         $containerName = $this->containerName;
         $_containerName = Str::lower($this->containerName);
 
-        if ($ui === 'api' || $ui === 'both') {
+        if ('api' === $ui || 'both' === $ui) {
             $this->call('apiato:generate:container:api', [
                 '--section' => $sectionName,
                 '--container' => $containerName,
@@ -74,7 +66,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
             ]);
         }
 
-        if ($ui === 'web' || $ui === 'both') {
+        if ('web' === $ui || 'both' === $ui) {
             $this->call('apiato:generate:container:web', [
                 '--section' => $sectionName,
                 '--container' => $containerName,
@@ -84,6 +76,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
         }
 
         $this->printInfoMessage('Generating Composer File');
+
         return [
             'path-parameters' => [
                 'section-name' => $this->sectionName,
@@ -103,7 +96,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
     }
 
     /**
-     * Get the default file name for this component to be generated
+     * Get the default file name for this component to be generated.
      */
     public function getDefaultFileName(): string
     {

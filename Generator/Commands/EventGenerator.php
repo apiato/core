@@ -12,8 +12,6 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model to generate this Event for'],
@@ -64,7 +62,7 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
                 '--event' => $this->fileName,
             ]);
 
-            if ($status == 0) {
+            if (0 == $status) {
                 $this->printInfoMessage('The Listener for Event was successfully generated');
             } else {
                 $this->printErrorMessage('Could not generate the corresponding Listener!');

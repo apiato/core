@@ -20,7 +20,8 @@ trait HasRequestCriteriaTrait
     #[Deprecated(
         reason: 'since Apiato 12.2.0, Use addRequestCriteria() on the Repository instead.
         Will be removed from Tasks and Actions.',
-        replacement: '%class%->repository->addRequestCriteria();')]
+        replacement: '%class%->repository->addRequestCriteria();',
+    )]
     public function addRequestCriteria($repository = null, array $fieldsToDecode = ['id']): static
     {
         $validatedRepository = $this->validateRepository($repository);
@@ -33,11 +34,7 @@ trait HasRequestCriteriaTrait
     }
 
     /**
-     * Validates, if the given Repository exists or uses $this->repository on the Task/Action to apply functions
-     *
-     * @param $repository
-     *
-     * @return Repository
+     * Validates, if the given Repository exists or uses $this->repository on the Task/Action to apply functions.
      *
      * @throws CoreInternalErrorException
      */
@@ -124,7 +121,7 @@ trait HasRequestCriteriaTrait
             $values = explode(';', $search);
             foreach ($values as $value) {
                 $s = explode(':', $value);
-                if (count($s) === 1) {
+                if (1 === count($s)) {
                     return $s[0];
                 }
             }
@@ -163,7 +160,7 @@ trait HasRequestCriteriaTrait
                     [$field, $value] = explode(':', $row);
                     $searchData[$field] = $value;
                 } catch (Exception $e) {
-                    //Surround offset error
+                    // Surround offset error
                 }
             }
         }
@@ -177,10 +174,10 @@ trait HasRequestCriteriaTrait
 
         $fields = array_keys($decodedSearchArray);
         $length = count($fields);
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             $field = $fields[$i];
             $decodedSearchQuery .= "{$field}:$decodedSearchArray[$field]";
-            if ($length !== 1 && $i < $length - 1) {
+            if (1 !== $length && $i < $length - 1) {
                 $decodedSearchQuery .= ';';
             }
         }

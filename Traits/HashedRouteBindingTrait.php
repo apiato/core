@@ -13,7 +13,6 @@ trait HashedRouteBindingTrait
      * Retrieve the model for a bound value.
      *
      * @param Model|Relation $query
-     * @param mixed $value
      * @param string|null $field
      *
      * @throws IncorrectIdException

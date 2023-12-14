@@ -13,8 +13,6 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads from the console whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this task is for.'],
@@ -58,8 +56,8 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
                 'stub',
                 'Select the Stub you want to load',
                 ['Generic', 'GetAll', 'Find', 'Create', 'Update', 'Delete'],
-                0
-            )
+                0,
+            ),
         );
 
         $event = $this->option('event');
@@ -91,7 +89,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
     }
 
     /**
-     * Get the default file name for this component to be generated
+     * Get the default file name for this component to be generated.
      */
     public function getDefaultFileName(): string
     {

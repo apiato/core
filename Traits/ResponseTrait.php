@@ -3,7 +3,6 @@
 namespace Apiato\Core\Traits;
 
 use Apiato\Core\Abstracts\Models\Model;
-use Apiato\Core\Abstracts\Models\UserModel;
 use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Exceptions\InvalidTransformerException;
 use Illuminate\Http\JsonResponse;
@@ -26,7 +25,7 @@ trait ResponseTrait
         $transformerName = null,
         array $includes = [],
         array $meta = [],
-        $resourceKey = null
+        $resourceKey = null,
     ): array {
         // first, we need to create the transformer
         if ($transformerName instanceof Transformer) {

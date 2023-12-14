@@ -141,10 +141,10 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                 'operation' => 'show',
                 'verb' => 'GET',
                 'url' => $url . '/{id}',
-                'action' => 'Find' . $model . 'ById' . 'Action',
-                'request' => 'Find' . $model . 'ById' . 'Request',
-                'task' => 'Find' . $model . 'ById' . 'Task',
-                'controller' => 'Find' . $model . 'ById' . 'Controller',
+                'action' => 'Find' . $model . 'ByIdAction',
+                'request' => 'Find' . $model . 'ByIdRequest',
+                'task' => 'Find' . $model . 'ByIdTask',
+                'controller' => 'Find' . $model . 'ByIdController',
             ],
             [
                 'stub' => 'Create',
@@ -212,7 +212,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                 '--stub' => $route['stub'],
             ]);
 
-            if ($route['action'] != null) {
+            if (null != $route['action']) {
                 $this->call('apiato:generate:action', [
                     '--section' => $sectionName,
                     '--container' => $containerName,
@@ -223,7 +223,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                 ]);
             }
 
-            if ($route['task'] != null) {
+            if (null != $route['task']) {
                 $this->call('apiato:generate:task', [
                     '--section' => $sectionName,
                     '--container' => $containerName,
@@ -233,7 +233,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                 ]);
             }
 
-            if ($controllertype === 'sac') {
+            if ('sac' === $controllertype) {
                 $this->call('apiato:generate:route', [
                     '--section' => $sectionName,
                     '--container' => $containerName,
@@ -270,7 +270,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             }
         }
 
-        if ($controllertype === 'mac') {
+        if ('mac' === $controllertype) {
             $this->printInfoMessage('Generating Controller to wire everything together');
             $this->call('apiato:generate:controller', [
                 '--section' => $sectionName,
@@ -280,7 +280,6 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                 '--stub' => 'crud',
             ]);
         }
-
 
         $generateComposerFile = [
             'path-parameters' => [
@@ -299,16 +298,17 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             ],
         ];
 
-        if (!$this->option('maincalled')){
+        if (!$this->option('maincalled')) {
             $this->printInfoMessage('Generating Composer File');
+
             return $generateComposerFile;
         }
-        
+
         return null;
     }
 
     /**
-     * Get the default file name for this component to be generated
+     * Get the default file name for this component to be generated.
      */
     public function getDefaultFileName(): string
     {

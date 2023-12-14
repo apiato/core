@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Class Request
+ * Class Request.
  *
  * A.K.A (app/Http/Requests/Request.php)
  *
@@ -25,14 +25,6 @@ abstract class Request extends LaravelRequest
 
     /**
      * To be used mainly from unit tests.
-     *
-     * @param array $parameters
-     * @param User|null $user
-     * @param array $cookies
-     * @param array $files
-     * @param array $server
-     *
-     * @return  static
      */
     public static function injectData(array $parameters = [], User $user = null, array $cookies = [], array $files = [], array $server = []): static
     {
@@ -58,7 +50,7 @@ abstract class Request extends LaravelRequest
      * but are needed for the request to be processed.
      * For example, in the unit tests, we can add the url parameters to the request which is not part of the request body.
      * It is best used with the `injectData` method.
-     * @param array $properties
+     *
      * @return $this
      */
     public function withUrlParameters(array $properties): self
@@ -89,10 +81,6 @@ abstract class Request extends LaravelRequest
      * check if a user has permission to perform an action.
      * User can set multiple permissions (separated with "|") and if the user has
      * any of the permissions, he will be authorized to proceed with this action.
-     *
-     * @param User|null $user
-     *
-     * @return  bool
      */
     public function hasAccess(User $user = null): bool
     {
@@ -113,18 +101,13 @@ abstract class Request extends LaravelRequest
         // check if the user has any role / permission to access the route
         $hasAccess = array_merge(
             $this->hasAnyPermissionAccess($user),
-            $this->hasAnyRoleAccess($user)
+            $this->hasAnyRoleAccess($user),
         );
 
         // allow access if user has access to any of the defined roles or permissions.
         return empty($hasAccess) || in_array(true, $hasAccess, true);
     }
 
-    /**
-     * @param $user
-     *
-     * @return  array
-     */
     protected function hasAnyPermissionAccess($user): array
     {
         if (!array_key_exists('permissions', $this->access) || !$this->access['permissions']) {
@@ -139,11 +122,6 @@ abstract class Request extends LaravelRequest
         }, $permissions);
     }
 
-    /**
-     * @param $user
-     *
-     * @return  array
-     */
     protected function hasAnyRoleAccess($user): array
     {
         if (!array_key_exists('roles', $this->access) || !$this->access['roles']) {
@@ -165,7 +143,6 @@ abstract class Request extends LaravelRequest
      * Note that the old value (data.attributes.name) is removed the original request - this method manipulates the request!
      * Be sure you know what you do!
      *
-     * @param array $fields
      * @throws IncorrectIdException
      */
     public function mapInput(array $fields): void
@@ -193,7 +170,6 @@ abstract class Request extends LaravelRequest
      *
      * @param null $keys
      *
-     * @return  array
      * @throws IncorrectIdException
      */
     public function all($keys = null): array
@@ -212,10 +188,6 @@ abstract class Request extends LaravelRequest
      * doesn't validate them by default!
      *
      * Now you can use validation rules like this: `'id' => 'required|integer|exists:items,id'`
-     *
-     * @param array $requestData
-     *
-     * @return  array
      */
     protected function mergeUrlParametersWithRequestData(array $requestData): array
     {
@@ -229,12 +201,8 @@ abstract class Request extends LaravelRequest
     }
 
     /**
-     * This method mimics the $request->input() method but works on the "decoded" values
+     * This method mimics the $request->input() method but works on the "decoded" values.
      *
-     * @param $key
-     * @param $default
-     *
-     * @return mixed
      * @throws IncorrectIdException
      */
     public function getInputByKey($key = null, $default = null): mixed
@@ -246,10 +214,6 @@ abstract class Request extends LaravelRequest
      * Used from the `authorize` function if the Request class.
      * To call functions and compare their bool responses to determine
      * if the user can proceed with the request or not.
-     *
-     * @param array $functions
-     *
-     * @return  bool
      */
     protected function check(array $functions): bool
     {

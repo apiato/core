@@ -46,11 +46,7 @@ class Apiato
     }
 
     /**
-     * Build and return an object of a class from its file path
-     *
-     * @param string $filePathName
-     *
-     * @return  mixed
+     * Build and return an object of a class from its file path.
      */
     public function getClassObjectFromFile(string $filePathName): mixed
     {
@@ -61,11 +57,7 @@ class Apiato
 
     /**
      * Get the full name (name \ namespace) of a class from its file path
-     * result example: (string) "I\Am\The\Namespace\Of\This\Class"
-     *
-     * @param string $filePathName
-     *
-     * @return  string
+     * result example: (string) "I\Am\The\Namespace\Of\This\Class".
      */
     public function getClassFullNameFromFile(string $filePathName): string
     {
@@ -73,11 +65,7 @@ class Apiato
     }
 
     /**
-     * Get the class namespace form file path using token
-     *
-     * @param string $filePathName
-     *
-     * @return  null|string
+     * Get the class namespace form file path using token.
      */
     protected function getClassNamespaceFromFile(string $filePathName): ?string
     {
@@ -90,10 +78,10 @@ class Apiato
         $namespace_ok = false;
         while ($i < $count) {
             $token = $tokens[$i];
-            if (is_array($token) && $token[0] === T_NAMESPACE) {
+            if (is_array($token) && T_NAMESPACE === $token[0]) {
                 // Found namespace declaration
                 while (++$i < $count) {
-                    if ($tokens[$i] === ';') {
+                    if (';' === $tokens[$i]) {
                         $namespace_ok = true;
                         $namespace = trim($namespace);
 
@@ -104,7 +92,7 @@ class Apiato
 
                 break;
             }
-            $i++;
+            ++$i;
         }
         if (!$namespace_ok) {
             return null;
@@ -114,11 +102,7 @@ class Apiato
     }
 
     /**
-     * Get the class name from file path using token
-     *
-     * @param string $filePathName
-     *
-     * @return  mixed
+     * Get the class name from file path using token.
      */
     protected function getClassNameFromFile(string $filePathName): mixed
     {
@@ -127,10 +111,10 @@ class Apiato
         $classes = [];
         $tokens = token_get_all($php_code);
         $count = count($tokens);
-        for ($i = 2; $i < $count; $i++) {
-            if ($tokens[$i - 2][0] == T_CLASS
-                && $tokens[$i - 1][0] == T_WHITESPACE
-                && $tokens[$i][0] == T_STRING
+        for ($i = 2; $i < $count; ++$i) {
+            if (T_CLASS == $tokens[$i - 2][0]
+                && T_WHITESPACE == $tokens[$i - 1][0]
+                && T_STRING == $tokens[$i][0]
             ) {
                 $class_name = $tokens[$i][1];
                 $classes[] = $class_name;
@@ -142,11 +126,7 @@ class Apiato
 
     /**
      * Get the last part of a camel case string.
-     * Example input = helloDearWorld | returns = World
-     *
-     * @param string $className
-     *
-     * @return  mixed
+     * Example input = helloDearWorld | returns = World.
      */
     public function getClassType(string $className): mixed
     {

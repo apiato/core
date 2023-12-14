@@ -20,7 +20,7 @@ trait CanOwnTrait
      *
      * @throws CoreInternalErrorException
      */
-    public function isOwnedBy(Model $owner, string|null $relation = null): bool
+    public function isOwnedBy(Model $owner, string $relation = null): bool
     {
         return $this->owns($owner, $relation);
     }
@@ -37,7 +37,7 @@ trait CanOwnTrait
      *
      * @throws CoreInternalErrorException
      */
-    public function owns(Model $ownable, string|null $relation = null): bool
+    public function owns(Model $ownable, string $relation = null): bool
     {
         if ($relation) {
             return !is_null($this->$relation()->find($ownable));

@@ -15,8 +15,6 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['tablename', null, InputOption::VALUE_OPTIONAL, 'The name for the database table'],
@@ -101,7 +99,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
     }
 
     /**
-     * Get the default file name for this component to be generated
+     * Get the default file name for this component to be generated.
      */
     public function getDefaultFileName(): string
     {
@@ -109,7 +107,7 @@ class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
     }
 
     /**
-     * Removes "special characters" from a string
+     * Removes "special characters" from a string.
      */
     protected function removeSpecialChars($str): string
     {

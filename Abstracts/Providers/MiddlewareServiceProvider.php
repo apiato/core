@@ -19,6 +19,7 @@ abstract class MiddlewareServiceProvider extends MainServiceProvider
 
     /**
      * Perform post-registration booting of services.
+     *
      * @throws BindingResolutionException
      */
     public function boot(): void

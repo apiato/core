@@ -7,7 +7,7 @@ use JetBrains\PhpStorm\Deprecated;
 use Symfony\Component\HttpFoundation\Response;
 
 #[Deprecated(
-    reason: 'This exception is not used anywhere and will be removed in the next major release.'
+    reason: 'This exception is not used anywhere and will be removed in the next major release.',
 )]
 class WrongConfigurationsException extends Exception
 {

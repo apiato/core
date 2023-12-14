@@ -12,8 +12,6 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['repository', null, InputOption::VALUE_OPTIONAL, 'Generate the corresponding Repository for this Model?'],
@@ -59,7 +57,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
                 '--file' => $this->fileName . 'Repository',
             ]);
 
-            if ($status != 0) {
+            if (0 != $status) {
                 $this->printErrorMessage('Could not generate the corresponding Repository!');
             }
         }

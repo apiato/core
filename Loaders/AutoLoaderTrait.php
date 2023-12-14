@@ -17,7 +17,7 @@ trait AutoLoaderTrait
     use HelpersLoaderTrait;
 
     /**
-     * To be used from the `boot` function of the main service provider
+     * To be used from the `boot` function of the main service provider.
      */
     public function runLoadersBoot(): void
     {

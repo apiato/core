@@ -12,8 +12,6 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
@@ -54,8 +52,8 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
                 'stub',
                 'Select the Stub you want to load',
                 ['Generic', 'MainServiceProvider', 'EventServiceProvider', 'MiddlewareServiceProvider'],
-                0
-            )
+                0,
+            ),
         );
 
         // load a new stub-file based on the users choice
@@ -80,7 +78,7 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
     }
 
     /**
-     * Get the default file name for this component to be generated
+     * Get the default file name for this component to be generated.
      */
     public function getDefaultFileName(): string
     {
