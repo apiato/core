@@ -2,13 +2,12 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
 
+use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 /**
- * Class {{class-name}}.
- *
  * @group {{_container-name}}
  * @group api
  */
@@ -21,10 +20,10 @@ class {{class-name}} extends ApiTestCase
         'roles' => '',
     ];
 
-    public function testGetAll{{models}}ByAdmin(): void
+    public function testList{{models}}ByAdmin(): void
     {
         $this->getTestingUserWithoutAccess(createUserAsAdmin: true);
-        {{model}}::factory()->count(2)->create();
+        {{model}}Factory::new()->count(2)->create();
 
         $response = $this->makeCall();
 
@@ -38,46 +37,46 @@ class {{class-name}} extends ApiTestCase
     // add some roles and permissions to this route's request
     // then add them to the $access array above
     // uncomment this test to test accesses
-//    public function testGetAll{{models}}ByNonAdmin(): void
-//    {
-//        $this->getTestingUserWithoutAccess();
-//        {{model}}::factory()->count(2)->create();
-//
-//        $response = $this->makeCall();
-//
-//        $response->assertStatus(403);
-//        $response->assertJson(
-//            fn (AssertableJson $json) =>
-//                $json->has('message')
-//                    ->where('message', 'This action is unauthorized.')
-//                    ->etc()
-//        );
-//    }
+    // public function testList{{models}}ByNonAdmin(): void
+    // {
+    //     $this->getTestingUserWithoutAccess();
+    //     {{model}}Factory::new()->count(2)->create();
+    //
+    //     $response = $this->makeCall();
+    //
+    //     $response->assertStatus(403);
+    //     $response->assertJson(
+    //         fn (AssertableJson $json) =>
+    //             $json->has('message')
+    //                 ->where('message', 'This action is unauthorized.')
+    //                 ->etc()
+    //     );
+    // }
 
     // TODO TEST
-//    public function testSearch{{models}}ByFields(): void
-//    {
-//        {{model}}::factory()->count(3)->create();
-//        // create a model with specific field values
-//        ${{_model}} = {{model}}::factory()->create([
-//            // 'name' => 'something',
-//        ]);
-//
-//        // search by the above values
-//        $response = $this->endpoint($this->endpoint . "?search=name:" . urlencode(${{_model}}->name))->makeCall();
-//
-//        $response->assertStatus(200);
-//        $response->assertJson(
-//            fn (AssertableJson $json) =>
-//                $json->has('data')
-//                    // ->where('data.0.name', ${{_model}}->name)
-//                    ->etc()
-//        );
-//    }
+    // public function testSearch{{models}}ByFields(): void
+    // {
+    //     {{model}}Factory::new()->count(3)->create();
+    //     // create a model with specific field values
+    //     ${{_model}} = {{model}}Factory::new()->create([
+    //         // 'name' => 'something',
+    //     ]);
+    //
+    //     // search by the above values
+    //     $response = $this->endpoint($this->endpoint . "?search=name:" . urlencode(${{_model}}->name))->makeCall();
+    //
+    //     $response->assertStatus(200);
+    //     $response->assertJson(
+    //         fn (AssertableJson $json) =>
+    //             $json->has('data')
+    //                 // ->where('data.0.name', ${{_model}}->name)
+    //                 ->etc()
+    //     );
+    // }
 
     public function testSearch{{models}}ByHashID(): void
     {
-        ${{_models}} = {{model}}::factory()->count(3)->create();
+        ${{_models}} = {{model}}Factory::new()->count(3)->create();
         $second{{model}} = ${{_models}}[1];
 
         $response = $this->endpoint($this->endpoint . '?search=id:' . $second{{model}}->getHashedKey())->makeCall();

@@ -12,9 +12,12 @@ use App\Ship\Parents\Actions\Action as ParentAction;
 
 class {{class-name}} extends ParentAction
 {
+    public function __construct(
+        private readonly Update{{model}}Task $update{{model}}Task,
+    ) {
+    }
+
     /**
-     * @param Update{{model}}Request $request
-     * @return {{model}}
      * @throws UpdateResourceFailedException
      * @throws IncorrectIdException
      * @throws NotFoundException
@@ -25,6 +28,6 @@ class {{class-name}} extends ParentAction
             // add your request data here
         ]);
 
-        return app(Update{{model}}Task::class)->run($data, $request->id);
+        return $this->update{{model}}Task->run($data, $request->id);
     }
 }

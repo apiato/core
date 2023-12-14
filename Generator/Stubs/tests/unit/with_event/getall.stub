@@ -2,27 +2,25 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
 
+use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
-use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
-use App\Containers\{{section-name}}\{{container-name}}\Tasks\GetAll{{models}}Task;
+use App\Containers\{{section-name}}\{{container-name}}\Tasks\List{{models}}Task;
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Event;
 
 /**
- * Class {{class-name}}.
- *
  * @group {{_container-name}}
  * @group unit
  */
 class {{class-name}} extends UnitTestCase
 {
-    public function testGetAll{{models}}(): void
+    public function testList{{models}}(): void
     {
         Event::fake();
-        {{model}}::factory()->count(3)->create();
+        {{model}}Factory::new()->count(3)->create();
 
-        $found{{models}} = app(GetAll{{models}}Task::class)->run();
+        $found{{models}} = app(List{{models}}Task::class)->run();
 
         $this->assertCount(3, $found{{models}});
         $this->assertInstanceOf(LengthAwarePaginator::class, $found{{models}});

@@ -10,11 +10,16 @@ use App\Ship\Parents\Actions\Action as ParentAction;
 
 class {{class-name}} extends ParentAction
 {
+    public function __construct(
+        private readonly Find{{model}}ByIdTask $find{{model}}ByIdTask,
+    ) {
+    }
+
     /**
      * @throws NotFoundException
      */
     public function run(Find{{model}}ByIdRequest $request): {{model}}
     {
-        return app(Find{{model}}ByIdTask::class)->run($request->id);
+        return $this->find{{model}}ByIdTask->run($request->id);
     }
 }

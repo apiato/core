@@ -8,6 +8,6 @@ class {{class-name}} extends ParentSubAction
 {
     public function run()
     {
-        // $var = app(Task::class)->run($arg1, $arg2);
+        //
     }
 }

@@ -5,8 +5,6 @@ namespace App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests\Functi
 use App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests\WebTestCase;
 
 /**
- * Class {{class-name}}.
- *
  * @group {{_container-name}}
  * @group web
  */

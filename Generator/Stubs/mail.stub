@@ -2,27 +2,39 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Mails;
 
-use App\Containers\AppSection\User\Models\User;
-use App\Ship\Parents\Mails\Mail as ParentMail;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 
-class {{class-name}} extends ParentMail implements ShouldQueue
+class {{class-name}} extends ParentMail
 {
-    use Queueable;
-
-    public function __construct(
-        protected User $recipient
-    ) {
+    public function __construct()
+    {
+        //
     }
 
-    public function build(): static
+    public function envelope(): Envelope
     {
-        return $this->view('{{sectionName}}@{{containerName}}::{{view}}')
-            ->to($this->recipient->email, $this->recipient->name)
-            ->with([
-                // place your replacement variables here...
-                //'name' => $this->recipient->name,
-            ]);
+        return new Envelope(
+            subject: 'Asd',
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            view: 'view.name',
+        );
+    }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
     }
 }

@@ -10,14 +10,17 @@ use App\Ship\Parents\Actions\Action as ParentAction;
 
 class {{class-name}} extends ParentAction
 {
+    public function __construct(
+        private readonly Delete{{model}}Task $delete{{model}}Task,
+    ) {
+    }
+
     /**
-     * @param Delete{{model}}Request $request
-     * @return int
      * @throws DeleteResourceFailedException
      * @throws NotFoundException
      */
     public function run(Delete{{model}}Request $request): int
     {
-        return app(Delete{{model}}Task::class)->run($request->id);
+        return $this->delete{{model}}Task->run($request->id);
     }
 }

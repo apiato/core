@@ -2,16 +2,14 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
 
+use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
-use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Update{{model}}Task;
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use App\Ship\Exceptions\NotFoundException;
 use Illuminate\Support\Facades\Event;
 
 /**
- * Class {{class-name}}.
- *
  * @group {{_container-name}}
  * @group unit
  */
@@ -21,7 +19,7 @@ class {{class-name}} extends UnitTestCase
     public function testUpdate{{model}}(): void
     {
         Event::fake();
-        ${{_model}} = {{model}}::factory()->create();
+        ${{_model}} = {{model}}Factory::new()->createOne();
         $data = [
             // add some fillable fields here
             // 'some_field' => 'new_field_data',

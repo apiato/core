@@ -9,8 +9,6 @@ use App\Ship\Exceptions\CreateResourceFailedException;
 use Illuminate\Support\Facades\Event;
 
 /**
- * Class {{class-name}}.
- *
  * @group {{_container-name}}
  * @group unit
  */

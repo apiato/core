@@ -2,14 +2,12 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
 
+use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
-use Hashids;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 /**
- * Class {{class-name}}.
- *
  * @group {{_container-name}}
  * @group api
  */
@@ -24,7 +22,7 @@ class {{class-name}} extends ApiTestCase
 
     public function testFind{{model}}(): void
     {
-        ${{_model}} = {{model}}::factory()->create();
+        ${{_model}} = {{model}}Factory::new()->createOne();
 
         $response = $this->injectId(${{_model}}->id)->makeCall();
 
@@ -32,7 +30,7 @@ class {{class-name}} extends ApiTestCase
         $response->assertJson(
             fn (AssertableJson $json) =>
                 $json->has('data')
-                    ->where('data.id', Hashids::encode(${{_model}}->id))
+                    ->where('data.id', $this->encode(${{_model}}->id))
                     ->etc()
         );
     }
@@ -48,7 +46,7 @@ class {{class-name}} extends ApiTestCase
 
     public function testFindFiltered{{model}}Response(): void
     {
-        ${{_model}} = {{model}}::factory()->create();
+        ${{_model}} = {{model}}Factory::new()->createOne();
 
         $response = $this->injectId(${{_model}}->id)->endpoint($this->endpoint . '?filter=id')->makeCall();
 
@@ -66,21 +64,21 @@ class {{class-name}} extends ApiTestCase
     // uncomment this test
     // modify it to your needs
     // test the relation
-//    public function testFind{{model}}WithRelation(): void
-//    {
-//        ${{_model}} = {{model}}::factory()->create();
-//        $relation = 'roles';
-//
-//        $response = $this->injectId(${{_model}}->id)->endpoint($this->endpoint . "?include=$relation")->makeCall();
-//
-//        $response->assertStatus(200);
-//        $response->assertJson(
-//            fn (AssertableJson $json) =>
-//              $json->has('data')
-//                  ->where('data.id', ${{_model}}->getHashedKey())
-//                  ->count("data.$relation.data", 1)
-//                  ->where("data.$relation.data.0.name", 'something')
-//                  ->etc()
-//        );
-//    }
+    // public function testFind{{model}}WithRelation(): void
+    // {
+    //     ${{_model}} = {{model}}Factory::new()->createOne();
+    //     $relation = 'roles';
+    //
+    //     $response = $this->injectId(${{_model}}->id)->endpoint($this->endpoint . "?include=$relation")->makeCall();
+    //
+    //     $response->assertStatus(200);
+    //     $response->assertJson(
+    //         fn (AssertableJson $json) =>
+    //           $json->has('data')
+    //               ->where('data.id', ${{_model}}->getHashedKey())
+    //               ->count("data.$relation.data", 1)
+    //               ->where("data.$relation.data.0.name", 'something')
+    //               ->etc()
+    //     );
+    // }
 }

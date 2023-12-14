@@ -11,15 +11,18 @@ use Illuminate\Http\JsonResponse;
 
 class {{class-name}} extends {{base-controller}}
 {
+    public function __construct(
+        private readonly Delete{{model}}Action $action,
+    ) {
+    }
+
     /**
-     * @param Delete{{model}}Request $request
-     * @return JsonResponse
      * @throws DeleteResourceFailedException
      * @throws NotFoundException
      */
-    public function delete{{model}}(Delete{{model}}Request $request): JsonResponse
+    public function __invoke(Delete{{model}}Request $request): JsonResponse
     {
-        app(Delete{{model}}Action::class)->run($request);
+        $this->action->run($request);
 
         return $this->noContent();
     }

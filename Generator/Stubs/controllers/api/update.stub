@@ -13,17 +13,20 @@ use App\Ship\Parents\Controllers\{{base-controller}};
 
 class {{class-name}} extends {{base-controller}}
 {
+    public function __construct(
+        private readonly Update{{model}}Action $action
+    ) {
+    }
+
     /**
-     * @param Update{{model}}Request $request
-     * @return array
      * @throws InvalidTransformerException
      * @throws UpdateResourceFailedException
      * @throws IncorrectIdException
      * @throws NotFoundException
      */
-    public function update{{model}}(Update{{model}}Request $request): array
+    public function __invoke(Update{{model}}Request $request): array
     {
-        ${{entity}} = app(Update{{model}}Action::class)->run($request);
+        ${{entity}} = $this->action->run($request);
 
         return $this->transform(${{entity}}, {{model}}Transformer::class);
     }

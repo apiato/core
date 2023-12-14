@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class {{class-name}} extends ParentTask
 {
     public function __construct(
-        protected {{model}}Repository $repository
+        protected readonly {{model}}Repository $repository,
     ) {
     }
 

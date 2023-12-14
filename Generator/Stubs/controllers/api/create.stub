@@ -13,16 +13,19 @@ use Illuminate\Http\JsonResponse;
 
 class {{class-name}} extends {{base-controller}}
 {
+    public function __construct(
+        private readonly Create{{model}}Action $action,
+    ) {
+    }
+
     /**
-     * @param Create{{model}}Request $request
-     * @return JsonResponse
      * @throws CreateResourceFailedException
      * @throws InvalidTransformerException
      * @throws IncorrectIdException
      */
-    public function create{{model}}(Create{{model}}Request $request): JsonResponse
+    public function __invoke(Create{{model}}Request $request): JsonResponse
     {
-        ${{entity}} = app(Create{{model}}Action::class)->run($request);
+        ${{entity}} = $this->action->run($request);
 
         return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
     }

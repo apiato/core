@@ -5,17 +5,16 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Middlewares;
 use App\Ship\Parents\Middlewares\Middleware as ParentMiddleware;
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class {{class-name}} extends ParentMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
+     * @param Closure(Request): (Response) $next
      */
-    public function handle(Request $request, Closure $next): mixed
+    public function handle(Request $request, Closure $next): Response
     {
         return $next($request);
     }
