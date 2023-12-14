@@ -10,7 +10,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 class {{class-name}} extends ParentEvent
 {
     public function __construct(
-        public readonly int $result
+        public readonly int $result,
     ) {
     }
 

@@ -6,9 +6,6 @@ use App\Ship\Parents\Repositories\Repository as ParentRepository;
 
 class {{class-name}} extends ParentRepository
 {
-    /**
-     * @var array
-     */
     protected $fieldSearchable = [
         'id' => '=',
         // ...

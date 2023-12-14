@@ -125,15 +125,15 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
 
         $routes = [
             [
-                'stub' => 'GetAll',
-                'name' => 'GetAll' . $models,
+                'stub' => 'List',
+                'name' => 'List' . $models,
                 'operation' => 'index',
                 'verb' => 'GET',
                 'url' => $url,
-                'action' => 'GetAll' . $models . 'Action',
-                'request' => 'GetAll' . $models . 'Request',
-                'task' => 'GetAll' . $models . 'Task',
-                'controller' => 'GetAll' . $models . 'Controller',
+                'action' => 'List' . $models . 'Action',
+                'request' => 'List' . $models . 'Request',
+                'task' => 'List' . $models . 'Task',
+                'controller' => 'List' . $models . 'Controller',
             ],
             [
                 'stub' => 'Find',

@@ -160,18 +160,18 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
 
         $routes = [
             [
-                'stub' => 'GetAll',
-                'name' => 'GetAll' . $models,
-                'operation' => 'getAll' . $models,
+                'stub' => 'List',
+                'name' => 'List' . $models,
+                'operation' => 'list' . $models,
                 'verb' => 'GET',
                 'url' => $url,
-                'action' => 'GetAll' . $models . 'Action',
-                'request' => 'GetAll' . $models . 'Request',
-                'task' => 'GetAll' . $models . 'Task',
-                'unittest' => 'GetAll' . $models . 'TaskTest',
-                'functionaltest' => 'GetAll' . $models . 'Test',
+                'action' => 'List' . $models . 'Action',
+                'request' => 'List' . $models . 'Request',
+                'task' => 'List' . $models . 'Task',
+                'unittest' => 'List' . $models . 'TaskTest',
+                'functionaltest' => 'List' . $models . 'Test',
                 'event' => $models . 'ListedEvent',
-                'controller' => 'GetAll' . $models . 'Controller',
+                'controller' => 'List' . $models . 'Controller',
             ],
             [
                 'stub' => 'Find',
