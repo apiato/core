@@ -14,4 +14,4 @@ jobs:
                   coverage: none
                   tools: phpmd
             - name: Run PHPMD
-              run: phpmd . github cleancode,codesize,controversial,design,naming,unusedcode --exclude 'Tests/*,vendor/*'
+              run: phpmd . github ruleset.xml --exclude 'Tests/*,vendor/*'
