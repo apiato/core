@@ -5,7 +5,6 @@ namespace Apiato\Core\Abstracts\Exceptions;
 use Exception as BaseException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 abstract class Exception extends BaseException
 {
@@ -13,9 +12,9 @@ abstract class Exception extends BaseException
     protected array $errors = [];
 
     public function __construct(
-        string $message = null,
-        int $code = null,
-        Throwable $previous = null,
+        null|string $message = null,
+        null|int $code = null,
+        null|\Throwable $previous = null,
     ) {
         // Detect and set the running environment
         $this->environment = Config::get('app.env');
@@ -23,12 +22,12 @@ abstract class Exception extends BaseException
         parent::__construct($this->prepareMessage($message), $this->prepareStatusCode($code), $previous);
     }
 
-    private function prepareMessage(string $message = null): string
+    private function prepareMessage(null|string $message = null): string
     {
         return is_null($message) ? $this->message : $message;
     }
 
-    private function prepareStatusCode(int $code = null): int
+    private function prepareStatusCode(null|int $code = null): int
     {
         return is_null($code) ? $this->code : $code;
     }

@@ -43,7 +43,7 @@ class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerato
      */
     protected string $stubName = 'repository.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         return [
             'path-parameters' => [

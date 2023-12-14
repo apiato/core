@@ -3,13 +3,12 @@
 namespace Apiato\Core\Middlewares\Http;
 
 use Apiato\Core\Abstracts\Middlewares\Middleware;
-use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProfilerMiddleware extends Middleware
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         $response = $next($request);
 

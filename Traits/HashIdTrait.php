@@ -22,7 +22,7 @@ trait HashIdTrait
      *
      * @param string|null $field The field of the model to be hashed
      */
-    public function getHashedKey(string $field = null): ?string
+    public function getHashedKey(null|string $field = null): null|string
     {
         // if no key is set, use the default key name (i.e., id)
         if (null === $field) {
@@ -69,7 +69,7 @@ trait HashIdTrait
      *
      * if the id is not decodable, null will be returned
      */
-    public function decode(?string $id): ?int
+    public function decode(null|string $id): null|int
     {
         // check if passed as null, (could be an optional decodable variable)
         if (is_null($id) || 'null' === strtolower($id)) {

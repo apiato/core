@@ -150,7 +150,7 @@ abstract class GeneratorCommand extends Command
     /**
      * Checks if the param is set (via CLI), otherwise asks the user for a value.
      */
-    protected function checkParameterOrAsk($param, $question, string $default = null): mixed
+    protected function checkParameterOrAsk($param, $question, null|string $default = null): mixed
     {
         // Check if we already have a param set
         $value = $this->option($param);

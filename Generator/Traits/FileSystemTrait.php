@@ -2,8 +2,6 @@
 
 namespace Apiato\Core\Generator\Traits;
 
-use Exception;
-
 trait FileSystemTrait
 {
     public function generateFile($filePath, $stubContent): bool|int
@@ -27,7 +25,7 @@ trait FileSystemTrait
             if (!$this->fileSystem->isDirectory(dirname($path))) {
                 $this->fileSystem->makeDirectory(dirname($path), 0777, true, true);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->printErrorMessage('Could not create ' . $path);
         }
     }

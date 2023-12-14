@@ -43,7 +43,7 @@ class MiddlewareGenerator extends GeneratorCommand implements ComponentsGenerato
      */
     protected string $stubName = 'middleware.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         return [
             'path-parameters' => [

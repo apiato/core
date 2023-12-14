@@ -9,8 +9,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
-use JsonException;
-use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
 trait TestRequestHelperTrait
@@ -29,19 +27,19 @@ trait TestRequestHelperTrait
 
     protected string $responseContent;
 
-    protected ?array $responseContentArray = null;
+    protected null|array $responseContentArray = null;
 
-    protected ?stdClass $responseContentObject = null;
+    protected null|\stdClass $responseContentObject = null;
 
     /**
      * Allows users to override the default class property `endpoint` directly before calling the `makeCall` function.
      */
-    protected ?string $overrideEndpoint = null;
+    protected null|string $overrideEndpoint = null;
 
     /**
      * Allows users to override the default class property `auth` directly before calling the `makeCall` function.
      */
-    protected ?bool $overrideAuth = null;
+    protected null|bool $overrideAuth = null;
 
     /**
      * @throws WrongEndpointFormatException
@@ -202,7 +200,7 @@ trait TestRequestHelperTrait
     }
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function getResponseContentObject()
     {
