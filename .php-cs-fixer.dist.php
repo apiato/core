@@ -23,11 +23,10 @@ return (new PhpCsFixer\Config())
         'trailing_comma_in_multiline' => [
             'elements' => ['arguments', 'arrays', 'match', 'parameters'],
         ],
-        'global_namespace_import' => ['import_classes' => true, 'import_constants' => true, 'import_functions' => true],
         'blank_line_before_statement' => [
             'statements' => ['return', 'throw', 'try'],
         ],
         'nullable_type_declaration_for_default_null_value' => ['use_nullable_type_declaration' => true],
-        'nullable_type_declaration' => 'union',
+        'nullable_type_declaration' => ['syntax' => 'union'],
     ])
     ->setFinder($finder);
