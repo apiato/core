@@ -1,0 +1,5 @@
+providers:
+    - Vinkla\Hashids\HashidsServiceProvider
+    - Prettus\Repository\Providers\RepositoryServiceProvider
+    - Spatie\Fractal\FractalServiceProvider
+    - Apiato\Core\Generator\GeneratorsServiceProvider
