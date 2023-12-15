@@ -4,13 +4,12 @@
          colors="true">
 <testsuites>
     <testsuite name="Unit">
-        <directory suffix="Test.php">./Tests</directory>
+        <directory>./Tests</directory>
     </testsuite>
 </testsuites>
-<coverage includeUncoveredFiles="true" ignoreDeprecatedCodeUnits="true"
-          pathCoverage="true" disableCodeCoverageIgnore="false">
+<coverage ignoreDeprecatedCodeUnits="true" pathCoverage="true">
     <report>
-        <html outputDirectory="html_coverage" lowUpperBound="50" highLowerBound="90"/>
+        <html outputDirectory="html_coverage"/>
     </report>
 </coverage>
 </phpunit>
