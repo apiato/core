@@ -6,8 +6,7 @@ use App\Ship\Parents\Seeders\Seeder as ParentSeeder;
 
 class {{class-name}} extends ParentSeeder
 {
-    public function run()
+    public function run(): void
     {
-        // ...
     }
 }

@@ -3,19 +3,10 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Policies;
 
 use App\Ship\Parents\Policies\Policy as ParentPolicy;
-use Illuminate\Auth\Access\HandlesAuthorization;
 
 class {{class-name}} extends ParentPolicy
 {
-    use HandlesAuthorization;
-
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        //
     }
 }

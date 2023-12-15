@@ -27,7 +27,7 @@ abstract class TestCase extends LaravelTestCase
     protected string $baseUrl;
 
     /**
-     * Seed the DB on migrations
+     * Seed the DB on migrations.
      */
     protected bool $seed = true;
 

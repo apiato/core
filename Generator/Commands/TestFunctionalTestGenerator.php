@@ -12,8 +12,6 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Test for.'],
@@ -50,7 +48,7 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
      */
     protected string $stubName = 'tests/functional/generic.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the Test', ['API', 'WEB', 'CLI'], 0));
 

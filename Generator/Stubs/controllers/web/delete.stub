@@ -10,7 +10,7 @@ class {{class-name}} extends WebController
 {
     public function destroy(Delete{{model}}Request $request)
     {
-         $result = app(Delete{{model}}Action::class)->run($request);
-         // ..
+        $result = app(Delete{{model}}Action::class)->run($request);
+        // ...
     }
 }

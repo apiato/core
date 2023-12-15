@@ -20,7 +20,7 @@ trait HelpersLoaderTrait
 
             foreach ($files as $file) {
                 try {
-                    require($file);
+                    require $file;
                 } catch (FileNotFoundException $e) {
                 }
             }

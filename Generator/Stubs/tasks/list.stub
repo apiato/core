@@ -4,14 +4,13 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
-use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
 use App\Ship\Parents\Tasks\Task as ParentTask;
 use Prettus\Repository\Exceptions\RepositoryException;
 
 class {{class-name}} extends ParentTask
 {
     public function __construct(
-        protected {{model}}Repository $repository
+        protected readonly {{model}}Repository $repository,
     ) {
     }
 
@@ -21,9 +20,6 @@ class {{class-name}} extends ParentTask
      */
     public function run(): mixed
     {
-        $result = $this->addRequestCriteria()->repository->paginate();
-        {{event}}::dispatch($result);
-
-        return $result;
+        return $this->repository->addRequestCriteria()->paginate();
     }
 }

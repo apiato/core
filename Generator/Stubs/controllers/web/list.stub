@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
+
+use App\Containers\{{section-name}}\{{container-name}}\Actions\List{{models}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\List{{models}}Request;
+use App\Ship\Parents\Controllers\WebController;
+
+class {{class-name}} extends WebController
+{
+    public function index(List{{models}}Request $request)
+    {
+        ${{entities}} = app(List{{models}}Action::class)->run($request);
+        // ...
+    }
+}

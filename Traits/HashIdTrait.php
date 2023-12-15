@@ -9,24 +9,23 @@ use Vinkla\Hashids\Facades\Hashids;
 trait HashIdTrait
 {
     /**
-     * endpoint to be skipped from decoding their ID's (example for external ID's)
+     * endpoint to be skipped from decoding their ID's (example for external ID's).
      */
     private array $skippedEndpoints = [
         // 'orders/{id}/external',
     ];
 
     /**
-     * Hashes the value of a field (e.g., ID)
+     * Hashes the value of a field (e.g., ID).
      *
      * Will be used by the Eloquent Models (since it's used as trait there).
      *
      * @param string|null $field The field of the model to be hashed
-     * @return string|null
      */
-    public function getHashedKey(?string $field = null): ?string
+    public function getHashedKey(null|string $field = null): null|string
     {
         // if no key is set, use the default key name (i.e., id)
-        if ($field === null) {
+        if (null === $field) {
             $field = $this->getKeyName();
         }
 
@@ -62,7 +61,6 @@ trait HashIdTrait
     }
 
     /**
-     * @param string|null $id
      * @return int|null
      *
      * if the decoded id is bigger than PHP_INT_MAX, the decoder will return a string
@@ -71,10 +69,10 @@ trait HashIdTrait
      *
      * if the id is not decodable, null will be returned
      */
-    public function decode(?string $id): ?int
+    public function decode(null|string $id): null|int
     {
         // check if passed as null, (could be an optional decodable variable)
-        if (is_null($id) || strtolower($id) === 'null') {
+        if (is_null($id) || 'null' === strtolower($id)) {
             return $id;
         }
 
@@ -93,15 +91,14 @@ trait HashIdTrait
 
     /**
      * without decoding the encoded ID's you won't be able to use
-     * validation features like `exists:table,id`
-     * @param array $requestData
-     * @return array
+     * validation features like `exists:table,id`.
+     *
      * @throws IncorrectIdException
      */
     protected function decodeHashedIdsBeforeValidation(array $requestData): array
     {
         // the hash ID feature must be enabled to use this decoder feature.
-        if (isset($this->decode) && !empty($this->decode) && Config::get('apiato.hash-id')) {
+        if (!empty($this->decode) && Config::get('apiato.hash-id')) {
             // iterate over each key (ID that needs to be decoded) and call keys locator to decode them
             foreach ($this->decode as $key) {
                 $requestData = $this->locateAndDecodeIds($requestData, $key);
@@ -112,28 +109,22 @@ trait HashIdTrait
     }
 
     /**
-     * Search the IDs to be decoded in the request data
+     * Search the IDs to be decoded in the request data.
      *
-     * @param $requestData
-     * @param $key
-     *
-     * @return  mixed
      * @throws IncorrectIdException
      */
     private function locateAndDecodeIds($requestData, $key): mixed
     {
         // split the key based on the "."
         $fields = explode('.', $key);
+
         // loop through all elements of the key.
         return $this->processField($requestData, $fields, $key);
     }
 
     /**
-     * Recursive function to process (decode) the request data with a given key
-     * @param $data
-     * @param $keysTodo
-     * @param $currentFieldName
-     * @return mixed
+     * Recursive function to process (decode) the request data with a given key.
+     *
      * @throws IncorrectIdException
      */
     private function processField($data, $keysTodo, $currentFieldName): mixed
@@ -158,8 +149,8 @@ trait HashIdTrait
         $field = array_shift($keysTodo);
 
         // is the current field an array?! we need to process it like crazy
-        if ($field == '*') {
-            //make sure field value is an array
+        if ('*' == $field) {
+            // make sure field value is an array
             $data = is_array($data) ? $data : [$data];
 
             // process each field of the array (and go down one level!)
@@ -167,8 +158,8 @@ trait HashIdTrait
             foreach ($fields as $key => $value) {
                 $data[$key] = $this->processField($value, $keysTodo, $currentFieldName . '[' . $key . ']');
             }
-            return $data;
 
+            return $data;
         }
 
         // check if the key we are looking for does, in fact, really exist

@@ -2,8 +2,6 @@
 
 namespace Apiato\Core\Loaders;
 
-
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
 
 trait ConfigsLoaderTrait

@@ -10,12 +10,17 @@ use Illuminate\Broadcasting\PrivateChannel;
 class {{class-name}} extends ParentEvent
 {
     public function __construct(
-        public {{model}} ${{_model}}
+        public readonly {{model}} ${{_model}},
     ) {
     }
 
-    public function broadcastOn(): Channel|array
+    /**
+     * @return Channel[]
+     */
+    public function broadcastOn(): array
     {
-        return new PrivateChannel('channel-name');
+        return [
+            new PrivateChannel('channel-name'),
+        ];
     }
 }

@@ -14,9 +14,8 @@ trait TestAssertionHelperTrait
     /**
      * Assert that the Gate::allows() method is called once with the given arguments.
      *
-     * @param string $policyMethodName
-     * @param ...$args
      * @return Gate|(Gate&MockObject)|MockObject
+     *
      * @throws Exception
      */
     protected function getGateMock(string $policyMethodName, ...$args)
@@ -50,9 +49,6 @@ trait TestAssertionHelperTrait
 
     /**
      * Check if the given id is in the given model collection by comparing hashed ids.
-     * @param $id
-     * @param Collection $collection
-     * @return bool
      */
     protected function inIds($id, Collection $collection): bool
     {
@@ -62,7 +58,7 @@ trait TestAssertionHelperTrait
     /**
      * Assert if the given database table has the expected columns with the expected types.
      *
-     * @param string $table The table name.
+     * @param string $table the table name
      * @param array<string, string> $expectedColumns The key is the column name and the value is the column type.
      *
      * Example: $this->assertDatabaseTable('users', ['id' => 'bigint']);

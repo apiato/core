@@ -11,8 +11,6 @@ class EventListenerGenerator extends GeneratorCommand implements ComponentsGener
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['event', null, InputOption::VALUE_OPTIONAL, 'The Event to generate this Listener for'],
@@ -46,7 +44,7 @@ class EventListenerGenerator extends GeneratorCommand implements ComponentsGener
      */
     protected string $stubName = 'listeners/listener.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         $event = $this->checkParameterOrAsk('event', 'Enter the name of the Event to generate this Listener for');
 

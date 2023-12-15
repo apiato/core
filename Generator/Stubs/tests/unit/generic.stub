@@ -5,8 +5,6 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 
 /**
- * Class {{class-name}}.
- *
  * @group {{_container-name}}
  * @group unit
  */

@@ -10,12 +10,12 @@ class GetApiatoVersionCommand extends ConsoleCommand
     /**
      * The name and signature of the console command.
      */
-    protected $signature = "apiato";
+    protected $signature = 'apiato';
 
     /**
      * The console command description.
      */
-    protected $description = "Display the current Apiato version.";
+    protected $description = 'Display the current Apiato version.';
 
     public function __construct()
     {

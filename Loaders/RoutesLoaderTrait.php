@@ -15,7 +15,7 @@ use Symfony\Component\Finder\SplFileInfo;
 trait RoutesLoaderTrait
 {
     /**
-     * Register all the containers routes files in the framework
+     * Register all the containers routes files in the framework.
      */
     public function runRoutesAutoLoader(): void
     {
@@ -41,8 +41,7 @@ trait RoutesLoaderTrait
     }
 
     /**
-     * Register the Containers API routes files
-     * @param string $containerPath
+     * Register the Containers API routes files.
      */
     private function loadApiContainerRoutes(string $containerPath): void
     {
@@ -67,7 +66,6 @@ trait RoutesLoaderTrait
     }
 
     /**
-     * @param string $apiRoutesPath
      * @return array|SplFileInfo[]
      */
     private function getFilesSortedByName(string $apiRoutesPath): array
@@ -76,6 +74,7 @@ trait RoutesLoaderTrait
         $files = Arr::sort($files, function ($file) {
             return $file->getFilename();
         });
+
         return $files;
     }
 
@@ -107,7 +106,7 @@ trait RoutesLoaderTrait
         ]);
     }
 
-    private function getRateLimitMiddleware(): ?string
+    private function getRateLimitMiddleware(): null|string
     {
         $rateLimitMiddleware = null;
 
@@ -150,9 +149,7 @@ trait RoutesLoaderTrait
     }
 
     /**
-     * Register the Containers WEB routes files
-     *
-     * @param $containerPath
+     * Register the Containers WEB routes files.
      */
     private function loadWebContainerRoutes($containerPath): void
     {

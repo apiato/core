@@ -11,12 +11,17 @@ use App\Ship\Parents\Controllers\{{base-controller}};
 
 class {{class-name}} extends {{base-controller}}
 {
+    public function __construct(
+        private readonly Find{{model}}ByIdAction $action
+    ) {
+    }
+
     /**
      * @throws InvalidTransformerException|NotFoundException
      */
-    public function find{{model}}ById(Find{{model}}ByIdRequest $request): array
+    public function __invoke(Find{{model}}ByIdRequest $request): array
     {
-        ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
+        ${{entity}} = $this->action->run($request);
 
         return $this->transform(${{entity}}, {{model}}Transformer::class);
     }

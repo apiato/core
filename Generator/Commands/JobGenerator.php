@@ -11,8 +11,6 @@ class JobGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
     ];
@@ -45,7 +43,7 @@ class JobGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'job.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         return [
             'path-parameters' => [
@@ -66,7 +64,7 @@ class JobGenerator extends GeneratorCommand implements ComponentsGenerator
     }
 
     /**
-     * Get the default file name for this component to be generated
+     * Get the default file name for this component to be generated.
      */
     public function getDefaultFileName(): string
     {

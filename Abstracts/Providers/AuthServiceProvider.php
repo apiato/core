@@ -17,13 +17,9 @@ abstract class AuthServiceProvider extends LaravelAuthServiceProvider
 
     /**
      * Register any authentication / authorization services.
-     *
-     * @return void
      */
     public function boot(): void
     {
         $this->registerPolicies();
-
-        //
     }
 }

@@ -13,8 +13,6 @@ abstract class MainServiceProvider extends LaravelAppServiceProvider
 
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -24,11 +22,8 @@ abstract class MainServiceProvider extends LaravelAppServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot(): void
     {
-
     }
 }

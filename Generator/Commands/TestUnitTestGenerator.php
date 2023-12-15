@@ -12,8 +12,6 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this tests is for.'],
@@ -50,7 +48,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'tests/unit/generic.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         $model = $this->option('model');
         $stub = $this->option('stub');

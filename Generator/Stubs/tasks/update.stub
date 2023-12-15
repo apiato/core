@@ -7,13 +7,12 @@ use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Tasks\Task as ParentTask;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class {{class-name}} extends ParentTask
 {
     public function __construct(
-        protected {{model}}Repository $repository
+        protected readonly {{model}}Repository $repository,
     ) {
     }
 
@@ -27,7 +26,7 @@ class {{class-name}} extends ParentTask
             return $this->repository->update($data, $id);
         } catch (ModelNotFoundException) {
             throw new NotFoundException();
-        } catch (Exception) {
+        } catch (\Exception) {
             throw new UpdateResourceFailedException();
         }
     }

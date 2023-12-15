@@ -9,19 +9,17 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
-use JsonException;
-use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
 trait TestRequestHelperTrait
 {
     /**
-     * property to be set on the user test class
+     * property to be set on the user test class.
      */
     protected string $endpoint = '';
 
     /**
-     * property to be set on the user test class
+     * property to be set on the user test class.
      */
     protected bool $auth = true;
 
@@ -29,19 +27,19 @@ trait TestRequestHelperTrait
 
     protected string $responseContent;
 
-    protected ?array $responseContentArray = null;
+    protected null|array $responseContentArray = null;
 
-    protected ?stdClass $responseContentObject = null;
+    protected null|\stdClass $responseContentObject = null;
 
     /**
      * Allows users to override the default class property `endpoint` directly before calling the `makeCall` function.
      */
-    protected ?string $overrideEndpoint = null;
+    protected null|string $overrideEndpoint = null;
 
     /**
      * Allows users to override the default class property `auth` directly before calling the `makeCall` function.
      */
-    protected ?bool $overrideAuth = null;
+    protected null|bool $overrideAuth = null;
 
     /**
      * @throws WrongEndpointFormatException
@@ -79,7 +77,8 @@ trait TestRequestHelperTrait
     }
 
     /**
-     * read `$this->endpoint` property from the test class (`verb@uri`) and convert it to usable data
+     * read `$this->endpoint` property from the test class (`verb@uri`) and convert it to usable data.
+     *
      * @throws WrongEndpointFormatException
      * @throws MissingTestEndpointException
      */
@@ -97,8 +96,8 @@ trait TestRequestHelperTrait
         // get the verb and uri values from the array
         extract(array_combine(['verb', 'uri'], $asArray));
 
-        /** @var string $verb */
-        /** @var string $uri */
+        /* @var string $verb */
+        /* @var string $uri */
         return [
             'verb' => $verb,
             'uri' => $uri,
@@ -152,10 +151,6 @@ trait TestRequestHelperTrait
      * Attach Authorization Bearer Token to the request headers
      * if it does not exist already and the authentication is required
      * for the endpoint `$this->auth = true`.
-     *
-     * @param array $headers
-     *
-     * @return array
      */
     private function injectAccessToken(array $headers = []): array
     {
@@ -185,6 +180,7 @@ trait TestRequestHelperTrait
     public function setResponseObjectAndContent($httpResponse)
     {
         $this->setResponseContent($httpResponse);
+
         return $this->response = $httpResponse;
     }
 
@@ -204,7 +200,7 @@ trait TestRequestHelperTrait
     }
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function getResponseContentObject()
     {
@@ -213,15 +209,11 @@ trait TestRequestHelperTrait
 
     /**
      * Inject the ID in the Endpoint URI before making the call by
-     * overriding the `$this->endpoint` property
+     * overriding the `$this->endpoint` property.
      *
      * Example: you give it ('users/{id}/stores', 100) it returns 'users/100/stores'
      *
-     * @param        $id
-     * @param bool $skipEncoding
-     * @param string $replace
-     *
-     * @return  $this
+     * @return $this
      */
     public function injectId($id, bool $skipEncoding = false, string $replace = '{id}'): static
     {
@@ -238,13 +230,11 @@ trait TestRequestHelperTrait
     }
 
     /**
-     * Override the default class endpoint property before making the call
+     * Override the default class endpoint property before making the call.
      *
      * to be used as follow: $this->endpoint('verb@uri')->makeCall($data);
      *
-     * @param $endpoint
-     *
-     * @return  $this
+     * @return $this
      */
     public function endpoint($endpoint): static
     {
@@ -254,13 +244,11 @@ trait TestRequestHelperTrait
     }
 
     /**
-     * Override the default class auth property before making the call
+     * Override the default class auth property before making the call.
      *
      * to be used as follows: $this->auth('false')->makeCall($data);
      *
-     * @param bool $auth
-     *
-     * @return  $this
+     * @return $this
      */
     public function auth(bool $auth): static
     {
@@ -271,10 +259,6 @@ trait TestRequestHelperTrait
 
     /**
      * Transform headers array to array of $_SERVER vars with HTTP_* format.
-     *
-     * @param array $headers
-     *
-     * @return array
      */
     protected function transformHeadersToServerVars(array $headers): array
     {

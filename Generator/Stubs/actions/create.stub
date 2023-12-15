@@ -11,9 +11,12 @@ use App\Ship\Parents\Actions\Action as ParentAction;
 
 class {{class-name}} extends ParentAction
 {
+    public function __construct(
+        private readonly Create{{model}}Task $create{{model}}Task,
+    ) {
+    }
+
     /**
-     * @param Create{{model}}Request $request
-     * @return {{model}}
      * @throws CreateResourceFailedException
      * @throws IncorrectIdException
      */
@@ -23,6 +26,6 @@ class {{class-name}} extends ParentAction
             // add your request data here
         ]);
 
-        return app(Create{{model}}Task::class)->run($data);
+        return $this->create{{model}}Task->run($data);
     }
 }

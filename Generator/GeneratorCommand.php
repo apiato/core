@@ -22,34 +22,31 @@ abstract class GeneratorCommand extends Command
     use FormatterTrait;
 
     /**
-     * Root directory of all sections
+     * Root directory of all sections.
      *
      * @var string
      */
     private const ROOT = 'app/Containers';
 
     /**
-     * Relative path for the stubs (relative to this directory / file)
+     * Relative path for the stubs (relative to this directory / file).
      *
      * @var string
      */
     private const STUB_PATH = 'Stubs/*';
 
     /**
-     * Relative path for the custom stubs (relative to the app/Ship directory!)
+     * Relative path for the custom stubs (relative to the app/Ship directory!).
      */
     private const CUSTOM_STUB_PATH = 'Generators/CustomStubs/*';
 
     /**
-     * Default section name
+     * Default section name.
      *
      * @var string
      */
     private const DEFAULT_SECTION_NAME = 'AppSection';
 
-    /**
-     * @var string
-     */
     protected string $filePath;
 
     /**
@@ -106,7 +103,7 @@ abstract class GeneratorCommand extends Command
         // Now fix the section, container and file name
         $this->sectionName = $this->removeSpecialChars($this->sectionName);
         $this->containerName = $this->removeSpecialChars($this->containerName);
-        if (!($this->fileType === 'Configuration')) {
+        if (!('Configuration' === $this->fileType)) {
             $this->fileName = $this->removeSpecialChars($this->fileName);
         }
 
@@ -116,7 +113,7 @@ abstract class GeneratorCommand extends Command
         // Get user inputs
         $this->userData = $this->getUserInputs();
 
-        if ($this->userData === null) {
+        if (null === $this->userData) {
             // The user skipped this step
             return;
         }
@@ -141,33 +138,23 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
-     * @param $generator
-     *
      * @throws GeneratorErrorException
      */
     private function validateGenerator($generator): void
     {
         if (!$generator instanceof ComponentsGenerator) {
-            throw new GeneratorErrorException(
-                'Your component maker command should implement ComponentsGenerator interface.'
-            );
+            throw new GeneratorErrorException('Your component maker command should implement ComponentsGenerator interface.');
         }
     }
 
     /**
-     * Checks if the param is set (via CLI), otherwise asks the user for a value
-     *
-     * @param $param
-     * @param $question
-     * @param string|null $default
-     *
-     * @return mixed
+     * Checks if the param is set (via CLI), otherwise asks the user for a value.
      */
-    protected function checkParameterOrAsk($param, $question, ?string $default = null): mixed
+    protected function checkParameterOrAsk($param, $question, null|string $default = null): mixed
     {
         // Check if we already have a param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user…
             $value = $this->ask($question, $default);
         }
@@ -176,7 +163,7 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
-     * Get the default file name for this component to be generated
+     * Get the default file name for this component to be generated.
      */
     protected function getDefaultFileName(): string
     {
@@ -184,9 +171,7 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
-     * Removes "special characters" from a string
-     * @param $str
-     * @return string
+     * Removes "special characters" from a string.
      */
     protected function removeSpecialChars($str): string
     {
@@ -196,10 +181,7 @@ abstract class GeneratorCommand extends Command
 
     /**
      * Checks, if the data from the generator contains path, stub and file-parameters.
-     * Adds empty arrays, if they are missing
-     *
-     * @param $data
-     * @return mixed
+     * Adds empty arrays, if they are missing.
      */
     private function sanitizeUserData($data): mixed
     {
@@ -240,7 +222,6 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
-     * @return  string
      * @throws FileNotFoundException
      */
     protected function getStubContent(): string
@@ -261,39 +242,26 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
-     * Get all the console command arguments, from the components. The default arguments are prepended
+     * Get all the console command arguments, from the components. The default arguments are prepended.
      */
     protected function getOptions(): array
     {
         return array_merge($this->defaultInputs, $this->inputs);
     }
 
-    /**
-     * @param      $arg
-     * @param bool $trim
-     *
-     * @return array|string|null
-     */
     protected function getInput($arg, bool $trim = true): array|string|null
     {
         return $trim ? $this->trimString($this->argument($arg)) : $this->argument($arg);
     }
 
     /**
-     * Checks if the param is set (via CLI), otherwise proposes choices to the user
-     *
-     * @param $param
-     * @param $question
-     * @param $choices
-     * @param mixed $default
-     *
-     * @return bool|array|string|null
+     * Checks if the param is set (via CLI), otherwise proposes choices to the user.
      */
     protected function checkParameterOrChoice($param, $question, $choices, mixed $default = null): bool|array|string|null
     {
         // Check if we already have a param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user…
             $value = $this->choice($question, $choices, $default);
         }
@@ -301,18 +269,11 @@ abstract class GeneratorCommand extends Command
         return $value;
     }
 
-    /**
-     * @param      $param
-     * @param      $question
-     * @param bool $default
-     *
-     * @return string|array|bool|null
-     */
     protected function checkParameterOrConfirm($param, $question, bool $default = false): string|array|bool|null
     {
         // Check if we already have a param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user...
             $value = $this->confirm($question, $default);
         }

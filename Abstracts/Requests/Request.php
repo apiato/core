@@ -11,30 +11,51 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
-/**
- * Class Request
- *
- * A.K.A (app/Http/Requests/Request.php)
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 abstract class Request extends LaravelRequest
 {
     use HashIdTrait;
     use SanitizerTrait;
 
     /**
-     * To be used mainly from unit tests.
+     * Roles and/or Permissions that has access to this request.
      *
-     * @param array $parameters
-     * @param User|null $user
-     * @param array $cookies
-     * @param array $files
-     * @param array $server
+     * @example ['permissions' => 'create-users', 'roles' => 'admin|manager']
+     * @example ['permissions' => null, 'roles' => 'admin']
+     * @example ['permissions' => ['create-users'], 'roles' => null]
      *
-     * @return  static
+     * @var array<string, string|array<string>|null>
      */
-    public static function injectData(array $parameters = [], User $user = null, array $cookies = [], array $files = [], array $server = []): static
+    protected array $access = [
+        'permissions' => null,
+        'roles' => null,
+    ];
+
+    /**
+     * Id's that needs decoding before applying the validation rules.
+     *
+     * @example ['id']
+     *
+     * @var string[]
+     */
+    protected array $decode = [];
+
+    /**
+     * Defining the URL parameters (`/stores/{slug}/items`) allows applying
+     * validation rules on them and allows accessing them like request data.
+     *
+     * For example, you can use the `exists` validation rule on the `slug` parameter.
+     * And you can access the `slug` parameter using `$request->slug`.
+     *
+     * @example ['slug']
+     *
+     * @var string[]
+     */
+    protected array $urlParameters = [];
+
+    /**
+     * To be used mainly from unit tests.
+     */
+    public static function injectData(array $parameters = [], null|User $user = null, array $cookies = [], array $files = [], array $server = []): static
     {
         // if user is passed, will be returned when asking for the authenticated user using `\Auth::user()`
         if ($user) {
@@ -58,7 +79,7 @@ abstract class Request extends LaravelRequest
      * but are needed for the request to be processed.
      * For example, in the unit tests, we can add the url parameters to the request which is not part of the request body.
      * It is best used with the `injectData` method.
-     * @param array $properties
+     *
      * @return $this
      */
     public function withUrlParameters(array $properties): self
@@ -72,29 +93,25 @@ abstract class Request extends LaravelRequest
 
     public function getAccessArray(): array
     {
-        return $this->access ?? [];
+        return $this->access;
     }
 
     public function getDecodeArray(): array
     {
-        return $this->decode ?? [];
+        return $this->decode;
     }
 
     public function getUrlParametersArray(): array
     {
-        return $this->urlParameters ?? [];
+        return $this->urlParameters;
     }
 
     /**
      * check if a user has permission to perform an action.
      * User can set multiple permissions (separated with "|") and if the user has
      * any of the permissions, he will be authorized to proceed with this action.
-     *
-     * @param User|null $user
-     *
-     * @return  bool
      */
-    public function hasAccess(User $user = null): bool
+    public function hasAccess(null|User $user = null): bool
     {
         // if not in parameters, take from the request object {$this}
         $user = $user ?: $this->user();
@@ -113,18 +130,13 @@ abstract class Request extends LaravelRequest
         // check if the user has any role / permission to access the route
         $hasAccess = array_merge(
             $this->hasAnyPermissionAccess($user),
-            $this->hasAnyRoleAccess($user)
+            $this->hasAnyRoleAccess($user),
         );
 
         // allow access if user has access to any of the defined roles or permissions.
         return empty($hasAccess) || in_array(true, $hasAccess, true);
     }
 
-    /**
-     * @param $user
-     *
-     * @return  array
-     */
     protected function hasAnyPermissionAccess($user): array
     {
         if (!array_key_exists('permissions', $this->access) || !$this->access['permissions']) {
@@ -139,11 +151,6 @@ abstract class Request extends LaravelRequest
         }, $permissions);
     }
 
-    /**
-     * @param $user
-     *
-     * @return  array
-     */
     protected function hasAnyRoleAccess($user): array
     {
         if (!array_key_exists('roles', $this->access) || !$this->access['roles']) {
@@ -165,7 +172,6 @@ abstract class Request extends LaravelRequest
      * Note that the old value (data.attributes.name) is removed the original request - this method manipulates the request!
      * Be sure you know what you do!
      *
-     * @param array $fields
      * @throws IncorrectIdException
      */
     public function mapInput(array $fields): void
@@ -193,7 +199,6 @@ abstract class Request extends LaravelRequest
      *
      * @param null $keys
      *
-     * @return  array
      * @throws IncorrectIdException
      */
     public function all($keys = null): array
@@ -212,14 +217,10 @@ abstract class Request extends LaravelRequest
      * doesn't validate them by default!
      *
      * Now you can use validation rules like this: `'id' => 'required|integer|exists:items,id'`
-     *
-     * @param array $requestData
-     *
-     * @return  array
      */
     protected function mergeUrlParametersWithRequestData(array $requestData): array
     {
-        if (isset($this->urlParameters) && !empty($this->urlParameters)) {
+        if (!empty($this->urlParameters)) {
             foreach ($this->urlParameters as $param) {
                 $requestData[$param] = $this->route($param);
             }
@@ -229,12 +230,8 @@ abstract class Request extends LaravelRequest
     }
 
     /**
-     * This method mimics the $request->input() method but works on the "decoded" values
+     * This method mimics the $request->input() method but works on the "decoded" values.
      *
-     * @param $key
-     * @param $default
-     *
-     * @return mixed
      * @throws IncorrectIdException
      */
     public function getInputByKey($key = null, $default = null): mixed
@@ -246,10 +243,6 @@ abstract class Request extends LaravelRequest
      * Used from the `authorize` function if the Request class.
      * To call functions and compare their bool responses to determine
      * if the user can proceed with the request or not.
-     *
-     * @param array $functions
-     *
-     * @return  bool
      */
     protected function check(array $functions): bool
     {

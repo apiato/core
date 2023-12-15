@@ -3,13 +3,12 @@
 namespace Apiato\Core\Middlewares\Http;
 
 use Apiato\Core\Abstracts\Middlewares\Middleware;
-use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 
 class ProcessETagHeadersMiddleware extends Middleware
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         /*
          * This middleware will add the "ETag" HTTP Header to a Response. The ETag, in turn, is a
@@ -28,7 +27,7 @@ class ProcessETagHeadersMiddleware extends Middleware
         if ($request->hasHeader('if-none-match')) {
             // check, if the request method is GET or HEAD
             $method = $request->method();
-            if (!($method === 'GET' || $method === 'HEAD')) {
+            if (!('GET' === $method || 'HEAD' === $method)) {
                 throw new PreconditionFailedHttpException('HTTP Header IF-None-Match is only allowed for GET and HEAD Requests.');
             }
         }

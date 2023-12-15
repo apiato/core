@@ -2,12 +2,11 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
 
+use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
 
 /**
- * Class {{class-name}}.
- *
  * @group {{_container-name}}
  * @group api
  */
@@ -22,7 +21,7 @@ class {{class-name}} extends ApiTestCase
 
     public function testDeleteExisting{{model}}(): void
     {
-        ${{_model}} = {{model}}::factory()->create();
+        ${{_model}} = {{model}}Factory::new()->createOne();
 
         $response = $this->injectId(${{_model}}->id)->makeCall();
 
@@ -42,13 +41,13 @@ class {{class-name}} extends ApiTestCase
     // add some roles and permissions to this route's request
     // then add them to the $access array above
     // uncomment this test to test accesses
-//    public function testGivenHaveNoAccess_CannotDelete{{model}}(): void
-//    {
-//        $this->getTestingUserWithoutAccess();
-//        ${{_model}} = {{model}}::factory()->create();
-//
-//        $response = $this->injectId(${{_model}}->id)->makeCall();
-//
-//        $response->assertStatus(403);
-//    }
+    // public function testGivenHaveNoAccess_CannotDelete{{model}}(): void
+    // {
+    //     $this->getTestingUserWithoutAccess();
+    //     ${{_model}} = {{model}}Factory::new()->createOne();
+    //
+    //     $response = $this->injectId(${{_model}}->id)->makeCall();
+    //
+    //     $response->assertStatus(403);
+    // }
 }

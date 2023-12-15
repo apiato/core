@@ -3,14 +3,11 @@
 namespace Apiato\Core\Traits;
 
 use Apiato\Core\Abstracts\Models\Model;
-use Apiato\Core\Abstracts\Models\UserModel;
 use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Exceptions\InvalidTransformerException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
-use ReflectionClass;
-use ReflectionException;
 use Request;
 use Spatie\Fractal\Facades\Fractal;
 
@@ -26,7 +23,7 @@ trait ResponseTrait
         $transformerName = null,
         array $includes = [],
         array $meta = [],
-        $resourceKey = null
+        $resourceKey = null,
     ): array {
         // first, we need to create the transformer
         if ($transformerName instanceof Transformer) {
@@ -78,7 +75,7 @@ trait ResponseTrait
         $fractal->parseIncludes($requestIncludes);
 
         // apply request filters if available in the request
-        if ($requestFilters = Request::get('filter')) {
+        if ($requestFilters = \Request::get('filter')) {
             $result = $this->filterResponse($fractal->toArray(), explode(';', $requestFilters));
         } else {
             $result = $fractal->toArray();
@@ -89,7 +86,7 @@ trait ResponseTrait
 
     protected function parseRequestedIncludes(): array
     {
-        return explode(',', Request::get('include') ?? '');
+        return explode(',', \Request::get('include') ?? '');
     }
 
     private function filterResponse(array $responseArray, array $filters): array
@@ -138,16 +135,16 @@ trait ResponseTrait
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
-    public function deleted(Model $deletedModel = null): JsonResponse
+    public function deleted(null|Model $deletedModel = null): JsonResponse
     {
         if (!$deletedModel) {
             return $this->accepted();
         }
 
         $id = $deletedModel->getHashedKey();
-        $className = (new ReflectionClass($deletedModel))->getShortName();
+        $className = (new \ReflectionClass($deletedModel))->getShortName();
 
         return $this->accepted([
             'message' => "$className ($id) Deleted Successfully.",

@@ -13,12 +13,12 @@ class {{class-name}} extends WebController
     public function edit(Edit{{model}}Request $request)
     {
         ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
-        // ..
+        // ...
     }
 
     public function update(Update{{model}}Request $request)
     {
         ${{entity}} = app(Update{{model}}Action::class)->run($request);
-        // ..
+        // ...
     }
 }

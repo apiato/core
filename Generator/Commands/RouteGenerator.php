@@ -12,8 +12,6 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
@@ -53,7 +51,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'routes/generic.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
         $version = $this->checkParameterOrAsk('docversion', 'Enter the endpoint version (integer)', 1);

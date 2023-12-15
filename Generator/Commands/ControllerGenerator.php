@@ -14,8 +14,6 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
      * The options which can be passed to the command. All options are optional. You do not need to pass the
      * "--container" and "--file" options, as they are globally handled. Just use the options which are specific to
      * this generator.
-     *
-     * @var  array
      */
     public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
@@ -50,7 +48,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
      */
     protected string $stubName = 'controllers/generic.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
 
@@ -58,9 +56,9 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
             $this->checkParameterOrChoice(
                 'stub',
                 'Select the Stub you want to load',
-                ['Generic', 'CRUD', 'Create', 'Delete', 'Find', 'GetAll', 'Update'],
-                0
-            )
+                ['Generic', 'CRUD', 'Create', 'Delete', 'Find', 'List', 'Update'],
+                0,
+            ),
         );
 
         // Load a new stub-file based on the users choice

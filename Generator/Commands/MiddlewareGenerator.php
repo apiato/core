@@ -11,8 +11,6 @@ class MiddlewareGenerator extends GeneratorCommand implements ComponentsGenerato
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     *
-     * @var  array
      */
     public array $inputs = [
     ];
@@ -45,7 +43,7 @@ class MiddlewareGenerator extends GeneratorCommand implements ComponentsGenerato
      */
     protected string $stubName = 'middleware.stub';
 
-    public function getUserInputs(): ?array
+    public function getUserInputs(): null|array
     {
         return [
             'path-parameters' => [

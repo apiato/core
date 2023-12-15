@@ -8,11 +8,11 @@ use Laravel\Passport\PersonalAccessClient;
 trait TestCaseTrait
 {
     /**
-     * Override default URL subDomain in case you want to change it for some tests
+     * Override default URL subDomain in case you want to change it for some tests.
      *
      * @param null $url
      *
-     * @return  string|void
+     * @return string|void
      */
     public function overrideSubDomain($url = null)
     {
@@ -28,9 +28,9 @@ trait TestCaseTrait
         $array = explode('.', $info['host']);
 
         $withoutDomain = (array_key_exists(
-                count($array) - 2,
-                $array
-            ) ? $array[count($array) - 2] : '') . '.' . $array[count($array) - 1];
+            count($array) - 2,
+            $array,
+        ) ? $array[count($array) - 2] : '') . '.' . $array[count($array) - 1];
 
         $newSubDomain = $info['scheme'] . '://' . $this->subDomain . '.' . $withoutDomain;
 
@@ -38,14 +38,14 @@ trait TestCaseTrait
     }
 
     /**
-     * Equivalent to passport:install but enough to run the tests
+     * Equivalent to passport:install but enough to run the tests.
      */
     public function setupPassportOAuth2(): void
     {
         $client = (new ClientRepository())->createPersonalAccessClient(
             null,
             'Testing Personal Access Client',
-            'http://localhost'
+            'http://localhost',
         );
 
         $accessClient = new PersonalAccessClient();

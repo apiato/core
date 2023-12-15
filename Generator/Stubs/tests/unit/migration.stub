@@ -6,8 +6,6 @@ use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class {{class-name}}.
- *
  * @group {{_container-name}}
  * @group unit
  */

@@ -7,13 +7,12 @@ use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
 use App\Ship\Exceptions\DeleteResourceFailedException;
 use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Tasks\Task as ParentTask;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class {{class-name}} extends ParentTask
 {
     public function __construct(
-        protected {{model}}Repository $repository
+        protected readonly {{model}}Repository $repository,
     ) {
     }
 
@@ -30,7 +29,7 @@ class {{class-name}} extends ParentTask
             return $result;
         } catch (ModelNotFoundException) {
             throw new NotFoundException();
-        } catch (Exception) {
+        } catch (\Exception) {
             throw new DeleteResourceFailedException();
         }
     }
