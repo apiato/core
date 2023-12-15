@@ -11,13 +11,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
-/**
- * Class Request.
- *
- * A.K.A (app/Http/Requests/Request.php)
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 abstract class Request extends LaravelRequest
 {
     use HashIdTrait;
@@ -30,7 +23,7 @@ abstract class Request extends LaravelRequest
      * @example ['permissions' => null, 'roles' => 'admin']
      * @example ['permissions' => ['create-users'], 'roles' => null]
      *
-     * @var array<string, string>|array<string, null>|array<string, array<string>>
+     * @var array<string, string|array<string>|null>
      */
     protected array $access = [
         'permissions' => null,
