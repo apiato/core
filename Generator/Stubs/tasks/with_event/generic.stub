@@ -8,11 +8,9 @@ class {{class-name}} extends ParentTask
 {
     public function __construct()
     {
-        //
     }
 
     public function run()
     {
-        //
     }
 }

@@ -10,11 +10,9 @@ class {{class-name}} extends ParentListener implements ShouldQueue
 {
     public function __construct()
     {
-        //
     }
 
     public function handle({{model}} $event): void
     {
-        //
     }
 }

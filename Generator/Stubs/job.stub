@@ -8,11 +8,9 @@ use App\Ship\Parents\Jobs\Job as ParentJob;
  {
     public function __construct()
     {
-        //
     }
 
     public function handle(): void
     {
-        //
     }
  }

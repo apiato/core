@@ -8,6 +8,5 @@ class {{class-name}} extends ParentPolicy
 {
     public function __construct()
     {
-        //
     }
 }

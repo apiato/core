@@ -8,6 +8,5 @@ class {{class-name}} extends ParentSeeder
 {
     public function run(): void
     {
-        //
     }
 }

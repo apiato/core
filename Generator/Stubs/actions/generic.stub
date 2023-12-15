@@ -8,6 +8,5 @@ class {{class-name}} extends ParentAction
 {
     public function run()
     {
-        //
     }
 }

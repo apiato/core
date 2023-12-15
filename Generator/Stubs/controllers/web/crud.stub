@@ -32,7 +32,6 @@ class {{class-name}} extends WebController
 
     public function create(Create{{model}}Request $request)
     {
-        //
     }
 
     public function store(Store{{model}}Request $request)
