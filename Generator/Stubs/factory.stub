@@ -12,18 +12,9 @@ use App\Ship\Parents\Factories\Factory as ParentFactory;
  */
 class {{class-name}} extends ParentFactory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var class-string<TModel>
-     */
+    /** @var class-string<TModel> */
     protected $model = {{model}}::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
