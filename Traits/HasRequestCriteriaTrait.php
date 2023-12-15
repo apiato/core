@@ -11,8 +11,8 @@ use Vinkla\Hashids\Facades\Hashids;
 trait HasRequestCriteriaTrait
 {
     /**
-     * @param array $fieldsToDecode
      * @return HasRequestCriteriaTrait
+     *
      * @throws RepositoryException
      */
     #[Deprecated(
