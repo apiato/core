@@ -24,6 +24,42 @@ abstract class Request extends LaravelRequest
     use SanitizerTrait;
 
     /**
+     * Roles and/or Permissions that has access to this request.
+     *
+     * @example ['permissions' => 'create-users', 'roles' => 'admin|manager']
+     * @example ['permissions' => null, 'roles' => 'admin']
+     * @example ['permissions' => ['create-users'], 'roles' => null]
+     *
+     * @var array<string, string>|array<string, null>|array<string, array<string>>
+     */
+    protected array $access = [
+        'permissions' => null,
+        'roles' => null,
+    ];
+
+    /**
+     * Id's that needs decoding before applying the validation rules.
+     *
+     * @example ['id']
+     *
+     * @var string[]
+     */
+    protected array $decode = [];
+
+    /**
+     * Defining the URL parameters (`/stores/{slug}/items`) allows applying
+     * validation rules on them and allows accessing them like request data.
+     *
+     * For example, you can use the `exists` validation rule on the `slug` parameter.
+     * And you can access the `slug` parameter using `$request->slug`.
+     *
+     * @example ['slug']
+     *
+     * @var string[]
+     */
+    protected array $urlParameters = [];
+
+    /**
      * To be used mainly from unit tests.
      */
     public static function injectData(array $parameters = [], null|User $user = null, array $cookies = [], array $files = [], array $server = []): static
@@ -64,17 +100,17 @@ abstract class Request extends LaravelRequest
 
     public function getAccessArray(): array
     {
-        return $this->access ?? [];
+        return $this->access;
     }
 
     public function getDecodeArray(): array
     {
-        return $this->decode ?? [];
+        return $this->decode;
     }
 
     public function getUrlParametersArray(): array
     {
-        return $this->urlParameters ?? [];
+        return $this->urlParameters;
     }
 
     /**
@@ -191,7 +227,7 @@ abstract class Request extends LaravelRequest
      */
     protected function mergeUrlParametersWithRequestData(array $requestData): array
     {
-        if (isset($this->urlParameters) && !empty($this->urlParameters)) {
+        if (!empty($this->urlParameters)) {
             foreach ($this->urlParameters as $param) {
                 $requestData[$param] = $this->route($param);
             }

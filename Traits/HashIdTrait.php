@@ -98,7 +98,7 @@ trait HashIdTrait
     protected function decodeHashedIdsBeforeValidation(array $requestData): array
     {
         // the hash ID feature must be enabled to use this decoder feature.
-        if (isset($this->decode) && !empty($this->decode) && Config::get('apiato.hash-id')) {
+        if (!empty($this->decode) && Config::get('apiato.hash-id')) {
             // iterate over each key (ID that needs to be decoded) and call keys locator to decode them
             foreach ($this->decode as $key) {
                 $requestData = $this->locateAndDecodeIds($requestData, $key);
