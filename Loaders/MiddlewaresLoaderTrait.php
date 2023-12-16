@@ -15,7 +15,7 @@ trait MiddlewaresLoaderTrait
         $this->registerMiddleware($this->middlewares);
         $this->registerMiddlewareGroups($this->middlewareGroups);
         $this->registerMiddlewarePriority($this->middlewarePriority);
-        $this->registerMiddlewareAliases($this->middlewareAliases);
+        $this->registerMiddlewareAliases();
     }
 
     /**
@@ -52,10 +52,15 @@ trait MiddlewaresLoaderTrait
         }
     }
 
-    private function registerMiddlewareAliases(array $middlewareAlias = []): void
+    private function registerMiddlewareAliases(): void
     {
-        foreach ($middlewareAlias as $key => $value) {
+        foreach ($this->getMiddlewareAliases() as $key => $value) {
             $this->app['router']->aliasMiddleware($key, $value);
         }
+    }
+
+    public function getMiddlewareAliases(): array
+    {
+        return array_merge($this->routeMiddleware, $this->middlewareAliases);
     }
 }
