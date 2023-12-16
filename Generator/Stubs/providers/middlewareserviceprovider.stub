@@ -10,7 +10,7 @@ class {{class-name}} extends ParentMiddlewareServiceProvider
 
     protected array $middlewareGroups = [];
 
-    protected array $middlewarePriority = [];
-
     protected array $middlewareAliases = [];
+
+    protected array $middlewarePriority = [];
 }
