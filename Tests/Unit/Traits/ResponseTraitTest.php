@@ -61,10 +61,10 @@ class ResponseTraitTest extends UnitTestCase
                 return $this->item($user->parent, new UserTransformer());
             }
 
-//            public function includePermissions(User $user)
-//            {
-//                return $this->collection($user->permissions, new UserTransformer());
-//            }
+            //            public function includePermissions(User $user)
+            //            {
+            //                return $this->collection($user->permissions, new UserTransformer());
+            //            }
         };
 
         $this->expectedTransformedData = [
