@@ -1,9 +1,8 @@
 <?php
 
-namespace Apiato\Core\Tests\Doubles;
+namespace Apiato\Core\Tests\Infrastructure\Doubles;
 
 use Apiato\Core\Abstracts\Transformers\Transformer;
-use Tests\Doubles\User;
 
 class UserTransformer extends Transformer
 {

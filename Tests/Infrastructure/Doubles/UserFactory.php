@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Doubles;
+namespace Apiato\Core\Tests\Infrastructure\Doubles;
 
 use Orchestra\Testbench\Factories\UserFactory as TestbenchUserFactory;
 

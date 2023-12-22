@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Doubles;
+namespace Apiato\Core\Tests\Infrastructure\Doubles;
 
 use Apiato\Core\Traits\CanOwnTrait;
 use Apiato\Core\Traits\HashIdTrait;

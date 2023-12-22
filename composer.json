@@ -62,9 +62,7 @@
         ]
     },
     "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "Tests/"
-        }
+        "psr-4": {}
     },
     "extra": {
         "laravel": {

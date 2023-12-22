@@ -3,11 +3,11 @@
 namespace Apiato\Core\Tests\Unit\Traits;
 
 use Apiato\Core\Abstracts\Transformers\Transformer;
-use Apiato\Core\Tests\Doubles\UserTransformer;
+use Apiato\Core\Tests\Infrastructure\Doubles\User;
+use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
 use Apiato\Core\Tests\Unit\UnitTestCase;
 use Apiato\Core\Traits\ResponseTrait;
-use Tests\Doubles\User;
-use Tests\Doubles\UserFactory;
+use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
 
 class ResponseTraitTest extends UnitTestCase
 {

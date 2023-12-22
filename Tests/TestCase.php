@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Apiato\Core\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\Concerns\WithWorkbench;
