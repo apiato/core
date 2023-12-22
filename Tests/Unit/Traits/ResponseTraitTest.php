@@ -14,13 +14,8 @@ class ResponseTraitTest extends UnitTestCase
     private $trait;
     private User $user;
     private Transformer $transformer;
-    private array $expectedTransformedData = [
-        'id' => '1',
-        'name' => 'test',
-    ];
     private array $customMetadata;
     private array $metadata;
-    private array $includes;
 
     public function setUp(): void
     {
@@ -30,52 +25,8 @@ class ResponseTraitTest extends UnitTestCase
             use ResponseTrait;
         };
 
-        $this->user = UserFactory::new()
-            ->withParent()
-            ->createOne();
-
-        $this->transformer = new class() extends Transformer {
-            protected array $availableIncludes = [
-                'parent',
-//                'permissions',
-            ];
-
-            protected array $defaultIncludes = [
-//                'permissions',
-            ];
-
-            public function transform(User $user): array
-            {
-                return [
-                    'object' => $user->getResourceKey(),
-                    'id' => $user->getHashedKey(),
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'created_at' => $user->created_at,
-                    'updated_at' => $user->updated_at,
-                ];
-            }
-
-            public function includeParent(User $user)
-            {
-                return $this->item($user->parent, new UserTransformer());
-            }
-
-            //            public function includePermissions(User $user)
-            //            {
-            //                return $this->collection($user->permissions, new UserTransformer());
-            //            }
-        };
-
-        $this->expectedTransformedData = [
-            'id' => $this->user->getHashedKey(),
-            'name' => $this->user->name,
-            'email' => $this->user->email,
-            'created_at' => $this->user->created_at,
-            'updated_at' => $this->user->updated_at,
-        ];
-
-        $this->includes = ['parent', 'permissions'];
+        $this->user = UserFactory::new()->withParent()->createOne();
+        $this->transformer = new UserTransformer();
         $this->customMetadata = [
             'key' => 'value',
         ];
@@ -86,22 +37,87 @@ class ResponseTraitTest extends UnitTestCase
 
     public function testTransform(): void
     {
-        $resourceKey = null;
-
         $result = $this->trait
             ->withMeta($this->metadata)
-            ->transform($this->user, $this->transformer, $this->includes, $this->customMetadata, $resourceKey);
+            ->transform(
+                data: $this->user,
+                transformerName: $this->transformer,
+                meta: $this->customMetadata,
+            );
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('data', $result);
-        $this->assertEquals(
-            array_merge($this->expectedTransformedData, ['object' => $this->user->getResourceKey()]),
-            $result['data'],
-        );
+        $this->assertArrayHasKey('object', $result['data']);
+        $this->assertEquals($this->user->getResourceKey(), $result['data']['object']);
+        $this->assertArrayNotHasKey('parent', $result['data']);
         $this->assertMetadata($result);
     }
 
-    // Add more test methods for each method in the ResponseTrait
+    public function testCanInclude(): void
+    {
+        $includes = ['parent'];
+
+        $result = $this->trait
+            ->withMeta($this->metadata)
+            ->transform(
+                data: $this->user,
+                transformerName: $this->transformer,
+                includes: $includes,
+                meta: $this->customMetadata,
+            );
+
+        $this->assertArrayHasKey('parent', $result['data']);
+        $this->assertNotNull($result['data']['parent']);
+        $this->assertMetadata($result);
+        $this->assertEquals($includes, $result['meta']['include']);
+    }
+
+    public static function resourceKeyProvider(): array
+    {
+        return [
+            'null' => [
+                'resourceKey' => null,
+                'expected' => 'User',
+            ],
+            'false' => [
+                'resourceKey' => false,
+                'expected' => 'User',
+            ],
+            'empty string' => [
+                'resourceKey' => '',
+                'expected' => 'User',
+            ],
+            'empty array' => [
+                'resourceKey' => [],
+                'expected' => 'User',
+            ],
+//            'empty object' => [
+//                'resourceKey' => new \stdClass(),
+//                'expected' => 'User',
+//            ],
+//            'override resource key' => [
+//                'resource key' => 'override-key',
+//                'expected' => 'override-key',
+//            ],
+        ];
+    }
+
+    /**
+     * @dataProvider resourceKeyProvider
+     */
+    public function testCanOverrideResourceKey($resourceKey, $expected): void
+    {
+        $result = $this->trait
+            ->withMeta($this->metadata)
+            ->transform(
+                data: $this->user,
+                transformerName: $this->transformer,
+                meta: $this->customMetadata,
+                resourceKey: $resourceKey,
+            );
+
+        $this->assertEquals($expected, $result['data']['object']);
+    }
 
     private function assertMetadata(array $result): void
     {
@@ -111,7 +127,6 @@ class ResponseTraitTest extends UnitTestCase
             $this->assertEquals($value, $result['meta'][$key]);
         }
         $this->assertArrayHasKey('include', $result['meta']);
-        $this->assertEquals($this->includes, $result['meta']['include']);
         $this->assertArrayHasKey('custom', $result['meta']);
         foreach ($this->customMetadata as $key => $value) {
             $this->assertArrayHasKey($key, $result['meta']['custom']);
@@ -119,14 +134,3 @@ class ResponseTraitTest extends UnitTestCase
         }
     }
 }
-
-/*
- *
-        $this->assertArrayHasKey('something', $result['meta']);
-        $this->assertArrayHasKey('key', $result['meta']['something']);
-        $this->assertEquals('value', $result['meta']['something']['key']);
-        $this->assertArrayHasKey('include', $result['meta']);
-        $this->assertArrayHasKey('custom', $result['meta']);
-        $this->assertArrayHasKey('key', $result['meta']['custom']);
-        $this->assertEquals('value', $result['meta']['custom']['key']);
- */

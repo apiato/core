@@ -25,7 +25,7 @@ class UserFactory extends TestbenchUserFactory
         });
     }
 
-    public function withChild(int $count = 1): static
+    public function withChildren(int $count = 1): static
     {
         return $this->afterCreating(function (User $user) use ($count) {
             static::new()->count($count)->create([

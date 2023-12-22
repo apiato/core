@@ -4,7 +4,7 @@ namespace Apiato\Core\Tests\Infrastructure\Doubles;
 
 use Apiato\Core\Abstracts\Repositories\Repository;
 
-class TestUserRepository extends Repository
+class UserRepository extends Repository
 {
     protected $fieldSearchable = [
         'name' => 'ilike',
