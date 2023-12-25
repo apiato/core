@@ -1,5 +1,7 @@
-on: [push, pull_request]
 name: PHPMD
+
+on: [push, pull_request]
+
 jobs:
     phpmd:
         name: PHPMD
