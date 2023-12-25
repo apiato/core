@@ -3,6 +3,10 @@ on:
     branches:
       - master
       - '*.x'
+  pull_request:
+    branches:
+      - master
+      - '*.x'
 name: Tests
 permissions:
   contents: read
