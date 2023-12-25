@@ -8,9 +8,9 @@
     </testsuite>
 </testsuites>
 <coverage ignoreDeprecatedCodeUnits="true" pathCoverage="true">
-    <report>
-        <html outputDirectory="html_coverage"/>
-    </report>
+<!--    <report>-->
+<!--        <html outputDirectory="html_coverage"/>-->
+<!--    </report>-->
 </coverage>
 <php>
     <env name="DB_CONNECTION" value="testing"/>
