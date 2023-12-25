@@ -6,10 +6,7 @@ on:
       - master
       - '*.x'
   pull_request:
-    types:
-      - opened
-      - reopened
-      - ready_for_review
+
 permissions:
   contents: read
 
