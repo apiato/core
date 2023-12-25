@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd" bootstrap="vendor/autoload.php"
-         colors="true">
-<testsuites>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true">
+  <testsuites>
     <testsuite name="Unit">
-        <directory>./Tests</directory>
+      <directory>./Tests</directory>
     </testsuite>
-</testsuites>
-<coverage ignoreDeprecatedCodeUnits="true" pathCoverage="true">
-<!--    <report>-->
-<!--        <html outputDirectory="html_coverage"/>-->
-<!--    </report>-->
-</coverage>
-<php>
+  </testsuites>
+  <coverage ignoreDeprecatedCodeUnits="true" pathCoverage="true"/>
+  <php>
     <env name="DB_CONNECTION" value="testing"/>
-</php>
+  </php>
+  <source>
+    <include>
+      <directory suffix=".php">./</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">./Tests</directory>
+      <directory suffix=".php">./vendor</directory>
+    </exclude>
+  </source>
 </phpunit>
