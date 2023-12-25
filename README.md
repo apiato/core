@@ -1,4 +1,18 @@
 <p align="center">
+<a href="https://github.com/apiato/core/actions"><img src="https://github.com/apiato/core/workflows/Tests/badge.svg" 
+alt="Build Status"></a>
+<a href="https://codecov.io/gh/apiato/core" > 
+ <img src="https://codecov.io/gh/apiato/core/graph/badge.svg?token=TQqxTZAhUk" alt="code coverage"/> 
+</a>
+<a href="https://packagist.org/packages/apiato/core"><img src="https://img.shields.io/packagist/dt/apiato/core" 
+alt="Total Downloads"></a>
+<br>
+<a href="https://packagist.org/packages/apiato/core"><img src="https://img.shields.io/packagist/v/apiato/core" alt="Latest Stable Version"></a>
+<a href="https://github.com/apiato/core"><img src="https://img.shields.io/github/license/apiato/core" alt="License"></a>
+<a href="https://discord.gg/ryPcV4KM5k"><img src="https://img.shields.io/discord/800815227839053834?label=discord" alt="support"></a>
+</p>
+
+<p align="center">
    <img src="https://github.com/apiato/documentation/blob/master/images/apiato.jpg" alt="Apiato Logo"/>
 </p>
 
