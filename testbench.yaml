@@ -4,6 +4,6 @@ providers:
     - Spatie\Fractal\FractalServiceProvider
     - Apiato\Core\Generator\GeneratorsServiceProvider
 migrations:
-    - Tests/Infrastructure/Migrations/2022_10_12_000000_testbench_update_users_table.php
+    - tests/Infrastructure/Migrations/2022_10_12_000000_testbench_update_users_table.php
 workbench:
     - install: true

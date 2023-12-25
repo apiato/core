@@ -18,4 +18,4 @@ jobs:
           coverage: none
           tools: phpmd
       - name: Run PHPMD
-        run: phpmd . github ruleset.xml --exclude 'Tests/*,vendor/*'
+        run: phpmd . github ruleset.xml --exclude 'tests/*,vendor/*'

@@ -55,14 +55,16 @@
     },
     "autoload": {
         "psr-4": {
-            "Apiato\\Core\\": ""
+            "Apiato\\Core\\": "src/"
         },
         "files": [
-            "Helpers/helpers.php"
+            "src/Helpers/helpers.php"
         ]
     },
     "autoload-dev": {
-        "psr-4": {}
+        "psr-4": {
+            "Apiato\\Core\\Tests\\": "tests/"
+        }
     },
     "extra": {
         "laravel": {
