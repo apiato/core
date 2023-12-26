@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c1352fed7864ed58270da6c8994646e",
+    "content-hash": "44ea06d0b2a09ba1a4ff7e9880b7de0f",
     "packages": [
         {
             "name": "apiato/container-installer",
