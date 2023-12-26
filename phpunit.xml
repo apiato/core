@@ -5,13 +5,12 @@
       <directory>./tests</directory>
     </testsuite>
   </testsuites>
-  <coverage ignoreDeprecatedCodeUnits="true" pathCoverage="true"/>
   <php>
     <env name="DB_CONNECTION" value="testing"/>
   </php>
   <source>
     <include>
-      <directory suffix=".php">./</directory>
+      <directory suffix=".php">./src</directory>
     </include>
     <exclude>
       <directory suffix=".php">./tests</directory>
