@@ -77,7 +77,7 @@
             ],
             "aliases": {
                 "Hashids": "Vinkla\\Hashids\\Facades\\Hashids",
-                "Fractal": "Spatie\\Fractal\\FractalFacade"
+                "Fractal": "Spatie\\Fractal\\Facades\\Fractal"
             }
         }
     },
