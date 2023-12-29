@@ -24,7 +24,7 @@ trait ResponseTrait
         array $includes = [],
         array $meta = [],
         $resourceKey = null,
-    ): array {
+    ) {
         // first, we need to create the transformer
         if ($transformerName instanceof Transformer) {
             // check, if we have provided a respective TRANSFORMER class
