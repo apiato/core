@@ -8,7 +8,7 @@ use Apiato\Core\Exceptions\InvalidTransformerException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
-use Request;
+use Illuminate\Support\Facades\Request;
 use Spatie\Fractal\Facades\Fractal;
 
 trait ResponseTrait
@@ -75,7 +75,7 @@ trait ResponseTrait
         $fractal->parseIncludes($requestIncludes);
 
         // apply request filters if available in the request
-        if ($requestFilters = \Request::get('filter')) {
+        if ($requestFilters = Request::get('filter')) {
             $result = $this->filterResponse($fractal->toArray(), explode(';', $requestFilters));
         } else {
             $result = $fractal->toArray();
@@ -86,7 +86,7 @@ trait ResponseTrait
 
     protected function parseRequestedIncludes(): array
     {
-        return explode(',', \Request::get('include') ?? '');
+        return explode(',', Request::get('include') ?? '');
     }
 
     private function filterResponse(array $responseArray, array $filters): array
