@@ -78,7 +78,13 @@ trait HashIdTrait
 
         // do the decoding if the ID looks like a hashed one
         if (!empty($this->decoder($id))) {
-            return is_string($this->decoder($id)[0]) ? null : $this->decoder($id)[0];
+            $id = $this->decoder($id)[0];
+
+            if (is_string($id)) {
+                return null;
+            }
+
+            return $id;
         }
 
         return null;

@@ -15,13 +15,13 @@ trait MiddlewaresLoaderTrait
         $this->registerMiddleware($this->middlewares);
         $this->registerMiddlewareGroups($this->middlewareGroups);
         $this->registerMiddlewarePriority($this->middlewarePriority);
-        $this->registerMiddlewareAliases($this->middlewareAliases);
+        $this->registerMiddlewareAliases();
     }
 
     /**
      * @throws BindingResolutionException
      */
-    private function registerMiddleware(array $middlewares = []): void
+    public function registerMiddleware(array $middlewares = []): void
     {
         $httpKernel = $this->app->make(Kernel::class);
 
@@ -30,7 +30,7 @@ trait MiddlewaresLoaderTrait
         }
     }
 
-    private function registerMiddlewareGroups(array $middlewareGroups = []): void
+    public function registerMiddlewareGroups(array $middlewareGroups = []): void
     {
         foreach ($middlewareGroups as $key => $middleware) {
             if (!is_array($middleware)) {
@@ -43,7 +43,7 @@ trait MiddlewaresLoaderTrait
         }
     }
 
-    private function registerMiddlewarePriority(array $middlewarePriority = []): void
+    public function registerMiddlewarePriority(array $middlewarePriority = []): void
     {
         foreach ($middlewarePriority as $key => $middleware) {
             if (!in_array($middleware, $this->app['router']->middlewarePriority)) {
@@ -52,10 +52,15 @@ trait MiddlewaresLoaderTrait
         }
     }
 
-    private function registerMiddlewareAliases(array $middlewareAlias = []): void
+    public function registerMiddlewareAliases(): void
     {
-        foreach ($middlewareAlias as $key => $value) {
+        foreach ($this->getMiddlewareAliases() as $key => $value) {
             $this->app['router']->aliasMiddleware($key, $value);
         }
+    }
+
+    public function getMiddlewareAliases(): array
+    {
+        return array_merge($this->routeMiddleware, $this->middlewareAliases);
     }
 }

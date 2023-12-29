@@ -2,12 +2,14 @@
 
 namespace Apiato\Core\Tests;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
     use WithWorkbench;
+    use RefreshDatabase;
 
     public function decode(string $hashedId): int|null
     {
