@@ -212,7 +212,8 @@ trait TestRequestHelperTrait
         return $this->responseContent;
     }
 
-    public function setResponseContent(TestResponse $httpResponse): string
+    // TODO: @next - add return type
+    public function setResponseContent(TestResponse $httpResponse)
     {
         return $this->responseContent = $httpResponse->getContent();
     }
@@ -264,7 +265,8 @@ trait TestRequestHelperTrait
      * Make sure to call it before injectId(),
      * or else injectId() will not replace the ID in the overridden endpoint.
      */
-    public function endpoint(string|null $endpoint): static
+    // TODO: @next - add $endpoint parameter type
+    public function endpoint($endpoint): static
     {
         $this->overrideEndpoint = $endpoint;
 
