@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\IncorrectIdException;
 use Illuminate\Support\Facades\Config;
 use Vinkla\Hashids\Facades\Hashids;
@@ -132,6 +133,7 @@ trait HashIdTrait
      * Recursive function to process (decode) the request data with a given key.
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     private function processField($data, $keysTodo, $currentFieldName): mixed
     {
@@ -140,15 +142,21 @@ trait HashIdTrait
             // there are no more keys left - so basically we need to decode this entry
             if ($this->skipHashIdDecode($data)) {
                 return $data;
-            } else {
-                $decodedField = $this->decode($data);
-
-                if (is_null($decodedField)) {
-                    throw new IncorrectIdException();
-                }
-
-                return $decodedField;
             }
+
+            throw_if(
+                !is_null($data) && !is_string($data),
+                (new CoreInternalErrorException('String expected, got ' . gettype($data), 422))
+                    ->withErrors([$currentFieldName => 'String expected, got ' . gettype($data)]),
+            );
+
+            $decodedField = $this->decode($data);
+
+            if (is_null($decodedField)) {
+                throw new IncorrectIdException('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
+            }
+
+            return $decodedField;
         }
 
         // take the first element from the field
