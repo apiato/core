@@ -1,21 +1,22 @@
 <p align="center">
 <a href="https://github.com/apiato/core/actions/workflows/tests.yaml">
-<img src="https://github.com/apiato/core/actions/workflows/tests.yaml/badge.svg" alt="Build Status">
+<img src="https://img.shields.io/github/actions/workflow/status/apiato/core/tests.yaml?label=tests" alt="tests status">
 </a>
 <a href="https://codecov.io/gh/apiato/core" > 
- <img src="https://codecov.io/gh/apiato/core/graph/badge.svg?token=TQqxTZAhUk" alt="code coverage"/> 
+ <img src="https://img.shields.io/codecov/c/github/apiato/core?token=TQqxTZAhUk" alt="code coverage"/> 
 </a>
 <a href="https://packagist.org/packages/apiato/core">
-<img src="https://img.shields.io/packagist/dt/apiato/core" alt="Total Downloads"></a>
+<img src="https://img.shields.io/packagist/v/apiato/core" alt="latest stable version">
+</a>
 <br>
 <a href="https://packagist.org/packages/apiato/core">
-<img src="https://img.shields.io/packagist/v/apiato/core" alt="Latest Stable Version">
+<img src="https://img.shields.io/packagist/dt/apiato/core" alt="total downloads">
 </a>
 <a href="https://github.com/apiato/core">
-<img src="https://img.shields.io/github/license/apiato/core" alt="License">
+<img src="https://img.shields.io/github/license/apiato/core" alt="license">
 </a>
 <a href="https://discord.gg/ryPcV4KM5k">
-<img src="https://img.shields.io/discord/800815227839053834?label=discord" alt="support">
+<img src="https://img.shields.io/discord/800815227839053834?logo=discord&label=chat" alt="chat">
 </a>
 </p>
 
