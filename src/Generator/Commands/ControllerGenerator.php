@@ -51,6 +51,10 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
     public function getUserInputs(): null|array
     {
+        // Name of the model (singular and plural)
+        $model = $this->checkParameterOrAsk('model', 'Model for the controller.', $this->containerName);
+        $models = Pluralizer::plural($model);
+
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
 
         $stub = Str::lower(
@@ -67,21 +71,8 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
         $basecontroller = Str::ucfirst($ui) . 'Controller';
 
-        // Name of the model (singular and plural)
-        $model = $this->containerName;
-        $models = Pluralizer::plural($model);
-
         $entity = Str::lower($model);
         $entities = Pluralizer::plural($entity);
-
-        info('Controller info', [
-            $this->stubName,
-            $basecontroller,
-            $model,
-            $models,
-            $entity,
-            $entities
-        ]);
 
         return [
             'path-parameters' => [
