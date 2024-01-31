@@ -27,8 +27,6 @@ abstract class MiddlewareServiceProvider extends MainServiceProvider
      * The application's route middleware.
      *
      * @var array<string, class-string|string>
-     *
-     * @deprecated
      */
     protected array $routeMiddleware = [];
 
