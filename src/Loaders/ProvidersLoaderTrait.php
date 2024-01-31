@@ -49,7 +49,7 @@ trait ProvidersLoaderTrait
      */
     public function loadServiceProviders(): void
     {
-        foreach ($this->serviceProviders as $provider) {
+        foreach ($this->serviceProviders ?? [] as $provider) {
             if (class_exists($provider)) {
                 $this->loadProvider($provider);
             }
