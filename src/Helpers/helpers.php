@@ -26,8 +26,8 @@ if (!function_exists('inIds')) {
      */
     function inIds(string $hashedId, Collection|array $ids): bool
     {
-        $hashService = new class() extends \Apiato\Core\Abstracts\Models\Model {
-            use \Apiato\Core\Traits\HashIdTrait;
+        $hashService = new class() extends Apiato\Core\Abstracts\Models\Model {
+            use Apiato\Core\Traits\HashIdTrait;
         };
 
         $id = $hashService->decode($hashedId);
