@@ -6,10 +6,12 @@ use Illuminate\Foundation\AliasLoader;
 
 trait AliasesLoaderTrait
 {
+    public array $aliases = [];
+
     public function loadAliases(): void
     {
         // `$this->aliases` is declared on each Container's Main Service Provider
-        foreach ($this->aliases ?? [] as $aliasKey => $aliasValue) {
+        foreach ($this->aliases as $aliasKey => $aliasValue) {
             if (class_exists($aliasValue)) {
                 $this->loadAlias($aliasKey, $aliasValue);
             }

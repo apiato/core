@@ -101,6 +101,7 @@ trait HashIdTrait
      * validation features like `exists:table,id`.
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     protected function decodeHashedIdsBeforeValidation(array $requestData): array
     {
@@ -119,6 +120,7 @@ trait HashIdTrait
      * Search the IDs to be decoded in the request data.
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     private function locateAndDecodeIds($requestData, $key): mixed
     {
