@@ -53,6 +53,8 @@ trait ResponseTrait
                 $obj = $data->getCollection()->first();
             } elseif ($data instanceof Collection) {
                 $obj = $data->first();
+            } elseif (is_array($data) && [] !== $data) {
+                $obj = $data[0];
             } else {
                 $obj = $data;
             }
