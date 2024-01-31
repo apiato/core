@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Providers;
+
+use App\Ship\Parents\Providers\EventServiceProvider as ParentEventServiceProvider;
+
+class {{class-name}} extends ParentEventServiceProvider
+{
+    protected $listen = [
+        // OrderShipped::class => [
+        //     SendShipmentNotification::class,
+        // ],
+    ];
+}

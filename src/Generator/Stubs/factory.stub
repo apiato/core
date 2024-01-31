@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Data\Factories;
+
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
+use App\Ship\Parents\Factories\Factory as ParentFactory;
+
+/**
+ * @template TModel of {{class-name}}
+ *
+ * @extends ParentFactory<TModel>
+ */
+class {{class-name}} extends ParentFactory
+{
+    /** @var class-string<TModel> */
+    protected $model = {{model}}::class;
+
+    public function definition(): array
+    {
+        return [
+            //
+        ];
+    }
+}

@@ -1,0 +1,9 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests;
+
+use App\Ship\Parents\Tests\PhpUnit\TestCase as ParentTestCase;
+
+class {{class-name}} extends ParentTestCase
+{
+}

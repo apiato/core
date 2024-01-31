@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
+
+use App\Containers\{{section-name}}\{{container-name}}\Actions\Delete{{model}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Delete{{model}}Request;
+use App\Ship\Exceptions\DeleteResourceFailedException;
+use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Parents\Controllers\{{base-controller}};
+use Illuminate\Http\JsonResponse;
+
+class {{class-name}} extends {{base-controller}}
+{
+    public function __construct(
+        private readonly Delete{{model}}Action $action,
+    ) {
+    }
+
+    /**
+     * @throws DeleteResourceFailedException
+     * @throws NotFoundException
+     */
+    public function __invoke(Delete{{model}}Request $request): JsonResponse
+    {
+        $this->action->run($request);
+
+        return $this->noContent();
+    }
+}

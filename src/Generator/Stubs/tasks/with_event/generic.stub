@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
+
+use App\Ship\Parents\Tasks\Task as ParentTask;
+
+class {{class-name}} extends ParentTask
+{
+    public function __construct()
+    {
+    }
+
+    public function run()
+    {
+    }
+}

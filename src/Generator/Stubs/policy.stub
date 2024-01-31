@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Policies;
+
+use App\Ship\Parents\Policies\Policy as ParentPolicy;
+
+class {{class-name}} extends ParentPolicy
+{
+    public function __construct()
+    {
+    }
+}

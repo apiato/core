@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Jobs;
+
+use App\Ship\Parents\Jobs\Job as ParentJob;
+
+ class {{class-name}} extends ParentJob
+ {
+    public function __construct()
+    {
+    }
+
+    public function handle(): void
+    {
+    }
+ }

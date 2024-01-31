@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
+
+use Apiato\Core\Exceptions\CoreInternalErrorException;
+use Apiato\Core\Exceptions\InvalidTransformerException;
+use App\Containers\{{section-name}}\{{container-name}}\Actions\List{{models}}Action;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\List{{models}}Request;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
+use App\Ship\Parents\Controllers\{{base-controller}};
+use Prettus\Repository\Exceptions\RepositoryException;
+
+class {{class-name}} extends {{base-controller}}
+{
+    public function __construct(
+        private readonly List{{models}}Action $action
+    ) {
+    }
+
+    /**
+     * @throws InvalidTransformerException
+     * @throws CoreInternalErrorException
+     * @throws RepositoryException
+     */
+    public function __invoke(List{{models}}Request $request): array
+    {
+        ${{entities}} = $this->action->run($request);
+
+        return $this->transform(${{entities}}, {{model}}Transformer::class);
+    }
+}

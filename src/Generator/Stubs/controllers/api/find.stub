@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
+
+use Apiato\Core\Exceptions\InvalidTransformerException;
+use App\Containers\{{section-name}}\{{container-name}}\Actions\Find{{model}}ByIdAction;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Find{{model}}ByIdRequest;
+use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
+use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Parents\Controllers\{{base-controller}};
+
+class {{class-name}} extends {{base-controller}}
+{
+    public function __construct(
+        private readonly Find{{model}}ByIdAction $action
+    ) {
+    }
+
+    /**
+     * @throws InvalidTransformerException|NotFoundException
+     */
+    public function __invoke(Find{{model}}ByIdRequest $request): array
+    {
+        ${{entity}} = $this->action->run($request);
+
+        return $this->transform(${{entity}}, {{model}}Transformer::class);
+    }
+}
