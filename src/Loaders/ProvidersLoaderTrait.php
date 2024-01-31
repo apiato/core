@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 
 trait ProvidersLoaderTrait
 {
-
     public array $serviceProviders = [];
 
     /**
