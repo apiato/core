@@ -97,15 +97,15 @@ trait TestAssertionHelperTrait
     }
 
     /**
-     * Create a spy for a task with a specified repository instance.
+     * Create a spy for an Action, SubAction or a Task that uses a repository.
      *
-     * @param string $taskClassName the task class name
+     * @param string $className the Action, SubAction or a Task class name
      * @param string $repositoryClassName the repository class name
      */
-    protected function createTaskSpyWithRepository(string $taskClassName, string $repositoryClassName, bool $allowRun = true): MockInterface
+    protected function createSpyWithRepository(string $className, string $repositoryClassName, bool $allowRun = true): MockInterface
     {
         /** @var MockInterface $taskSpy */
-        $taskSpy = \Mockery::mock($taskClassName, [app($repositoryClassName)])
+        $taskSpy = \Mockery::mock($className, [app($repositoryClassName)])
             ->shouldIgnoreMissing(null, true)
             ->makePartial();
 
@@ -113,7 +113,7 @@ trait TestAssertionHelperTrait
             $taskSpy->allows('run')->andReturn();
         }
 
-        $this->swap($taskClassName, $taskSpy);
+        $this->swap($className, $taskSpy);
 
         return $taskSpy;
     }
