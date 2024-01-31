@@ -9,8 +9,6 @@ use Illuminate\Support\Str;
 
 trait ProvidersLoaderTrait
 {
-    public array $serviceProviders = [];
-
     /**
      * Loads only the Main Service Providers from the Containers.
      * All the Service Providers (registered inside the main), will be

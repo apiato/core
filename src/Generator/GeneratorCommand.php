@@ -233,7 +233,7 @@ abstract class GeneratorCommand extends Command
         // Check if the custom file exists
         if (!$this->fileSystem->exists($file)) {
             // It does not exist - so take the default file!
-            $path = __DIR__ . 'GeneratorCommand.php/' . self::STUB_PATH;
+            $path = __DIR__ . '/' . self::STUB_PATH;
             $file = str_replace('*', $this->stubName, $path);
         }
 
