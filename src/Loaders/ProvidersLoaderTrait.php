@@ -29,12 +29,9 @@ trait ProvidersLoaderTrait
             $files = File::allFiles($directory);
 
             foreach ($files as $file) {
-                if (File::isFile($file)) {
-                    // Check if this is the Main Service Provider
-                    if (Str::startsWith($file->getFilename(), $mainServiceProviderNameStartWith)) {
-                        $serviceProviderClass = Apiato::getClassFullNameFromFile($file->getPathname());
-                        $this->loadProvider($serviceProviderClass);
-                    }
+                if (File::isFile($file) && Str::startsWith($file->getFilename(), $mainServiceProviderNameStartWith)) {
+                    $serviceProviderClass = Apiato::getClassFullNameFromFile($file->getPathname());
+                    $this->loadProvider($serviceProviderClass);
                 }
             }
         }
@@ -50,7 +47,6 @@ trait ProvidersLoaderTrait
      */
     public function loadServiceProviders(): void
     {
-        // `$this->serviceProviders` is declared on each Container's Main Service Provider
         foreach ($this->serviceProviders ?? [] as $provider) {
             if (class_exists($provider)) {
                 $this->loadProvider($provider);

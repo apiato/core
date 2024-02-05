@@ -53,6 +53,8 @@ trait ResponseTrait
                 $obj = $data->getCollection()->first();
             } elseif ($data instanceof Collection) {
                 $obj = $data->first();
+            } elseif (is_array($data) && [] !== $data) {
+                $obj = $data[0];
             } else {
                 $obj = $data;
             }
@@ -137,7 +139,7 @@ trait ResponseTrait
     /**
      * @throws \ReflectionException
      */
-    public function deleted(null|Model $deletedModel = null): JsonResponse
+    public function deleted(Model|null $deletedModel = null): JsonResponse
     {
         if (!$deletedModel) {
             return $this->accepted();

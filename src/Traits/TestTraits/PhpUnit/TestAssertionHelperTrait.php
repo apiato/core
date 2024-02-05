@@ -7,7 +7,6 @@ use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use JetBrains\PhpStorm\Deprecated;
-use Mockery\MockInterface;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -94,77 +93,5 @@ trait TestAssertionHelperTrait
         $property = $reflection->getProperty($property);
 
         return $property->getValue($object);
-    }
-
-    /**
-     * Create a spy for a task with a specified repository instance.
-     *
-     * @param string $taskClassName the task class name
-     * @param string $repositoryClassName the repository class name
-     */
-    protected function createTaskSpyWithRepository(string $taskClassName, string $repositoryClassName, bool $allowRun = true): MockInterface
-    {
-        /** @var MockInterface $taskSpy */
-        $taskSpy = \Mockery::mock($taskClassName, [app($repositoryClassName)])
-            ->shouldIgnoreMissing(null, true)
-            ->makePartial();
-
-        if ($allowRun) {
-            $taskSpy->allows('run')->andReturn();
-        }
-
-        $this->swap($taskClassName, $taskSpy);
-
-        return $taskSpy;
-    }
-
-    /**
-     * Mock a repository and assert that the given criteria is pushed to it.
-     *
-     * @param string $repositoryClassName the repository class name
-     * @param string $criteriaClassName the criteria class name
-     * @param array<string, mixed>|null $criteriaArgs the criteria constructor arguments
-     *
-     * @return MockInterface repository mock
-     *
-     * @example $this->
-     * assertCriteriaPushedToRepository(UserRepository::class, SearchUsersCriteria::class, ['parameterName' => 'value']);
-     */
-    protected function assertCriteriaPushedToRepository(string $repositoryClassName, string $criteriaClassName, array|null $criteriaArgs = null): MockInterface
-    {
-        $repositoryMock = $this->mock($repositoryClassName);
-
-        if (is_null($criteriaArgs)) {
-            $repositoryMock->expects('pushCriteria')->once();
-        } else {
-            $repositoryMock->expects('pushCriteriaWith')->once()->with($criteriaClassName, $criteriaArgs);
-        }
-
-        return $repositoryMock;
-    }
-
-    /**
-     * Assert that no criteria are pushed to the repository.
-     *
-     * @param string $repositoryClassName the repository class name
-     *
-     * @return MockInterface repository mock
-     */
-    protected function assertNoCriteriaPushedToRepository(string $repositoryClassName): MockInterface
-    {
-        $repositoryMock = $this->mock($repositoryClassName);
-        $repositoryMock->expects('pushCriteria')->never();
-
-        return $repositoryMock;
-    }
-
-    /**
-     * Allow "addRequestCriteria" invocation on the repository mock.
-     * This is particularly useful when you want to test a repository that uses the RequestCriteria
-     * (e.g., for search and filter).
-     */
-    protected function allowAddRequestCriteriaInvocation(MockInterface $repositoryMock): void
-    {
-        $repositoryMock->allows('addRequestCriteria')->andReturnSelf();
     }
 }

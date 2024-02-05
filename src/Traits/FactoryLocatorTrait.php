@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 trait FactoryLocatorTrait
 {
-    protected static function newFactory(): null|Factory
+    protected static function newFactory(): Factory|null
     {
         $separator = '\\';
         $containersFactoriesPath = $separator . 'Data' . $separator . 'Factories' . $separator;

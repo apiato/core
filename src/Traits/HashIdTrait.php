@@ -23,7 +23,7 @@ trait HashIdTrait
      *
      * @param string|null $field The field of the model to be hashed
      */
-    public function getHashedKey(null|string $field = null): null|string
+    public function getHashedKey(string|null $field = null): string|null
     {
         // if no key is set, use the default key name (i.e., id)
         if (null === $field) {
@@ -35,7 +35,11 @@ trait HashIdTrait
             // we need to get the VALUE for this KEY (model field)
             $value = $this->getAttribute($field);
 
-            return is_null($value) ? null : $this->encoder($value);
+            if (null === $value) {
+                return null;
+            }
+
+            return $this->encoder($value);
         }
 
         return $this->getAttribute($field);
@@ -70,10 +74,10 @@ trait HashIdTrait
      *
      * if the id is not decodable, null will be returned
      */
-    public function decode(null|string $id): null|int
+    public function decode(string|null $id): int|null
     {
         // check if passed as null, (could be an optional decodable variable)
-        if (is_null($id) || 'null' === strtolower($id)) {
+        if (null === $id || 'null' === strtolower($id)) {
             return $id;
         }
 
@@ -101,6 +105,7 @@ trait HashIdTrait
      * validation features like `exists:table,id`.
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     protected function decodeHashedIdsBeforeValidation(array $requestData): array
     {
@@ -119,6 +124,7 @@ trait HashIdTrait
      * Search the IDs to be decoded in the request data.
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     private function locateAndDecodeIds($requestData, $key): mixed
     {
@@ -145,14 +151,14 @@ trait HashIdTrait
             }
 
             throw_if(
-                !is_null($data) && !is_string($data),
+                null !== $data && !is_string($data),
                 (new CoreInternalErrorException('String expected, got ' . gettype($data), 422))
                     ->withErrors([$currentFieldName => 'String expected, got ' . gettype($data)]),
             );
 
             $decodedField = $this->decode($data);
 
-            if (is_null($decodedField)) {
+            if (null === $decodedField) {
                 throw new IncorrectIdException('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
             }
 

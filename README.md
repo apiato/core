@@ -69,21 +69,21 @@ All security vulnerabilities will be promptly addressed.
   <tbody>
      <tr>
         <td align="center" valign="top">
-            <img width="125" height="125" src="https://github.com/mahmoudz.png?s=150">
+            <img width="125" height="125" alt="author image" src="https://github.com/mahmoudz.png?s=150">
             <br>
             <strong>Mahmoud Zalt</strong>
             <br>
             <a href="https://github.com/Mahmoudz">@mahmoudz</a>
         </td>
          <td align="center" valign="top">
-            <img width="125" height="125" src="https://github.com/mohammad-alavi.png?s=150">
+            <img width="125" height="125" alt="developer image" src="https://github.com/mohammad-alavi.png?s=150">
             <br>
             <strong>Mohammad Alavi</strong>
             <br>
             <a href="https://github.com/mohammad-alavi">@Mohammad-Alavi</a>
         </td>
           <td align="center" valign="top">
-            <img width="125" height="125" src="https://github.com/mderis.png?s=150">
+            <img width="125" height="125" alt="developer image" src="https://github.com/mderis.png?s=150">
             <br>
             <strong>Moslem Deris</strong>
             <br>
@@ -92,25 +92,3 @@ All security vulnerabilities will be promptly addressed.
      </tr>
   </tbody>
 </table>
-
-[comment]: # (Open Collective Tiers)
-
-[contributors-src]: https://contrib.rocks/image?repo=apiato/apiato
-
-[contributors-href]: https://github.com/apiato/apiato/graphs/contributors
-
-[backers-src]: https://opencollective.com/apiato/tiers/awesome-backers.svg?width=890&button=false&isActive=true
-
-[backers-href]: https://opencollective.com/apiato#contributors
-
-[gold-sponsors-src]: https://opencollective.com/apiato/tiers/gold-sponsors.svg?avatarHeight=80&width=890&button=false&isActive=true
-
-[gold-sponsors-href]: https://opencollective.com/apiato#contributors
-
-[silver-sponsors-src]: https://opencollective.com/apiato/tiers/silver-sponsors.svg?avatarHeight=64&width=890&button=false&isActive=true
-
-[silver-sponsors-href]: https://opencollective.com/apiato#contributors
-
-[bronze-sponsors-src]: https://opencollective.com/apiato/tiers/bronze-sponsors.svg?avatarHeight=48&width=890&button=false&isActive=true
-
-[bronze-sponsors-href]: https://opencollective.com/apiato#contributors

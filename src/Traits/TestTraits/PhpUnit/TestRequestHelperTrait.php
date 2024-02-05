@@ -78,6 +78,7 @@ trait TestRequestHelperTrait
 
     /**
      * read `$this->endpoint` property from the test class (`verb@uri`) and convert it to usable data.
+     *
      * @return array<string, string>
      *
      * @throws WrongEndpointFormatException
@@ -117,7 +118,7 @@ trait TestRequestHelperTrait
 
     public function getEndpoint(): string
     {
-        if (!is_null($this->overrideEndpoint)) {
+        if (null !== $this->overrideEndpoint) {
             return $this->overrideEndpoint;
         }
 
@@ -176,7 +177,7 @@ trait TestRequestHelperTrait
 
     public function getAuth(): bool
     {
-        if (is_null($this->overrideAuth)) {
+        if (null === $this->overrideAuth) {
             return $this->auth;
         }
 
@@ -240,7 +241,7 @@ trait TestRequestHelperTrait
             $id = $this->hashIdIfEnabled($id);
         }
 
-        if (is_null($this->overrideEndpoint)) {
+        if (null === $this->overrideEndpoint) {
             $this->endpoint = str_replace($replace, $id, $this->endpoint);
         } else {
             $this->overrideEndpoint = str_replace($replace, $id, $this->overrideEndpoint);

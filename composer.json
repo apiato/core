@@ -18,7 +18,7 @@
         {
             "name": "Mahmoud Zalt",
             "email": "mahmoud@zalt.me",
-            "role": "Developer"
+            "role": "Author"
         },
         {
             "name": "Mohammad Alavi",
@@ -42,6 +42,7 @@
     "require-dev": {
         "fakerphp/faker": "^1.19.1",
         "friendsofphp/php-cs-fixer": "^3.8.0",
+        "jetbrains/phpstorm-attributes": "^1.0",
         "mockery/mockery": "^1.4.4",
         "orchestra/testbench": "^8.15",
         "php-standard-library/psalm-plugin": "^2.3",
