@@ -48,7 +48,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'composer.stub';
 
-    public function getUserInputs(): null|array
+    public function getUserInputs(): array|null
     {
         $ui = 'web';
 

@@ -45,7 +45,7 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'mail.stub';
 
-    public function getUserInputs(): null|array
+    public function getUserInputs(): array|null
     {
         $view = $this->checkParameterOrAsk('view', 'Enter the name of the view to be loaded when sending this Mail');
 

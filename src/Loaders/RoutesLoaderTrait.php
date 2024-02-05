@@ -106,7 +106,7 @@ trait RoutesLoaderTrait
         ]);
     }
 
-    private function getRateLimitMiddleware(): null|string
+    private function getRateLimitMiddleware(): string|null
     {
         $rateLimitMiddleware = null;
 

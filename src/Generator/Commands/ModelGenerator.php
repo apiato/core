@@ -45,7 +45,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'model.stub';
 
-    public function getUserInputs(): null|array
+    public function getUserInputs(): array|null
     {
         $repository = $this->checkParameterOrConfirm('repository', 'Do you want to generate the corresponding Repository for this Model?', true);
         if ($repository) {
