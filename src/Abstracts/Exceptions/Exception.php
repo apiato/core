@@ -12,9 +12,9 @@ abstract class Exception extends BaseException
     protected array $errors = [];
 
     public function __construct(
-        null|string $message = null,
-        null|int $code = null,
-        null|\Throwable $previous = null,
+        string|null $message = null,
+        int|null $code = null,
+        \Throwable|null $previous = null,
     ) {
         // Detect and set the running environment
         $this->environment = Config::get('app.env');
@@ -22,12 +22,12 @@ abstract class Exception extends BaseException
         parent::__construct($this->prepareMessage($message), $this->prepareStatusCode($code), $previous);
     }
 
-    private function prepareMessage(null|string $message = null): string
+    private function prepareMessage(string|null $message = null): string
     {
         return is_null($message) ? $this->message : $message;
     }
 
-    private function prepareStatusCode(null|int $code = null): int
+    private function prepareStatusCode(int|null $code = null): int
     {
         return is_null($code) ? $this->code : $code;
     }

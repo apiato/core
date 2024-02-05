@@ -43,7 +43,7 @@ class SubActionGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'subaction.stub';
 
-    public function getUserInputs(): null|array
+    public function getUserInputs(): array|null
     {
         return [
             'path-parameters' => [

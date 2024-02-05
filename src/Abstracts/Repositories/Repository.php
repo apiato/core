@@ -22,7 +22,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      */
     protected int $maxPaginationLimit = 0;
 
-    protected null|bool $allowDisablePagination = null;
+    protected bool|null $allowDisablePagination = null;
 
     /**
      * This function relies on strict conventions:
