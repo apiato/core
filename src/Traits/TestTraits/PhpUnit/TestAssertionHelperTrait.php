@@ -7,7 +7,6 @@ use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use JetBrains\PhpStorm\Deprecated;
-use Mockery\MockInterface;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
