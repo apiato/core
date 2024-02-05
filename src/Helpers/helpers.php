@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Collection;
-
 if (!function_exists('uncamelize')) {
     /**
      * @return string|string[]|null

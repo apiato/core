@@ -51,7 +51,7 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     protected string $stubName = 'routes/generic.stub';
 
-    public function getUserInputs(): null|array
+    public function getUserInputs(): array|null
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
         $version = $this->checkParameterOrAsk('docversion', 'Enter the endpoint version (integer)', 1);

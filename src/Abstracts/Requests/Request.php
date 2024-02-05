@@ -55,7 +55,7 @@ abstract class Request extends LaravelRequest
     /**
      * To be used mainly from unit tests.
      */
-    public static function injectData(array $parameters = [], null|User $user = null, array $cookies = [], array $files = [], array $server = []): static
+    public static function injectData(array $parameters = [], User|null $user = null, array $cookies = [], array $files = [], array $server = []): static
     {
         // if user is passed, will be returned when asking for the authenticated user using `\Auth::user()`
         if ($user) {
@@ -111,7 +111,7 @@ abstract class Request extends LaravelRequest
      * User can set multiple permissions (separated with "|") and if the user has
      * any of the permissions, he will be authorized to proceed with this action.
      */
-    public function hasAccess(null|User $user = null): bool
+    public function hasAccess(User|null $user = null): bool
     {
         // if not in parameters, take from the request object {$this}
         $user = $user ?: $this->user();

@@ -48,7 +48,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
      */
     protected string $stubName = 'tests/unit/generic.stub';
 
-    public function getUserInputs(): null|array
+    public function getUserInputs(): array|null
     {
         $model = $this->option('model');
         $stub = $this->option('stub');

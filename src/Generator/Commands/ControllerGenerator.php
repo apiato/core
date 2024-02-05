@@ -48,7 +48,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
      */
     protected string $stubName = 'controllers/generic.stub';
 
-    public function getUserInputs(): null|array
+    public function getUserInputs(): array|null
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
 

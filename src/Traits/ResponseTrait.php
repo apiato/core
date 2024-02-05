@@ -139,7 +139,7 @@ trait ResponseTrait
     /**
      * @throws \ReflectionException
      */
-    public function deleted(null|Model $deletedModel = null): JsonResponse
+    public function deleted(Model|null $deletedModel = null): JsonResponse
     {
         if (!$deletedModel) {
             return $this->accepted();
