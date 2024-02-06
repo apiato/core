@@ -7,6 +7,7 @@ use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use JetBrains\PhpStorm\Deprecated;
+use Mockery\MockInterface;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -158,9 +159,9 @@ trait TestAssertionHelperTrait
     }
 
     /**
-     * Allow "addRequestCriteria" invocation on the repository mock.
+     * Allow "addRequestCriteria" method invocation on the repository mock.
      * This is particularly useful when you want to test a repository that uses the RequestCriteria
-     * (e.g., for search and filter).
+     * (e.g., for search and filtering).
      */
     protected function allowAddRequestCriteriaInvocation(MockInterface $repositoryMock): void
     {
