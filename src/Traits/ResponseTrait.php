@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
+use JetBrains\PhpStorm\Deprecated;
 use Spatie\Fractal\Facades\Fractal;
 
 trait ResponseTrait
@@ -18,6 +19,10 @@ trait ResponseTrait
     /**
      * @throws InvalidTransformerException
      */
+    #[Deprecated(
+        reason: 'This method is the cause of many bugs and its functionality is already covered by the Fractal package.',
+        replacement: '\Spatie\Fractal\Facades\Fractal::create(%parameter0%,%parameter1%)->parseIncludes(%parameter2%)->addMeta(%parameter3%)->toArray();',
+    )]
     public function transform(
         $data,
         $transformerName = null,
@@ -119,6 +124,10 @@ trait ResponseTrait
         return $responseArray;
     }
 
+    #[Deprecated(
+        reason: 'Its functionality is already covered by the Fractal package. Use the addMeta() method on the Fractal instance instead.',
+        replacement: '\Spatie\Fractal\Facades\Fractal::create()->addMeta(%parameter0%)->toArray();',
+    )]
     public function withMeta($data): self
     {
         $this->metaData = $data;
