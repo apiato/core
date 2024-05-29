@@ -56,7 +56,7 @@ trait TestAssertionHelperTrait
      *
      * @example $this->inIds($hashedId, $collectionOfModels);
      */
-    #[Deprecated(reason: 'Use inIds() helper function instead.')]
+    #[Deprecated(reason: 'Wrong method location and bad design. Use the "containsHashedId" method from the EloquentCollection instead.')]
     protected function inIds(string $hashedId, Collection|array $ids): bool
     {
         if ($ids instanceof Collection) {
