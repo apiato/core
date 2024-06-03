@@ -39,4 +39,11 @@ abstract class Transformer extends FractalTransformer
 
         return parent::collection($data, $transformer, $resourceKey);
     }
+
+    public static function empty(): callable
+    {
+        return static function () {
+            return [];
+        };
+    }
 }
