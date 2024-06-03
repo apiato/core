@@ -10,7 +10,7 @@ use League\Fractal\TransformerAbstract as FractalTransformer;
 
 abstract class Transformer extends FractalTransformer
 {
-    public function nullableItem($data, $transformer, $resourceKey = null): Primitive|Item
+    protected function nullableItem($data, $transformer, $resourceKey = null): Primitive|Item
     {
         if (is_null($data)) {
             return $this->primitive(null);
