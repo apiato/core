@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Macros\Fractal;
 
-use App\Ship\Parents\Transformers\Transformer;
+use Apiato\Core\Abstracts\Transformers\Transformer;
 use Illuminate\Http\JsonResponse;
 use Apiato\Core\Services\Response;
 
