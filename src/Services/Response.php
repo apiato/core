@@ -3,18 +3,22 @@
 namespace Apiato\Core\Services;
 
 use Apiato\Core\Contracts\HasResourceKey;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
-use League\Fractal\Manager;
 use League\Fractal\Scope;
-use League\Fractal\TransformerAbstract;
 use Spatie\Fractal\Fractal as SpatieFractal;
 
-class Fractal extends SpatieFractal
+/**
+ * A wrapper class for Spatie\Fractal\Fractal
+ *
+ * @see \Spatie\Fractal\Fractal
+ */
+class Response extends SpatieFractal
 {
     public function createData(): Scope
     {
         $this->withResourceName($this->defaultResourceName());
-        $this->parseFieldsets($this->getRequestFieldsets());
+        $this->parseFieldsets($this->getRequestedFieldsets());
 
         return parent::createData();
     }
@@ -35,10 +39,10 @@ class Fractal extends SpatieFractal
         return '';
     }
 
-    private function getRequestFieldsets(): array
+    private function getRequestedFieldsets(): array
     {
         $fieldSets = [];
-        if ($filters = Request::get('filter')) {
+        if ($filters = Request::get(Config::get('apiato.requests.params.filter', 'filter'))) {
             foreach ($filters as $filter) {
                 [$resourceName, $fields] = explode(':', $filter);
                 $field = explode(';', $fields);
@@ -47,20 +51,5 @@ class Fractal extends SpatieFractal
         }
 
         return $fieldSets;
-    }
-
-    public static function getRequestedIncludes(): array
-    {
-        return app(Manager::class)->parseIncludes(request('include', []))->getRequestedIncludes();
-    }
-
-    public function getTransformer(): string|callable|TransformerAbstract|null
-    {
-        return $this->transformer;
-    }
-
-    public function emptyTransformer(): callable
-    {
-        return static fn (): array => [];
     }
 }
