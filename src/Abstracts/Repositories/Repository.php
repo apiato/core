@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Repositories;
 
+use Apiato\Core\Traits\CanEagerLoadTrait;
 use Apiato\Core\Traits\HasRequestCriteriaTrait;
 use Illuminate\Support\Facades\Request;
 use Prettus\Repository\Contracts\CacheableInterface as PrettusCacheable;
@@ -12,8 +13,16 @@ use Prettus\Repository\Traits\CacheableRepository as PrettusCacheableRepository;
 abstract class Repository extends PrettusRepository implements PrettusCacheable
 {
     use HasRequestCriteriaTrait;
+    use CanEagerLoadTrait;
     use PrettusCacheableRepository {
         PrettusCacheableRepository::paginate as cacheablePaginate;
+    }
+
+    public function boot(): void
+    {
+        parent::boot();
+
+        $this->eagerLoadRequestedRelations();
     }
 
     /**
