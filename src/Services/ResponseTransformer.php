@@ -13,7 +13,7 @@ use Spatie\Fractal\Fractal as SpatieFractal;
  *
  * @see \Spatie\Fractal\Fractal
  */
-class Response extends SpatieFractal
+class ResponseTransformer extends SpatieFractal
 {
     public function createData(): Scope
     {
