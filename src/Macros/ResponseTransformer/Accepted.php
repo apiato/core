@@ -9,12 +9,16 @@ use Apiato\Core\Services\ResponseTransformer;
 class Accepted {
     public function __invoke(): callable
     {
-        return function (): JsonResponse {
-            /** @var ResponseTransformer $this */
-            if (is_null($this->getTransformer())) {
-                $this->transformWith(Transformer::empty());
-            }
-            return $this->respond(202);
-        };
+        return
+            /**
+             * Returns a 202 Accepted response.
+             */
+            function (): JsonResponse {
+                /** @var ResponseTransformer $this */
+                if (is_null($this->getTransformer())) {
+                    $this->transformWith(Transformer::empty());
+                }
+                return $this->respond(202);
+            };
     }
 }

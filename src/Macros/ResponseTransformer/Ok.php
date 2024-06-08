@@ -9,12 +9,16 @@ use Apiato\Core\Services\ResponseTransformer;
 class Ok {
     public function __invoke(): callable
     {
-        return function (): JsonResponse {
-            /** @var ResponseTransformer $this */
-            if (is_null($this->getTransformer())) {
-                $this->transformWith(Transformer::empty());
-            }
-            return $this->respond(200);
-        };
+        return
+            /**
+             * Returns a 200 OK response.
+             */
+            function (): JsonResponse {
+                /** @var ResponseTransformer $this */
+                if (is_null($this->getTransformer())) {
+                    $this->transformWith(Transformer::empty());
+                }
+                return $this->respond(200);
+            };
     }
 }

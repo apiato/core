@@ -9,12 +9,16 @@ use Apiato\Core\Services\ResponseTransformer;
 class NoContent {
     public function __invoke(): callable
     {
-        return function (): JsonResponse {
-            /** @var ResponseTransformer $this */
-            if (is_null($this->getTransformer())) {
-                $this->transformWith(Transformer::empty());
-            }
-            return $this->respond(204);
-        };
+        return
+            /**
+             * Returns a 204 No Content response.
+             */
+            function (): JsonResponse {
+                /** @var ResponseTransformer $this */
+                if (is_null($this->getTransformer())) {
+                    $this->transformWith(Transformer::empty());
+                }
+                return $this->respond(204);
+            };
     }
 }
