@@ -3,7 +3,7 @@
 namespace Apiato\Core\Providers\MacroProviders;
 
 use Apiato\Core\Abstracts\Providers\MainServiceProvider as AbstractMainServiceProvider;
-use Apiato\Core\Macros\Collection\ContainsHashedId;
+use Apiato\Core\Macros\Collection\ContainsDecodedHash;
 use Illuminate\Support\Collection;
 
 final class CollectionMacroServiceProvider extends AbstractMainServiceProvider {
@@ -19,7 +19,7 @@ final class CollectionMacroServiceProvider extends AbstractMainServiceProvider {
     private function macros(): array
     {
         return [
-            'containsHashedId' => ContainsHashedId::class,
+            'containsDecodedHash' => ContainsDecodedHash::class,
         ];
     }
 }

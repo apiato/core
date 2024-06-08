@@ -5,17 +5,17 @@ namespace Apiato\Core\Macros\Collection;
 use Illuminate\Support\Collection;
 use Vinkla\Hashids\Facades\Hashids;
 
-class ContainsHashedId {
+class ContainsDecodedHash {
     public function __invoke(): callable
     {
         return
             /**
-             * Check if the given hashed id exists in the collection
+             * Decodes a hashed value and checks if the decoded value exists in the collection under the specified key.
              */
-            function (string $hashedId, string $key = 'id'): bool
+            function (string $hashedValue, string $key = 'id'): bool
             {
                 /** @var Collection $this */
-                return $this->contains($key, Hashids::decode($hashedId)[0]);
+                return $this->contains($key, Hashids::decode($hashedValue)[0]);
             };
     }
 }
