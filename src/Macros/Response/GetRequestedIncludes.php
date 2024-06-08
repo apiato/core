@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Macros\ResponseTransformer;
+namespace Apiato\Core\Macros\Response;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;

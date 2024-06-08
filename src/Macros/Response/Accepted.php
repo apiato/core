@@ -1,24 +1,24 @@
 <?php
 
-namespace Apiato\Core\Macros\ResponseTransformer;
+namespace Apiato\Core\Macros\Response;
 
 use Apiato\Core\Abstracts\Transformers\Transformer;
 use Illuminate\Http\JsonResponse;
-use Apiato\Core\Services\ResponseTransformer;
+use Apiato\Core\Services\Response;
 
-class NoContent {
+class Accepted {
     public function __invoke(): callable
     {
         return
             /**
-             * Returns a 204 No Content response.
+             * Returns a 202 Accepted response.
              */
             function (): JsonResponse {
-                /** @var ResponseTransformer $this */
+                /** @var Response $this */
                 if (is_null($this->getTransformer())) {
                     $this->transformWith(Transformer::empty());
                 }
-                return $this->respond(204);
+                return $this->respond(202);
             };
     }
 }

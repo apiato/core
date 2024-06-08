@@ -6,7 +6,7 @@ use Apiato\Core\Abstracts\Providers\MainServiceProvider as AbstractMainServicePr
 use Apiato\Core\Foundation\Apiato;
 use Apiato\Core\Loaders\AutoLoaderTrait;
 use Apiato\Core\Providers\MacroProviders\ConfigMacroServiceProvider;
-use Apiato\Core\Providers\MacroProviders\ResponseTransformerMacroServiceProvider;
+use Apiato\Core\Providers\MacroProviders\ResponseMacroServiceProvider;
 use Apiato\Core\Traits\ValidationTrait;
 use Illuminate\Support\Facades\Schema;
 
@@ -17,7 +17,7 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
 
     public array $serviceProviders = [
         ConfigMacroServiceProvider::class,
-        ResponseTransformerMacroServiceProvider::class,
+        ResponseMacroServiceProvider::class,
     ];
 
     public function register(): void

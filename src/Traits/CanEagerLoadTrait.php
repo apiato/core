@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
-use Apiato\Core\Services\ResponseTransformer;
+use Apiato\Core\Services\Response;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
@@ -20,7 +20,7 @@ trait CanEagerLoadTrait {
         $this->scopeQuery(function (Builder|Model $model) {
             if (Request::has(config('apiato.requests.params.include', 'include'))) {
                 $validIncludes = [];
-                foreach (ResponseTransformer::getRequestedIncludes() as $includeName) {
+                foreach (Response::getRequestedIncludes() as $includeName) {
                     $relationParts = explode('.', $includeName);
                     $camelCasedIncludeName = $this->validateNestedRelations($this->model, $relationParts);
                     if ($camelCasedIncludeName) {
