@@ -18,7 +18,7 @@ trait CanEagerLoadTrait {
     protected function eagerLoadRequestedRelations(): void
     {
         $this->scopeQuery(function (Builder|Model $model) {
-            if (Request::has(config('apiato.requests.params.include'))) {
+            if (Request::has(config('apiato.requests.params.include', 'include'))) {
                 $validIncludes = [];
                 foreach (ResponseTransformer::getRequestedIncludes() as $includeName) {
                     $relationParts = explode('.', $includeName);

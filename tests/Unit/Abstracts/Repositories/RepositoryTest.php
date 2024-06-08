@@ -36,7 +36,7 @@ final class RepositoryTest extends UnitTestCase
     #[DataProvider('includeDataProvider')]
     public function testEagerLoadSingleRelationRequestedViaRequest(string $includes, array $mustLoadRelations, array $mustNotLoadRelations): void
     {
-        request()->offsetSet(config('apiato.requests.params.include'), $includes);
+        request()->offsetSet(config('apiato.requests.params.include', 'include'), $includes);
         $parent = UserFactory::new()->has(
             UserFactory::new()->count(3),
             'children'

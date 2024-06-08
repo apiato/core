@@ -11,7 +11,7 @@ class GetRequestedIncludes
     public function __invoke(): callable
     {
         return function (): array {
-            return app(Manager::class)->parseIncludes(Request::get(Config::get('apiato.requests.params.include'), []))->getRequestedIncludes();
+            return app(Manager::class)->parseIncludes(Request::get(Config::get('apiato.requests.params.include', 'include'), []))->getRequestedIncludes();
         };
     }
 }
