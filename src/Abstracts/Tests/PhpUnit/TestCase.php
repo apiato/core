@@ -3,15 +3,18 @@
 namespace Apiato\Core\Abstracts\Tests\PhpUnit;
 
 use Apiato\Core\Traits\HashIdTrait;
+use Apiato\Core\Traits\TestCaseTrait;
 use Apiato\Core\Traits\TestTraits\PhpUnit\TestAssertionHelperTrait;
 use Apiato\Core\Traits\TestTraits\PhpUnit\TestAuthHelperTrait;
 use Apiato\Core\Traits\TestTraits\PhpUnit\TestRequestHelperTrait;
+use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
-use Illuminate\Support\Facades\Artisan;
 
 abstract class TestCase extends LaravelTestCase
 {
+    use TestCaseTrait;
     use TestAuthHelperTrait;
     use TestRequestHelperTrait;
     use TestAssertionHelperTrait;
@@ -19,12 +22,43 @@ abstract class TestCase extends LaravelTestCase
     use LazilyRefreshDatabase;
 
     /**
+     * The base URL to use while testing the application.
+     */
+    protected string $baseUrl;
+
+    /**
      * Seed the DB on migrations.
      */
     protected bool $seed = true;
 
-    protected function afterRefreshingDatabase(): void
+    /**
+     * Refresh the in-memory database.
+     */
+    protected function refreshInMemoryDatabase(): void
     {
-        Artisan::call('passport:install');
+        $this->artisan('migrate', $this->migrateUsing());
+
+        // Install Passport Client for Testing
+        $this->setupPassportOAuth2();
+
+        $this->app[Kernel::class]->setArtisan(null);
+    }
+
+    /**
+     * Refresh a conventional test database.
+     */
+    protected function refreshTestDatabase(): void
+    {
+        if (!RefreshDatabaseState::$migrated) {
+            $this->artisan('migrate:fresh', $this->migrateFreshUsing());
+            $this->setupPassportOAuth2();
+
+            $this->app[Kernel::class]->setArtisan(null);
+
+            RefreshDatabaseState::$migrated = true;
+        }
+
+        $this->beginDatabaseTransaction();
     }
 }
+
