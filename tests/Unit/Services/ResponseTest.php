@@ -123,7 +123,7 @@ class ResponseTest extends UnitTestCase
     }
 
     #[DataProvider('paginatedIncludeMetaDataDataProvider')]
-    public function testPaginatedResourceMetaData($include): void
+    public function testPaginatedResourceMetaDataAndInclude($include): void
     {
         request()->merge(compact('include'));
         UserFactory::new()->count(3)->create();
@@ -174,5 +174,113 @@ class ResponseTest extends UnitTestCase
             $result->has($expectation);
             $result->has('meta.include', fn (AssertableJson $json) => $json->whereAll(['parent', 'children', 'books']));
         }
+    }
+
+    public static function csvExcludeDataProvider(): array
+    {
+        return [
+            'single string' => [
+                'exclude' => 'parent',
+                'expected' => ['data.parent'],
+            ],
+            'single string nested' => [
+                'exclude' => 'children.books',
+                'expected' => ['data.children.data.0.books'],
+            ],
+            'csv string' => [
+                'exclude' => 'parent,children',
+                'expected' => ['data.parent', 'data.children'],
+            ],
+            'csv string and nested' => [
+                'exclude' => 'parent,children.books',
+                'expected' => ['data.parent', 'data.children.data.0.books'],
+            ],
+        ];
+    }
+
+    #[DataProvider('csvExcludeDataProvider')]
+    public function testSingleResourceCanHandleCSVExclude($exclude, $expected): void
+    {
+        request()->merge(compact('exclude'));
+        $response = Response::createFrom($this->user);
+        $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
+
+        $result = AssertableJson::fromArray($response->toArray());
+
+        foreach ($expected as $expectation) {
+            $result->missing($expectation);
+        }
+    }
+
+    public static function arrayExcludeDataProvider(): array
+    {
+        return [
+            'single array' => [
+                'exclude' => ['parent'],
+                'expected' => ['data.parent'],
+            ],
+            'multiple array' => [
+                'exclude' => ['parent', 'children'],
+                'expected' => ['data.parent', 'data.children'],
+            ],
+            'multiple array nested' => [
+                'exclude' => ['parent.books', 'children'],
+                'expected' => ['data.parent.data.books', 'data.children'],
+            ],
+        ];
+    }
+
+    #[DataProvider('arrayExcludeDataProvider')]
+    public function testSingleResourceCanHandleArrayExclude($exclude, $expected): void
+    {
+        request()->merge(compact('exclude'));
+        $response = Response::createFrom($this->user);
+        $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
+
+        $result = AssertableJson::fromArray($response->toArray());
+
+        foreach ($expected as $expectation) {
+            $result->missing($expectation);
+        }
+    }
+
+    public static function paginatedExcludeMetaDataDataProvider(): array
+    {
+        return [
+            'single string' => [
+                'exclude' => 'parent',
+            ],
+            'single string nested' => [
+                'exclude' => 'children.books',
+            ],
+            'csv string' => [
+                'exclude' => 'parent,children',
+            ],
+            'csv string and nested' => [
+                'exclude' => 'parent,children.books',
+            ],
+            'single array' => [
+                'exclude' => ['parent'],
+            ],
+            'multiple array' => [
+                'exclude' => ['parent', 'children'],
+            ],
+            'multiple array nested' => [
+                'exclude' => ['parent.books', 'children'],
+            ],
+        ];
+    }
+
+    #[DataProvider('paginatedExcludeMetaDataDataProvider')]
+    public function testPaginatedResourceMetaDataAndExclude($exclude): void
+    {
+        request()->merge(compact('exclude'));
+        UserFactory::new()->count(3)->create();
+        $users = app(UserRepository::class, ['app' => $this->app])->paginate();
+        $response = Response::createFrom($users)->transformWith(UserTransformer::class)->parseIncludes($exclude);
+
+        $result = AssertableJson::fromArray($response->toArray());
+
+        $result->has('meta.include', fn (AssertableJson $json) => $json->whereAll(['parent', 'children', 'books']));
     }
 }
