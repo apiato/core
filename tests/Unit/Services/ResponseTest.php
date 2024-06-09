@@ -100,45 +100,79 @@ class ResponseTest extends UnitTestCase
         return [
             'single string' => [
                 'include' => 'parent',
-                'expected' => ['parent', 'children', 'books']
             ],
             'single string nested' => [
                 'include' => 'children.books',
-                'expected' => ['parent', 'children', 'books']
             ],
             'csv string' => [
                 'include' => 'parent,children',
-                'expected' => ['parent', 'children', 'books']
             ],
             'csv string and nested' => [
                 'include' => 'parent,children.books',
-                'expected' => ['parent', 'children', 'books']
             ],
             'single array' => [
                 'include' => ['parent'],
-                'expected' => ['parent', 'children', 'books']
             ],
             'multiple array' => [
                 'include' => ['parent', 'children'],
-                'expected' => ['parent', 'children', 'books']
             ],
             'multiple array nested' => [
                 'include' => ['parent.books', 'children'],
-                'expected' => ['parent', 'children', 'books']
             ],
         ];
     }
 
     #[DataProvider('paginatedIncludeMetaDataDataProvider')]
-    public function testPaginatedResourceMetaData($include, $expected): void
+    public function testPaginatedResourceMetaData($include): void
     {
-        request()->offsetSet('include', $include);
-            UserFactory::new()->count(3)->create();
+        request()->merge(compact('include'));
+        UserFactory::new()->count(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
         $response = Response::createFrom($users)->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
 
-        $result->has('meta.include', fn (AssertableJson $json) => $json->whereAll($expected));
+        $result->has('meta.include', fn (AssertableJson $json) => $json->whereAll(['parent', 'children', 'books']));
+    }
+
+    public static function fieldsetDataProvider(): array
+    {
+        return [
+            'without includes' => [
+                'fieldset' => ['User:id;email'],
+                'expected' => ['data.id', 'data.email'],
+            ],
+            'with first level includes - no filter' => [
+                'fieldset' => ['User:object,id;email;books'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.author', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
+            ],
+            'with first level includes - filter' => [
+                'fieldset' => ['User:object,id;email;books', 'Book:object,author'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.author'],
+            ],
+            'with nested includes - no filter' => [
+                'fieldset' => ['User:object,id;email,children;books'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.children.data.0.object', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.id', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at'],
+            ],
+            'with nested includes - filter' => [
+                'fieldset' => ['User:object,id;email;children;books', 'Books:id'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.children.data.0.object', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.id'],
+            ],
+        ];
+    }
+
+    #[DataProvider('fieldsetDataProvider')]
+    public function testCanFilterResponse($fieldset, $expected): void
+    {
+        request()->merge(['include' => 'books,children.books', 'fieldset' => $fieldset]);
+        $response = Response::createFrom($this->user);
+        $response->transformWith(UserTransformer::class);
+
+        $result = AssertableJson::fromArray($response->toArray());
+
+        foreach ($expected as $expectation) {
+            $result->has($expectation);
+            $result->has('meta.include', fn (AssertableJson $json) => $json->whereAll(['parent', 'children', 'books']));
+        }
     }
 }
