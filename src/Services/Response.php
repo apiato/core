@@ -19,8 +19,29 @@ class Response extends SpatieFractal
     {
         $this->withResourceName($this->defaultResourceName());
         $this->parseFieldsets($this->getRequestedFieldsets());
+        $this->setAvailableIncludesMeta();
 
         return parent::createData();
+    }
+
+    private function setAvailableIncludesMeta(): void
+    {
+        $this->addMeta([
+            'include' => $this->getTransformerAvailableIncludes()
+        ]);
+    }
+
+    private function getTransformerAvailableIncludes(): array
+    {
+        if(is_null($this->transformer) || is_callable($this->transformer)) {
+            return [];
+        }
+
+        if (is_string($this->transformer)) {
+            return (new $this->transformer)->getAvailableIncludes();
+        }
+
+        return $this->transformer->getAvailableIncludes();
     }
 
     private function defaultResourceName(): string
