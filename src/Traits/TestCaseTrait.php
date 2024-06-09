@@ -2,9 +2,11 @@
 
 namespace Apiato\Core\Traits;
 
+use JetBrains\PhpStorm\Deprecated;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\PersonalAccessClient;
 
+#[Deprecated(reason: 'This trait is complicated a lot stuff that can be done in a much simpler way.')]
 trait TestCaseTrait
 {
     /**
