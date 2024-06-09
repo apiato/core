@@ -46,6 +46,10 @@ class Response extends SpatieFractal
 
     private function defaultResourceName(): string
     {
+        if (is_string($this->getResourceName())) {
+            return $this->getResourceName();
+        }
+
         if ($this->data instanceof HasResourceKey) {
             return $this->data->getResourceKey();
         }
