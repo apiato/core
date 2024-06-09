@@ -15,9 +15,7 @@ class NoContent {
              */
             function (): JsonResponse {
                 /** @var Response $this */
-                if (is_null($this->getTransformer())) {
-                    $this->transformWith(Transformer::empty());
-                }
+                $this->transformWith(Transformer::empty());
                 return $this->respond(204);
             };
     }
