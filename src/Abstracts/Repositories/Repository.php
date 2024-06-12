@@ -18,7 +18,8 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         PrettusCacheableRepository::paginate as cacheablePaginate;
     }
 
-    public function boot(): void
+    // TODO: BC: set return type to void
+    public function boot()
     {
         parent::boot();
 
