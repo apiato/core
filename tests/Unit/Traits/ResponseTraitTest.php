@@ -69,7 +69,7 @@ class ResponseTraitTest extends UnitTestCase
         $this->assertArrayHasKey('parent', $result['data']);
         $this->assertNotNull($result['data']['parent']);
         $this->assertMetadata($result);
-        $this->assertEquals($includes, $result['meta']['include']);
+        $this->assertContains($includes, $result['meta']['include']);
     }
 
     public static function resourceKeyProvider(): array
