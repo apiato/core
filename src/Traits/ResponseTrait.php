@@ -83,7 +83,7 @@ trait ResponseTrait
         $fractal->parseIncludes($requestIncludes);
 
         // apply request filters if available in the request
-        if ($requestFilters = Request::get(Config::get('apiato.requests.params.filter', 'fieldset'))) {
+        if ($requestFilters = Request::get(Config::get('apiato.requests.params.filter', 'filter'))) {
             $result = $this->filterResponse($fractal->toArray(), explode(';', $requestFilters));
         } else {
             $result = $fractal->toArray();
