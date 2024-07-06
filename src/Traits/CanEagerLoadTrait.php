@@ -35,6 +35,12 @@ trait CanEagerLoadTrait {
         });
     }
 
+    // TODO: implement
+    protected function skipEagerLoad(): array
+    {
+        return [];
+    }
+
     private function validateNestedRelations(Builder|Model $model, array $relationParts): string|null
     {
         if (empty($relationParts)) {

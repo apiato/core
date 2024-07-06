@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
+use Apiato\Core\Abstracts\Models\Model;
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\IncorrectIdException;
 use Illuminate\Support\Facades\Config;
@@ -143,6 +144,10 @@ trait HashIdTrait
      */
     private function processField($data, $keysTodo, $currentFieldName): mixed
     {
+        if (is_object($data)) {
+            return $data;
+        }
+
         // check if there are no more fields to be processed
         if (empty($keysTodo)) {
             // there are no more keys left - so basically we need to decode this entry
