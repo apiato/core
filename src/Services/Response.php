@@ -55,6 +55,8 @@ class Response extends SpatieFractal
         }
 
         if (!empty($this->data) && 'collection' === $this->determineDataType($this->data)) {
+            // TODO: there was a problem $this->data->first() but I cant remember. It had to do with the data being an array
+            // also check AbstractTransformer where we also do this check and use the first item. we also have the same problem there
             $firstItem = $this->data->first();
             if ($firstItem instanceof HasResourceKey) {
                 return $firstItem->getResourceKey();
