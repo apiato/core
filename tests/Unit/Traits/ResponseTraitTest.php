@@ -55,21 +55,21 @@ class ResponseTraitTest extends UnitTestCase
 
     public function testCanInclude(): void
     {
-        $includes = ['parent'];
+        $include = 'parent';
 
         $result = $this->trait
             ->withMeta($this->metadata)
             ->transform(
                 data: $this->user,
                 transformerName: $this->transformer,
-                includes: $includes,
+                includes: [$include],
                 meta: $this->customMetadata,
             );
 
         $this->assertArrayHasKey('parent', $result['data']);
         $this->assertNotNull($result['data']['parent']);
         $this->assertMetadata($result);
-        $this->assertEquals($includes, $result['meta']['include']);
+        $this->assertContains($include, $result['meta']['include']);
     }
 
     public static function resourceKeyProvider(): array

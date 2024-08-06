@@ -41,6 +41,8 @@ trait TestRequestHelperTrait
      */
     protected bool|null $overrideAuth = null;
 
+    private string|null $url;
+
     /**
      * @throws WrongEndpointFormatException
      * @throws MissingTestEndpointException
@@ -143,7 +145,13 @@ trait TestRequestHelperTrait
             $uri = '/' . $uri;
         }
 
-        return Config::get('apiato.api.url') . $uri;
+        return $this->getUrl() . $uri;
+    }
+
+    private function getUrl(): string
+    {
+        // 'API_URL' value comes from `phpunit.xml` during testing
+        return $this->url ?? Config::get('apiato.api.url');
     }
 
     private function dataArrayToQueryParam(array $data, string $url): string
@@ -280,6 +288,16 @@ trait TestRequestHelperTrait
     public function auth(bool $auth): static
     {
         $this->overrideAuth = $auth;
+
+        return $this;
+    }
+
+    /**
+     * Override the default url before making the call.
+     */
+    public function url(string $url): static
+    {
+        $this->url = $url;
 
         return $this;
     }

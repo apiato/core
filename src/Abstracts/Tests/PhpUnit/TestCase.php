@@ -32,22 +32,6 @@ abstract class TestCase extends LaravelTestCase
     protected bool $seed = true;
 
     /**
-     * Setup the test environment, before each test.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    /**
-     * Reset the test environment, after each test.
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
-    /**
      * Refresh the in-memory database.
      */
     protected function refreshInMemoryDatabase(): void
@@ -77,3 +61,4 @@ abstract class TestCase extends LaravelTestCase
         $this->beginDatabaseTransaction();
     }
 }
+

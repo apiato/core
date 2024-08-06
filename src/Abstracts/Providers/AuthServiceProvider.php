@@ -6,6 +6,11 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as LaravelAuthSe
 
 abstract class AuthServiceProvider extends LaravelAuthServiceProvider
 {
+    // TODO: BC
+    // https://laravel.com/docs/10.x/upgrade#register-policies
+    // parent::boot() should be removed from
+    // App\Containers\AppSection\Authentication\Providers\AuthServiceProvider::boot()
+
     /**
      * The policy mappings for the application.
      *
