@@ -37,6 +37,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
         "laravel/passport": "^11.0.0",
+        "nette/php-generator": "^4.1",
         "ext-gettext": "*"
     },
     "require-dev": {
