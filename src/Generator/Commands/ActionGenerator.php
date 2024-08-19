@@ -3,95 +3,93 @@
 namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ActionGenerator extends GeneratorCommand implements ComponentsGenerator
+class ActionGenerator extends GeneratorCommand
 {
-    /**
-     * User required/optional inputs expected to be passed while calling the command.
-     * This is a replacement of the `getArguments` function "which reads from the console whenever it's called".
-     */
-    public array $inputs = [
-        ['model', null, InputOption::VALUE_OPTIONAL, 'The model this action is for.'],
-        ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
-        ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Action for.'],
-    ];
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:action';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a Action file for a Container';
-    /**
-     * The type of class being generated.
-     */
-    protected string $fileType = 'Action';
-    /**
-     * The structure of the file path.
-     */
-    protected string $pathStructure = '{section-name}/{container-name}/Actions/*';
-    /**
-     * The structure of the file name.
-     */
-    protected string $nameStructure = '{file-name}';
-    /**
-     * The name of the stub file.
-     */
-    protected string $stubName = 'actions/generic.stub';
+    private string $model;
 
-    public function getUserInputs(): array|null
+    private string $ui;
+
+    private string $stub;
+
+    public static function getCommandName(): string
     {
-        $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this action is for.', $this->containerName);
-        $ui = Str::upper($this->checkParameterOrChoice('ui', 'Which UI is this Action for?', ['API', 'WEB'], 0));
-        $stub = Str::lower(
-            $this->checkParameterOrChoice(
-                'stub',
-                'Select the Stub you want to load',
-                ['Generic', 'List', 'Find', 'Create', 'Update', 'Delete'],
-                0,
-            ),
-        );
+        return 'apiato:generate:action';
+    }
 
-        // Load a new stub-file based on the users choice
-        $this->stubName = 'actions/' . $stub . '.stub';
+    public static function getCommandDescription(): string
+    {
+        return 'Create a Action file for a Container';
+    }
 
-        $models = Pluralizer::plural($model);
+    public static function getFileType(): string
+    {
+        return 'action';
+    }
 
+    protected static function getCustomCommandArguments(): array
+    {
         return [
-            'path-parameters' => [
-                'section-name' => $this->sectionName,
-                'container-name' => $this->containerName,
-            ],
-            'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
-                '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-                'model' => $model,
-                'models' => $models,
-                'ui' => $ui,
-            ],
-            'file-parameters' => [
-                'file-name' => $this->fileName,
-            ],
+            ['model', null, InputOption::VALUE_OPTIONAL, 'The model this action is for.'],
+            ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
+            ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Action for.'],
         ];
     }
 
-    /**
-     * Get the default file name for this component to be generated.
-     */
-    public function getDefaultFileName(): string
+    public function askCustomInputs(): void
     {
-        return 'DefaultAction';
+        $this->model = $this->checkParameterOrAskText(
+            param: 'model',
+            label: 'Enter the name of the model this action is for:',
+            default: $this->containerName,
+        );
+        $this->ui = $this->checkParameterOrSelect(
+            param: 'ui',
+            label: 'Which UI is this Action for?',
+            options: ['API', 'WEB'],
+            default: 'API',
+            hint: 'Different UIs have different request/response formats.',
+        );
+        $this->stub = $this->checkParameterOrSelect(
+            param: 'stub',
+            label: 'Select the action type:',
+            options: [
+                'generic' => 'Generic',
+                'list' => 'List',
+                'find' => 'Find',
+                'create' => 'Create',
+                'update' => 'Update',
+                'delete' => 'Delete',
+            ],
+            default: 'generic',
+            hint: 'Different types of actions have different default behaviors.',
+        );
+    }
+
+    protected function getFilePath(): string
+    {
+        return "{$this->sectionName}/{$this->containerName}/Actions/{$this->fileName}.php";
+    }
+
+    protected function getStubFileName(): string
+    {
+        return "actions/{$this->stub}.stub";
+    }
+
+    protected function getStubParameters(): array
+    {
+        return [
+            '_section-name' => Str::lower($this->sectionName),
+            'section-name' => $this->sectionName,
+            '_container-name' => Str::lower($this->containerName),
+            'container-name' => $this->containerName,
+            'class-name' => $this->fileName,
+            'model' => $this->model,
+            'models' => Pluralizer::plural($this->model),
+            'ui' => $this->ui,
+        ];
     }
 }
