@@ -54,18 +54,17 @@ abstract class GeneratorCommand extends Command
 
     public function __construct(
         protected IlluminateFilesystem $fileSystem,
-    )
-    {
+    ) {
         $this->name = $this->getCommandName();
         $this->description = $this->getCommandDescription();
         parent::__construct();
     }
 
-    public abstract static function getCommandName(): string;
+    abstract public static function getCommandName(): string;
 
-    public abstract static function getCommandDescription(): string;
+    abstract public static function getCommandDescription(): string;
 
-    public abstract static function getFileType(): string;
+    abstract public static function getFileType(): string;
 
     /**
      * @throws FileNotFoundException
@@ -131,11 +130,11 @@ abstract class GeneratorCommand extends Command
         }
     }
 
-    protected abstract function askCustomInputs(): void;
+    abstract protected function askCustomInputs(): void;
 
-    protected abstract function getFilePath(): string;
+    abstract protected function getFilePath(): string;
 
-    protected abstract function getStubFileName(): string;
+    abstract protected function getStubFileName(): string;
 
-    protected abstract function getStubParameters(): array;
+    abstract protected function getStubParameters(): array;
 }

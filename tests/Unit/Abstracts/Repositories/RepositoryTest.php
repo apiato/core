@@ -39,7 +39,7 @@ final class RepositoryTest extends UnitTestCase
         request()->offsetSet(config('apiato.requests.params.include', 'include'), $includes);
         $parent = UserFactory::new()->has(
             UserFactory::new()->count(3),
-            'children'
+            'children',
         )->count(3)->create();
         $repository = app(UserRepository::class);
 

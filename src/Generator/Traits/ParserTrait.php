@@ -9,7 +9,7 @@ trait ParserTrait
      */
     protected function parseStubContent($stub, $data): string|array
     {
-        $maskedKeys = array_map(function($key) {
+        $maskedKeys = array_map(function ($key) {
             return '{{' . $key . '}}';
         }, array_keys($data));
 
