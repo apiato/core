@@ -15,9 +15,15 @@ class GeneratorsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->commands($this->getGeneratorCommands());
             $this->loadGeneratorCommandsFromCore();
+            $this->loadGeneratorCommandsFromShip();
         }
+    }
+
+    private function loadGeneratorCommandsFromShip(): void
+    {
+        $shipGeneratorCommandsDirectory = base_path('app/Ship/Generators/Commands');
+        $this->loadTheConsoles($shipGeneratorCommandsDirectory);
     }
 
     private function loadGeneratorCommandsFromCore(): void
