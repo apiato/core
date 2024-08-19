@@ -12,7 +12,6 @@ use Apiato\Core\Generator\Traits\ParserTrait;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 abstract class GeneratorCommand extends Command
@@ -73,8 +72,6 @@ abstract class GeneratorCommand extends Command
      */
     public function handle(): void
     {
-        $this->setOptions();
-
         $this->askGeneralInputs();
 
         $this->askCustomInputs();
@@ -85,18 +82,6 @@ abstract class GeneratorCommand extends Command
     public function getDefaultFileName(): string
     {
         return 'Default' . $this->getFileTypeCapitalized();
-    }
-
-    protected function setOptions(): void
-    {
-        $optionsFromConfig = Config::get('apiato.generator-commands.options', []);
-
-        foreach ($optionsFromConfig as $key => $value) {
-            //  Do not override the option if it was already set via command line
-            if ($this->option($key) === null) {
-                $this->input->setOption($key, $value);
-            }
-        }
     }
 
     protected function askGeneralInputs(): void
