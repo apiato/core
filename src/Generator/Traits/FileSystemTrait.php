@@ -2,22 +2,37 @@
 
 namespace Apiato\Core\Generator\Traits;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+
 trait FileSystemTrait
 {
-    public function generateFile($filePath, $stubContent): bool|int
+    /**
+     * @throws FileNotFoundException
+     */
+    public function generateFile(): void
     {
-        return $this->fileSystem->put($filePath, $stubContent);
+        $fullFilePath = $this->getFullFilePath($this->getFilePath());
+        if ($this->fileAlreadyExists($fullFilePath)) {
+            $this->outputError($this->getFileTypeCapitalized() . ' already exists');
+        } else {
+            $renderedStubContent = $this->parseStubContent($this->getStubFileContent(), $this->getStubParameters());
+
+            $created = $this->fileSystem->put($fullFilePath, $renderedStubContent);
+
+            if ($created) {
+                $this->outputInfo($this->getFileTypeCapitalized() . ' generated successfully.');
+            } else {
+                $this->outputError($this->getFileTypeCapitalized() . ' could not be created');
+            }
+        }
     }
 
     /**
      * If path is for a directory, create it otherwise do nothing.
      */
-    public function createDirectory($path)
+    public function createDirectory($path): void
     {
-        if ($this->alreadyExists($path)) {
-            $this->printErrorMessage($this->fileType . ' already exists');
-
-            // the file does exist - return but NOT exit
+        if ($this->fileAlreadyExists($path)) {
             return;
         }
 
@@ -26,16 +41,44 @@ trait FileSystemTrait
                 $this->fileSystem->makeDirectory(dirname($path), 0777, true, true);
             }
         } catch (\Exception $e) {
-            $this->printErrorMessage('Could not create ' . $path);
+            $this->outputError('Could not create ' . $path);
         }
     }
 
+    protected function getFullFilePath($path): string
+    {
+        // Complete the missing parts of the path
+        $path = base_path() . '/' .
+            str_replace('\\', '/', self::ROOT . '/' . $path);
+
+        // Try to create directory
+        $this->createDirectory($path);
+
+        // Return full path
+        return $path;
+    }
+
     /**
-     * Determine if the file already exists.
-     *
-     * @return bool
+     * @throws FileNotFoundException
      */
-    protected function alreadyExists($path)
+    protected function getStubFileContent(): string
+    {
+        // Check if there is a custom stub file in Ship that overrides the default stub on Core
+        $path = app_path() . '/Ship/' . self::CUSTOM_STUB_PATH;
+        $file = str_replace('*', $this->getStubFileName(), $path);
+
+        // Check if the custom file exists
+        if (!$this->fileSystem->exists($file)) {
+            // It does not exist - so take the default file!
+            $path = __DIR__ . '/../' . self::STUB_PATH;
+            $file = str_replace('*', $this->getStubFileName(), $path);
+        }
+
+        // Now load the stub
+        return $this->fileSystem->get($file);
+    }
+
+    protected function fileAlreadyExists($path): bool
     {
         return $this->fileSystem->exists($path);
     }
