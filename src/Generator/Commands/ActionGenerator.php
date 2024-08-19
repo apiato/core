@@ -76,7 +76,7 @@ class ActionGenerator extends GeneratorCommand
 
     protected function getStubFileName(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile;
+        $file = new \Nette\PhpGenerator\PhpFile();
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions');
         $isCRUD = in_array($this->stub, ['list', 'find', 'create', 'update', 'delete']);
 
@@ -87,13 +87,13 @@ class ActionGenerator extends GeneratorCommand
             if (in_array($this->stub, ['create', 'update', 'find'])) {
                 $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->model;
                 $namespace->addUse($modelFullPath);
-            }elseif ($this->stub === 'list') {
+            } elseif ('list' === $this->stub) {
                 $lengthAwarePaginatorFullPath = '\Illuminate\Contracts\Pagination\LengthAwarePaginator';
                 $namespace->addUse($lengthAwarePaginatorFullPath);
             }
-            $taskFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tasks\\' . Str::ucfirst($this->stub) . $this->model . ($this->stub === 'list' ? 's' : '') . 'Task';
+            $taskFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tasks\\' . Str::ucfirst($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Task';
             $namespace->addUse($taskFullPath);
-            $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\' . $this->ui . '\Requests\\' . Str::ucfirst($this->stub) . $this->model . ($this->stub === 'list' ? 's' : '') . 'Request';
+            $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\' . $this->ui . '\Requests\\' . Str::ucfirst($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Request';
             $namespace->addUse($requestFullPath);
         }
 
@@ -105,7 +105,7 @@ class ActionGenerator extends GeneratorCommand
         // constructor
         $constructor = $class->addMethod('__construct');
         if ($isCRUD) {
-            $constructor->addPromotedParameter(Str::lower($this->stub) . $this->model . ($this->stub === 'list' ? 's' : '') . 'Task')
+            $constructor->addPromotedParameter(Str::lower($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Task')
                 ->setPrivate()
                 ->setReadOnly()
                 ->setType($taskFullPath);
@@ -118,35 +118,34 @@ class ActionGenerator extends GeneratorCommand
                 ->setPrivate()
                 ->setType($requestFullPath);
 
-            if ($this->stub === 'create') {
+            if ('create' === $this->stub) {
                 $runMethod->setReturnType($modelFullPath);
 
-                $runMethod->addBody("\$data = \$request->sanitizeInput([
+                $runMethod->addBody('$data = $request->sanitizeInput([
     // add your request data here
 ]);
-            ");
+            ');
                 $runMethod->addBody("return \$this->?{$this->model}Task->run(\$data);", [Str::lower($this->stub)]);
-            }elseif ($this->stub === 'update') {
+            } elseif ('update' === $this->stub) {
                 $runMethod->setReturnType($modelFullPath);
 
-                $runMethod->addBody("\$data = \$request->sanitizeInput([
+                $runMethod->addBody('$data = $request->sanitizeInput([
     // add your request data here
 ]);
-            ");
+            ');
                 $runMethod->addBody("return \$this->?{$this->model}Task->run(\$data, \$request->id);", [Str::lower($this->stub)]);
-
-            }elseif ($this->stub === 'delete') {
+            } elseif ('delete' === $this->stub) {
                 $runMethod->setReturnType('int');
 
                 $runMethod->addBody("return \$this->?{$this->model}Task->run(\$request->id);", [Str::lower($this->stub)]);
-            }elseif ($this->stub === 'find') {
+            } elseif ('find' === $this->stub) {
                 $runMethod->setReturnType($modelFullPath);
 
                 $runMethod->addBody("return \$this->?{$this->model}Task->run(\$request->id);", [Str::lower($this->stub)]);
-            }elseif ($this->stub === 'list') {
+            } elseif ('list' === $this->stub) {
                 $runMethod->setReturnType($lengthAwarePaginatorFullPath);
 
-                $runMethod->addBody("return \$this->?Task->run();", [Str::lower($this->stub) . Str::plural($this->model)]);
+                $runMethod->addBody('return $this->?Task->run();', [Str::lower($this->stub) . Str::plural($this->model)]);
             }
         } else {
             $runMethod->setReturnType('void');
@@ -155,21 +154,21 @@ class ActionGenerator extends GeneratorCommand
         // return the file
         return $file;
 
-// or use the PsrPrinter for output in accordance with PSR-2 / PSR-12 / PER
-// echo (new Nette\PhpGenerator\PsrPrinter)->printFile($file);
+        // or use the PsrPrinter for output in accordance with PSR-2 / PSR-12 / PER
+        // echo (new Nette\PhpGenerator\PsrPrinter)->printFile($file);
     }
 
     protected function getStubParameters(): array
     {
         return [
-//            '_section-name' => Str::lower($this->sectionName),
-//            'section-name' => $this->sectionName,
-//            '_container-name' => Str::lower($this->containerName),
-//            'container-name' => $this->containerName,
-//            'class-name' => $this->fileName,
-//            'model' => $this->model,
-//            'models' => Pluralizer::plural($this->model),
-//            'ui' => $this->ui,
+            //            '_section-name' => Str::lower($this->sectionName),
+            //            'section-name' => $this->sectionName,
+            //            '_container-name' => Str::lower($this->containerName),
+            //            'container-name' => $this->containerName,
+            //            'class-name' => $this->fileName,
+            //            'model' => $this->model,
+            //            'models' => Pluralizer::plural($this->model),
+            //            'ui' => $this->ui,
         ];
     }
 }

@@ -15,7 +15,7 @@ trait ConsoleCommandArgumentsTrait
         ];
     }
 
-    protected abstract static function getCustomCommandArguments(): array;
+    abstract protected static function getCustomCommandArguments(): array;
 
     protected function getOptions(): array
     {

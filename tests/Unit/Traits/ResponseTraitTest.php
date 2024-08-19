@@ -21,7 +21,7 @@ class ResponseTraitTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->trait = new class() {
+        $this->trait = new class {
             use ResponseTrait;
         };
 
@@ -91,14 +91,14 @@ class ResponseTraitTest extends UnitTestCase
                 'resourceKey' => [],
                 'expected' => 'User',
             ],
-//            'empty object' => [
-//                'resourceKey' => new \stdClass(),
-//                'expected' => 'User',
-//            ],
-//            'override resource key' => [
-//                'resource key' => 'override-key',
-//                'expected' => 'override-key',
-//            ],
+            //            'empty object' => [
+            //                'resourceKey' => new \stdClass(),
+            //                'expected' => 'User',
+            //            ],
+            //            'override resource key' => [
+            //                'resource key' => 'override-key',
+            //                'expected' => 'override-key',
+            //            ],
         ];
     }
 

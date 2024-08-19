@@ -2,7 +2,6 @@
 
 namespace Apiato\Core\Generator\Traits;
 
-use Closure;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\multisearch;
 use function Laravel\Prompts\multiselect;
@@ -16,11 +15,11 @@ use function Laravel\Prompts\textarea;
 
 trait ConsoleInputTrait
 {
-    protected function checkParameterOrAskText(string $param, string $label, ?string $default = '', string $hint = '', string $placeHolder = '', bool $required = true): string
+    protected function checkParameterOrAskText(string $param, string $label, string|null $default = '', string $hint = '', string $placeHolder = '', bool $required = true): string
     {
         // Check if we already have the param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user for the param
             $value = text(
                 label: $label,
@@ -34,11 +33,11 @@ trait ConsoleInputTrait
         return $value;
     }
 
-    protected function checkParameterOrAskTextSuggested(string $param, string $label, ?string $default = '', array $suggestions = [], string $hint = '', string $placeHolder = '', bool $required = true): string
+    protected function checkParameterOrAskTextSuggested(string $param, string $label, string|null $default = '', array $suggestions = [], string $hint = '', string $placeHolder = '', bool $required = true): string
     {
         // Check if we already have the param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user for the param
             $value = suggest(
                 label: $label,
@@ -53,11 +52,11 @@ trait ConsoleInputTrait
         return $value;
     }
 
-    protected function checkParameterOrAskTextArea(string $param, string $label, int $rows = 5, ?string $default = '', string $hint = '', string $placeHolder = '', bool $required = true): string
+    protected function checkParameterOrAskTextArea(string $param, string $label, int $rows = 5, string|null $default = '', string $hint = '', string $placeHolder = '', bool $required = true): string
     {
         // Check if we already have the param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user for the param
             $value = textarea(
                 label: $label,
@@ -72,12 +71,11 @@ trait ConsoleInputTrait
         return $value;
     }
 
-
     protected function checkParameterOrAskPassword(string $param, string $label, string $hint = '', string $placeHolder = '', bool $required = true): string
     {
         // Check if we already have the param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user for the param
             $value = password(
                 label: $label,
@@ -85,17 +83,16 @@ trait ConsoleInputTrait
                 required: $required,
                 hint: $hint,
             );
-
         }
 
         return $value;
     }
 
-    protected function checkParameterOrSelect(string $param, string $label, array $options, ?string $default = null, string $hint = '', bool $required = true): string
+    protected function checkParameterOrSelect(string $param, string $label, array $options, string|null $default = null, string $hint = '', bool $required = true): string
     {
         // Check if we already have the param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user for the param
             $value = select(
                 label: $label,
@@ -109,11 +106,11 @@ trait ConsoleInputTrait
         return $value;
     }
 
-    protected function checkParameterOrMultiSelect(string $param, string $label, array $options, int $scroll = 10, ?array $default = null, string $hint = '', bool $required = true): array
+    protected function checkParameterOrMultiSelect(string $param, string $label, array $options, int $scroll = 10, array|null $default = null, string $hint = '', bool $required = true): array
     {
         // Check if we already have the param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user for the param
             $value = multiselect(
                 label: $label,
@@ -128,11 +125,11 @@ trait ConsoleInputTrait
         return $value;
     }
 
-    protected function checkParameterOrSearchableSelect(string $param, string $label, Closure $options, int $scroll = 10, string $hint = '', string $placeHolder = '', bool $required = true): string
+    protected function checkParameterOrSearchableSelect(string $param, string $label, \Closure $options, int $scroll = 10, string $hint = '', string $placeHolder = '', bool $required = true): string
     {
         // Check if we already have the param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user for the param
             $value = search(
                 label: $label,
@@ -147,11 +144,11 @@ trait ConsoleInputTrait
         return $value;
     }
 
-    protected function checkParameterOrMultiSearchableSelect(string $param, string $label, Closure $options, int $scroll = 10, string $hint = '', string $placeHolder = '', bool $required = true): array
+    protected function checkParameterOrMultiSearchableSelect(string $param, string $label, \Closure $options, int $scroll = 10, string $hint = '', string $placeHolder = '', bool $required = true): array
     {
         // Check if we already have the param set
         $value = $this->option($param);
-        if ($value === null) {
+        if (null === $value) {
             // There was no value provided via CLI, so ask the user for the param
             $value = multisearch(
                 label: $label,

@@ -15,7 +15,7 @@ trait FileSystemTrait
         if ($this->fileAlreadyExists($fullFilePath)) {
             $this->outputError($this->getFileTypeCapitalized() . ' already exists');
         } else {
-//            $renderedStubContent = $this->parseStubContent($this->getStubFileContent(), $this->getStubParameters());
+            //            $renderedStubContent = $this->parseStubContent($this->getStubFileContent(), $this->getStubParameters());
 
             $created = $this->fileSystem->put($fullFilePath, $this->getStubFileName());
 
