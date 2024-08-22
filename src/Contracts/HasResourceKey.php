@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Contracts;
 
-interface HasResourceKey {
+interface HasResourceKey
+{
     public function getResourceKey(): string;
 }

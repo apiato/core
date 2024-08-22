@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
-trait CanEagerLoadTrait {
+trait CanEagerLoadTrait
+{
     /**
      * Eager load relations if requested by the client via ?include=... in the URL.
-     * This is a workaround for incompatible third-party packages. (Fractal, L5Repo)
+     * This is a workaround for incompatible third-party packages. (Fractal, L5Repo).
      *
-     * @link https://apiato.atlassian.net/browse/API-905
+     * @see https://apiato.atlassian.net/browse/API-905
      */
     protected function eagerLoadRequestedRelations(): void
     {

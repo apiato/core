@@ -17,7 +17,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         parent::setUp();
 
-        foreach((app(ApiatoServiceProvider::class, ['app' => $this->app]))->serviceProviders as $provider) {
+        foreach ((app(ApiatoServiceProvider::class, ['app' => $this->app]))->serviceProviders as $provider) {
             App::register($provider);
         }
     }

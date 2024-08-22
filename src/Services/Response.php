@@ -9,9 +9,9 @@ use League\Fractal\Scope;
 use Spatie\Fractal\Fractal as SpatieFractal;
 
 /**
- * A wrapper class for Spatie\Fractal\Fractal
+ * A wrapper class for Spatie\Fractal\Fractal.
  *
- * @see \Spatie\Fractal\Fractal
+ * @see SpatieFractal
  */
 class Response extends SpatieFractal
 {
@@ -27,18 +27,18 @@ class Response extends SpatieFractal
     private function setAvailableIncludesMeta(): void
     {
         $this->addMeta([
-            'include' => $this->getTransformerAvailableIncludes()
+            'include' => $this->getTransformerAvailableIncludes(),
         ]);
     }
 
     private function getTransformerAvailableIncludes(): array
     {
-        if(is_null($this->transformer) || is_callable($this->transformer)) {
+        if (is_null($this->transformer) || is_callable($this->transformer)) {
             return [];
         }
 
         if (is_string($this->transformer)) {
-            return (new $this->transformer)->getAvailableIncludes();
+            return (new $this->transformer())->getAvailableIncludes();
         }
 
         return $this->transformer->getAvailableIncludes();
