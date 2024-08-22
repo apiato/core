@@ -5,12 +5,11 @@ namespace Apiato\Core\Macros\Config;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Arr;
 
-class UnsetKey
-{
+class UnsetKey {
     public function __invoke(): callable
     {
         return function (array|string|int|float $key): void {
-            /* @var Repository $this */
+            /** @var Repository $this */
             Arr::forget($this->items, $key);
         };
     }

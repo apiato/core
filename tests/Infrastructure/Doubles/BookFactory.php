@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Tests\Infrastructure\Doubles;
 
+
 use Apiato\Core\Abstracts\Factories\Factory as CoreFactory;
 
 /**

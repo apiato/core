@@ -61,3 +61,4 @@ abstract class TestCase extends LaravelTestCase
         $this->beginDatabaseTransaction();
     }
 }
+
