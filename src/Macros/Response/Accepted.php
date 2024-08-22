@@ -3,10 +3,11 @@
 namespace Apiato\Core\Macros\Response;
 
 use Apiato\Core\Abstracts\Transformers\Transformer;
-use Illuminate\Http\JsonResponse;
 use Apiato\Core\Services\Response;
+use Illuminate\Http\JsonResponse;
 
-class Accepted {
+class Accepted
+{
     public function __invoke(): callable
     {
         return
@@ -18,6 +19,7 @@ class Accepted {
                 if (is_null($this->getTransformer())) {
                     $this->transformWith(Transformer::empty());
                 }
+
                 return $this->respond(202);
             };
     }
