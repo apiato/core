@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
+use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\IncorrectIdException;
 use Illuminate\Support\Facades\Config;
 use Vinkla\Hashids\Facades\Hashids;
@@ -22,7 +23,7 @@ trait HashIdTrait
      *
      * @param string|null $field The field of the model to be hashed
      */
-    public function getHashedKey(null|string $field = null): null|string
+    public function getHashedKey(string|null $field = null): string|null
     {
         // if no key is set, use the default key name (i.e., id)
         if (null === $field) {
@@ -34,7 +35,11 @@ trait HashIdTrait
             // we need to get the VALUE for this KEY (model field)
             $value = $this->getAttribute($field);
 
-            return is_null($value) ? null : $this->encoder($value);
+            if (null === $value) {
+                return null;
+            }
+
+            return $this->encoder($value);
         }
 
         return $this->getAttribute($field);
@@ -69,10 +74,10 @@ trait HashIdTrait
      *
      * if the id is not decodable, null will be returned
      */
-    public function decode(null|string $id): null|int
+    public function decode(string|null $id): int|null
     {
         // check if passed as null, (could be an optional decodable variable)
-        if (is_null($id) || 'null' === strtolower($id)) {
+        if (null === $id || 'null' === strtolower($id)) {
             return $id;
         }
 
@@ -100,6 +105,7 @@ trait HashIdTrait
      * validation features like `exists:table,id`.
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     protected function decodeHashedIdsBeforeValidation(array $requestData): array
     {
@@ -118,6 +124,7 @@ trait HashIdTrait
      * Search the IDs to be decoded in the request data.
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     private function locateAndDecodeIds($requestData, $key): mixed
     {
@@ -132,6 +139,7 @@ trait HashIdTrait
      * Recursive function to process (decode) the request data with a given key.
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     private function processField($data, $keysTodo, $currentFieldName): mixed
     {
@@ -140,15 +148,21 @@ trait HashIdTrait
             // there are no more keys left - so basically we need to decode this entry
             if ($this->skipHashIdDecode($data)) {
                 return $data;
-            } else {
-                $decodedField = $this->decode($data);
-
-                if (is_null($decodedField)) {
-                    throw new IncorrectIdException();
-                }
-
-                return $decodedField;
             }
+
+            throw_if(
+                null !== $data && !is_string($data),
+                (new CoreInternalErrorException('String expected, got ' . gettype($data), 422))
+                    ->withErrors([$currentFieldName => 'String expected, got ' . gettype($data)]),
+            );
+
+            $decodedField = $this->decode($data);
+
+            if (null === $decodedField) {
+                throw new IncorrectIdException('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
+            }
+
+            return $decodedField;
         }
 
         // take the first element from the field

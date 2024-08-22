@@ -1,21 +1,22 @@
 <p align="center">
 <a href="https://github.com/apiato/core/actions/workflows/tests.yaml">
-<img src="https://github.com/apiato/core/actions/workflows/tests.yaml/badge.svg" alt="Build Status">
+<img src="https://img.shields.io/github/actions/workflow/status/apiato/core/tests.yaml?label=tests" alt="tests status">
 </a>
 <a href="https://codecov.io/gh/apiato/core" > 
- <img src="https://codecov.io/gh/apiato/core/graph/badge.svg?token=TQqxTZAhUk" alt="code coverage"/> 
+ <img src="https://img.shields.io/codecov/c/github/apiato/core?token=TQqxTZAhUk" alt="code coverage"/> 
 </a>
 <a href="https://packagist.org/packages/apiato/core">
-<img src="https://img.shields.io/packagist/dt/apiato/core" alt="Total Downloads"></a>
+<img src="https://img.shields.io/packagist/v/apiato/core" alt="latest stable version">
+</a>
 <br>
 <a href="https://packagist.org/packages/apiato/core">
-<img src="https://img.shields.io/packagist/v/apiato/core" alt="Latest Stable Version">
+<img src="https://img.shields.io/packagist/dt/apiato/core" alt="total downloads">
 </a>
 <a href="https://github.com/apiato/core">
-<img src="https://img.shields.io/github/license/apiato/core" alt="License">
+<img src="https://img.shields.io/github/license/apiato/core" alt="license">
 </a>
 <a href="https://discord.gg/ryPcV4KM5k">
-<img src="https://img.shields.io/discord/800815227839053834?label=discord" alt="support">
+<img src="https://img.shields.io/discord/800815227839053834?logo=discord&label=chat" alt="chat">
 </a>
 </p>
 
@@ -68,21 +69,21 @@ All security vulnerabilities will be promptly addressed.
   <tbody>
      <tr>
         <td align="center" valign="top">
-            <img width="125" height="125" src="https://github.com/mahmoudz.png?s=150">
+            <img width="125" height="125" alt="author image" src="https://github.com/mahmoudz.png?s=150">
             <br>
             <strong>Mahmoud Zalt</strong>
             <br>
             <a href="https://github.com/Mahmoudz">@mahmoudz</a>
         </td>
          <td align="center" valign="top">
-            <img width="125" height="125" src="https://github.com/mohammad-alavi.png?s=150">
+            <img width="125" height="125" alt="developer image" src="https://github.com/mohammad-alavi.png?s=150">
             <br>
             <strong>Mohammad Alavi</strong>
             <br>
             <a href="https://github.com/mohammad-alavi">@Mohammad-Alavi</a>
         </td>
           <td align="center" valign="top">
-            <img width="125" height="125" src="https://github.com/mderis.png?s=150">
+            <img width="125" height="125" alt="developer image" src="https://github.com/mderis.png?s=150">
             <br>
             <strong>Moslem Deris</strong>
             <br>
@@ -91,25 +92,3 @@ All security vulnerabilities will be promptly addressed.
      </tr>
   </tbody>
 </table>
-
-[comment]: # (Open Collective Tiers)
-
-[contributors-src]: https://contrib.rocks/image?repo=apiato/apiato
-
-[contributors-href]: https://github.com/apiato/apiato/graphs/contributors
-
-[backers-src]: https://opencollective.com/apiato/tiers/awesome-backers.svg?width=890&button=false&isActive=true
-
-[backers-href]: https://opencollective.com/apiato#contributors
-
-[gold-sponsors-src]: https://opencollective.com/apiato/tiers/gold-sponsors.svg?avatarHeight=80&width=890&button=false&isActive=true
-
-[gold-sponsors-href]: https://opencollective.com/apiato#contributors
-
-[silver-sponsors-src]: https://opencollective.com/apiato/tiers/silver-sponsors.svg?avatarHeight=64&width=890&button=false&isActive=true
-
-[silver-sponsors-href]: https://opencollective.com/apiato#contributors
-
-[bronze-sponsors-src]: https://opencollective.com/apiato/tiers/bronze-sponsors.svg?avatarHeight=48&width=890&button=false&isActive=true
-
-[bronze-sponsors-href]: https://opencollective.com/apiato#contributors

@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Abstracts\Repositories;
 
+use Apiato\Core\Traits\CanEagerLoadTrait;
 use Apiato\Core\Traits\HasRequestCriteriaTrait;
 use Illuminate\Support\Facades\Request;
 use Prettus\Repository\Contracts\CacheableInterface as PrettusCacheable;
@@ -12,8 +13,17 @@ use Prettus\Repository\Traits\CacheableRepository as PrettusCacheableRepository;
 abstract class Repository extends PrettusRepository implements PrettusCacheable
 {
     use HasRequestCriteriaTrait;
+    use CanEagerLoadTrait;
     use PrettusCacheableRepository {
         PrettusCacheableRepository::paginate as cacheablePaginate;
+    }
+
+    // TODO: BC: set return type to void
+    public function boot()
+    {
+        parent::boot();
+
+        $this->eagerLoadRequestedRelations();
     }
 
     /**
@@ -22,7 +32,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      */
     protected int $maxPaginationLimit = 0;
 
-    protected null|bool $allowDisablePagination = null;
+    protected bool|null $allowDisablePagination = null;
 
     /**
      * This function relies on strict conventions:

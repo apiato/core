@@ -56,7 +56,7 @@ trait TestAssertionHelperTrait
      *
      * @example $this->inIds($hashedId, $collectionOfModels);
      */
-    #[Deprecated(reason: 'Use inIds() helper function instead.')]
+    #[Deprecated(reason: 'Wrong method location and bad design. Use the "containsHashedId" method from the EloquentCollection instead.')]
     protected function inIds(string $hashedId, Collection|array $ids): bool
     {
         if ($ids instanceof Collection) {
@@ -97,15 +97,15 @@ trait TestAssertionHelperTrait
     }
 
     /**
-     * Create a spy for a task with a specified repository instance.
+     * Create a spy for an Action, SubAction or a Task that uses a repository.
      *
-     * @param string $taskClassName the task class name
+     * @param string $className the Action, SubAction or a Task class name
      * @param string $repositoryClassName the repository class name
      */
-    protected function createTaskSpyWithRepository(string $taskClassName, string $repositoryClassName, bool $allowRun = true): MockInterface
+    protected function createSpyWithRepository(string $className, string $repositoryClassName, bool $allowRun = true): MockInterface
     {
         /** @var MockInterface $taskSpy */
-        $taskSpy = \Mockery::mock($taskClassName, [app($repositoryClassName)])
+        $taskSpy = \Mockery::mock($className, [app($repositoryClassName)])
             ->shouldIgnoreMissing(null, true)
             ->makePartial();
 
@@ -113,7 +113,7 @@ trait TestAssertionHelperTrait
             $taskSpy->allows('run')->andReturn();
         }
 
-        $this->swap($taskClassName, $taskSpy);
+        $this->swap($className, $taskSpy);
 
         return $taskSpy;
     }
@@ -159,9 +159,9 @@ trait TestAssertionHelperTrait
     }
 
     /**
-     * Allow "addRequestCriteria" invocation on the repository mock.
+     * Allow "addRequestCriteria" method invocation on the repository mock.
      * This is particularly useful when you want to test a repository that uses the RequestCriteria
-     * (e.g., for search and filter).
+     * (e.g., for search and filtering).
      */
     protected function allowAddRequestCriteriaInvocation(MockInterface $repositoryMock): void
     {

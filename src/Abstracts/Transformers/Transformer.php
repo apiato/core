@@ -54,4 +54,11 @@ abstract class Transformer extends FractalTransformer
             throw new CoreInternalErrorException($exception->getMessage());
         }
     }
+
+    public static function empty(): callable
+    {
+        return static function () {
+            return [];
+        };
+    }
 }

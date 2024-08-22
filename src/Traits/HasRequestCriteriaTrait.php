@@ -98,7 +98,7 @@ trait HasRequestCriteriaTrait
         request()->query->replace($query);
     }
 
-    private function decodeValue(string $searchQuery): null|string
+    private function decodeValue(string $searchQuery): string|null
     {
         $searchValue = $this->parserSearchValue($searchQuery);
 

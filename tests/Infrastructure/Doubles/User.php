@@ -2,26 +2,16 @@
 
 namespace Apiato\Core\Tests\Infrastructure\Doubles;
 
-use Apiato\Core\Traits\CanOwnTrait;
-use Apiato\Core\Traits\HashIdTrait;
-use Apiato\Core\Traits\HasResourceKeyTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Apiato\Core\Abstracts\Models\UserModel;
+use Apiato\Core\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as LaravelAuthenticatableUser;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
 
-class User extends LaravelAuthenticatableUser
+class User extends UserModel
 {
-    use HasApiTokens;
+    use ModelTrait;
     use Notifiable;
-    use HashIdTrait;
-    use CanOwnTrait;
-    use HasResourceKeyTrait;
-    use HasFactory;
-
-    protected $table = 'users';
 
     protected $fillable = [
         'name',
@@ -47,5 +37,10 @@ class User extends LaravelAuthenticatableUser
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
+    }
+
+    public function books(): HasMany
+    {
+        return $this->hasMany(Book::class, 'author_id');
     }
 }

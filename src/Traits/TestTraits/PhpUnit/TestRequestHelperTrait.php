@@ -27,19 +27,21 @@ trait TestRequestHelperTrait
 
     protected string $responseContent;
 
-    protected null|array $responseContentArray = null;
+    protected array|null $responseContentArray = null;
 
-    protected null|\stdClass $responseContentObject = null;
+    protected \stdClass|null $responseContentObject = null;
 
     /**
      * Allows users to override the default class property `endpoint` directly before calling the `makeCall` function.
      */
-    protected null|string $overrideEndpoint = null;
+    protected string|null $overrideEndpoint = null;
 
     /**
      * Allows users to override the default class property `auth` directly before calling the `makeCall` function.
      */
-    protected null|bool $overrideAuth = null;
+    protected bool|null $overrideAuth = null;
+
+    private string|null $url;
 
     /**
      * @throws WrongEndpointFormatException
@@ -79,6 +81,8 @@ trait TestRequestHelperTrait
     /**
      * read `$this->endpoint` property from the test class (`verb@uri`) and convert it to usable data.
      *
+     * @return array<string, string>
+     *
      * @throws WrongEndpointFormatException
      * @throws MissingTestEndpointException
      */
@@ -90,7 +94,6 @@ trait TestRequestHelperTrait
 
         $this->validateEndpointFormat($separator);
 
-        // convert the string to array
         $asArray = explode($separator, $this->getEndpoint(), 2);
 
         // get the verb and uri values from the array
@@ -117,15 +120,18 @@ trait TestRequestHelperTrait
 
     public function getEndpoint(): string
     {
-        return !is_null($this->overrideEndpoint) ? $this->overrideEndpoint : $this->endpoint;
+        if (null !== $this->overrideEndpoint) {
+            return $this->overrideEndpoint;
+        }
+
+        return $this->endpoint;
     }
 
     /**
      * @throws WrongEndpointFormatException
      */
-    private function validateEndpointFormat($separator): void
+    private function validateEndpointFormat(string $separator): void
     {
-        // check if string contains the separator
         if (!strpos($this->getEndpoint(), $separator)) {
             throw new WrongEndpointFormatException();
         }
@@ -134,23 +140,33 @@ trait TestRequestHelperTrait
     private function buildUrlForUri($uri): string
     {
         $uri = Config::get('apiato.api.prefix') . $uri;
-        // add `/` at the beginning in case it doesn't exist
+
         if (!Str::startsWith($uri, '/')) {
             $uri = '/' . $uri;
         }
 
-        return Config::get('apiato.api.url') . $uri;
+        return $this->getUrl() . $uri;
     }
 
-    private function dataArrayToQueryParam($data, $url): string
+    private function getUrl(): string
     {
-        return $data ? $url . '?' . http_build_query($data) : $url;
+        // 'API_URL' value comes from `phpunit.xml` during testing
+        return $this->url ?? Config::get('apiato.api.url');
+    }
+
+    private function dataArrayToQueryParam(array $data, string $url): string
+    {
+        if (empty($data)) {
+            return $url;
+        }
+
+        return $url . '?' . http_build_query($data);
     }
 
     /**
      * Attach Authorization Bearer Token to the request headers
      * if it does not exist already and the authentication is required
-     * for the endpoint `$this->auth = true`.
+     * for the endpoint, e.g., `$this->auth = true`.
      */
     private function injectAccessToken(array $headers = []): array
     {
@@ -169,7 +185,11 @@ trait TestRequestHelperTrait
 
     public function getAuth(): bool
     {
-        return !is_null($this->overrideAuth) ? $this->overrideAuth : $this->auth;
+        if (null === $this->overrideAuth) {
+            return $this->auth;
+        }
+
+        return $this->overrideAuth;
     }
 
     private function headersContainAuthorization($headers): bool
@@ -177,16 +197,23 @@ trait TestRequestHelperTrait
         return Arr::has($headers, 'Authorization');
     }
 
-    public function setResponseObjectAndContent($httpResponse)
+    public function setResponseObjectAndContent(TestResponse $httpResponse): TestResponse
     {
         $this->setResponseContent($httpResponse);
 
         return $this->response = $httpResponse;
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function getResponseContentArray()
     {
-        return $this->responseContentArray ?: $this->responseContentArray = json_decode($this->getResponseContent(), true);
+        if ($this->responseContentArray) {
+            return $this->responseContentArray;
+        }
+
+        return $this->responseContentArray = json_decode($this->getResponseContent(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function getResponseContent(): string
@@ -194,7 +221,8 @@ trait TestRequestHelperTrait
         return $this->responseContent;
     }
 
-    public function setResponseContent($httpResponse)
+    // TODO: @next - add return type
+    public function setResponseContent(TestResponse $httpResponse)
     {
         return $this->responseContent = $httpResponse->getContent();
     }
@@ -204,38 +232,49 @@ trait TestRequestHelperTrait
      */
     public function getResponseContentObject()
     {
-        return $this->responseContentObject ?: $this->responseContentObject = json_decode($this->getResponseContent(), false, 512, JSON_THROW_ON_ERROR);
+        if ($this->responseContentObject) {
+            return $this->responseContentObject;
+        }
+
+        return $this->responseContentObject = json_decode($this->getResponseContent(), false, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
      * Inject the ID in the Endpoint URI before making the call by
      * overriding the `$this->endpoint` property.
-     *
-     * Example: you give it ('users/{id}/stores', 100) it returns 'users/100/stores'
-     *
-     * @return $this
      */
     public function injectId($id, bool $skipEncoding = false, string $replace = '{id}'): static
     {
-        // In case Hash ID is enabled it will encode the ID first
-        $id = $this->hashEndpointId($id, $skipEncoding);
-        $this->endpoint = str_replace($replace, $id, $this->endpoint);
+        if (!$skipEncoding) {
+            $id = $this->hashIdIfEnabled($id);
+        }
+
+        if (null === $this->overrideEndpoint) {
+            $this->endpoint = str_replace($replace, $id, $this->endpoint);
+        } else {
+            $this->overrideEndpoint = str_replace($replace, $id, $this->overrideEndpoint);
+        }
 
         return $this;
     }
 
-    private function hashEndpointId($id, $skipEncoding = false): string
+    private function hashIdIfEnabled($id): string
     {
-        return (Config::get('apiato.hash-id') && !$skipEncoding) ? Hashids::encode($id) : $id;
+        if (Config::get('apiato.hash-id')) {
+            return Hashids::encode($id);
+        }
+
+        return $id;
     }
 
     /**
      * Override the default class endpoint property before making the call.
      *
-     * to be used as follow: $this->endpoint('verb@uri')->makeCall($data);
-     *
-     * @return $this
+     * Note: The order in which you call this function is crucial.
+     * Make sure to call it before injectId(),
+     * or else injectId() will not replace the ID in the overridden endpoint.
      */
+    // TODO: @next - add $endpoint parameter type
     public function endpoint($endpoint): static
     {
         $this->overrideEndpoint = $endpoint;
@@ -245,14 +284,20 @@ trait TestRequestHelperTrait
 
     /**
      * Override the default class auth property before making the call.
-     *
-     * to be used as follows: $this->auth('false')->makeCall($data);
-     *
-     * @return $this
      */
     public function auth(bool $auth): static
     {
         $this->overrideAuth = $auth;
+
+        return $this;
+    }
+
+    /**
+     * Override the default url before making the call.
+     */
+    public function url(string $url): static
+    {
+        $this->url = $url;
 
         return $this;
     }
@@ -267,10 +312,5 @@ trait TestRequestHelperTrait
 
             return [$this->formatServerHeaderKey($name) => $value];
         })->all();
-    }
-
-    private function getJsonVerb($text): string
-    {
-        return Str::replaceFirst('json:', '', $text);
     }
 }
