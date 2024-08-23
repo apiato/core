@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
+/**
+ * @internal
+ */
 trait CanEagerLoadTrait
 {
     /**
