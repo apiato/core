@@ -158,7 +158,6 @@ trait ResponseTrait
         return new JsonResponse($data, $status, $headers, $options);
     }
 
-
     #[Deprecated(
         reason: 'Use the noContent method from the Response facade instead.',
         replacement: '\Apiato\Core\Facades\Response::createFrom(%parameter0%)->noContent();',
