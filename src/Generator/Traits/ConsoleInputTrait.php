@@ -163,7 +163,7 @@ trait ConsoleInputTrait
         return $value;
     }
 
-    protected function checkParameterOrConfirm(string $param, string $label, bool $default = true, string $yes = 'Yes', string $no = 'No', string $hint = '', bool $required = true): bool
+    protected function checkParameterOrConfirm(string $param, string $label, bool $default = true, string $yes = 'Yes', string $no = 'No', string $hint = '', bool $required = false): bool
     {
         // Check if we already have a param set
         $value = $this->option($param);
