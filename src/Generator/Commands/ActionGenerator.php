@@ -2,18 +2,20 @@
 
 namespace Apiato\Core\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Illuminate\Support\Pluralizer;
+use Apiato\Core\Generator\FileGeneratorCommand;
+use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ActionGenerator extends GeneratorCommand
+class ActionGenerator extends FileGeneratorCommand
 {
-    private string $model;
+    use HasTestTrait;
 
-    private string $ui;
+    protected string $model;
 
-    private string $stub;
+    protected string $stub;
+
+    protected string $ui;
 
     public static function getCommandName(): string
     {
@@ -22,7 +24,7 @@ class ActionGenerator extends GeneratorCommand
 
     public static function getCommandDescription(): string
     {
-        return 'Create a Action file for a Container';
+        return 'Create an Action file for a Container';
     }
 
     public static function getFileType(): string
@@ -43,9 +45,11 @@ class ActionGenerator extends GeneratorCommand
     {
         $this->model = $this->checkParameterOrAskText(
             param: 'model',
-            label: 'Enter the name of the model this action is for:',
+            label: 'Enter the name of the Model:',
             default: $this->containerName,
+            hint: 'Enter the name of the Model this action is for.',
         );
+
         $this->ui = $this->checkParameterOrSelect(
             param: 'ui',
             label: 'Which UI is this Action for?',
@@ -53,6 +57,7 @@ class ActionGenerator extends GeneratorCommand
             default: 'API',
             hint: 'Different UIs have different request/response formats.',
         );
+
         $this->stub = $this->checkParameterOrSelect(
             param: 'stub',
             label: 'Select the action type:',
@@ -71,10 +76,10 @@ class ActionGenerator extends GeneratorCommand
 
     protected function getFilePath(): string
     {
-        return "{$this->sectionName}/{$this->containerName}/Actions/{$this->fileName}.php";
+        return "$this->sectionName/$this->containerName/Actions/$this->fileName.php";
     }
 
-    protected function getStubFileName(): string
+    protected function getFileContent(): string
     {
         $file = new \Nette\PhpGenerator\PhpFile();
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions');
@@ -121,7 +126,8 @@ class ActionGenerator extends GeneratorCommand
             if ('create' === $this->stub) {
                 $runMethod->setReturnType($modelFullPath);
 
-                $runMethod->addBody('$data = $request->sanitizeInput([
+                $runMethod->addBody('
+$data = $request->sanitizeInput([
     // add your request data here
 ]);
             ');
@@ -129,7 +135,8 @@ class ActionGenerator extends GeneratorCommand
             } elseif ('update' === $this->stub) {
                 $runMethod->setReturnType($modelFullPath);
 
-                $runMethod->addBody('$data = $request->sanitizeInput([
+                $runMethod->addBody('
+$data = $request->sanitizeInput([
     // add your request data here
 ]);
             ');
@@ -158,17 +165,33 @@ class ActionGenerator extends GeneratorCommand
         // echo (new Nette\PhpGenerator\PsrPrinter)->printFile($file);
     }
 
-    protected function getStubParameters(): array
+    public function getTestPath(): string
     {
-        return [
-            //            '_section-name' => Str::lower($this->sectionName),
-            //            'section-name' => $this->sectionName,
-            //            '_container-name' => Str::lower($this->containerName),
-            //            'container-name' => $this->containerName,
-            //            'class-name' => $this->fileName,
-            //            'model' => $this->model,
-            //            'models' => Pluralizer::plural($this->model),
-            //            'ui' => $this->ui,
-        ];
+        return $this->sectionName . '/' . $this->containerName . '/Tests/Unit/Actions/' . $this->fileName . 'Test.php';
+    }
+
+    public function getTestContent(): string
+    {
+        $file = new \Nette\PhpGenerator\PhpFile();
+        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Actions');
+
+        // imports
+        $parentUnitTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\UnitTestCase";
+        $namespace->addUse($parentUnitTestCaseFullPath);
+
+        // class
+        $class = $file->addNamespace($namespace)
+            ->addClass($this->fileName . 'Test')
+            ->setFinal()
+            ->setExtends($parentUnitTestCaseFullPath);
+
+        // test method
+        $testMethod = $class->addMethod('testAction')->setPublic();
+        $testMethod->addBody('// add your test here');
+
+        $testMethod->setReturnType('void');
+
+        // return the file
+        return $file;
     }
 }
