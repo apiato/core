@@ -3,11 +3,10 @@
 namespace Apiato\Core\Generator\Commands\TestCases;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
-use Apiato\Core\Generator\GeneratorCommand;
 
 class ContainerTestCaseGenerator extends FileGeneratorCommand
 {
-    protected ?string $fileName = 'ContainerTestCase';
+    protected string|null $fileName = 'ContainerTestCase';
 
     public static function getCommandName(): string
     {

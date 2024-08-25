@@ -17,14 +17,13 @@ abstract class FileGeneratorCommand extends GeneratorCommand
      */
     protected const ROOT = 'app/Containers';
 
-    protected ?string $fileName = null;
+    protected string|null $fileName = null;
 
     protected bool $allowSpecialCharactersInFileName = true;
 
     public function __construct(
         protected IlluminateFilesystem $fileSystem,
-    )
-    {
+    ) {
         parent::__construct();
     }
 

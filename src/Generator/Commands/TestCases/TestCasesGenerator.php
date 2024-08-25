@@ -25,7 +25,7 @@ class TestCasesGenerator extends CompositeGeneratorCommand
     {
     }
 
-    function runGeneratorCommands(): void
+    public function runGeneratorCommands(): void
     {
         $this->runGeneratorCommand(ContainerTestCaseGenerator::class, [
             '--section' => $this->sectionName,

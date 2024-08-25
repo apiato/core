@@ -6,7 +6,7 @@ use Apiato\Core\Generator\FileGeneratorCommand;
 
 class FunctionalTestCaseGenerator extends FileGeneratorCommand
 {
-    protected ?string $fileName = 'FunctionalTestCase';
+    protected string|null $fileName = 'FunctionalTestCase';
 
     public static function getCommandName(): string
     {

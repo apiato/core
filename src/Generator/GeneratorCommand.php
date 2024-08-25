@@ -21,11 +21,11 @@ abstract class GeneratorCommand extends Command
     use ConsoleCommandArgumentsTrait;
     use SuggestionHelperTrait;
 
-    protected ?string $sectionName = null;
+    protected string|null $sectionName = null;
 
-    protected ?string $containerName = null;
+    protected string|null $containerName = null;
 
-    protected ?bool $test = null;
+    protected bool|null $test = null;
 
     public function __construct()
     {

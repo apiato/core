@@ -6,7 +6,7 @@ use Apiato\Core\Generator\FileGeneratorCommand;
 
 class CliTestCaseGenerator extends FileGeneratorCommand
 {
-    protected ?string $fileName = 'CliTestCase';
+    protected string|null $fileName = 'CliTestCase';
 
     public static function getCommandName(): string
     {

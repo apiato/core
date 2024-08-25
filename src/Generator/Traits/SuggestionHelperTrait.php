@@ -9,11 +9,10 @@ trait SuggestionHelperTrait
     public function getActionsList(
         string $section,
         string $container,
-        bool   $removeActionPostFix = false,
-        bool   $removePhpPostFix = true,
-        bool   $unCamelizeAndReplaceWithSpace = false,
-    ): array
-    {
+        bool $removeActionPostFix = false,
+        bool $removePhpPostFix = true,
+        bool $unCamelizeAndReplaceWithSpace = false,
+    ): array {
         $actionsDirectory = base_path('app/Containers/' . $section . '/' . $container . '/Actions');
         $files = File::allFiles($actionsDirectory);
 

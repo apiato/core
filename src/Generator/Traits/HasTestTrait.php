@@ -4,7 +4,7 @@ namespace Apiato\Core\Generator\Traits;
 
 trait HasTestTrait
 {
-    abstract function getTestPath(): string;
+    abstract public function getTestPath(): string;
 
-    abstract function getTestContent(): string;
+    abstract public function getTestContent(): string;
 }
