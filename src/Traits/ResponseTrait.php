@@ -10,13 +10,9 @@ use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
-use JetBrains\PhpStorm\Deprecated;
 use Spatie\Fractal\Facades\Fractal;
 
-#[Deprecated(
-    reason: 'All methods in this trait are deprecated and will be removed in the next major release.',
-    replacement: 'Use the Response facade instead.',
-)]
+// TODO: Remove this after migrating everything to use Response facade
 trait ResponseTrait
 {
     protected array $metaData = [];
@@ -24,10 +20,6 @@ trait ResponseTrait
     /**
      * @throws InvalidTransformerException
      */
-    #[Deprecated(
-        reason: 'This method is the cause of many bugs and its functionality is already covered by the Response facade. Use the Response facade instead.',
-        replacement: '\Apiato\Core\Facades\Response::createFrom(%parameter0%,%parameter1%)->parseIncludes(%parameter2%)->addMeta(%parameter3%)->toArray();',
-    )]
     public function transform(
         $data,
         $transformerName = null,
@@ -129,10 +121,6 @@ trait ResponseTrait
         return $responseArray;
     }
 
-    #[Deprecated(
-        reason: 'Its functionality is already covered by the Response facade. Use the addMeta method from the Response facade instead.',
-        replacement: '\Apiato\Core\Facades\Response::createFrom()->addMeta(%parameter0%)->toArray();',
-    )]
     public function withMeta($data): self
     {
         $this->metaData = $data;
@@ -140,28 +128,16 @@ trait ResponseTrait
         return $this;
     }
 
-    #[Deprecated(
-        reason: 'Its functionality is already covered by the Response facade. Use the toJson method from the Response facade instead.',
-        replacement: '\Apiato\Core\Facades\Response::createFrom(%parameter0%)->toJson();',
-    )]
     public function json($data, $status = 200, array $headers = [], $options = 0): JsonResponse
     {
         return new JsonResponse($data, $status, $headers, $options);
     }
 
-    #[Deprecated(
-        reason: 'Its functionality is already covered by the Response facade. Use the created method from the Response facade instead.',
-        replacement: '\Apiato\Core\Facades\Response::createFrom(%parameter0%)->created();',
-    )]
     public function created($data = null, $status = 201, array $headers = [], $options = 0): JsonResponse
     {
         return new JsonResponse($data, $status, $headers, $options);
     }
 
-    #[Deprecated(
-        reason: 'Use the noContent method from the Response facade instead.',
-        replacement: '\Apiato\Core\Facades\Response::createFrom(%parameter0%)->noContent();',
-    )]
     public function deleted(Model|null $deletedModel = null): JsonResponse
     {
         if (!$deletedModel) {
@@ -176,19 +152,11 @@ trait ResponseTrait
         ]);
     }
 
-    #[Deprecated(
-        reason: 'Its functionality is already covered by the Response facade. Use the accepted method from the Response facade instead.',
-        replacement: '\Apiato\Core\Facades\Response::createFrom(%parameter0%)->accepted();',
-    )]
     public function accepted($data = null, $status = 202, array $headers = [], $options = 0): JsonResponse
     {
         return new JsonResponse($data, $status, $headers, $options);
     }
 
-    #[Deprecated(
-        reason: 'Its functionality is already covered by the Response facade. Use the noContent method from the Response facade instead.',
-        replacement: '\Apiato\Core\Facades\Response::createFrom()->noContent();',
-    )]
     public function noContent($status = 204): JsonResponse
     {
         return new JsonResponse(null, $status);
