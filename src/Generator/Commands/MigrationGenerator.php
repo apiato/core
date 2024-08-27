@@ -106,7 +106,7 @@ return new class() extends Migration {
             ->setExtends($parentUnitTestCaseFullPath);
 
         // test method
-        $testMethod = $class->addMethod("test" . ucfirst($this->table) . "TableHasExpectedColumns")->setPublic();
+        $testMethod = $class->addMethod('test' . ucfirst($this->table) . 'TableHasExpectedColumns')->setPublic();
         $testMethod->addBody("
 \$columns = [
 'id' => 'bigint',
