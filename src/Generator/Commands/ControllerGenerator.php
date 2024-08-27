@@ -9,6 +9,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ControllerGenerator extends FileGeneratorCommand
 {
+    use HasTestTrait;
+
     public static function getFileType(): string
     {
         // TODO: Implement getFileType() method.
@@ -42,5 +44,15 @@ class ControllerGenerator extends FileGeneratorCommand
     protected function askCustomInputs(): void
     {
         // TODO: Implement askCustomInputs() method.
+    }
+
+    protected function getTestPath(): string
+    {
+        // TODO: Implement getTestPath() method.
+    }
+
+    protected function getTestContent(): string
+    {
+        // TODO: Implement getTestContent() method.
     }
 }
