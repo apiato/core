@@ -4,8 +4,6 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\Traits\HasTestTrait;
-use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
 
 class ControllerGenerator extends FileGeneratorCommand
 {
