@@ -165,12 +165,12 @@ $data = $request->sanitizeInput([
         // echo (new Nette\PhpGenerator\PsrPrinter)->printFile($file);
     }
 
-    public function getTestPath(): string
+    protected function getTestPath(): string
     {
         return $this->sectionName . '/' . $this->containerName . '/Tests/Unit/Actions/' . $this->fileName . 'Test.php';
     }
 
-    public function getTestContent(): string
+    protected function getTestContent(): string
     {
         $file = new \Nette\PhpGenerator\PhpFile();
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Actions');
