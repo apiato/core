@@ -101,17 +101,17 @@ class ControllerGenerator extends FileGeneratorCommand
         switch ($this->stub) {
             case 'list':
                 $invoke->addBody("$$entities = \$action->run();");
-                $invoke->addBody(sprintf("return Response::createFrom($%s)->transformWith(%s::class)->ok();", $entities, $model . 'Transformer'));
+                $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entities, $model . 'Transformer'));
                 break;
             case 'create':
             case 'update':
             case 'find':
                 $invoke->addBody("$$entity = \$action->run(\$request);");
-                $invoke->addBody(sprintf("return Response::createFrom($%s)->transformWith(%s::class)->ok();", $entity, $model . 'Transformer'));
+                $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entity, $model . 'Transformer'));
                 break;
             case 'delete':
-                $invoke->addBody("\$action->run(\$request);");
-                $invoke->addBody("return Response::noContent();");
+                $invoke->addBody('$action->run($request);');
+                $invoke->addBody('return Response::noContent();');
                 break;
         }
 
@@ -150,6 +150,6 @@ class ControllerGenerator extends FileGeneratorCommand
 
     private function getAct(): string
     {
-        return ucfirst($this->stub) . ($this->stub == 'list' ? ucfirst(Pluralizer::plural($this->containerName)) : ucfirst($this->containerName));
+        return ucfirst($this->stub) . ('list' == $this->stub ? ucfirst(Pluralizer::plural($this->containerName)) : ucfirst($this->containerName));
     }
 }
