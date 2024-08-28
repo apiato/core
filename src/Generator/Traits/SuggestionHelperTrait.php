@@ -36,4 +36,35 @@ trait SuggestionHelperTrait
 
         return $actions;
     }
+
+    public function getModelsList(
+        string $section,
+        string $container,
+        bool $removeModelPostFix = false,
+        bool $removePhpPostFix = true,
+        bool $unCamelizeAndReplaceWithSpace = false,
+    ): array {
+        $modelsDirectory = base_path('app/Containers/' . $section . '/' . $container . '/Models');
+        $files = File::allFiles($modelsDirectory);
+
+        $models = [];
+
+        foreach ($files as $model) {
+            $fileName = $originalFileName = $model->getFilename();
+
+            if ($removeModelPostFix) {
+                $fileName = str_replace(['.php'], '', $fileName);
+            }
+            if ($removePhpPostFix) {
+                $fileName = str_replace(['.php'], '', $fileName);
+            }
+            if ($unCamelizeAndReplaceWithSpace) {
+                $fileName = uncamelize($fileName);
+            }
+
+            $models[] = $fileName;
+        }
+
+        return $models;
+    }
 }
