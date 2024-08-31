@@ -82,7 +82,7 @@ class RepositoryGenerator extends FileGeneratorCommand
             ->setValue($modelFullPath);
         $class->addProperty('fieldSearchable')
             ->setVisibility('protected')
-            ->setValue(['id' => '=',]);
+            ->setValue(['id' => '=']);
 
         return $file;
     }
@@ -114,7 +114,7 @@ class RepositoryGenerator extends FileGeneratorCommand
             ->setExtends($parentUnitTestCaseFullPath);
 
         // test method 1
-        $testMethod1 = $class->addMethod("testRepositoryHasExpectedSearchableFieldsSet")->setPublic();
+        $testMethod1 = $class->addMethod('testRepositoryHasExpectedSearchableFieldsSet')->setPublic();
         $testMethod1->addBody("
 \$data = [
     'id' => '=',
@@ -127,7 +127,7 @@ class RepositoryGenerator extends FileGeneratorCommand
         $testMethod1->setReturnType('void');
 
         // test method 2
-        $testMethod2 = $class->addMethod("testReturnsCorrectModel")->setPublic();
+        $testMethod2 = $class->addMethod('testReturnsCorrectModel')->setPublic();
         $testMethod2->addBody("
 \$repository = app($this->fileName::class);
 
