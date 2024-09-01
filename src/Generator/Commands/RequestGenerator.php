@@ -45,6 +45,7 @@ class RequestGenerator extends FileGeneratorCommand
         if ($isCRUD) {
             return Str::ucfirst($this->stub) . $this->model . 'Request';
         }
+
         return parent::getDefaultFileName();
     }
 
@@ -165,8 +166,7 @@ class RequestGenerator extends FileGeneratorCommand
         return $this->sectionName . '/' . $this->containerName . '/Tests/Unit/UI/API/Requests/' . $this->fileName . 'Test.php';
     }
 
-    protected
-    function getTestContent(): string
+    protected function getTestContent(): string
     {
         $file = new \Nette\PhpGenerator\PhpFile();
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\UI\API\Requests');
@@ -178,7 +178,6 @@ class RequestGenerator extends FileGeneratorCommand
         $namespace->addUse($modelFullPath);
         $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Requests\\' . $this->fileName;
         $namespace->addUse($requestFullPath);
-
 
         // class
         $class = $file->addNamespace($namespace)
@@ -222,11 +221,11 @@ class RequestGenerator extends FileGeneratorCommand
         $testMethod2->setReturnType('void');
 
         $testMethod3 = $class->addMethod('testValidationRules')->setPublic();
-        $testMethod3->addBody("
-\$rules = \$this->request->rules();
+        $testMethod3->addBody('
+$rules = $this->request->rules();
 
-\$this->assertSame([], \$rules);
-");
+$this->assertSame([], $rules);
+');
         $testMethod3->setReturnType('void');
 
         $testMethod4 = $class->addMethod('testAuthorizeMethodGateCall')->setPublic();
