@@ -48,17 +48,17 @@ class ModelGenerator extends FileGeneratorCommand
 
     protected function askCustomInputs(): void
     {
-//        $this->model = $this->checkParameterOrAskTextSuggested(
-//            param: 'model',
-//            label: 'Enter the name of the Model:',
-//            default: $this->containerName,
-//            suggestions: $this->getModelsList(
-//                section: $this->sectionName,
-//                container: $this->containerName,
-//                removeModelPostFix: true,
-//            ),
-//            hint: 'Enter the name of the Model this factory is for.',
-//        );
+        //        $this->model = $this->checkParameterOrAskTextSuggested(
+        //            param: 'model',
+        //            label: 'Enter the name of the Model:',
+        //            default: $this->containerName,
+        //            suggestions: $this->getModelsList(
+        //                section: $this->sectionName,
+        //                container: $this->containerName,
+        //                removeModelPostFix: true,
+        //            ),
+        //            hint: 'Enter the name of the Model this factory is for.',
+        //        );
 
         $this->table = $this->checkParameterOrAskText(
             param: 'table',
@@ -142,7 +142,7 @@ class ModelGenerator extends FileGeneratorCommand
             ->setExtends($parentUnitTestCaseFullPath);
 
         // test method
-        $testMethod1 = $class->addMethod("testUsesCorrectTable")->setPublic();
+        $testMethod1 = $class->addMethod('testUsesCorrectTable')->setPublic();
         $testMethod1->addBody("
 \$entity = $factoryName::new()->createOne();
 \$table = '$this->table';
@@ -151,7 +151,7 @@ class ModelGenerator extends FileGeneratorCommand
 ");
         $testMethod1->setReturnType('void');
 
-        $testMethod2 = $class->addMethod("testHasCorrectFillableFields")->setPublic();
+        $testMethod2 = $class->addMethod('testHasCorrectFillableFields')->setPublic();
         $testMethod2->addBody("
 \$entity = $factoryName::new()->createOne();
 \$fillables = [
@@ -161,7 +161,7 @@ class ModelGenerator extends FileGeneratorCommand
 ");
         $testMethod2->setReturnType('void');
 
-        $testMethod3 = $class->addMethod("testHasCorrectCasts")->setPublic();
+        $testMethod3 = $class->addMethod('testHasCorrectCasts')->setPublic();
         $testMethod3->addBody("
 \$entity = $factoryName::new()->createOne();
 \$casts = [
@@ -172,7 +172,7 @@ class ModelGenerator extends FileGeneratorCommand
 ");
         $testMethod3->setReturnType('void');
 
-        $testMethod4 = $class->addMethod("testHasCorrectHiddenFields")->setPublic();
+        $testMethod4 = $class->addMethod('testHasCorrectHiddenFields')->setPublic();
         $testMethod4->addBody("
 \$entity = $factoryName::new()->createOne();
 \$hiddens = [
@@ -182,7 +182,7 @@ class ModelGenerator extends FileGeneratorCommand
 ");
         $testMethod4->setReturnType('void');
 
-        $testMethod5 = $class->addMethod("testHasCorrectResourceKey")->setPublic();
+        $testMethod5 = $class->addMethod('testHasCorrectResourceKey')->setPublic();
         $testMethod5->addBody("
 \$entity = $factoryName::new()->createOne();
 
