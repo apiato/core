@@ -143,7 +143,7 @@ return [
             ->setType($transformerFullPath);
 
         // test methods
-        $testMethod1 = $class->addMethod("testCanTransformSingleObject")->setPublic();
+        $testMethod1 = $class->addMethod('testCanTransformSingleObject')->setPublic();
         $testMethod1->addBody("
 \$$entity = $factoryName::new()->createOne();
 \$expected = [
@@ -163,25 +163,25 @@ return [
 
         $testMethod1->setReturnType('void');
 
-        $testMethod2 = $class->addMethod("testAvailableIncludes")->setPublic();
-        $testMethod2->addBody("
-\$this->assertSame([
+        $testMethod2 = $class->addMethod('testAvailableIncludes')->setPublic();
+        $testMethod2->addBody('
+$this->assertSame([
     // add your available includes here
-], \$this->transformer->getAvailableIncludes());
-");
+], $this->transformer->getAvailableIncludes());
+');
 
         $testMethod2->setReturnType('void');
 
-        $testMethod3 = $class->addMethod("testDefaultIncludes")->setPublic();
-        $testMethod3->addBody("
-\$this->assertSame([
+        $testMethod3 = $class->addMethod('testDefaultIncludes')->setPublic();
+        $testMethod3->addBody('
+$this->assertSame([
     // add your default includes here
-], \$this->transformer->getDefaultIncludes());
-");
+], $this->transformer->getDefaultIncludes());
+');
 
         $testMethod3->setReturnType('void');
 
-        $setupMethod = $class->addMethod("setUp")->setPublic();
+        $setupMethod = $class->addMethod('setUp')->setPublic();
         $setupMethod->addBody("
 parent::setUp();
 \$this->transformer = new $this->fileName();
