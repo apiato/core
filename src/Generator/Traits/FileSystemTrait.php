@@ -8,15 +8,35 @@ trait FileSystemTrait
     {
         $fullFilePath = $this->getFullFilePath($path);
         $fileName = basename($fullFilePath);
-        if ($this->fileAlreadyExists($fullFilePath)) {
-            $this->outputError("$fileName already exists");
-        } else {
-            $created = $this->fileSystem->put($fullFilePath, $content);
 
-            if ($created) {
-                $this->outputInfo("$fileName generated successfully.");
+        if ($this->overrideExistingFile) {
+            // If the file already exists, replace it
+            if ($this->fileAlreadyExists($fullFilePath)) {
+                $this->fileSystem->replace($fullFilePath, $content);
+                $this->outputInfo("$fileName modified successfully.");
             } else {
-                $this->outputError("$fileName could not be created");
+                // If the file does not exist, create it
+                $created = $this->fileSystem->put($fullFilePath, $content);
+
+                if ($created) {
+                    $this->outputInfo("$fileName generated successfully.");
+                } else {
+                    $this->outputError("$fileName could not be created");
+                }
+            }
+        }else{
+            // If the file exists, show an error
+            if ($this->fileAlreadyExists($fullFilePath)) {
+                $this->outputError("$fileName already exists");
+            } else {
+                // If the file does not exist, create it
+                $created = $this->fileSystem->put($fullFilePath, $content);
+
+                if ($created) {
+                    $this->outputInfo("$fileName generated successfully.");
+                } else {
+                    $this->outputError("$fileName could not be created");
+                }
             }
         }
     }
@@ -39,7 +59,7 @@ trait FileSystemTrait
         }
     }
 
-    private function getFullFilePath($path): string
+    protected function getFullFilePath($path): string
     {
         // Complete the missing parts of the path
         $path = base_path() . '/' .
@@ -52,7 +72,7 @@ trait FileSystemTrait
         return $path;
     }
 
-    private function fileAlreadyExists($path): bool
+    protected function fileAlreadyExists($path): bool
     {
         return $this->fileSystem->exists($path);
     }
