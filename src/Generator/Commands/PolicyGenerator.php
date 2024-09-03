@@ -89,10 +89,10 @@ class PolicyGenerator extends FileGeneratorCommand
         if (!$class->hasMethod($this->method)) {
             $method = $class->addMethod($this->method)
                 ->setPublic()
-                ->setBody("
+                ->setBody('
 // add your policy logic here
 return true;
-")
+')
                 ->setReturnType('bool');
             $method->addParameter('user')->setType($userModelFullPath);
         }
@@ -134,7 +134,6 @@ return true;
                 ->setFinal()
                 ->setExtends($parentUnitTestCaseFullPath);
         }
-
 
         // test method
         $testMethodName = 'testCan' . ucfirst($this->method);

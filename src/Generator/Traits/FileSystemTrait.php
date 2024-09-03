@@ -24,7 +24,7 @@ trait FileSystemTrait
                     $this->outputError("$fileName could not be created");
                 }
             }
-        }else{
+        } else {
             // If the file exists, show an error
             if ($this->fileAlreadyExists($fullFilePath)) {
                 $this->outputError("$fileName already exists");
