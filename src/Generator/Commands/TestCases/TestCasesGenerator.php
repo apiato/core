@@ -47,6 +47,11 @@ class TestCasesGenerator extends CompositeGeneratorCommand
             '--container' => $this->containerName,
         ]);
 
+        $this->runGeneratorCommand(WebTestCaseGenerator::class, [
+            '--section' => $this->sectionName,
+            '--container' => $this->containerName,
+        ]);
+
         $this->runGeneratorCommand(CliTestCaseGenerator::class, [
             '--section' => $this->sectionName,
             '--container' => $this->containerName,
