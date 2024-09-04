@@ -82,7 +82,7 @@ class PolicyGenerator extends FileGeneratorCommand
         }
 
         // imports
-        $userModelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\User';
+        $userModelFullPath = 'App\Containers\AppSection\User\Models\User';
         $namespace->addUse($userModelFullPath);
 
         // method
