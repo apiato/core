@@ -17,7 +17,7 @@ class RouteGenerator extends FileGeneratorCommand
 
     protected string $docVersion;
 
-    protected  string $url;
+    protected string $url;
 
     protected string $method;
 
@@ -53,32 +53,32 @@ class RouteGenerator extends FileGeneratorCommand
     protected function askCustomInputs(): void
     {
         $this->ui = $this->checkParameterOrSelect(
-          param:  'ui',
-           label: 'Select the UI of the route:',
-         options:   ['API', 'WEB'],
-            default: 'API'
+            param: 'ui',
+            label: 'Select the UI of the route:',
+            options: ['API', 'WEB'],
+            default: 'API',
         );
         $this->visibility = $this->checkParameterOrSelect(
             param: 'visibility',
-             label: 'Select the visibility of the route:',
-           options: ['private', 'public'],
-              default: 'private'
+            label: 'Select the visibility of the route:',
+            options: ['private', 'public'],
+            default: 'private',
         );
         $this->docVersion = $this->checkParameterOrAskText(
-       param:     'docversion',
-            label:'Enter the version of the route:',
-            default:'1'
+            param: 'docversion',
+            label: 'Enter the version of the route:',
+            default: '1',
         );
         $this->url = $this->checkParameterOrAskText(
-         param:   'url',
-            label:'Enter the URL of the route:',
-           default: '/' . Str::plural(Str::lower($this->containerName))
+            param: 'url',
+            label: 'Enter the URL of the route:',
+            default: '/' . Str::plural(Str::lower($this->containerName)),
         );
         $this->method = $this->checkParameterOrSelect(
-           param:  'method',
-            label:  'Select the method of the route:',
-          options:  ['GET', 'POST', 'PUT', 'DELETE'],
-             default:  'GET'
+            param: 'method',
+            label: 'Select the method of the route:',
+            options: ['GET', 'POST', 'PUT', 'DELETE'],
+            default: 'GET',
         );
         $this->controller = $this->checkParameterOrAskTextSuggested(
             'controller',
@@ -98,6 +98,7 @@ class RouteGenerator extends FileGeneratorCommand
     protected function getFileContent(): string
     {
         $routeTitle = Str::headline($this->fileName);
+
         return "
 <?php
 
@@ -145,7 +146,7 @@ Route::$this->method('$this->url', $this->controller::class)
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . "\Tests\Functional\\$this->ui");
 
         // imports
-        $parentTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\Functional\\" . Str::ucfirst(Str::lower($this->ui)) ."TestCase";
+        $parentTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\Functional\\" . Str::ucfirst(Str::lower($this->ui)) . 'TestCase';
         $namespace->addUse($parentTestCaseFullPath);
         $userModelFullPath = 'App\Containers\AppSection\User\Models\User';
         $namespace->addUse($userModelFullPath);
@@ -170,23 +171,23 @@ Route::$this->method('$this->url', $this->controller::class)
         $testMethod1->setReturnType('void');
 
         $testMethod2 = $class->addMethod('testEndpointWhileUnauthenticated')->setPublic();
-        $testMethod2->addBody("
-\$this->testingUser = User::factory()->create();
+        $testMethod2->addBody('
+$this->testingUser = User::factory()->create();
 
-\$response = \$this->auth(false)->makeCall();
+$response = $this->auth(false)->makeCall();
 
-\$response->assertUnauthorized();
-");
+$response->assertUnauthorized();
+');
         $testMethod2->setReturnType('void');
 
         $testMethod3 = $class->addMethod('testEndpointWhileUnverified')->setPublic();
-        $testMethod3->addBody("
-\$this->testingUser = User::factory()->unverified()->create();
+        $testMethod3->addBody('
+$this->testingUser = User::factory()->unverified()->create();
 
-\$response = \$this->makeCall();
+$response = $this->makeCall();
 
-\$response->assertForbidden();
-");
+$response->assertForbidden();
+');
         $testMethod3->setReturnType('void');
 
         // return the file
