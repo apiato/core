@@ -67,4 +67,35 @@ trait SuggestionHelperTrait
 
         return $models;
     }
+
+    public function getControllersList(
+        string $section,
+        string $container,
+        bool $removeControllerPostFix = false,
+        bool $removePhpPostFix = true,
+        bool $unCamelizeAndReplaceWithSpace = false,
+    ): array {
+        $controllersDirectory = base_path('app/Containers/' . $section . '/' . $container . '/UI/API/Controllers');
+        $files = File::allFiles($controllersDirectory);
+
+        $controllers = [];
+
+        foreach ($files as $controller) {
+            $fileName = $originalFileName = $controller->getFilename();
+
+            if ($removeControllerPostFix) {
+                $fileName = str_replace(['Controller.php'], '', $fileName);
+            }
+            if ($removePhpPostFix) {
+                $fileName = str_replace(['.php'], '', $fileName);
+            }
+            if ($unCamelizeAndReplaceWithSpace) {
+                $fileName = uncamelize($fileName);
+            }
+
+            $controllers[] = $fileName;
+        }
+
+        return $controllers;
+    }
 }
