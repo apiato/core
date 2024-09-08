@@ -51,7 +51,6 @@ class NotificationGenerator extends FileGeneratorCommand
         $userModelFullPath = 'App\Containers\AppSection\User\Models\User';
         $namespace->addUse($userModelFullPath);
 
-
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName)
