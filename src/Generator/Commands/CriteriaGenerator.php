@@ -59,7 +59,7 @@ class CriteriaGenerator extends FileGeneratorCommand
         $applyMethod = $class->addMethod('apply')
             ->setPublic()
             ->setReturnType('mixed')
-            ->setBody("return \$model;");
+            ->setBody('return $model;');
         $applyMethod->addParameter('model');
         $applyMethod->addParameter('repository')->setType($repositoryInterface);
 
@@ -88,7 +88,6 @@ class CriteriaGenerator extends FileGeneratorCommand
             ->addClass($this->fileName . 'Test')
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
-
 
         $testMethod = $class->addMethod('testCriteria')->setPublic();
         $testMethod->addBody("
