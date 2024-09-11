@@ -6,6 +6,7 @@ use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\TestCaseTrait;
 use Apiato\Core\Traits\TestTraits\PhpUnit\TestAssertionHelperTrait;
 use Apiato\Core\Traits\TestTraits\PhpUnit\TestAuthHelperTrait;
+use Apiato\Core\Traits\TestTraits\PhpUnit\TestDatabaseProfilerTrait;
 use Apiato\Core\Traits\TestTraits\PhpUnit\TestRequestHelperTrait;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -20,6 +21,7 @@ abstract class TestCase extends LaravelTestCase
     use TestAssertionHelperTrait;
     use HashIdTrait;
     use LazilyRefreshDatabase;
+    use TestDatabaseProfilerTrait;
 
     /**
      * The base URL to use while testing the application.
