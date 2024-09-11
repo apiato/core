@@ -91,7 +91,7 @@ class RequestGenerator extends FileGeneratorCommand
 
         // imports
         $parentRequestFullPath = 'App\Ship\Parents\Requests\Request';
-        $namespace->addUse($parentRequestFullPath, 'ParentAction');
+        $namespace->addUse($parentRequestFullPath, 'ParentRequest');
         $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->model;
         $namespace->addUse($modelFullPath);
         $gateFullPath = 'Illuminate\Contracts\Auth\Access\Gate';
