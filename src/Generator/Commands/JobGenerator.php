@@ -51,11 +51,11 @@ class JobGenerator extends FileGeneratorCommand
             ->setExtends($parentJobFullPath);
 
         // constructor method
-        $viaMethod = $class->addMethod('__construct')
+        $constructorMethod = $class->addMethod('__construct')
             ->setPublic();
 
         // handle method
-        $viaMethod = $class->addMethod('handle')
+        $handleMethod = $class->addMethod('handle')
             ->setPublic()
             ->setReturnType('void');
 
