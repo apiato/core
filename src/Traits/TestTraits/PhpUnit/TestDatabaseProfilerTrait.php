@@ -50,7 +50,7 @@ trait TestDatabaseProfilerTrait
      * Assert the number of database queries.
      * @param int $expectedCount
      */
-    protected function assertDatabaseQueriesCount(int $expectedCount): void
+    protected function assertDatabaseQueryCount(int $expectedCount): void
     {
         $actualCount = count($this->getDatabaseQueries());
         $this->assertEquals($expectedCount, $actualCount, "Expected $expectedCount database queries, but got $actualCount.");
@@ -76,7 +76,7 @@ trait TestDatabaseProfilerTrait
      * @param callable $callback
      * @return mixed
      */
-    protected function profileDatabaseQueriesCount(int $expectedCount, callable $callback): mixed
+    protected function profileDatabaseQueryCount(int $expectedCount, callable $callback): mixed
     {
         return $this->profileDatabaseQueries(function () use ($expectedCount, $callback) {
             $result = $callback();
