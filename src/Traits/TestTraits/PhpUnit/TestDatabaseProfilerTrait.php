@@ -45,4 +45,14 @@ trait TestDatabaseProfilerTrait
 
         return $result;
     }
+
+    protected function profileDatabaseQueriesCount(int $expectedCount, callable $callback): mixed
+    {
+        return $this->profileDatabaseQueries(function () use ($expectedCount, $callback) {
+            $result = $callback();
+            $this->assertDatabaseQueriesCount($expectedCount);
+
+            return $result;
+        });
+    }
 }
