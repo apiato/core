@@ -48,7 +48,6 @@ trait TestDatabaseProfilerTrait
 
     /**
      * Assert the number of database queries.
-     * @param int $expectedCount
      */
     protected function assertDatabaseQueryCount(int $expectedCount): void
     {
@@ -58,8 +57,6 @@ trait TestDatabaseProfilerTrait
 
     /**
      * Wrapper to profile database queries.
-     * @param callable $callback
-     * @return mixed
      */
     protected function profileDatabaseQueries(callable $callback): mixed
     {
@@ -72,9 +69,6 @@ trait TestDatabaseProfilerTrait
 
     /**
      * Wrapper to profile database queries and assert the number of queries.
-     * @param int $expectedCount
-     * @param callable $callback
-     * @return mixed
      */
     protected function profileDatabaseQueryCount(int $expectedCount, callable $callback): mixed
     {
