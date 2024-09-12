@@ -41,7 +41,7 @@ trait TestDatabaseProfilerTrait
     /**
      * Dump and die the database queries.
      */
-    protected function ddDatabaseQueries(): void
+    protected function ddDatabaseQueries(): never
     {
         dd($this->getDatabaseQueries());
     }
