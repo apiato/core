@@ -36,4 +36,13 @@ trait TestDatabaseProfilerTrait
         $actualCount = count($this->getDatabaseQueries());
         $this->assertEquals($expectedCount, $actualCount, "Expected $expectedCount database queries, but got $actualCount.");
     }
+
+    protected function profileDatabaseQueries(callable $callback): mixed
+    {
+        $this->startDatabaseProfiler();
+        $result = $callback();
+        $this->stopDatabaseProfiler();
+
+        return $result;
+    }
 }
