@@ -56,6 +56,24 @@ trait TestDatabaseProfilerTrait
     }
 
     /**
+     * Assert that the database queries contain the expected query.
+     */
+    protected function assertDatabaseQueriesContains(string $expectedQuery): void
+    {
+        $queries = $this->getDatabaseQueries();
+
+        $found = false;
+        foreach ($queries as $query) {
+            if (str_contains($query['query'], $expectedQuery)) {
+                $found = true;
+                break;
+            }
+        }
+
+        $this->assertTrue($found, "Expected query '$expectedQuery' not found in database queries.");
+    }
+
+    /**
      * Wrapper to profile database queries.
      */
     protected function profileDatabaseQueries(callable $callback): mixed
