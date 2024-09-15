@@ -89,7 +89,7 @@ abstract class GeneratorCommand extends Command
 
     protected function setOptions(): void
     {
-        $optionsFromConfig = Config::get('apiato.generator-commands.options', []);
+        $optionsFromConfig = $this->readYamlConfig(filePath: base_path() . '/code-generator-options.yaml',default: []);
 
         foreach ($optionsFromConfig as $key => $value) {
             //  Do not override the option if it was already set via command line
