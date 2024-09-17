@@ -10,7 +10,7 @@ class WebTestCaseGenerator extends FileGeneratorCommand
 
     public static function getCommandName(): string
     {
-        return 'apiato:generate:testcase:functional:web';
+        return 'apiato:make:testcase:functional:web';
     }
 
     public static function getCommandDescription(): string

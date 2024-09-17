@@ -10,7 +10,7 @@ class FunctionalTestCaseGenerator extends FileGeneratorCommand
 
     public static function getCommandName(): string
     {
-        return 'apiato:generate:testcase:functional';
+        return 'apiato:make:testcase:functional';
     }
 
     public static function getCommandDescription(): string

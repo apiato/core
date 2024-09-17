@@ -10,7 +10,7 @@ class UnitTestCaseGenerator extends FileGeneratorCommand
 
     public static function getCommandName(): string
     {
-        return 'apiato:generate:testcase:unit';
+        return 'apiato:make:testcase:unit';
     }
 
     public static function getCommandDescription(): string

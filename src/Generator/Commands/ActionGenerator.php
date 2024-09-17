@@ -19,7 +19,7 @@ class ActionGenerator extends FileGeneratorCommand
 
     public static function getCommandName(): string
     {
-        return 'apiato:generate:action';
+        return 'apiato:make:action';
     }
 
     public static function getCommandDescription(): string

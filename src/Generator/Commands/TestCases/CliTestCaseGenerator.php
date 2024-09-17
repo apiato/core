@@ -10,7 +10,7 @@ class CliTestCaseGenerator extends FileGeneratorCommand
 
     public static function getCommandName(): string
     {
-        return 'apiato:generate:testcase:functional:cli';
+        return 'apiato:make:testcase:functional:cli';
     }
 
     public static function getCommandDescription(): string

@@ -16,7 +16,7 @@ class ControllerGenerator extends FileGeneratorCommand
 
     public static function getCommandName(): string
     {
-        return 'apiato:generate:controller';
+        return 'apiato:make:controller';
     }
 
     public static function getCommandDescription(): string

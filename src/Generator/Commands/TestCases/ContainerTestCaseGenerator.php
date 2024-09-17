@@ -10,7 +10,7 @@ class ContainerTestCaseGenerator extends FileGeneratorCommand
 
     public static function getCommandName(): string
     {
-        return 'apiato:generate:testcase:container';
+        return 'apiato:make:testcase:container';
     }
 
     public static function getCommandDescription(): string

@@ -8,7 +8,7 @@ class TestCasesGenerator extends CompositeGeneratorCommand
 {
     public static function getCommandName(): string
     {
-        return 'apiato:generate:testcase';
+        return 'apiato:make:testcase';
     }
 
     public static function getCommandDescription(): string
