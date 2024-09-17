@@ -69,9 +69,12 @@ class Response extends SpatieFractal
     private function getRequestedFieldsets(): array
     {
         $fieldSets = [];
-        if ($filters = Request::get(Config::get('apiato.requests.params.filter', 'fieldset'))) {
-            foreach ($filters as $filter) {
-                [$resourceName, $fields] = explode(':', $filter);
+        // TODO: BREAKING CHANGE: rename the default to fieldset
+        if ($requestFieldSets = Request::get(Config::get('apiato.requests.params.filter', 'filter'))) {
+            foreach ($requestFieldSets as $fieldSet) {
+                [$resourceName, $fields] = explode(':', $fieldSet);
+                // TODO: Maybe just split by comma and remove the explode?
+                //  Decide between the two ';', & ',' and stick with one
                 $field = explode(';', $fields);
                 $fieldSets[$resourceName] = $field;
             }

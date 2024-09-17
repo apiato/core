@@ -1,6 +1,10 @@
 name: PHPMD
 
 on:
+  push:
+    branches:
+      - master
+      - '*.x'
   pull_request:
     types: [ opened, synchronize, reopened ]
 
