@@ -47,6 +47,7 @@ class ControllerGenerator extends FileGeneratorCommand
             param: 'stub',
             label: 'Select the controller type:',
             options: [
+                // add generic
                 'list' => 'List',
                 'find' => 'Find',
                 'create' => 'Create',
