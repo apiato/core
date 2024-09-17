@@ -6,7 +6,8 @@ use Apiato\Core\Services\Response;
 use League\Fractal\Serializer\SerializerAbstract;
 use League\Fractal\TransformerAbstract;
 
-class CreateFrom {
+class CreateFrom
+{
     public function __invoke(): callable
     {
         return

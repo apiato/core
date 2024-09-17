@@ -2,8 +2,8 @@
 
 namespace Apiato\Core\Generator\Traits;
 
-use Closure;
 use Laravel\Prompts\Progress;
+
 use function Laravel\Prompts\alert;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
@@ -45,12 +45,12 @@ trait ConsoleOutputTrait
         table($headers, $rows);
     }
 
-    public function outputSpin(Closure $callback, string $message = ''): void
+    public function outputSpin(\Closure $callback, string $message = ''): void
     {
         spin($callback, $message);
     }
 
-    public function outputProgress(string $label, iterable|int $steps, ?Closure $callback = null, string $hint = ''): array|Progress
+    public function outputProgress(string $label, iterable|int $steps, \Closure|null $callback = null, string $hint = ''): array|Progress
     {
         return progress(
             label: $label,
