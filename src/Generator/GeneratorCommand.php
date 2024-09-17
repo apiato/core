@@ -111,7 +111,7 @@ abstract class GeneratorCommand extends Command
             param: 'test',
             label: 'Do you want to create a test?',
             default: true,
-            hint: 'This will create a test file for the action.',
+            hint: 'This will create a test file for the ' . $this->getFileType(),
             required: false,
         );
     }
