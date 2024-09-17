@@ -36,4 +36,66 @@ trait SuggestionHelperTrait
 
         return $actions;
     }
+
+    public function getModelsList(
+        string $section,
+        string $container,
+        bool $removeModelPostFix = false,
+        bool $removePhpPostFix = true,
+        bool $unCamelizeAndReplaceWithSpace = false,
+    ): array {
+        $modelsDirectory = base_path('app/Containers/' . $section . '/' . $container . '/Models');
+        $files = File::allFiles($modelsDirectory);
+
+        $models = [];
+
+        foreach ($files as $model) {
+            $fileName = $originalFileName = $model->getFilename();
+
+            if ($removeModelPostFix) {
+                $fileName = str_replace(['.php'], '', $fileName);
+            }
+            if ($removePhpPostFix) {
+                $fileName = str_replace(['.php'], '', $fileName);
+            }
+            if ($unCamelizeAndReplaceWithSpace) {
+                $fileName = uncamelize($fileName);
+            }
+
+            $models[] = $fileName;
+        }
+
+        return $models;
+    }
+
+    public function getControllersList(
+        string $section,
+        string $container,
+        bool $removeControllerPostFix = false,
+        bool $removePhpPostFix = true,
+        bool $unCamelizeAndReplaceWithSpace = false,
+    ): array {
+        $controllersDirectory = base_path('app/Containers/' . $section . '/' . $container . '/UI/API/Controllers');
+        $files = File::allFiles($controllersDirectory);
+
+        $controllers = [];
+
+        foreach ($files as $controller) {
+            $fileName = $originalFileName = $controller->getFilename();
+
+            if ($removeControllerPostFix) {
+                $fileName = str_replace(['Controller.php'], '', $fileName);
+            }
+            if ($removePhpPostFix) {
+                $fileName = str_replace(['.php'], '', $fileName);
+            }
+            if ($unCamelizeAndReplaceWithSpace) {
+                $fileName = uncamelize($fileName);
+            }
+
+            $controllers[] = $fileName;
+        }
+
+        return $controllers;
+    }
 }
