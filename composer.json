@@ -38,7 +38,8 @@
         "laravel/framework": "^10.0",
         "laravel/passport": "^11.0.0",
         "nette/php-generator": "^4.1",
-        "ext-gettext": "*"
+        "ext-gettext": "*",
+        "nikic/php-parser": "^4.19"
     },
     "require-dev": {
         "fakerphp/faker": "^1.19.1",

@@ -19,6 +19,8 @@ abstract class FileGeneratorCommand extends GeneratorCommand
 
     protected string|null $fileName = null;
 
+    protected bool $overrideExistingFile = false;
+
     protected bool $allowSpecialCharactersInFileName = true;
 
     public function __construct(
