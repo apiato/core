@@ -84,12 +84,12 @@ trait FileSystemTrait
         return $this->fileSystem->exists($path);
     }
 
-    protected function readYamlConfig(string $filePath, ?array $default = null): array
+    protected function readYamlConfig(string $filePath, array|null $default = null): array
     {
         if (!file_exists($filePath)) {
-            if (is_null($default)){
+            if (is_null($default)) {
                 throw new \RuntimeException("Configuration file not found: $filePath");
-            }else{
+            } else {
                 return $default;
             }
         }

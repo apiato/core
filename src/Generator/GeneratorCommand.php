@@ -12,7 +12,6 @@ use Apiato\Core\Generator\Traits\ParserTrait;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 abstract class GeneratorCommand extends Command
@@ -88,11 +87,11 @@ abstract class GeneratorCommand extends Command
 
     protected function setOptions(): void
     {
-        $optionsFromConfig = $this->readYamlConfig(filePath: base_path() . '/code-generator-options.yaml',default: []);
+        $optionsFromConfig = $this->readYamlConfig(filePath: base_path() . '/code-generator-options.yaml', default: []);
 
         foreach ($optionsFromConfig as $key => $value) {
             //  Do not override the option if it was already set via command line
-            if ($this->hasOption($key) && $this->option($key) === null) {
+            if ($this->hasOption($key) && null === $this->option($key)) {
                 $this->input->setOption($key, $value);
             }
         }
