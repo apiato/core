@@ -5,6 +5,11 @@ namespace Apiato\Core\Generator\Commands;
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\Method;
+use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PhpNamespace;
+use Nette\PhpGenerator\PsrPrinter;
 use Symfony\Component\Console\Input\InputOption;
 
 class ActionGenerator extends FileGeneratorCommand
@@ -81,33 +86,37 @@ class ActionGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
-        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions');
         $isCRUD = in_array($this->stub, ['list', 'find', 'create', 'update', 'delete']);
 
-        // imports
+        $file = new PhpFile();
+        $namespace = $this->addNamespace($file);
+        $class = $this->addClass($file, $namespace);
+        $this->addConstructor($namespace, $class, $isCRUD);
+        $this->addRunMethod($namespace, $class, $isCRUD);
+
+        return (new PsrPrinter())->printFile($file);
+    }
+
+    protected function addNamespace(PhpFile $file): PhpNamespace
+    {
+        return $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions');
+    }
+
+    protected function addClass(PhpFile $file, PhpNamespace $namespace): ClassType
+    {
         $parentActionFullPath = 'App\Ship\Parents\Actions\Action';
         $namespace->addUse($parentActionFullPath, 'ParentAction');
-        if ($isCRUD) {
-            if (in_array($this->stub, ['create', 'update', 'find'])) {
-                $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->model;
-                $namespace->addUse($modelFullPath);
-            } elseif ('list' === $this->stub) {
-                $lengthAwarePaginatorFullPath = '\Illuminate\Contracts\Pagination\LengthAwarePaginator';
-                $namespace->addUse($lengthAwarePaginatorFullPath);
-            }
-            $taskFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tasks\\' . Str::ucfirst($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Task';
-            $namespace->addUse($taskFullPath);
-            $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\' . $this->ui . '\Requests\\' . Str::ucfirst($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Request';
-            $namespace->addUse($requestFullPath);
-        }
 
-        // class
-        $class = $file->addNamespace($namespace)
+        return $file->addNamespace($namespace)
             ->addClass($this->fileName)
             ->setExtends($parentActionFullPath);
+    }
 
-        // constructor
+    protected function addConstructor(PhpNamespace $namespace, ClassType $class, bool $isCRUD): Method
+    {
+        $taskFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tasks\\' . Str::ucfirst($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Task';
+        $namespace->addUse($taskFullPath);
+
         $constructor = $class->addMethod('__construct');
         if ($isCRUD) {
             $constructor->addPromotedParameter(Str::lower($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Task')
@@ -115,10 +124,18 @@ class ActionGenerator extends FileGeneratorCommand
                 ->setReadOnly()
                 ->setType($taskFullPath);
         }
+        return $constructor;
+    }
 
-        // run method
+    protected function addRunMethod(PhpNamespace $namespace, ClassType $class, bool $isCRUD): Method
+    {
         $runMethod = $class->addMethod('run')->setPublic();
         if ($isCRUD) {
+            $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\' . $this->ui . '\Requests\\' . Str::ucfirst($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Request';
+            $namespace->addUse($requestFullPath);
+            $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->model;
+            $namespace->addUse($modelFullPath);
+
             $runMethod->addPromotedParameter('request')
                 ->setPrivate()
                 ->setType($requestFullPath);
@@ -143,26 +160,21 @@ $data = $request->sanitizeInput([
                 $runMethod->addBody("return \$this->?{$this->model}Task->run(\$data, \$request->id);", [Str::lower($this->stub)]);
             } elseif ('delete' === $this->stub) {
                 $runMethod->setReturnType('int');
-
                 $runMethod->addBody("return \$this->?{$this->model}Task->run(\$request->id);", [Str::lower($this->stub)]);
             } elseif ('find' === $this->stub) {
                 $runMethod->setReturnType($modelFullPath);
-
                 $runMethod->addBody("return \$this->?{$this->model}Task->run(\$request->id);", [Str::lower($this->stub)]);
             } elseif ('list' === $this->stub) {
-                $runMethod->setReturnType($lengthAwarePaginatorFullPath);
+                $lengthAwarePaginatorFullPath = '\Illuminate\Contracts\Pagination\LengthAwarePaginator';
+                $namespace->addUse($lengthAwarePaginatorFullPath);
 
+                $runMethod->setReturnType($lengthAwarePaginatorFullPath);
                 $runMethod->addBody('return $this->?Task->run();', [Str::lower($this->stub) . Str::plural($this->model)]);
             }
         } else {
             $runMethod->setReturnType('void');
         }
-
-        // return the file
-        return $file;
-
-        // or use the PsrPrinter for output in accordance with PSR-2 / PSR-12 / PER
-        // echo (new Nette\PhpGenerator\PsrPrinter)->printFile($file);
+        return $runMethod;
     }
 
     protected function getTestPath(): string
@@ -172,7 +184,7 @@ $data = $request->sanitizeInput([
 
     protected function getTestContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Actions');
 
         // imports
