@@ -3,6 +3,7 @@
 namespace Apiato\Core\Generator\Traits;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Symfony\Component\Yaml\Yaml;
 
 trait FileSystemTrait
 {
@@ -81,5 +82,18 @@ trait FileSystemTrait
     protected function fileAlreadyExists($path): bool
     {
         return $this->fileSystem->exists($path);
+    }
+
+    protected function readYamlConfig(string $filePath, array|null $default = null): array
+    {
+        if (!file_exists($filePath)) {
+            if (is_null($default)) {
+                throw new \RuntimeException("Configuration file not found: $filePath");
+            } else {
+                return $default;
+            }
+        }
+
+        return Yaml::parseFile($filePath);
     }
 }
