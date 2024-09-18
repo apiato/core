@@ -124,6 +124,7 @@ class ActionGenerator extends FileGeneratorCommand
                 ->setReadOnly()
                 ->setType($taskFullPath);
         }
+
         return $constructor;
     }
 
@@ -174,6 +175,7 @@ $data = $request->sanitizeInput([
         } else {
             $runMethod->setReturnType('void');
         }
+
         return $runMethod;
     }
 
