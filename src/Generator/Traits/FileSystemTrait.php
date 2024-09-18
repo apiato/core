@@ -2,28 +2,41 @@
 
 namespace Apiato\Core\Generator\Traits;
 
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Symfony\Component\Yaml\Yaml;
-
 trait FileSystemTrait
 {
-    /**
-     * @throws FileNotFoundException
-     */
-    public function generateFile(): void
+    public function generateFile(string $path, string $content): void
     {
-        $fullFilePath = $this->getFullFilePath($this->getFilePath());
-        if ($this->fileAlreadyExists($fullFilePath)) {
-            $this->outputError($this->getFileTypeCapitalized() . ' already exists');
-        } else {
-            $renderedStubContent = $this->parseStubContent($this->getStubFileContent(), $this->getStubParameters());
+        $fullFilePath = $this->getFullFilePath($path);
+        $fileName = basename($fullFilePath);
 
-            $created = $this->fileSystem->put($fullFilePath, $renderedStubContent);
-
-            if ($created) {
-                $this->outputInfo($this->getFileTypeCapitalized() . ' generated successfully.');
+        if ($this->overrideExistingFile) {
+            // If the file already exists, replace it
+            if ($this->fileAlreadyExists($fullFilePath)) {
+                $this->fileSystem->replace($fullFilePath, $content);
+                $this->outputInfo("$fileName modified successfully.");
             } else {
-                $this->outputError($this->getFileTypeCapitalized() . ' could not be created');
+                // If the file does not exist, create it
+                $created = $this->fileSystem->put($fullFilePath, $content);
+
+                if ($created) {
+                    $this->outputInfo("$fileName generated successfully.");
+                } else {
+                    $this->outputError("$fileName could not be created");
+                }
+            }
+        } else {
+            // If the file exists, show an error
+            if ($this->fileAlreadyExists($fullFilePath)) {
+                $this->outputError("$fileName already exists");
+            } else {
+                // If the file does not exist, create it
+                $created = $this->fileSystem->put($fullFilePath, $content);
+
+                if ($created) {
+                    $this->outputInfo("$fileName generated successfully.");
+                } else {
+                    $this->outputError("$fileName could not be created");
+                }
             }
         }
     }
@@ -31,7 +44,7 @@ trait FileSystemTrait
     /**
      * If path is for a directory, create it otherwise do nothing.
      */
-    public function createDirectory($path): void
+    private function createDirectory($path): void
     {
         if ($this->fileAlreadyExists($path)) {
             return;
@@ -59,41 +72,8 @@ trait FileSystemTrait
         return $path;
     }
 
-    /**
-     * @throws FileNotFoundException
-     */
-    protected function getStubFileContent(): string
-    {
-        // Check if there is a custom stub file in Ship that overrides the default stub on Core
-        $path = app_path() . '/Ship/' . self::CUSTOM_STUB_PATH;
-        $file = str_replace('*', $this->getStubFileName(), $path);
-
-        // Check if the custom file exists
-        if (!$this->fileSystem->exists($file)) {
-            // It does not exist - so take the default file!
-            $path = __DIR__ . '/../' . self::STUB_PATH;
-            $file = str_replace('*', $this->getStubFileName(), $path);
-        }
-
-        // Now load the stub
-        return $this->fileSystem->get($file);
-    }
-
     protected function fileAlreadyExists($path): bool
     {
         return $this->fileSystem->exists($path);
-    }
-
-    protected function readYamlConfig(string $filePath, array|null $default = null): array
-    {
-        if (!file_exists($filePath)) {
-            if (is_null($default)) {
-                throw new \RuntimeException("Configuration file not found: $filePath");
-            } else {
-                return $default;
-            }
-        }
-
-        return Yaml::parseFile($filePath);
     }
 }

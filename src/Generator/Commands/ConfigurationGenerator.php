@@ -2,72 +2,102 @@
 
 namespace Apiato\Core\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Core\Generator\FileGeneratorCommand;
+use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\PhpFile;
 
-class ConfigurationGenerator extends GeneratorCommand implements ComponentsGenerator
+class ConfigurationGenerator extends FileGeneratorCommand
 {
-    /**
-     * User required/optional inputs expected to be passed while calling the command.
-     * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     */
-    public array $inputs = [
-    ];
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:configuration';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a Configuration file for a Container';
-    /**
-     * The type of class being generated.
-     */
-    protected string $fileType = 'Configuration';
-    /**
-     * The structure of the file path.
-     */
-    protected string $pathStructure = '{section-name}/{container-name}/Configs/*';
-    /**
-     * The structure of the file name.
-     */
-    protected string $nameStructure = '{file-name}';
-    /**
-     * The name of the stub file.
-     */
-    protected string $stubName = 'config.stub';
+    use HasTestTrait;
 
-    public function getUserInputs(): array|null
+    protected string $table;
+
+    public static function getCommandName(): string
+    {
+        return 'apiato:make:config';
+    }
+
+    public static function getCommandDescription(): string
+    {
+        return 'Create a Configuration file for a Container';
+    }
+
+    public static function getFileType(): string
+    {
+        return 'config';
+    }
+
+    protected static function getCustomCommandArguments(): array
     {
         return [
-            'path-parameters' => [
-                'section-name' => $this->sectionName,
-                'container-name' => $this->containerName,
-            ],
-            'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
-                '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-            ],
-            'file-parameters' => [
-                'file-name' => $this->fileName,
-            ],
         ];
     }
 
-    /**
-     * Get the default file name for this component to be generated.
-     */
     public function getDefaultFileName(): string
     {
-        return Str::camel($this->sectionName) . '-' . Str::camel($this->containerName);
+        return Str::camel($this->sectionName) . '-' . Str::lower($this->containerName);
+    }
+
+    protected function askCustomInputs(): void
+    {
+    }
+
+    protected function getFilePath(): string
+    {
+        return "$this->sectionName/$this->containerName/Configs/$this->fileName.php";
+    }
+
+    protected function getFileContent(): string
+    {
+        return "
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | $this->sectionName Section $this->containerName Container
+    |--------------------------------------------------------------------------
+    |
+    |
+    |
+    */
+
+];
+";
+    }
+
+    protected function getTestPath(): string
+    {
+        return $this->sectionName . '/' . $this->containerName . '/Tests/Unit/Configs/' . $this->containerName . 'ConfigTest.php';
+    }
+
+    protected function getTestContent(): string
+    {
+        $file = new PhpFile();
+        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Configs');
+
+        // imports
+        $parentUnitTestCaseFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Tests\UnitTestCase";
+        $namespace->addUse($parentUnitTestCaseFullPath);
+
+        // class
+        $class = $file->addNamespace($namespace)
+            ->addClass($this->containerName . 'ConfigTest')
+            ->setFinal()
+            ->setExtends($parentUnitTestCaseFullPath);
+
+        // test method
+        $testMethod = $class->addMethod('testConfigHasCorrectValues')->setPublic();
+        $testMethod->addBody("
+\$config = config('$this->fileName');
+\$this->assertIsArray(\$config);
+// \$this->assertArrayHasKey('some_key', \$config);
+");
+
+        $testMethod->setReturnType('void');
+
+        return $file;
     }
 }
