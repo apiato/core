@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Generator;
 
-use Apiato\Core\Foundation\Facades\Apiato;
+use Apiato\Core\Foundation\Apiato;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Finder\SplFileInfo;
@@ -40,7 +40,7 @@ class GeneratorsServiceProvider extends ServiceProvider
             foreach ($files as $consoleFile) {
                 // Do not load route files
                 if (!$this->isRouteFile($consoleFile)) {
-                    $consoleClass = Apiato::getClassFullNameFromFile($consoleFile->getPathname());
+                    $consoleClass = app(Apiato::class)->getClassFullNameFromFile($consoleFile->getPathname());
                     $this->commands([$consoleClass]);
                 }
             }
