@@ -18,6 +18,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
     public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
+        ['model', null, InputOption::VALUE_OPTIONAL, 'The model you want to use for this controller.'],
     ];
     /**
      * The console command name.
@@ -50,6 +51,10 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
     public function getUserInputs(): array|null
     {
+        // Name of the model (singular and plural)
+        $model = $this->checkParameterOrAsk('model', 'Model for the controller.', $this->containerName);
+        $models = Pluralizer::plural($model);
+
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
 
         $stub = Str::lower(
@@ -65,10 +70,6 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
         $this->stubName = 'controllers/' . $ui . '/' . $stub . '.stub';
 
         $basecontroller = Str::ucfirst($ui) . 'Controller';
-
-        // Name of the model (singular and plural)
-        $model = $this->containerName;
-        $models = Pluralizer::plural($model);
 
         $entity = Str::lower($model);
         $entities = Pluralizer::plural($entity);
