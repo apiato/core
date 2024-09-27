@@ -7,7 +7,7 @@ trait TestDatabaseProfilerTrait
     /**
      * Start profiling database queries.
      */
-    protected function startDatabaseProfiler(): void
+    protected function startDatabaseQueryLog(): void
     {
         $this->app->make('db')->enableQueryLog();
     }
@@ -15,7 +15,7 @@ trait TestDatabaseProfilerTrait
     /**
      * Stop profiling database queries.
      */
-    protected function stopDatabaseProfiler(): void
+    protected function stopDatabaseQueryLog(): void
     {
         $this->app->make('db')->disableQueryLog();
     }
@@ -58,7 +58,7 @@ trait TestDatabaseProfilerTrait
     /**
      * Assert that the database queries contain the expected query.
      */
-    protected function assertDatabaseQueriesContains(string $expectedQuery): void
+    protected function assertDatabaseExecutedQuery(string $expectedQuery): void
     {
         $queries = $this->getDatabaseQueries();
 
@@ -71,6 +71,16 @@ trait TestDatabaseProfilerTrait
         }
 
         $this->assertTrue($found, "Expected query '$expectedQuery' not found in database queries.");
+    }
+
+    /**
+     * Assert that the database queries contain the expected queries.
+     */
+    protected function assertDatabaseExecutedQueries(array $expectedQueries): void
+    {
+        foreach ($expectedQueries as $expectedQuery) {
+            $this->assertDatabaseExecutedQuery($expectedQuery);
+        }
     }
 
     /**
@@ -93,6 +103,19 @@ trait TestDatabaseProfilerTrait
         return $this->profileDatabaseQueries(function () use ($expectedCount, $callback) {
             $result = $callback();
             $this->assertDatabaseQueriesCount($expectedCount);
+
+            return $result;
+        });
+    }
+
+    /**
+     * Wrapper to profile database queries and assert the executed query.
+     */
+    protected function profileDatabaseExecutedQuery(string $expectedQuery, callable $callback): mixed
+    {
+        return $this->profileDatabaseQueries(function () use ($expectedQuery, $callback) {
+            $result = $callback();
+            $this->assertDatabaseExecutedQuery($expectedQuery);
 
             return $result;
         });
