@@ -78,8 +78,18 @@ trait TestDatabaseProfilerTrait
      */
     protected function assertDatabaseExecutedQueries(array $expectedQueries): void
     {
+        $queries = $this->getDatabaseQueries();
+
         foreach ($expectedQueries as $expectedQuery) {
-            $this->assertDatabaseExecutedQuery($expectedQuery);
+            $found = false;
+            foreach ($queries as $query) {
+                if (str_contains($query['query'], $expectedQuery)) {
+                    $found = true;
+                    break;
+                }
+            }
+
+            $this->assertTrue($found, "Expected query '$expectedQuery' not found in database queries.");
         }
     }
 
@@ -88,9 +98,12 @@ trait TestDatabaseProfilerTrait
      */
     protected function profileDatabaseQueries(callable $callback): mixed
     {
-        $this->startDatabaseProfiler();
-        $result = $callback();
-        $this->stopDatabaseProfiler();
+        try {
+            $this->startDatabaseQueryLog();
+            $result = $callback();
+        } finally {
+            $this->stopDatabaseQueryLog();
+        }
 
         return $result;
     }
@@ -102,7 +115,7 @@ trait TestDatabaseProfilerTrait
     {
         return $this->profileDatabaseQueries(function () use ($expectedCount, $callback) {
             $result = $callback();
-            $this->assertDatabaseQueriesCount($expectedCount);
+            $this->assertDatabaseQueryCount($expectedCount);
 
             return $result;
         });
@@ -116,6 +129,19 @@ trait TestDatabaseProfilerTrait
         return $this->profileDatabaseQueries(function () use ($expectedQuery, $callback) {
             $result = $callback();
             $this->assertDatabaseExecutedQuery($expectedQuery);
+
+            return $result;
+        });
+    }
+
+    /**
+     * Wrapper to profile database queries and assert the executed queries.
+     */
+    protected function profileDatabaseExecutedQueries(array $expectedQueries, callable $callback): mixed
+    {
+        return $this->profileDatabaseQueries(function () use ($expectedQueries, $callback) {
+            $result = $callback();
+            $this->assertDatabaseExecutedQueries($expectedQueries);
 
             return $result;
         });
