@@ -15,7 +15,6 @@
     <exclude>
       <directory suffix=".php">./tests</directory>
       <directory suffix=".php">./vendor</directory>
-      <directory suffix=".php">./src/Traits/TestTraits</directory>
     </exclude>
   </source>
 </phpunit>
