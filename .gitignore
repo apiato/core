@@ -28,3 +28,5 @@ aliases
 /psalm_cache/
 .bash_aliases
 .DS_Store
+/.ddev/*
+!/.ddev/config.yaml
