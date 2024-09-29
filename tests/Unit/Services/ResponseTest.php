@@ -11,8 +11,10 @@ use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
 use Apiato\Core\Tests\Unit\UnitTestCase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Testing\Fluent\AssertableJson;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(Response::class)]
 class ResponseTest extends UnitTestCase
 {
     private const FIELDSET_KEY = 'fieldset';

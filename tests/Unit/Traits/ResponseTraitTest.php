@@ -8,7 +8,9 @@ use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
 use Apiato\Core\Tests\Unit\UnitTestCase;
 use Apiato\Core\Traits\ResponseTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(ResponseTrait::class)]
 class ResponseTraitTest extends UnitTestCase
 {
     private $trait;
