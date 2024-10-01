@@ -144,8 +144,8 @@ trait HashIdTrait
     private function processField($data, $keysTodo, $currentFieldName): mixed
     {
         // is the current field a null?! we can give it back and chill out
-        if (is_null($data)) {
-            return $data;
+        if(is_null($data)) {
+             return $data;
         }
 
         // check if there are no more fields to be processed
