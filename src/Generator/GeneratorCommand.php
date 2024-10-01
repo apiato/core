@@ -6,17 +6,18 @@ use Apiato\Core\Foundation\Facades\Apiato;
 use Apiato\Core\Generator\Traits\ConsoleCommandArgumentsTrait;
 use Apiato\Core\Generator\Traits\ConsoleInputTrait;
 use Apiato\Core\Generator\Traits\ConsoleOutputTrait;
+use Apiato\Core\Generator\Traits\FileSystemTrait;
 use Apiato\Core\Generator\Traits\FormatterTrait;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Apiato\Core\Generator\Traits\SuggestionHelperTrait;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 abstract class GeneratorCommand extends Command
 {
     use ConsoleInputTrait;
     use ConsoleOutputTrait;
+    use FileSystemTrait;
     use FormatterTrait;
     use ConsoleCommandArgumentsTrait;
     use SuggestionHelperTrait;
@@ -59,7 +60,7 @@ abstract class GeneratorCommand extends Command
 
     protected function setOptions(): void
     {
-        $optionsFromConfig = Config::get('apiato.generator-commands.options', []);
+        $optionsFromConfig = $this->readYamlConfig(filePath: base_path() . '/code-generator-options.yaml', default: []);
 
         foreach ($optionsFromConfig as $key => $value) {
             //  Do not override the option if it was already set via command line

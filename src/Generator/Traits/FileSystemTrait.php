@@ -2,6 +2,8 @@
 
 namespace Apiato\Core\Generator\Traits;
 
+use Symfony\Component\Yaml\Yaml;
+
 trait FileSystemTrait
 {
     public function generateFile(string $path, string $content): void
@@ -41,24 +43,6 @@ trait FileSystemTrait
         }
     }
 
-    /**
-     * If path is for a directory, create it otherwise do nothing.
-     */
-    private function createDirectory($path): void
-    {
-        if ($this->fileAlreadyExists($path)) {
-            return;
-        }
-
-        try {
-            if (!$this->fileSystem->isDirectory(dirname($path))) {
-                $this->fileSystem->makeDirectory(dirname($path), 0777, true, true);
-            }
-        } catch (\Exception $e) {
-            $this->outputError('Could not create ' . $path);
-        }
-    }
-
     protected function getFullFilePath($path): string
     {
         // Complete the missing parts of the path
@@ -75,5 +59,36 @@ trait FileSystemTrait
     protected function fileAlreadyExists($path): bool
     {
         return $this->fileSystem->exists($path);
+    }
+
+    protected function readYamlConfig(string $filePath, array|null $default = null): array
+    {
+        if (!file_exists($filePath)) {
+            if (is_null($default)) {
+                throw new \RuntimeException("Configuration file not found: $filePath");
+            } else {
+                return $default;
+            }
+        }
+
+        return Yaml::parseFile($filePath);
+    }
+
+    /**
+     * If path is for a directory, create it otherwise do nothing.
+     */
+    private function createDirectory($path): void
+    {
+        if ($this->fileAlreadyExists($path)) {
+            return;
+        }
+
+        try {
+            if (!$this->fileSystem->isDirectory(dirname($path))) {
+                $this->fileSystem->makeDirectory(dirname($path), 0777, true, true);
+            }
+        } catch (\Exception $e) {
+            $this->outputError('Could not create ' . $path);
+        }
     }
 }
