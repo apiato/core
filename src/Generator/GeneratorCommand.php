@@ -2,282 +2,127 @@
 
 namespace Apiato\Core\Generator;
 
-use Apiato\Core\Exceptions\GeneratorErrorException;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Core\Foundation\Facades\Apiato;
+use Apiato\Core\Generator\Traits\ConsoleCommandArgumentsTrait;
+use Apiato\Core\Generator\Traits\ConsoleInputTrait;
+use Apiato\Core\Generator\Traits\ConsoleOutputTrait;
 use Apiato\Core\Generator\Traits\FileSystemTrait;
 use Apiato\Core\Generator\Traits\FormatterTrait;
-use Apiato\Core\Generator\Traits\ParserTrait;
-use Apiato\Core\Generator\Traits\PrinterTrait;
+use Apiato\Core\Generator\Traits\HasTestTrait;
+use Apiato\Core\Generator\Traits\SuggestionHelperTrait;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
 
 abstract class GeneratorCommand extends Command
 {
-    use ParserTrait;
-    use PrinterTrait;
+    use ConsoleInputTrait;
+    use ConsoleOutputTrait;
     use FileSystemTrait;
     use FormatterTrait;
+    use ConsoleCommandArgumentsTrait;
+    use SuggestionHelperTrait;
 
-    /**
-     * Root directory of all sections.
-     *
-     * @var string
-     */
-    private const ROOT = 'app/Containers';
+    protected string|null $sectionName = null;
 
-    /**
-     * Relative path for the stubs (relative to this directory / file).
-     *
-     * @var string
-     */
-    private const STUB_PATH = 'Stubs/*';
+    protected string|null $containerName = null;
 
-    /**
-     * Relative path for the custom stubs (relative to the app/Ship directory!).
-     */
-    private const CUSTOM_STUB_PATH = 'Generators/CustomStubs/*';
+    protected bool|null $test = null;
 
-    /**
-     * Default section name.
-     *
-     * @var string
-     */
-    private const DEFAULT_SECTION_NAME = 'AppSection';
-
-    protected string $filePath;
-
-    /**
-     * @var string the name of the section to generate the stubs
-     */
-    protected string $sectionName;
-
-    /**
-     * @var string the name of the container to generate the stubs
-     */
-    protected string $containerName;
-
-    /**
-     * @var string The name of the file to be created (entered by the user)
-     */
-    protected string $fileName;
-
-    protected $userData;
-
-    protected $parsedFileName;
-
-    protected $stubContent;
-
-    protected $renderedStubContent;
-
-    private IlluminateFilesystem $fileSystem;
-
-    private array $defaultInputs = [
-        ['section', null, InputOption::VALUE_OPTIONAL, 'The name of the section'],
-        ['container', null, InputOption::VALUE_OPTIONAL, 'The name of the container'],
-        ['file', null, InputOption::VALUE_OPTIONAL, 'The name of the file'],
-    ];
-
-    public function __construct(IlluminateFilesystem $fileSystem)
+    public function __construct()
     {
+        $this->name = $this->getCommandName();
+        $this->description = $this->getCommandDescription();
         parent::__construct();
-
-        $this->fileSystem = $fileSystem;
     }
 
-    /**
-     * @void
-     *
-     * @throws GeneratorErrorException|FileNotFoundException
-     */
-    public function handle()
+    abstract public static function getCommandName(): string;
+
+    abstract public static function getCommandDescription(): string;
+
+    public function handle(): void
     {
-        $this->validateGenerator($this);
+        $this->setOptions();
+    }
 
-        $this->sectionName = ucfirst($this->checkParameterOrAsk('section', 'Enter the name of the Section', self::DEFAULT_SECTION_NAME));
-        $this->containerName = ucfirst($this->checkParameterOrAsk('container', 'Enter the name of the Container'));
-        $this->fileName = $this->checkParameterOrAsk('file', 'Enter the name of the ' . $this->fileType . ' file', $this->getDefaultFileName());
-
-        // Now fix the section, container and file name
-        $this->sectionName = $this->removeSpecialChars($this->sectionName);
-        $this->containerName = $this->removeSpecialChars($this->containerName);
-        if (!('Configuration' === $this->fileType)) {
-            $this->fileName = $this->removeSpecialChars($this->fileName);
+    public function runGeneratorCommand(string $commandClass, array $arguments = [], bool $silent = false): void
+    {
+        $commandInstance = app($commandClass);
+        if (!$commandInstance instanceof GeneratorCommand) {
+            throw new \RuntimeException('The command must be an instance of ' . GeneratorCommand::class);
         }
 
-        // And we are ready to start
-        $this->printStartedMessage($this->sectionName . ':' . $this->containerName, $this->fileName);
+        if ($silent) {
+            $this->callSilent($commandInstance::getCommandName(), $arguments);
+        } else {
+            $this->call($commandInstance::getCommandName(), $arguments);
+        }
+    }
 
-        // Get user inputs
-        $this->userData = $this->getUserInputs();
+    protected function setOptions(): void
+    {
+        $optionsFromConfig = $this->readYamlConfig(filePath: base_path() . '/code-generator-options.yaml', default: []);
 
-        if (null === $this->userData) {
-            // The user skipped this step
+        foreach ($optionsFromConfig as $key => $value) {
+            //  Do not override the option if it was already set via command line
+            if ($this->hasOption($key) && null === $this->option($key)) {
+                $this->input->setOption($key, $value);
+            }
+        }
+    }
+
+    protected function askSection(): void
+    {
+        if ($this->sectionName) {
             return;
         }
-        $this->userData = $this->sanitizeUserData($this->userData);
 
-        // Get the actual path of the output file as well as the correct filename
-        $this->parsedFileName = $this->parseFileStructure($this->nameStructure, $this->userData['file-parameters']);
-        $this->filePath = $this->getFilePath($this->parsePathStructure($this->pathStructure, $this->userData['path-parameters']));
+        $input = $this->checkParameterOrAskTextSuggested(
+            param: 'section',
+            label: 'Select the section:',
+            suggestions: Apiato::getSectionNames(),
+        );
 
-        if (!$this->fileSystem->exists($this->filePath)) {
-            // Prepare stub content
-            $this->stubContent = $this->getStubContent();
-            $this->renderedStubContent = $this->parseStubContent($this->stubContent, $this->userData['stub-parameters']);
+        $this->sectionName = Str::ucfirst($input);
+        $this->sectionName = $this->removeSpecialChars($this->sectionName);
+    }
 
-            $this->generateFile($this->filePath, $this->renderedStubContent);
-
-            $this->printFinishedMessage($this->fileType);
+    protected function askContainer(): void
+    {
+        if ($this->containerName) {
+            return;
         }
 
-        // Exit the command successfully
-        return 0;
+        $input = $this->checkParameterOrAskTextSuggested(
+            param: 'container',
+            label: 'Select the container:',
+            suggestions: Apiato::getSectionContainerNames($this->sectionName),
+        );
+
+        $this->containerName = Str::ucfirst($input);
+        $this->containerName = $this->removeSpecialChars($this->containerName);
     }
 
-    /**
-     * @throws GeneratorErrorException
-     */
-    private function validateGenerator($generator): void
+    protected function askForTest(): void
     {
-        if (!$generator instanceof ComponentsGenerator) {
-            throw new GeneratorErrorException('Your component maker command should implement ComponentsGenerator interface.');
-        }
-    }
-
-    /**
-     * Checks if the param is set (via CLI), otherwise asks the user for a value.
-     */
-    protected function checkParameterOrAsk($param, $question, string|null $default = null): mixed
-    {
-        // Check if we already have a param set
-        $value = $this->option($param);
-        if (null === $value) {
-            // There was no value provided via CLI, so ask the user…
-            $value = $this->ask($question, $default);
+        if ($this->test || !$this->isTestable()) {
+            return;
         }
 
-        return $value;
+        $this->test = $this->checkParameterOrConfirm(
+            param: 'test',
+            label: 'Do you want to create a test?',
+            default: true,
+            hint: 'This will create a test file for the ' . $this->getFileType(),
+            required: false,
+        );
     }
 
-    /**
-     * Get the default file name for this component to be generated.
-     */
-    protected function getDefaultFileName(): string
+    protected function isTestable(): bool
     {
-        return 'Default' . Str::ucfirst($this->fileType);
+        return in_array(HasTestTrait::class, class_uses_recursive($this));
     }
 
-    /**
-     * Removes "special characters" from a string.
-     */
-    protected function removeSpecialChars($str): string
-    {
-        // remove everything that is NOT a character or digit
-        return preg_replace('/[^A-Za-z0-9]/', '', $str);
-    }
+    abstract protected function askCustomInputs(): void;
 
-    /**
-     * Checks, if the data from the generator contains path, stub and file-parameters.
-     * Adds empty arrays, if they are missing.
-     */
-    private function sanitizeUserData($data): mixed
-    {
-        if (!array_key_exists('path-parameters', $data)) {
-            $data['path-parameters'] = [];
-        }
-
-        if (!array_key_exists('stub-parameters', $data)) {
-            $data['stub-parameters'] = [];
-        }
-
-        if (!array_key_exists('file-parameters', $data)) {
-            $data['file-parameters'] = [];
-        }
-
-        return $data;
-    }
-
-    protected function getFilePath($path): string
-    {
-        // Complete the missing parts of the path
-        $path = base_path() . '/' .
-            str_replace('\\', '/', self::ROOT . '/' . $path) . '.' . $this->getDefaultFileExtension();
-
-        // Try to create directory
-        $this->createDirectory($path);
-
-        // Return full path
-        return $path;
-    }
-
-    /**
-     * Get the default file extension for the file to be created.
-     */
-    protected function getDefaultFileExtension(): string
-    {
-        return 'php';
-    }
-
-    /**
-     * @throws FileNotFoundException
-     */
-    protected function getStubContent(): string
-    {
-        // Check if there is a custom file that overrides the default stubs
-        $path = app_path() . '/Ship/' . self::CUSTOM_STUB_PATH;
-        $file = str_replace('*', $this->stubName, $path);
-
-        // Check if the custom file exists
-        if (!$this->fileSystem->exists($file)) {
-            // It does not exist - so take the default file!
-            $path = __DIR__ . '/' . self::STUB_PATH;
-            $file = str_replace('*', $this->stubName, $path);
-        }
-
-        // Now load the stub
-        return $this->fileSystem->get($file);
-    }
-
-    /**
-     * Get all the console command arguments, from the components. The default arguments are prepended.
-     */
-    protected function getOptions(): array
-    {
-        return array_merge($this->defaultInputs, $this->inputs);
-    }
-
-    protected function getInput($arg, bool $trim = true): array|string|null
-    {
-        return $trim ? $this->trimString($this->argument($arg)) : $this->argument($arg);
-    }
-
-    /**
-     * Checks if the param is set (via CLI), otherwise proposes choices to the user.
-     */
-    protected function checkParameterOrChoice($param, $question, $choices, mixed $default = null): bool|array|string|null
-    {
-        // Check if we already have a param set
-        $value = $this->option($param);
-        if (null === $value) {
-            // There was no value provided via CLI, so ask the user…
-            $value = $this->choice($question, $choices, $default);
-        }
-
-        return $value;
-    }
-
-    protected function checkParameterOrConfirm($param, $question, bool $default = false): string|array|bool|null
-    {
-        // Check if we already have a param set
-        $value = $this->option($param);
-        if (null === $value) {
-            // There was no value provided via CLI, so ask the user...
-            $value = $this->confirm($question, $default);
-        }
-
-        return $value;
-    }
+    abstract protected function runGeneratorCommands(): void;
 }

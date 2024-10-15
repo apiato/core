@@ -7,7 +7,7 @@ use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class RepositoryGenerator extends FileGeneratorCommand
+class FactoryGenerator extends FileGeneratorCommand
 {
     use HasTestTrait;
 
@@ -15,29 +15,29 @@ class RepositoryGenerator extends FileGeneratorCommand
 
     public static function getCommandName(): string
     {
-        return 'apiato:make:repository';
+        return 'apiato:make:factory';
     }
 
     public static function getCommandDescription(): string
     {
-        return 'Create a Repository file for a Container';
+        return 'Create a Factory for a model';
     }
 
     public static function getFileType(): string
     {
-        return 'repository';
+        return 'factory';
     }
 
     protected static function getCustomCommandArguments(): array
     {
         return [
-            ['model', null, InputOption::VALUE_OPTIONAL, 'The model this repository is for.'],
+            ['model', null, InputOption::VALUE_OPTIONAL, 'The model this factory is for.'],
         ];
     }
 
     public function getDefaultFileName(): string
     {
-        return ucfirst($this->model) . 'Repository';
+        return ucfirst($this->model) . 'Factory';
     }
 
     protected function askCustomInputs(): void
@@ -51,45 +51,48 @@ class RepositoryGenerator extends FileGeneratorCommand
                 container: $this->containerName,
                 removeModelPostFix: true,
             ),
-            hint: 'Enter the name of the Model this repository is for.',
+            hint: 'Enter the name of the Model this factory is for.',
         );
     }
 
     protected function getFilePath(): string
     {
-        return "$this->sectionName/$this->containerName/Data/Repositories/$this->fileName.php";
+        return "$this->sectionName/$this->containerName/Data/Factories/$this->fileName.php";
     }
 
     protected function getFileContent(): string
     {
         $file = new \Nette\PhpGenerator\PhpFile();
-        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Repositories');
+        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Factories');
 
         // imports
-        $parentRepositoryFullPath = 'App\Ship\Parents\Repositories\Repository';
-        $namespace->addUse($parentRepositoryFullPath, 'ParentRepository');
+        $parentFactoryFullPath = 'App\Ship\Parents\Factories\Factory';
+        $namespace->addUse($parentFactoryFullPath, 'ParentFactory');
         $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->model;
         $namespace->addUse($modelFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName)
-            ->setExtends($parentRepositoryFullPath);
+            ->setExtends($parentFactoryFullPath);
 
         // properties
         $class->addProperty('model')
             ->setVisibility('protected')
             ->setValue($modelFullPath);
-        $class->addProperty('fieldSearchable')
-            ->setVisibility('protected')
-            ->setValue(['id' => '=']);
+
+        // definition method
+        $definition = $class->addMethod('definition')
+            ->setPublic()
+            ->setReturnType('array')
+            ->setBody('return [];');
 
         return $file;
     }
 
     protected function getTestPath(): string
     {
-        return $this->sectionName . '/' . $this->containerName . '/Tests/Unit/Data/Repositories/' . $this->fileName . 'Test.php';
+        return $this->sectionName . '/' . $this->containerName . '/Tests/Unit/Data/Factories/' . $this->fileName . 'Test.php';
     }
 
     protected function getTestContent(): string
@@ -97,15 +100,15 @@ class RepositoryGenerator extends FileGeneratorCommand
         $entity = Str::lower($this->model);
 
         $file = new \Nette\PhpGenerator\PhpFile();
-        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Data\Repositories');
+        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Data\Factories');
 
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
         $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->model;
         $namespace->addUse($modelFullPath);
-        $repositoryFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Data\Repositories\\$this->fileName";
-        $namespace->addUse($repositoryFullPath);
+        $factoryFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Data\Factories\\$this->fileName";
+        $namespace->addUse($factoryFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
@@ -113,26 +116,15 @@ class RepositoryGenerator extends FileGeneratorCommand
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 
-        // test method 1
-        $testMethod1 = $class->addMethod('testRepositoryHasExpectedSearchableFieldsSet')->setPublic();
-        $testMethod1->addBody("
-\$data = [
-    'id' => '=',
-];
-\$repository = app($this->fileName::class);
+        // test method
+        $testMethod = $class->addMethod("testCanCreate$this->model")->setPublic();
+        $testMethod->addBody("
+\$$entity = $this->fileName::new()->createOne();
 
-\$this->assertSame(\$data, \$repository->getFieldsSearchable());
+\$this->assertInstanceOf($this->model::class, $$entity);
 ");
 
-        $testMethod1->setReturnType('void');
-
-        // test method 2
-        $testMethod2 = $class->addMethod('testReturnsCorrectModel')->setPublic();
-        $testMethod2->addBody("
-\$repository = app($this->fileName::class);
-
-\$this->assertSame($this->model::class, \$repository->model());
-");
+        $testMethod->setReturnType('void');
 
         // return the file
         return $file;

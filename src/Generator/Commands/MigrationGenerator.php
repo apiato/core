@@ -2,115 +2,124 @@
 
 namespace Apiato\Core\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Core\Generator\FileGeneratorCommand;
+use Apiato\Core\Generator\Traits\HasTestTrait;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
-class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
+class MigrationGenerator extends FileGeneratorCommand
 {
-    /**
-     * User required/optional inputs expected to be passed while calling the command.
-     * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     */
-    public array $inputs = [
-        ['tablename', null, InputOption::VALUE_OPTIONAL, 'The name for the database table'],
-    ];
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:migration';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create an "empty" migration file for a Container';
-    /**
-     * The type of class being generated.
-     */
-    protected string $fileType = 'Migration';
-    /**
-     * The structure of the file path.
-     */
-    protected string $pathStructure = '{section-name}/{container-name}/Data/Migrations/*';
-    /**
-     * The structure of the file name.
-     */
-    protected string $nameStructure = '{date}_{file-name}';
-    /**
-     * The name of the stub file.
-     */
-    protected string $stubName = 'migration.stub';
+    use HasTestTrait;
 
-    public function getUserInputs(): array|null
+    protected string $table;
+
+    public static function getCommandName(): string
     {
-        $tableName = Str::lower($this->checkParameterOrAsk('tablename', 'Enter the name of the database table', Str::snake(Pluralizer::plural($this->containerName))));
+        return 'apiato:make:migration';
+    }
 
-        // Now we need to check if there already exists a "default migration file" for this container!
-        // We therefore search for a file that is named "xxxx_xx_xx_xxxxxx_NAME"
-        $exists = false;
+    public static function getCommandDescription(): string
+    {
+        return 'Create a Migration file for a Container';
+    }
 
-        $folder = $this->parsePathStructure($this->pathStructure, [
-            'section-name' => $this->sectionName,
-            'container-name' => $this->containerName,
-        ]);
-        $folder = $this->getFilePath($folder);
-        $folder = rtrim($folder, $this->parsedFileName . '.' . $this->getDefaultFileExtension());
+    public static function getFileType(): string
+    {
+        return 'migration';
+    }
 
-        $migrationName = $this->fileName . '.' . $this->getDefaultFileExtension();
-
-        // Get the content of this folder
-        $files = File::allFiles($folder);
-        foreach ($files as $file) {
-            if (Str::endsWith($file->getFilename(), $migrationName)) {
-                $exists = true;
-            }
-        }
-
-        if ($exists) {
-            // There exists a basic migration file for this container
-            return null;
-        }
-
+    protected static function getCustomCommandArguments(): array
+    {
         return [
-            'path-parameters' => [
-                'section-name' => $this->sectionName,
-                'container-name' => $this->containerName,
-            ],
-            'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
-                '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => Str::studly($this->fileName),
-                'table-name' => $tableName,
-            ],
-            'file-parameters' => [
-                'date' => Carbon::now()->format('Y_m_d_His'),
-                'file-name' => $this->fileName,
-            ],
+            ['table', null, InputOption::VALUE_OPTIONAL, 'The name of the table to create.'],
         ];
     }
 
-    /**
-     * Get the default file name for this component to be generated.
-     */
     public function getDefaultFileName(): string
     {
         return 'create_' . Str::snake(Pluralizer::plural($this->containerName)) . '_table';
     }
 
-    /**
-     * Removes "special characters" from a string.
-     */
-    protected function removeSpecialChars($str): string
+    protected function askCustomInputs(): void
     {
-        return $str;
+        $this->table = $this->checkParameterOrAskText(
+            param: 'table',
+            label: 'Enter the name of the table:',
+            default: Str::snake(Pluralizer::plural($this->containerName)),
+            hint: 'The name of the database table you want to create the migration for',
+        );
+    }
+
+    protected function getFilePath(): string
+    {
+        return "$this->sectionName/$this->containerName/Data/Migrations/" . Carbon::now()->format('Y_m_d_His') . "_$this->fileName.php";
+    }
+
+    protected function getFileContent(): string
+    {
+        return "
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class() extends Migration {
+    public function up(): void
+    {
+        Schema::create('$this->table', function (Blueprint \$table) {
+            \$table->id();
+            // add your columns here
+            \$table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('$this->table');
+    }
+};
+";
+    }
+
+    protected function getTestPath(): string
+    {
+        return $this->sectionName . '/' . $this->containerName . '/Tests/Unit/Data/Migrations/MigrationTest.php';
+    }
+
+    protected function getTestContent(): string
+    {
+        $file = new PhpFile();
+        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Data\Migrations');
+
+        // imports
+        $parentUnitTestCaseFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Tests\UnitTestCase";
+        $namespace->addUse($parentUnitTestCaseFullPath);
+
+        // class
+        $class = $file->addNamespace($namespace)
+            ->addClass('MigrationTest')
+            ->setFinal()
+            ->setExtends($parentUnitTestCaseFullPath);
+
+        // test method
+        $testMethod = $class->addMethod('test' . ucfirst($this->table) . 'TableHasExpectedColumns')->setPublic();
+        $testMethod->addBody("
+\$columns = [
+'id' => 'bigint',
+// add your columns here
+'created_at' => 'datetime',
+'updated_at' => 'datetime',
+];
+
+\$this->assertDatabaseTable('$this->table', \$columns);
+");
+
+        $testMethod->setReturnType('void');
+
+        return $file;
     }
 }

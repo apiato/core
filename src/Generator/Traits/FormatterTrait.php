@@ -2,22 +2,17 @@
 
 namespace Apiato\Core\Generator\Traits;
 
+use Illuminate\Support\Str;
+
 trait FormatterTrait
 {
-    public function prependOperationToName($operation, $class): string
+    public function getFileTypeCapitalized(): string
     {
-        $className = ('list' == $operation) ? ngettext($class) : $class;
-
-        return $operation . $this->capitalize($className);
+        return Str::ucfirst($this->getFileType());
     }
 
-    public function capitalize($word): string
+    protected function removeSpecialChars($str): string
     {
-        return ucfirst($word);
-    }
-
-    protected function trimString($string): string
-    {
-        return trim($string);
+        return preg_replace('/[^A-Za-z0-9]/', '', $str);
     }
 }

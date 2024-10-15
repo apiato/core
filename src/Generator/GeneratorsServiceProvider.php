@@ -2,84 +2,53 @@
 
 namespace Apiato\Core\Generator;
 
-use Apiato\Core\Generator\Commands\ActionGenerator;
-use Apiato\Core\Generator\Commands\ConfigurationGenerator;
-use Apiato\Core\Generator\Commands\ContainerApiGenerator;
-use Apiato\Core\Generator\Commands\ContainerGenerator;
-use Apiato\Core\Generator\Commands\ContainerWebGenerator;
-use Apiato\Core\Generator\Commands\ControllerGenerator;
-use Apiato\Core\Generator\Commands\EventGenerator;
-use Apiato\Core\Generator\Commands\EventListenerGenerator;
-use Apiato\Core\Generator\Commands\ExceptionGenerator;
-use Apiato\Core\Generator\Commands\JobGenerator;
-use Apiato\Core\Generator\Commands\MailGenerator;
-use Apiato\Core\Generator\Commands\MiddlewareGenerator;
-use Apiato\Core\Generator\Commands\MigrationGenerator;
-use Apiato\Core\Generator\Commands\ModelFactoryGenerator;
-use Apiato\Core\Generator\Commands\ModelGenerator;
-use Apiato\Core\Generator\Commands\NotificationGenerator;
-use Apiato\Core\Generator\Commands\PolicyGenerator;
-use Apiato\Core\Generator\Commands\ReadmeGenerator;
-use Apiato\Core\Generator\Commands\RepositoryGenerator;
-use Apiato\Core\Generator\Commands\RequestGenerator;
-use Apiato\Core\Generator\Commands\RouteGenerator;
-use Apiato\Core\Generator\Commands\SeederGenerator;
-use Apiato\Core\Generator\Commands\ServiceProviderGenerator;
-use Apiato\Core\Generator\Commands\SubActionGenerator;
-use Apiato\Core\Generator\Commands\TaskGenerator;
-use Apiato\Core\Generator\Commands\TestFunctionalTestGenerator;
-use Apiato\Core\Generator\Commands\TestTestCaseGenerator;
-use Apiato\Core\Generator\Commands\TestUnitTestGenerator;
-use Apiato\Core\Generator\Commands\TransformerGenerator;
-use Apiato\Core\Generator\Commands\ValueGenerator;
+use Apiato\Core\Foundation\Apiato;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\Finder\SplFileInfo;
 
 class GeneratorsServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->commands($this->getGeneratorCommands());
+            $this->loadGeneratorCommandsFromCore();
+            $this->loadGeneratorCommandsFromShip();
         }
     }
 
-    private function getGeneratorCommands(): array
+    private function loadGeneratorCommandsFromShip(): void
     {
-        // add your generators here
-        return $generatorCommands = [
-            ActionGenerator::class,
-            ConfigurationGenerator::class,
-            ContainerGenerator::class,
-            ContainerApiGenerator::class,
-            ContainerWebGenerator::class,
-            ControllerGenerator::class,
-            EventGenerator::class,
-            EventListenerGenerator::class,
-            ExceptionGenerator::class,
-            JobGenerator::class,
-            ModelFactoryGenerator::class,
-            MailGenerator::class,
-            MiddlewareGenerator::class,
-            MigrationGenerator::class,
-            ModelGenerator::class,
-            NotificationGenerator::class,
-            PolicyGenerator::class,
-            ReadmeGenerator::class,
-            RepositoryGenerator::class,
-            RequestGenerator::class,
-            RouteGenerator::class,
-            SeederGenerator::class,
-            ServiceProviderGenerator::class,
-            SubActionGenerator::class,
-            TestFunctionalTestGenerator::class,
-            TestTestCaseGenerator::class,
-            TestUnitTestGenerator::class,
-            TaskGenerator::class,
-            TransformerGenerator::class,
-            ValueGenerator::class,
-        ];
+        $shipGeneratorCommandsDirectory = base_path('app/Ship/Generators/Commands');
+        $this->loadTheConsoles($shipGeneratorCommandsDirectory);
+    }
+
+    private function loadGeneratorCommandsFromCore(): void
+    {
+        $coreGeneratorCommandsDirectory = __DIR__ . '/../Generator/Commands';
+        $this->loadTheConsoles($coreGeneratorCommandsDirectory);
+    }
+
+    private function loadTheConsoles(string $directory): void
+    {
+        if (File::isDirectory($directory)) {
+            $files = File::allFiles($directory);
+
+            foreach ($files as $consoleFile) {
+                // Do not load route files
+                if (!$this->isRouteFile($consoleFile)) {
+                    $consoleClass = app(Apiato::class)->getClassFullNameFromFile($consoleFile->getPathname());
+                    $this->commands([$consoleClass]);
+                }
+            }
+        }
+    }
+
+    private function isRouteFile(SplFileInfo $consoleFile): bool
+    {
+        return 'closures.php' === $consoleFile->getFilename();
     }
 }
