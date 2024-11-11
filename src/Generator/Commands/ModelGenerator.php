@@ -2,82 +2,220 @@
 
 namespace Apiato\Core\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Core\Generator\FileGeneratorCommand;
+use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
+class ModelGenerator extends FileGeneratorCommand
 {
-    /**
-     * User required/optional inputs expected to be passed while calling the command.
-     * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     */
-    public array $inputs = [
-        ['repository', null, InputOption::VALUE_OPTIONAL, 'Generate the corresponding Repository for this Model?'],
-    ];
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:model';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a new Model class';
-    /**
-     * The type of class being generated.
-     */
-    protected string $fileType = 'Model';
-    /**
-     * The structure of the file path.
-     */
-    protected string $pathStructure = '{section-name}/{container-name}/Models/*';
-    /**
-     * The structure of the file name.
-     */
-    protected string $nameStructure = '{file-name}';
-    /**
-     * The name of the stub file.
-     */
-    protected string $stubName = 'model.stub';
+    use HasTestTrait;
 
-    public function getUserInputs(): array|null
+    protected string $table;
+
+    protected bool $repository;
+
+    protected bool $factory;
+
+    public static function getCommandName(): string
     {
-        $repository = $this->checkParameterOrConfirm('repository', 'Do you want to generate the corresponding Repository for this Model?', true);
-        if ($repository) {
-            // We need to generate a corresponding repository
-            // so call the other command
-            $status = $this->call('apiato:generate:repository', [
+        return 'apiato:make:model';
+    }
+
+    public static function getCommandDescription(): string
+    {
+        return 'Create a Model file for a Container';
+    }
+
+    public static function getFileType(): string
+    {
+        return 'model';
+    }
+
+    protected static function getCustomCommandArguments(): array
+    {
+        return [
+            ['table', null, InputOption::VALUE_OPTIONAL, 'The name of the table to use for this model.'],
+            ['repository', null, InputOption::VALUE_NEGATABLE, 'Generate a repository for this model.'],
+            ['factory', null, InputOption::VALUE_NEGATABLE, 'Generate a factory for this model.'],
+        ];
+    }
+
+    public function getDefaultFileName(): string
+    {
+        return $this->containerName;
+    }
+
+    protected function askCustomInputs(): void
+    {
+        //        $this->model = $this->checkParameterOrAskTextSuggested(
+        //            param: 'model',
+        //            label: 'Enter the name of the Model:',
+        //            default: $this->containerName,
+        //            suggestions: $this->getModelsList(
+        //                section: $this->sectionName,
+        //                container: $this->containerName,
+        //                removeModelPostFix: true,
+        //            ),
+        //            hint: 'Enter the name of the Model this factory is for.',
+        //        );
+
+        $this->table = $this->checkParameterOrAskText(
+            param: 'table',
+            label: 'Enter the name of the table:',
+            default: Str::snake(Str::plural($this->containerName)),
+            hint: 'The name of the database table you want to create the model for.',
+        );
+
+        $this->repository = $this->checkParameterOrConfirm(
+            param: 'repository',
+            label: 'Do you want to generate a repository for this model?',
+            hint: 'This will generate a repository for this model.',
+        );
+
+        $this->factory = $this->checkParameterOrConfirm(
+            param: 'factory',
+            label: 'Do you want to generate a factory for this model?',
+            hint: 'This will generate a factory for this model.',
+        );
+    }
+
+    protected function getFilePath(): string
+    {
+        return "$this->sectionName/$this->containerName/Models/$this->fileName.php";
+    }
+
+    protected function getFileContent(): string
+    {
+        $file = new \Nette\PhpGenerator\PhpFile();
+        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models');
+
+        // imports
+        $parentModelFullPath = 'App\Ship\Parents\Models\Model';
+        $namespace->addUse($parentModelFullPath, 'ParentModel');
+
+        // class
+        $class = $file->addNamespace($namespace)
+            ->addClass($this->fileName)
+            ->setExtends($parentModelFullPath);
+
+        // properties
+        $class->addProperty('fillable')
+            ->setVisibility('protected')
+            ->setValue([]);
+
+        $class->addProperty('resourceKey')
+            ->setType('string')
+            ->setVisibility('protected')
+            ->setValue($this->fileName);
+
+        $class->addProperty('table')
+            ->setVisibility('protected')
+            ->setValue($this->table);
+
+        return $file;
+    }
+
+    protected function getTestPath(): string
+    {
+        return $this->sectionName . '/' . $this->containerName . '/Tests/Unit/Models/' . $this->fileName . 'Test.php';
+    }
+
+    protected function getTestContent(): string
+    {
+        $factoryName = $this->fileName . 'Factory';
+        $file = new \Nette\PhpGenerator\PhpFile();
+        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Models');
+
+        // imports
+        $parentUnitTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\UnitTestCase";
+        $namespace->addUse($parentUnitTestCaseFullPath);
+        $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->fileName;
+        $namespace->addUse($modelFullPath);
+        $factoryFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Factories\\' . $this->fileName . 'Factory';
+        $namespace->addUse($factoryFullPath);
+
+        // class
+        $class = $file->addNamespace($namespace)
+            ->addClass($this->fileName . 'Test')
+            ->setFinal()
+            ->setExtends($parentUnitTestCaseFullPath);
+
+        // test method
+        $testMethod1 = $class->addMethod('testUsesCorrectTable')->setPublic();
+        $testMethod1->addBody("
+\$entity = $factoryName::new()->createOne();
+\$table = '$this->table';
+
+\$this->assertSame(\$table, \$entity->getTable());
+");
+        $testMethod1->setReturnType('void');
+
+        $testMethod2 = $class->addMethod('testHasCorrectFillableFields')->setPublic();
+        $testMethod2->addBody("
+\$entity = $factoryName::new()->createOne();
+\$fillables = [
+];
+
+\$this->assertSame(\$fillables, \$entity->getFillable());
+");
+        $testMethod2->setReturnType('void');
+
+        $testMethod3 = $class->addMethod('testHasCorrectCasts')->setPublic();
+        $testMethod3->addBody("
+\$entity = $factoryName::new()->createOne();
+\$casts = [
+    'id' => 'int',
+];
+
+\$this->assertSame(\$casts, \$entity->getCasts());
+");
+        $testMethod3->setReturnType('void');
+
+        $testMethod4 = $class->addMethod('testHasCorrectHiddenFields')->setPublic();
+        $testMethod4->addBody("
+\$entity = $factoryName::new()->createOne();
+\$hiddens = [
+];
+
+\$this->assertSame(\$hiddens, \$entity->getHidden());
+");
+        $testMethod4->setReturnType('void');
+
+        $testMethod5 = $class->addMethod('testHasCorrectResourceKey')->setPublic();
+        $testMethod5->addBody("
+\$entity = $factoryName::new()->createOne();
+
+\$this->assertSame('$this->fileName', \$entity->getResourceKey());
+");
+        $testMethod5->setReturnType('void');
+
+        // return the file
+        return $file;
+    }
+
+    protected function runGeneratorCommands(): void
+    {
+        if ($this->repository) {
+            $this->runGeneratorCommand(RepositoryGenerator::class, [
                 '--section' => $this->sectionName,
                 '--container' => $this->containerName,
+                '--model' => $this->fileName,
                 '--file' => $this->fileName . 'Repository',
+                '--test' => $this->test,
             ]);
-
-            if (0 != $status) {
-                $this->printErrorMessage('Could not generate the corresponding Repository!');
-            }
         }
 
-        return [
-            'path-parameters' => [
-                'section-name' => $this->sectionName,
-                'container-name' => $this->containerName,
-            ],
-            'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
-                '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-                'resource-key' => $this->fileName,
-            ],
-            'file-parameters' => [
-                'file-name' => $this->fileName,
-            ],
-        ];
+        if ($this->factory) {
+            $this->runGeneratorCommand(FactoryGenerator::class, [
+                '--section' => $this->sectionName,
+                '--container' => $this->containerName,
+                '--model' => $this->fileName,
+                '--file' => $this->fileName . 'Factory',
+                '--test' => $this->test,
+            ]);
+        }
+
+        parent::runGeneratorCommands();
     }
 }

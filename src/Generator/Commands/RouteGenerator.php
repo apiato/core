@@ -2,104 +2,195 @@
 
 namespace Apiato\Core\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Core\Generator\FileGeneratorCommand;
+use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
+class RouteGenerator extends FileGeneratorCommand
 {
-    /**
-     * User required/optional inputs expected to be passed while calling the command.
-     * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     */
-    public array $inputs = [
-        ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
-        ['operation', null, InputOption::VALUE_OPTIONAL, 'The operation from the Controller to be called (e.g., index)'],
-        ['doctype', null, InputOption::VALUE_OPTIONAL, 'The type of the endpoint (private, public)'],
-        ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of the endpoint (1, 2, ...)'],
-        ['url', null, InputOption::VALUE_OPTIONAL, 'The URL of the endpoint (/stores, /cars, ...)'],
-        ['verb', null, InputOption::VALUE_OPTIONAL, 'The HTTP verb of the endpoint (GET, POST, ...)'],
-        ['controller', null, InputOption::VALUE_OPTIONAL, 'The controller used in this route'],
-    ];
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:route';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a new Route class';
-    /**
-     * The type of class being generated.
-     */
-    protected string $fileType = 'Route';
-    /**
-     * The structure of the file path.
-     */
-    protected string $pathStructure = '{section-name}/{container-name}/UI/{user-interface}/Routes/*';
-    /**
-     * The structure of the file name.
-     */
-    protected string $nameStructure = '{endpoint-name}.{endpoint-version}.{documentation-type}';
-    /**
-     * The name of the stub file.
-     */
-    protected string $stubName = 'routes/generic.stub';
+    use HasTestTrait;
 
-    public function getUserInputs(): array|null
+    protected string $ui;
+
+    protected string $visibility;
+
+    protected string $docVersion;
+
+    protected string $url;
+
+    protected string $method;
+
+    protected string $controller;
+
+    public static function getCommandName(): string
     {
-        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
-        $version = $this->checkParameterOrAsk('docversion', 'Enter the endpoint version (integer)', 1);
-        $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for this endpoint', ['private', 'public'], 0);
-        $operation = $this->checkParameterOrAsk('operation', 'Enter the name of the controller function that needs to be invoked when calling this endpoint');
-        $verb = Str::upper($this->checkParameterOrAsk('verb', 'Enter the HTTP verb of this endpoint (GET, POST,...)'));
-        // Get the URI and remove the first trailing slash
-        $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the endpoint URI (foo/bar/{id})'));
-        $url = ltrim($url, '/');
+        return 'apiato:make:route';
+    }
 
-        $controllerName = $this->checkParameterOrAsk('controller', 'Enter the controller name', Str::studly($operation) . 'Controller');
+    public static function getCommandDescription(): string
+    {
+        return 'Create a Route for a Container';
+    }
 
-        $docUrl = preg_replace('~{(.+?)}~', ':$1', $url);
+    public static function getFileType(): string
+    {
+        return 'route';
+    }
 
-        $routeName = Str::lower($ui . '_' . $this->containerName . '_' . Str::snake($operation));
-
-        // Change the stub to the currently selected UI (API / WEB)
-        $this->stubName = 'routes/' . $ui . '.stub';
-
+    protected static function getCustomCommandArguments(): array
+    {
         return [
-            'path-parameters' => [
-                'section-name' => $this->sectionName,
-                'container-name' => $this->containerName,
-                'user-interface' => Str::upper($ui),
-            ],
-            'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
-                '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'operation' => $operation,
-                'doc-api-name' => Str::studly($operation),
-                'user-interface' => Str::upper($ui),
-                'endpoint-url' => $url,
-                'endpoint-title' => Str::headline($operation),
-                'doc-endpoint-url' => '/v' . $version . '/' . $docUrl,
-                'endpoint-version' => $version,
-                'http-verb' => Str::lower($verb),
-                'doc-http-verb' => Str::upper($verb),
-                'route-name' => $routeName,
-                'auth-middleware' => Str::lower($ui),
-                'controller-name' => $controllerName,
-            ],
-            'file-parameters' => [
-                'endpoint-name' => $this->fileName,
-                'endpoint-version' => 'v' . $version,
-                'documentation-type' => $doctype,
-            ],
+            ['ui', null, InputOption::VALUE_OPTIONAL, 'The UI of the route. (API, WEB, ...)'],
+            ['visibility', null, InputOption::VALUE_OPTIONAL, 'The visibility of the route. (public, private)'],
+            ['docversion', null, InputOption::VALUE_OPTIONAL, 'The version of the route. (1, 2, ...)'],
+            ['url', null, InputOption::VALUE_OPTIONAL, 'The URL of the route. (/users, /products, ...)'],
+            ['method', null, InputOption::VALUE_OPTIONAL, 'The method of the route. (GET, POST, PUT, DELETE, ...)'],
+            ['controller', null, InputOption::VALUE_OPTIONAL, 'The controller of the route.'],
         ];
+    }
+
+    protected function askCustomInputs(): void
+    {
+        $this->ui = $this->checkParameterOrSelect(
+            param: 'ui',
+            label: 'Select the UI of the route:',
+            options: ['API', 'WEB'],
+            default: 'API',
+        );
+        $this->visibility = $this->checkParameterOrSelect(
+            param: 'visibility',
+            label: 'Select the visibility of the route:',
+            options: ['private', 'public'],
+            default: 'private',
+        );
+        $this->docVersion = $this->checkParameterOrAskText(
+            param: 'docversion',
+            label: 'Enter the version of the route:',
+            default: '1',
+        );
+        $this->url = $this->checkParameterOrAskText(
+            param: 'url',
+            label: 'Enter the URL of the route:',
+            default: '/' . Str::plural(Str::lower($this->containerName)),
+        );
+        $this->method = $this->checkParameterOrSelect(
+            param: 'method',
+            label: 'Select the method of the route:',
+            options: ['GET', 'POST', 'PUT', 'DELETE'],
+            default: 'GET',
+        );
+        $this->controller = $this->checkParameterOrAskTextSuggested(
+            'controller',
+            'Enter the controller of the route:',
+            suggestions: $this->getControllersList(
+                section: $this->sectionName,
+                container: $this->containerName,
+            ),
+        );
+    }
+
+    protected function getFilePath(): string
+    {
+        return "$this->sectionName/$this->containerName/UI/API/Routes/$this->fileName.v$this->docVersion.$this->visibility.php";
+    }
+
+    protected function getFileContent(): string
+    {
+        $routeTitle = Str::headline($this->fileName);
+
+        return "
+<?php
+
+/**
+ * @apiGroup           $this->containerName
+ *
+ * @apiName            $this->fileName
+ *
+ * @api                {{$this->method}} /v$this->docVersion$this->url $routeTitle
+ *
+ * @apiDescription     Endpoint description here...
+ *
+ * @apiVersion         $this->docVersion.0.0
+ *
+ * @apiPermission      Authenticated | Resource Owner
+ *
+ * @apiHeader          {String} accept=application/json
+ * @apiHeader          {String} authorization=Bearer
+ *
+ * @apiParam           {String} parameters here...
+ *
+ * @apiSuccessExample  {json} Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *     // Insert the response of the request here...
+ * }
+ */
+
+use App\Containers\\$this->sectionName\\$this->containerName\UI\\$this->ui\Controllers\\$this->controller;
+use Illuminate\Support\Facades\Route;
+
+Route::$this->method('$this->url', $this->controller::class)
+    ->middleware(['auth:api']);
+";
+    }
+
+    protected function getTestPath(): string
+    {
+        return $this->sectionName . '/' . $this->containerName . "/Tests/Functional/$this->ui/" . $this->fileName . 'Test.php';
+    }
+
+    protected function getTestContent(): string
+    {
+        $file = new \Nette\PhpGenerator\PhpFile();
+        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . "\Tests\Functional\\$this->ui");
+
+        // imports
+        $parentTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\Functional\\" . Str::ucfirst(Str::lower($this->ui)) . 'TestCase';
+        $namespace->addUse($parentTestCaseFullPath);
+        $userModelFullPath = 'App\Containers\AppSection\User\Models\User';
+        $namespace->addUse($userModelFullPath);
+
+        // class
+        $class = $file->addNamespace($namespace)
+            ->addClass($this->fileName . 'Test')
+            ->setFinal()
+            ->setExtends($parentTestCaseFullPath);
+
+        // properties
+        $class->addProperty('endpoint')
+            ->setVisibility('protected')
+            ->setType('string')
+            ->setValue("$this->method@v$this->docVersion$this->url");
+
+        // test methods
+        $testMethod1 = $class->addMethod('testEndpoint')->setPublic();
+        $testMethod1->addBody("
+\$this->markTestSkipped('This test has not been implemented yet.');
+");
+        $testMethod1->setReturnType('void');
+
+        $testMethod2 = $class->addMethod('testEndpointWhileUnauthenticated')->setPublic();
+        $testMethod2->addBody('
+$this->testingUser = User::factory()->create();
+
+$response = $this->auth(false)->makeCall();
+
+$response->assertUnauthorized();
+');
+        $testMethod2->setReturnType('void');
+
+        $testMethod3 = $class->addMethod('testEndpointWhileUnverified')->setPublic();
+        $testMethod3->addBody('
+$this->testingUser = User::factory()->unverified()->create();
+
+$response = $this->makeCall();
+
+$response->assertForbidden();
+');
+        $testMethod3->setReturnType('void');
+
+        // return the file
+        return $file;
     }
 }

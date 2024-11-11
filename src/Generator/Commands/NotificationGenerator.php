@@ -2,64 +2,80 @@
 
 namespace Apiato\Core\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
-use Illuminate\Support\Str;
+use Apiato\Core\Generator\FileGeneratorCommand;
 
-class NotificationGenerator extends GeneratorCommand implements ComponentsGenerator
+class NotificationGenerator extends FileGeneratorCommand
 {
-    /**
-     * User required/optional inputs expected to be passed while calling the command.
-     * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     */
-    public array $inputs = [
-    ];
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:notification';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a new Notification class';
-    /**
-     * The type of class being generated.
-     */
-    protected string $fileType = 'Notification';
-    /**
-     * The structure of the file path.
-     */
-    protected string $pathStructure = '{section-name}/{container-name}/Notifications/*';
-    /**
-     * The structure of the file name.
-     */
-    protected string $nameStructure = '{file-name}';
-    /**
-     * The name of the stub file.
-     */
-    protected string $stubName = 'notification.stub';
+    public static function getCommandName(): string
+    {
+        return 'apiato:make:notification';
+    }
 
-    public function getUserInputs(): array|null
+    public static function getCommandDescription(): string
+    {
+        return 'Create a Notification for a Container';
+    }
+
+    public static function getFileType(): string
+    {
+        return 'notification';
+    }
+
+    protected static function getCustomCommandArguments(): array
     {
         return [
-            'path-parameters' => [
-                'section-name' => $this->sectionName,
-                'container-name' => $this->containerName,
-            ],
-            'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
-                '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-            ],
-            'file-parameters' => [
-                'file-name' => $this->fileName,
-            ],
         ];
+    }
+
+    protected function askCustomInputs(): void
+    {
+    }
+
+    protected function getFilePath(): string
+    {
+        return "$this->sectionName/$this->containerName/Notifications/$this->fileName.php";
+    }
+
+    protected function getFileContent(): string
+    {
+        $file = new \Nette\PhpGenerator\PhpFile();
+        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Notifications');
+
+        // imports
+        $parentNotificationFullPath = 'App\Ship\Parents\Notifications\Notification';
+        $namespace->addUse($parentNotificationFullPath, 'ParentNotification');
+        $mailMessageFullPath = 'Illuminate\Notifications\Messages\MailMessage';
+        $namespace->addUse($mailMessageFullPath);
+        $queueableFullPath = 'Illuminate\Bus\Queueable';
+        $namespace->addUse($queueableFullPath);
+        $userModelFullPath = 'App\Containers\AppSection\User\Models\User';
+        $namespace->addUse($userModelFullPath);
+
+        // class
+        $class = $file->addNamespace($namespace)
+            ->addClass($this->fileName)
+            ->setExtends($parentNotificationFullPath);
+        $class->addTrait($queueableFullPath);
+
+        // via method
+        $viaMethod = $class->addMethod('via')
+            ->setPublic()
+            ->setReturnType('array')
+            ->setBody("return ['mail'];")
+        ->addParameter('notifiable');
+
+        // toMail method
+        $toMailMethod = $class->addMethod('toMail')
+            ->setPublic()
+            ->setReturnType($mailMessageFullPath)
+        ->setBody("
+return (new MailMessage())
+    ->subject('Email Verified')
+    ->line('Your email has been verified.');
+");
+        $toMailMethod->addParameter('notifiable')
+            ->setType($userModelFullPath);
+
+        return $file;
     }
 }

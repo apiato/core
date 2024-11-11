@@ -2,68 +2,69 @@
 
 namespace Apiato\Core\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
-use Symfony\Component\Console\Input\InputOption;
+use Apiato\Core\Generator\FileGeneratorCommand;
 
-class EventListenerGenerator extends GeneratorCommand implements ComponentsGenerator
+//  TODO: Make this command receive the event name as an argument
+//  when `EventGenerator` is implemented
+class EventListenerGenerator extends FileGeneratorCommand
 {
-    /**
-     * User required/optional inputs expected to be passed while calling the command.
-     * This is a replacement of the `getArguments` function "which reads whenever it's called".
-     */
-    public array $inputs = [
-        ['event', null, InputOption::VALUE_OPTIONAL, 'The Event to generate this Listener for'],
-    ];
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'apiato:generate:listener';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a new Event Listener class';
-    /**
-     * The type of class being generated.
-     */
-    protected string $fileType = 'Listener';
-    /**
-     * The structure of the file path.
-     */
-    protected string $pathStructure = '{section-name}/{container-name}/Listeners/*';
-    /**
-     * The structure of the file name.
-     */
-    protected string $nameStructure = '{file-name}';
-    /**
-     * The name of the stub file.
-     */
-    protected string $stubName = 'listeners/listener.stub';
-
-    public function getUserInputs(): array|null
+    public static function getCommandName(): string
     {
-        $event = $this->checkParameterOrAsk('event', 'Enter the name of the Event to generate this Listener for');
+        return 'apiato:make:listener';
+    }
 
-        $this->printInfoMessage('!!! Do not forget to register the Event and/or Event Listener !!!');
+    public static function getCommandDescription(): string
+    {
+        return 'Create an Event Listener for a Container';
+    }
 
+    public static function getFileType(): string
+    {
+        return 'listener';
+    }
+
+    protected static function getCustomCommandArguments(): array
+    {
         return [
-            'path-parameters' => [
-                'section-name' => $this->sectionName,
-                'container-name' => $this->containerName,
-            ],
-            'stub-parameters' => [
-                'section-name' => $this->sectionName,
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-                'model' => $event,
-            ],
-            'file-parameters' => [
-                'file-name' => $this->fileName,
-            ],
         ];
+    }
+
+    protected function askCustomInputs(): void
+    {
+    }
+
+    protected function getFilePath(): string
+    {
+        return "$this->sectionName/$this->containerName/Listeners/$this->fileName.php";
+    }
+
+    protected function getFileContent(): string
+    {
+        $file = new \Nette\PhpGenerator\PhpFile();
+        $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Listeners');
+
+        // imports
+        $parentJobFullPath = 'App\Ship\Parents\Listeners\Listener';
+        $namespace->addUse($parentJobFullPath, 'ParentListener');
+        $shouldQueueFullPath = 'Illuminate\Contracts\Queue\ShouldQueue';
+        $namespace->addUse($shouldQueueFullPath);
+
+        // class
+        $class = $file->addNamespace($namespace)
+            ->addClass($this->fileName)
+            ->setExtends($parentJobFullPath)
+            ->addImplement($shouldQueueFullPath);
+
+        // constructor method
+        $constructorMethod = $class->addMethod('__construct')
+            ->setPublic();
+
+        // handle method
+        $handleMethod = $class->addMethod('handle')
+            ->setPublic()
+            ->setReturnType('void')
+            ->addParameter('event');
+
+        return $file;
     }
 }
