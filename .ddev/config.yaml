@@ -1,15 +1,14 @@
-name: apiato-core
+name: core
 type: php
 docroot: ""
-php_version: "8.1"
+php_version: "8.2"
 webserver_type: nginx-fpm
 xdebug_enabled: false
-additional_hostnames: []
-additional_fqdns: []
-omit_containers: [db]
+database:
+  type: postgres
+  version: "17"
 use_dns_when_possible: true
 composer_version: "2"
-web_environment: []
 corepack_enable: false
 
 # Key features of DDEV's config.yaml:
@@ -207,6 +206,7 @@ corepack_enable: false
 
 # no_project_mount: false
 # (Experimental) If true, DDEV will not mount the project into the web container;
+# the user is responsible for mounting it manually or via a script.
 # the user is responsible for mounting it manually or via a script.
 # This is to enable experimentation with alternate file mounting strategies.
 # For advanced users only!
