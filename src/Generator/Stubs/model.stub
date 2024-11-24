@@ -9,5 +9,5 @@ class {{class-name}} extends ParentModel
     /**
      * A resource key to be used in the serialized responses.
      */
-    protected string $resourceKey = '{{resource-key}}';
+    protected $resourceKey = '{{resource-key}}';
 }
