@@ -330,7 +330,7 @@ class ResponseTest extends UnitTestCase
     #[DataProvider('invalidResourceNameProvider')]
     public function testGivenInvalidNameProvidedRevertToDefaultMainResourceName($resourceName): void
     {
-        request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => ["{$resourceName}:id", 'Book:author,title']]);
+        request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => [$resourceName => 'id', 'Book' => 'author,title']]);
         $response = Response::createFrom($this->user);
         $response->transformWith(UserTransformer::class);
         $response->withResourceName($resourceName);
