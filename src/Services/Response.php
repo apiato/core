@@ -24,26 +24,6 @@ class Response extends SpatieFractal
         return parent::createData();
     }
 
-    private function setAvailableIncludesMeta(): void
-    {
-        $this->addMeta([
-            'include' => $this->getTransformerAvailableIncludes(),
-        ]);
-    }
-
-    private function getTransformerAvailableIncludes(): array
-    {
-        if (is_null($this->transformer) || is_callable($this->transformer)) {
-            return [];
-        }
-
-        if (is_string($this->transformer)) {
-            return (new $this->transformer())->getAvailableIncludes();
-        }
-
-        return $this->transformer->getAvailableIncludes();
-    }
-
     private function defaultResourceName(): string
     {
         if (is_string($this->getResourceName())) {
@@ -68,18 +48,27 @@ class Response extends SpatieFractal
 
     private function getRequestedFieldsets(): array
     {
-        $fieldSets = [];
-        // TODO: BREAKING CHANGE: rename the default to fieldset
-        if ($requestFieldSets = Request::get(Config::get('apiato.requests.params.filter', 'filter'))) {
-            foreach ($requestFieldSets as $fieldSet) {
-                [$resourceName, $fields] = explode(':', $fieldSet);
-                // TODO: Maybe just split by comma and remove the explode?
-                //  Decide between the two ';', & ',' and stick with one
-                $field = explode(';', $fields);
-                $fieldSets[$resourceName] = $field;
-            }
+        // TODO: BREAKING CHANGE: rename the default to "fields"
+        return Request::get(Config::get('apiato.requests.params.filter', 'filter')) ?? [];
+    }
+
+    private function setAvailableIncludesMeta(): void
+    {
+        $this->addMeta([
+            'include' => $this->getTransformerAvailableIncludes(),
+        ]);
+    }
+
+    private function getTransformerAvailableIncludes(): array
+    {
+        if (is_null($this->transformer) || is_callable($this->transformer)) {
+            return [];
         }
 
-        return $fieldSets;
+        if (is_string($this->transformer)) {
+            return (new $this->transformer())->getAvailableIncludes();
+        }
+
+        return $this->transformer->getAvailableIncludes();
     }
 }

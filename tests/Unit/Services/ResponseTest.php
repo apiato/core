@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Response::class)]
 class ResponseTest extends UnitTestCase
 {
-    private const FIELDSET_KEY = 'fieldset';
+    private const FIELDSET_KEY = 'fields';
     private User $user;
 
     public static function csvIncludeDataProvider(): array
@@ -83,42 +83,6 @@ class ResponseTest extends UnitTestCase
             ],
             'multiple array nested' => [
                 'include' => ['parent.books', 'children'],
-            ],
-        ];
-    }
-
-    public static function fieldsetDataProvider(): array
-    {
-        return [
-            'without includes' => [
-                self::FIELDSET_KEY => ['User:id;email'],
-                'expected' => ['data.id', 'data.email'],
-                'missing' => ['data.object', 'data.name', 'data.created_at', 'data.updated_at', 'data.children', 'data.books'],
-            ],
-            'only filter nested include keys' => [
-                self::FIELDSET_KEY => ['Book:author;title'],
-                'expected' => ['data.object', 'data.id', 'data.email', 'data.name', 'data.created_at', 'data.updated_at', 'data.books.data.0.author', 'data.books.data.0.title'],
-                'missing' => ['data.books.data.0.id', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
-            ],
-            'with first level includes - no filter' => [
-                self::FIELDSET_KEY => ['User:object,id;email;books'],
-                'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.author', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
-                'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
-            ],
-            'with first level includes - filter' => [
-                self::FIELDSET_KEY => ['User:object,id;email;books', 'Book:object,author'],
-                'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.author'],
-                'missing' => ['data.children', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.created_at', 'data.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
-            ],
-            'with nested includes - no filter' => [
-                self::FIELDSET_KEY => ['User:object,id;email,children;books'],
-                'expected' => ['data.object', 'data.id', 'data.email', 'data.children.data.0.object', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.id', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at'],
-                'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
-            ],
-            'with nested includes - filter' => [
-                self::FIELDSET_KEY => ['User:id;email;children;books', 'Book:id'],
-                'expected' => ['data.id', 'data.email', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.id'],
-                'missing' => ['data.object', 'data.children.data.0.object', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
             ],
         ];
     }
@@ -210,6 +174,42 @@ class ResponseTest extends UnitTestCase
             ],
             'false' => [
                 'resourceName' => false,
+            ],
+        ];
+    }
+
+    public static function fieldsetDataProvider(): array
+    {
+        return [
+            'without includes' => [
+                self::FIELDSET_KEY => ['User' => 'id,email'],
+                'expected' => ['data.id', 'data.email'],
+                'missing' => ['data.object', 'data.name', 'data.created_at', 'data.updated_at', 'data.children', 'data.books'],
+            ],
+            'only filter nested include keys' => [
+                self::FIELDSET_KEY => ['Book' => 'author,title'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.name', 'data.created_at', 'data.updated_at', 'data.books.data.0.author', 'data.books.data.0.title'],
+                'missing' => ['data.books.data.0.id', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
+            ],
+            'with first level includes - no filter' => [
+                self::FIELDSET_KEY => ['User' => 'object,id,email,books'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.author', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
+                'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
+            ],
+            'with first level includes - filter' => [
+                self::FIELDSET_KEY => ['User' => 'object,id,email,books', 'Book' => 'object,author'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.author'],
+                'missing' => ['data.children', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.created_at', 'data.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
+            ],
+            'with nested includes - no filter' => [
+                self::FIELDSET_KEY => ['User' => 'object,id,email,children,books'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.children.data.0.object', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.id', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at'],
+                'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
+            ],
+            'with nested includes - filter' => [
+                self::FIELDSET_KEY => ['User' => 'id,email,children,books', 'Book' => 'id'],
+                'expected' => ['data.id', 'data.email', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.id'],
+                'missing' => ['data.object', 'data.children.data.0.object', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
             ],
         ];
     }
@@ -317,7 +317,7 @@ class ResponseTest extends UnitTestCase
     #[DataProvider('validResourceNameProvider')]
     public function testCanOverrideMainResourceName($resourceName): void
     {
-        request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => ["{$resourceName}:id", 'Book:author,title']]);
+        request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => [$resourceName => 'id', 'Book' => 'author,title']]);
         $response = Response::createFrom($this->user);
         $response->transformWith(UserTransformer::class);
         $response->withResourceName($resourceName);
