@@ -32,16 +32,15 @@ final class RepositoryTest extends UnitTestCase
     }
 
     #[DataProvider('includeDataProvider')]
-    public function testEagerLoadSingleRelationRequestedViaRequest(string $includes, array $mustLoadRelations, array $mustNotLoadRelations): void
+    public function testEagerLoadSingleRelationRequestedViaRequest(string $include, array $mustLoadRelations, array $mustNotLoadRelations): void
     {
-        request()->offsetSet(config('apiato.requests.params.include', 'include'), $includes);
+        request()->merge(compact('include'));
         $parent = UserFactory::new()->has(
             UserFactory::new()->count(3),
             'children',
         )->count(3)->create();
         $repository = app(UserRepository::class);
 
-        // get all children
         $result = $repository->all();
 
         $result->each(function (User $user) use ($mustLoadRelations, $mustNotLoadRelations) {
