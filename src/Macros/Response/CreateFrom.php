@@ -14,7 +14,7 @@ class CreateFrom
             /**
              * Create a new Response instance.
              */
-            function (mixed $data = null, callable|TransformerAbstract|null $transformer = null, SerializerAbstract|null $serializer = null): Response {
+            function (mixed $data = null, callable|TransformerAbstract|null|string $transformer = null, SerializerAbstract|null|string $serializer = null): Response {
                 return Response::create($data, $transformer, $serializer);
             };
     }

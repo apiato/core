@@ -8,7 +8,7 @@ use League\Fractal\TransformerAbstract;
 use Spatie\Fractal\Facades\Fractal;
 
 /**
- * @method static \Apiato\Core\Services\Response createFrom(mixed $data = null, callable|TransformerAbstract|null $transformer = null, SerializerAbstract|null $serializer = null)
+ * @method static \Apiato\Core\Services\Response createFrom(mixed $data = null, callable|TransformerAbstract|null|string $transformer = null, SerializerAbstract|null|string $serializer = null)
  * @method static JsonResponse ok()
  * @method static JsonResponse created()
  * @method static JsonResponse noContent()
