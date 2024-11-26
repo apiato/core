@@ -24,9 +24,9 @@ trait CanEagerLoadTrait
         $this->scopeQuery(function (Builder|Model $model) {
             if (Request::has(config('apiato.requests.params.include', 'include'))) {
                 $validIncludes = [];
-                foreach (Response::getRequestedIncludes() as $includeName) {
+                foreach (Response::getRequestedIncludesAsModelRelation() as $includeName) {
                     $relationParts = explode('.', $includeName);
-                    $camelCasedIncludeName = $this->validateNestedRelations($this->model, $relationParts);
+                    $camelCasedIncludeName = $this->filterInvalidRelations($this->model, $relationParts);
                     if ($camelCasedIncludeName) {
                         $validIncludes[] = $camelCasedIncludeName;
                     }
@@ -39,7 +39,7 @@ trait CanEagerLoadTrait
         });
     }
 
-    private function validateNestedRelations(Builder|Model $model, array $relationParts): string|null
+    private function filterInvalidRelations(Builder|Model $model, array $relationParts): string|null
     {
         if (empty($relationParts)) {
             return null;
@@ -57,7 +57,7 @@ trait CanEagerLoadTrait
             return $relation;
         }
 
-        $nextRelation = $this->validateNestedRelations($nextModel, $relationParts);
+        $nextRelation = $this->filterInvalidRelations($nextModel, $relationParts);
 
         if (is_null($nextRelation)) {
             return null;
