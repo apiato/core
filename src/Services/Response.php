@@ -20,6 +20,19 @@ use Spatie\Fractal\Fractal;
 class Response extends Fractal
 {
     /**
+     * Parse the Request's include query parameter and return the requested includes as model relations.
+     *
+     * For example, if the include query parameter is "books,children.books", this method will return:
+     * ['books', 'children', 'children.books']
+     */
+    public static function getRequestedIncludesAsModelRelation(): array
+    {
+        $requestedIncludes = Request::get(Config::get('apiato.requests.params.include', 'include'), []);
+
+        return static::create()->manager->parseIncludes($requestedIncludes)->getRequestedIncludes();
+    }
+
+    /**
      * Create a new Response instance.
      *
      * @param null|mixed $data
@@ -31,19 +44,6 @@ class Response extends Fractal
     public static function create($data = null, $transformer = null, $serializer = null): static
     {
         return parent::create($data, $transformer, $serializer);
-    }
-
-    /**
-     * Parse the include parameter from the request and return an array of resources to include.
-     *
-     * Includes can be Array or csv string of resources to include.
-     */
-    public static function getRequestedIncludes(): array
-    {
-        $requestedIncludes = Request::get(Config::get('apiato.requests.params.include', 'include'), []);
-        $instance = static::create()->parseIncludes($requestedIncludes);
-
-        return $instance->manager->parseIncludes($instance->includes)->getRequestedIncludes();
     }
 
     public function createData(): Scope
