@@ -15,4 +15,17 @@ trait FormatterTrait
     {
         return preg_replace('/[^A-Za-z0-9]/', '', $str);
     }
+
+    protected function camelize(string $string): string
+    {
+        return str_replace(
+            ' ',
+            '',
+            ucwords(str_replace(
+                ['-', '_'],
+                ' ',
+                $string,
+            )),
+        );
+    }
 }

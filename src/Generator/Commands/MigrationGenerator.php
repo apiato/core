@@ -3,6 +3,7 @@
 namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
+use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Pluralizer;
@@ -106,7 +107,7 @@ return new class() extends Migration {
             ->setExtends($parentUnitTestCaseFullPath);
 
         // test method
-        $testMethod = $class->addMethod('test' . ucfirst($this->table) . 'TableHasExpectedColumns')->setPublic();
+        $testMethod = $class->addMethod('test' . $this->camelize($this->table) . 'TableHasExpectedColumns')->setPublic();
         $testMethod->addBody("
 \$columns = [
 'id' => 'bigint',
@@ -121,5 +122,10 @@ return new class() extends Migration {
         $testMethod->setReturnType('void');
 
         return $file;
+    }
+
+    protected function getParentTestCase(): ParentTestCase
+    {
+        return ParentTestCase::UNIT_TEST_CASE;
     }
 }

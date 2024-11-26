@@ -55,4 +55,14 @@ class UnitTestCaseGenerator extends FileGeneratorCommand
 
         return $file;
     }
+
+    protected function runGeneratorCommands(): void
+    {
+        $this->runGeneratorCommand(ContainerTestCaseGenerator::class, [
+            '--section' => $this->sectionName,
+            '--container' => $this->containerName,
+        ], silent: true);
+
+        parent::runGeneratorCommands();
+    }
 }
