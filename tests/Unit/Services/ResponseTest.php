@@ -218,7 +218,7 @@ class ResponseTest extends UnitTestCase
     public function testSingleResourceCanHandleCSVInclude($include, $expected): void
     {
         request()->merge(compact('include'));
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -232,7 +232,7 @@ class ResponseTest extends UnitTestCase
     public function testSingleResourceCanHandleArrayInclude($include, $expected): void
     {
         request()->merge(compact('include'));
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -248,7 +248,7 @@ class ResponseTest extends UnitTestCase
         request()->merge(compact('include'));
         UserFactory::new()->count(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
-        $response = Response::createFrom($users)->transformWith(UserTransformer::class);
+        $response = Response::create($users)->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
 
@@ -259,7 +259,7 @@ class ResponseTest extends UnitTestCase
     public function testCanFilterResponse($fieldset, $expected, $missing): void
     {
         request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => $fieldset]);
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -277,7 +277,7 @@ class ResponseTest extends UnitTestCase
     public function testSingleResourceCanHandleCSVExclude($exclude, $expected): void
     {
         request()->merge(compact('exclude'));
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -291,7 +291,7 @@ class ResponseTest extends UnitTestCase
     public function testSingleResourceCanHandleArrayExclude($exclude, $expected): void
     {
         request()->merge(compact('exclude'));
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -307,7 +307,7 @@ class ResponseTest extends UnitTestCase
         request()->merge(compact('exclude'));
         UserFactory::new()->count(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
-        $response = Response::createFrom($users)->transformWith(UserTransformer::class)->parseIncludes($exclude);
+        $response = Response::create($users)->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
         $result = AssertableJson::fromArray($response->toArray());
 
@@ -318,7 +318,7 @@ class ResponseTest extends UnitTestCase
     public function testCanOverrideMainResourceName($resourceName): void
     {
         request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => [$resourceName => 'id', 'Book' => 'author,title']]);
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
         $response->withResourceName($resourceName);
 
@@ -331,7 +331,7 @@ class ResponseTest extends UnitTestCase
     public function testGivenInvalidNameProvidedRevertToDefaultMainResourceName($resourceName): void
     {
         request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => [$resourceName => 'id', 'Book' => 'author,title']]);
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
         $response->withResourceName($resourceName);
 

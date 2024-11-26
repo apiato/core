@@ -2,19 +2,50 @@
 
 namespace Apiato\Core\Services;
 
+use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Contracts\HasResourceKey;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use League\Fractal\Scope;
-use Spatie\Fractal\Fractal as SpatieFractal;
+use League\Fractal\Serializer\SerializerAbstract;
+use League\Fractal\TransformerAbstract;
+use Spatie\Fractal\Fractal;
 
 /**
  * A wrapper class for Spatie\Fractal\Fractal.
  *
- * @see SpatieFractal
+ * @see Fractal
  */
-class Response extends SpatieFractal
+class Response extends Fractal
 {
+    /**
+     * Create a new Response instance.
+     *
+     * @param null|mixed $data
+     * @param callable|TransformerAbstract|null|string $transformer
+     * @param SerializerAbstract|null|string $serializer
+     *
+     * @return static
+     */
+    public static function create($data = null, $transformer = null, $serializer = null): static
+    {
+        return parent::create($data, $transformer, $serializer);
+    }
+
+    /**
+     * Parse the include parameter from the request and return an array of resources to include.
+     *
+     * Includes can be Array or csv string of resources to include.
+     */
+    public static function getRequestedIncludes(): array
+    {
+        $requestedIncludes = Request::get(Config::get('apiato.requests.params.include', 'include'), []);
+        $instance = static::create()->parseIncludes($requestedIncludes);
+
+        return $instance->manager->parseIncludes($instance->includes)->getRequestedIncludes();
+    }
+
     public function createData(): Scope
     {
         $this->withResourceName($this->defaultResourceName());
@@ -70,5 +101,56 @@ class Response extends SpatieFractal
         }
 
         return $this->transformer->getAvailableIncludes();
+    }
+
+    /**
+     * Returns a 202 Accepted response.
+     */
+    public function accepted(): JsonResponse
+    {
+        if (is_null($this->getTransformer())) {
+            $this->transformWith(Transformer::empty());
+        }
+
+        return $this->respond(202);
+    }
+
+    public function getTransformer(): string|callable|TransformerAbstract|null
+    {
+        return $this->transformer;
+    }
+
+    /**
+     * Returns a 201 Created response.
+     */
+    public function created(): JsonResponse
+    {
+        if (is_null($this->getTransformer())) {
+            $this->transformWith(Transformer::empty());
+        }
+
+        return $this->respond(201);
+    }
+
+    /**
+     * Returns a 204 No Content response.
+     */
+    public function noContent(): JsonResponse
+    {
+        $this->transformWith(Transformer::empty());
+
+        return $this->respond(204);
+    }
+
+    /**
+     * Returns a 200 OK response.
+     */
+    public function ok(): JsonResponse
+    {
+        if (is_null($this->getTransformer())) {
+            $this->transformWith(Transformer::empty());
+        }
+
+        return $this->respond(200);
     }
 }
