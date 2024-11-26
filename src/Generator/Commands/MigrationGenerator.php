@@ -98,12 +98,15 @@ return new class() extends Migration {
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
+        $coversNothingAttributeFullPath = 'PHPUnit\Framework\Attributes\CoversNothing';
+        $namespace->addUse($coversNothingAttributeFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass('MigrationTest')
             ->setFinal()
-            ->setExtends($parentUnitTestCaseFullPath);
+            ->setExtends($parentUnitTestCaseFullPath)
+            ->addAttribute($coversNothingAttributeFullPath);
 
         // test method
         $testMethod = $class->addMethod('test' . ucfirst($this->table) . 'TableHasExpectedColumns')->setPublic();
