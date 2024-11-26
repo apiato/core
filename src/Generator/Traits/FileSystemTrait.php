@@ -71,7 +71,9 @@ trait FileSystemTrait
             }
         }
 
-        return Yaml::parseFile($filePath);
+        $config = Yaml::parseFile($filePath);
+
+        return $config ?? [];
     }
 
     /**
