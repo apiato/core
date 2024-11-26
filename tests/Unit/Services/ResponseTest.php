@@ -352,4 +352,53 @@ class ResponseTest extends UnitTestCase
             ->has(BookFactory::new()->count(2))
             ->createOne();
     }
+
+    public function testCanGenerate200OKResponse(): void
+    {
+        $response = Response::create($this->user);
+        $response->transformWith(UserTransformer::class);
+
+        $result = $response->ok();
+
+        $this->assertEquals(200, $result->getStatusCode());
+    }
+
+    public function testCanGenerate202OAcceptedResponse(): void
+    {
+        $response = Response::create($this->user);
+        $response->transformWith(UserTransformer::class);
+
+        $result = $response->accepted();
+
+        $this->assertEquals(202, $result->getStatusCode());
+    }
+
+    public function testCanGenerate201CreatedResponse(): void
+    {
+        $response = Response::create($this->user);
+        $response->transformWith(UserTransformer::class);
+
+        $result = $response->created();
+
+        $this->assertEquals(201, $result->getStatusCode());
+    }
+
+    public function testCanGenerate204NoContentResponse(): void
+    {
+        $response = Response::create($this->user);
+        $response->transformWith(UserTransformer::class);
+
+        $result = $response->noContent();
+
+        $this->assertEquals(204, $result->getStatusCode());
+    }
+
+    public function testCanGetRequestedIncludes(): void
+    {
+        request()->merge(['include' => 'books,children.books']);
+
+        $result = Response::getRequestedIncludesAsModelRelation();
+
+        $this->assertEquals(['books', 'children', 'children.books'], $result);
+    }
 }
