@@ -54,4 +54,14 @@ class ApiTestCaseGenerator extends FileGeneratorCommand
 
         return $file;
     }
+
+    protected function runGeneratorCommands(): void
+    {
+        $this->runGeneratorCommand(FunctionalTestCaseGenerator::class, [
+            '--section' => $this->sectionName,
+            '--container' => $this->containerName,
+        ], silent: true);
+
+        parent::runGeneratorCommands();
+    }
 }
