@@ -44,8 +44,8 @@ class ContainerTestCaseGenerator extends FileGeneratorCommand
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests');
 
         // imports
-        $parentTestCaseFullPath = 'App\Ship\Parents\Tests\TestCase';
-        $namespace->addUse($parentTestCaseFullPath, 'ParentTestCase');
+        $parentTestCaseFullPath = 'App\Ship\Parents\Tests\PhpUnit\TestCase';
+        $namespace->addUse($parentTestCaseFullPath, 'ShipTestCase');
 
         // class
         $file->addNamespace($namespace)
