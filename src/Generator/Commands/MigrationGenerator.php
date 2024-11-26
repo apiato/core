@@ -68,7 +68,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class () extends Migration {
     public function up(): void
     {
         Schema::create('$this->table', function (Blueprint \$table) {
@@ -99,12 +99,15 @@ return new class() extends Migration {
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
+        $coversNothingAttributeFullPath = 'PHPUnit\Framework\Attributes\CoversNothing';
+        $namespace->addUse($coversNothingAttributeFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass('MigrationTest')
             ->setFinal()
-            ->setExtends($parentUnitTestCaseFullPath);
+            ->setExtends($parentUnitTestCaseFullPath)
+            ->addAttribute($coversNothingAttributeFullPath);
 
         // test method
         $testMethod = $class->addMethod('test' . $this->camelize($this->table) . 'TableHasExpectedColumns')->setPublic();
