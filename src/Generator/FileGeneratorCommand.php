@@ -2,7 +2,6 @@
 
 namespace Apiato\Core\Generator;
 
-use Apiato\Core\Generator\Commands\TestCases\TestCasesGenerator;
 use Apiato\Core\Generator\Traits\FileSystemTrait;
 use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 
@@ -76,10 +75,7 @@ abstract class FileGeneratorCommand extends GeneratorCommand
     {
         $this->generateFile($this->getFilePath(), $this->getFileContent());
         if ($this->isTestable() && $this->test) {
-            $this->runGeneratorCommand(TestCasesGenerator::class, [
-                '--section' => $this->sectionName,
-                '--container' => $this->containerName,
-            ], silent: true);
+            $this->createTestCases();
             $this->generateFile($this->getTestPath(), $this->getTestContent());
         }
     }
