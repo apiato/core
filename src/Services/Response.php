@@ -35,11 +35,9 @@ class Response extends Fractal
     /**
      * Create a new Response instance.
      *
-     * @param null|mixed $data
-     * @param callable|TransformerAbstract|null|string $transformer
-     * @param SerializerAbstract|null|string $serializer
-     *
-     * @return static
+     * @param mixed|null $data
+     * @param callable|TransformerAbstract|string|null $transformer
+     * @param SerializerAbstract|string|null $serializer
      */
     public static function create($data = null, $transformer = null, $serializer = null): static
     {

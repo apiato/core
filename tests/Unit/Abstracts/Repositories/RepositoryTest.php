@@ -61,9 +61,9 @@ final class RepositoryTest extends UnitTestCase
     #[DataProvider('includeDataProvider')]
     public function testEagerLoadSingleRelationRequestedViaRequest(
         string $include,
-        array  $userMustLoadRelations,
-        array  $booksMustLoadRelations,
-        array  $mustNotLoadRelations,
+        array $userMustLoadRelations,
+        array $booksMustLoadRelations,
+        array $mustNotLoadRelations,
     ): void {
         request()->merge(compact('include'));
         UserFactory::new()
