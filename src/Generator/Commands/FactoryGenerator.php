@@ -7,7 +7,6 @@ use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
 use Nette\PhpGenerator\Literal;
-use Nette\PhpGenerator\Type;
 use Symfony\Component\Console\Input\InputOption;
 
 class FactoryGenerator extends FileGeneratorCommand
