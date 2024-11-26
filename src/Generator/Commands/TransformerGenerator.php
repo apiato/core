@@ -3,6 +3,7 @@
 namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
+use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
@@ -191,5 +192,10 @@ parent::setUp();
 
         // return the file
         return $file;
+    }
+
+    protected function getParentTestCase(): ParentTestCase
+    {
+        return ParentTestCase::UNIT_TEST_CASE;
     }
 }
