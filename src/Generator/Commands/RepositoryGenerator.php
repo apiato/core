@@ -7,6 +7,7 @@ use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -84,7 +85,7 @@ class RepositoryGenerator extends FileGeneratorCommand
         // properties
         $class->addProperty('model')
             ->setVisibility('protected')
-            ->setValue($modelFullPath);
+            ->setValue(new Literal("$this->model::class"));
         $class->addProperty('fieldSearchable')
             ->setVisibility('protected')
             ->setValue(['id' => '=']);
