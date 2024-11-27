@@ -4,8 +4,11 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
 class RepositoryGenerator extends FileGeneratorCommand
@@ -63,7 +66,9 @@ class RepositoryGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Repositories');
 
         // imports
@@ -80,12 +85,12 @@ class RepositoryGenerator extends FileGeneratorCommand
         // properties
         $class->addProperty('model')
             ->setVisibility('protected')
-            ->setValue($modelFullPath);
+            ->setValue(new Literal("$this->model::class"));
         $class->addProperty('fieldSearchable')
             ->setVisibility('protected')
             ->setValue(['id' => '=']);
 
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getTestPath(): string
@@ -97,7 +102,9 @@ class RepositoryGenerator extends FileGeneratorCommand
     {
         $entity = Str::lower($this->model);
 
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Data\Repositories');
 
         // imports
@@ -136,7 +143,7 @@ class RepositoryGenerator extends FileGeneratorCommand
 ");
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getParentTestCase(): ParentTestCase

@@ -4,8 +4,10 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
 class RouteGenerator extends FileGeneratorCommand
@@ -143,7 +145,9 @@ Route::$this->method('$this->url', $this->controller::class)
 
     protected function getTestContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . "\Tests\Functional\\$this->ui");
 
         // imports
@@ -192,7 +196,7 @@ $response->assertForbidden();
         $testMethod3->setReturnType('void');
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getParentTestCase(): ParentTestCase

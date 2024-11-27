@@ -3,6 +3,8 @@
 namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
+use Apiato\Core\Generator\Printer;
+use Nette\PhpGenerator\PhpFile;
 
 class NotificationGenerator extends FileGeneratorCommand
 {
@@ -38,7 +40,9 @@ class NotificationGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Notifications');
 
         // imports
@@ -76,6 +80,6 @@ return (new MailMessage())
         $toMailMethod->addParameter('notifiable')
             ->setType($userModelFullPath);
 
-        return $file;
+        return $printer->printFile($file);
     }
 }

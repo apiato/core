@@ -4,6 +4,7 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Pluralizer;
@@ -94,6 +95,8 @@ return new class () extends Migration {
     protected function getTestContent(): string
     {
         $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Data\Migrations');
 
         // imports
@@ -124,7 +127,7 @@ return new class () extends Migration {
 
         $testMethod->setReturnType('void');
 
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getParentTestCase(): ParentTestCase

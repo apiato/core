@@ -4,9 +4,11 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
 class ControllerGenerator extends FileGeneratorCommand
@@ -73,7 +75,9 @@ class ControllerGenerator extends FileGeneratorCommand
         $entity = Str::lower($model);
         $entities = Pluralizer::plural($entity);
 
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Controllers');
 
         // imports
@@ -117,7 +121,7 @@ class ControllerGenerator extends FileGeneratorCommand
                 break;
         }
 
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getTestPath(): string
@@ -127,7 +131,9 @@ class ControllerGenerator extends FileGeneratorCommand
 
     protected function getTestContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\UI\API\Controllers');
 
         // imports
@@ -147,7 +153,7 @@ class ControllerGenerator extends FileGeneratorCommand
         $testMethod->setReturnType('void');
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getParentTestCase(): ParentTestCase

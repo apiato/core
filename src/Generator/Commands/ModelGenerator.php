@@ -4,8 +4,11 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
 class ModelGenerator extends FileGeneratorCommand
@@ -88,7 +91,9 @@ class ModelGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models');
 
         // imports
@@ -101,20 +106,28 @@ class ModelGenerator extends FileGeneratorCommand
             ->setExtends($parentModelFullPath);
 
         // properties
-        $class->addProperty('fillable')
-            ->setVisibility('protected')
-            ->setValue([]);
-
-        $class->addProperty('resourceKey')
-            ->setType('string')
-            ->setVisibility('protected')
-            ->setValue($this->fileName);
-
         $class->addProperty('table')
             ->setVisibility('protected')
             ->setValue($this->table);
 
-        return $file;
+        $class->addProperty('fillable')
+            ->setVisibility('protected')
+            ->setValue(new Literal("[\n]"));
+
+        $class->addProperty('hidden')
+            ->setVisibility('protected')
+            ->setValue(new Literal("[\n]"));
+
+        $class->addProperty('casts')
+            ->setVisibility('protected')
+            ->setValue(new Literal("[\n]"));
+
+        $class->addMethod('getResourceKey')
+            ->setReturnType('string')
+            ->setBody("return '$this->fileName';")
+            ->setPublic();
+
+        return $printer->printFile($file);
     }
 
     protected function getTestPath(): string
@@ -125,7 +138,10 @@ class ModelGenerator extends FileGeneratorCommand
     protected function getTestContent(): string
     {
         $factoryName = $this->fileName . 'Factory';
-        $file = new \Nette\PhpGenerator\PhpFile();
+
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Models');
 
         // imports
@@ -135,12 +151,15 @@ class ModelGenerator extends FileGeneratorCommand
         $namespace->addUse($modelFullPath);
         $factoryFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Factories\\' . $this->fileName . 'Factory';
         $namespace->addUse($factoryFullPath);
+        $coversClassAttributeFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
+        $namespace->addUse($coversClassAttributeFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
             ->setFinal()
-            ->setExtends($parentUnitTestCaseFullPath);
+            ->setExtends($parentUnitTestCaseFullPath)
+            ->addAttribute($coversClassAttributeFullPath, [new Literal("$this->fileName::class")]);
 
         // test method
         $testMethod1 = $class->addMethod('testUsesCorrectTable')->setPublic();
@@ -176,10 +195,10 @@ class ModelGenerator extends FileGeneratorCommand
         $testMethod4 = $class->addMethod('testHasCorrectHiddenFields')->setPublic();
         $testMethod4->addBody("
 \$entity = $factoryName::new()->createOne();
-\$hiddens = [
+\$hidden = [
 ];
 
-\$this->assertSame(\$hiddens, \$entity->getHidden());
+\$this->assertSame(\$hidden, \$entity->getHidden());
 ");
         $testMethod4->setReturnType('void');
 
@@ -192,7 +211,7 @@ class ModelGenerator extends FileGeneratorCommand
         $testMethod5->setReturnType('void');
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function runGeneratorCommands(): void

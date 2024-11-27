@@ -4,7 +4,9 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
 class PolicyGenerator extends FileGeneratorCommand
@@ -59,16 +61,18 @@ class PolicyGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
+        $printer = new Printer();
+
         $fullPath = $this->getFullFilePath($this->getFilePath());
         $fileExists = $this->fileAlreadyExists($fullPath);
         if ($fileExists) {
             $fileContent = file_get_contents($fullPath);
-            $file = \Nette\PhpGenerator\PhpFile::fromCode($fileContent);
+            $file = PhpFile::fromCode($fileContent);
 
             $namespace = array_values($file->getNamespaces())[0];
             $class = array_values($namespace->getClasses())[0];
         } else {
-            $file = new \Nette\PhpGenerator\PhpFile();
+            $file = new PhpFile();
 
             $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Policies');
 
@@ -98,7 +102,7 @@ return true;
             $method->addParameter('user')->setType($userModelFullPath);
         }
 
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getTestPath(): string
@@ -108,17 +112,19 @@ return true;
 
     protected function getTestContent(): string
     {
+        $printer = new Printer();
+
         $fullPath = $this->getFullFilePath($this->getTestPath());
         $fileExists = $this->fileAlreadyExists($fullPath);
 
         if ($fileExists) {
             $fileContent = file_get_contents($fullPath);
-            $file = \Nette\PhpGenerator\PhpFile::fromCode($fileContent);
+            $file = PhpFile::fromCode($fileContent);
 
             $namespace = array_values($file->getNamespaces())[0];
             $class = array_values($namespace->getClasses())[0];
         } else {
-            $file = new \Nette\PhpGenerator\PhpFile();
+            $file = new PhpFile();
             $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Policies');
 
             // imports
@@ -151,7 +157,7 @@ return true;
         }
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getParentTestCase(): ParentTestCase

@@ -4,8 +4,11 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
 class FactoryGenerator extends FileGeneratorCommand
@@ -63,7 +66,9 @@ class FactoryGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Factories');
 
         // imports
@@ -80,7 +85,7 @@ class FactoryGenerator extends FileGeneratorCommand
         // properties
         $class->addProperty('model')
             ->setVisibility('protected')
-            ->setValue($modelFullPath);
+            ->setValue(new Literal("$this->model::class"));
 
         // definition method
         $definition = $class->addMethod('definition')
@@ -88,7 +93,7 @@ class FactoryGenerator extends FileGeneratorCommand
             ->setReturnType('array')
             ->setBody('return [];');
 
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getTestPath(): string
@@ -100,7 +105,9 @@ class FactoryGenerator extends FileGeneratorCommand
     {
         $entity = Str::lower($this->model);
 
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Data\Factories');
 
         // imports
@@ -117,18 +124,34 @@ class FactoryGenerator extends FileGeneratorCommand
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 
-        // test method
-        $testMethod = $class->addMethod("testCanCreate$this->model")->setPublic();
-        $testMethod->addBody("
+        // test method 1
+        $testMethod1 = $class->addMethod("testCanCreate$this->model")->setPublic();
+        $testMethod1->addBody("
 \$$entity = $this->fileName::new()->createOne();
 
 \$this->assertInstanceOf($this->model::class, $$entity);
 ");
 
-        $testMethod->setReturnType('void');
+        $testMethod1->setReturnType('void');
+
+        // test method 2
+        $testMethod2 = $class->addMethod('testFactorySetsExpectedFieldsByDefault')->setPublic();
+        $testMethod2->addBody("
+\$$entity = $this->fileName::new()->createOne();
+\$data = [
+    // add expected fields here
+];
+
+\$this->assertInstanceOf($this->model::class, $$entity);
+foreach (\$data as \$field) {
+    \$this->assertNotNull(\$$entity->\$field);
+}
+");
+
+        $testMethod2->setReturnType('void');
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getParentTestCase(): ParentTestCase

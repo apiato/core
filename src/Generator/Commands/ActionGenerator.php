@@ -4,13 +4,13 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
-use Nette\PhpGenerator\PsrPrinter;
 use Symfony\Component\Console\Input\InputOption;
 
 class ActionGenerator extends FileGeneratorCommand
@@ -90,12 +90,14 @@ class ActionGenerator extends FileGeneratorCommand
         $isCRUD = in_array($this->stub, ['list', 'find', 'create', 'update', 'delete']);
 
         $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $this->addNamespace($file);
         $class = $this->addClass($file, $namespace);
         $this->addConstructor($namespace, $class, $isCRUD);
         $this->addRunMethod($namespace, $class, $isCRUD);
 
-        return (new PsrPrinter())->printFile($file);
+        return $printer->printFile($file);
     }
 
     protected function addNamespace(PhpFile $file): PhpNamespace
@@ -188,6 +190,8 @@ $data = $request->sanitizeInput([
     protected function getTestContent(): string
     {
         $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Actions');
 
         // imports
@@ -207,7 +211,7 @@ $data = $request->sanitizeInput([
         $testMethod->setReturnType('void');
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getParentTestCase(): ParentTestCase
