@@ -2,7 +2,6 @@
 
 namespace Apiato\Core\Generator\Traits;
 
-use Exception;
 use Illuminate\Support\Facades\File;
 
 trait SuggestionHelperTrait
@@ -103,8 +102,8 @@ trait SuggestionHelperTrait
     private function getAllFilesFromDirectory(string $directory): array
     {
         try {
-        return File::allFiles($directory);
-        }catch (Exception) {
+            return File::allFiles($directory);
+        } catch (\Exception) {
             return [];
         }
     }
