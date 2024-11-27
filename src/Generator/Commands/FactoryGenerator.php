@@ -124,15 +124,31 @@ class FactoryGenerator extends FileGeneratorCommand
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 
-        // test method
-        $testMethod = $class->addMethod("testCanCreate$this->model")->setPublic();
-        $testMethod->addBody("
+        // test method 1
+        $testMethod1 = $class->addMethod("testCanCreate$this->model")->setPublic();
+        $testMethod1->addBody("
 \$$entity = $this->fileName::new()->createOne();
 
 \$this->assertInstanceOf($this->model::class, $$entity);
 ");
 
-        $testMethod->setReturnType('void');
+        $testMethod1->setReturnType('void');
+
+        // test method 2
+        $testMethod2 = $class->addMethod('testFactorySetsExpectedFieldsByDefault')->setPublic();
+        $testMethod2->addBody("
+\$$entity = $this->fileName::new()->createOne();
+\$data = [
+    // add expected fields here
+];
+
+\$this->assertInstanceOf($this->model::class, $$entity);
+foreach (\$data as \$field) {
+    \$this->assertNotNull(\$$entity->\$field);
+}
+");
+
+        $testMethod2->setReturnType('void');
 
         // return the file
         return $printer->printFile($file);
