@@ -14,7 +14,7 @@ trait SuggestionHelperTrait
         bool $unCamelizeAndReplaceWithSpace = false,
     ): array {
         $actionsDirectory = base_path('app/Containers/' . $section . '/' . $container . '/Actions');
-        $files = File::allFiles($actionsDirectory);
+        $files = $this->getAllFilesFromDirectory($actionsDirectory);
 
         $actions = [];
 
@@ -45,7 +45,7 @@ trait SuggestionHelperTrait
         bool $unCamelizeAndReplaceWithSpace = false,
     ): array {
         $modelsDirectory = base_path('app/Containers/' . $section . '/' . $container . '/Models');
-        $files = File::allFiles($modelsDirectory);
+        $files = $this->getAllFilesFromDirectory($modelsDirectory);
 
         $models = [];
 
@@ -76,7 +76,7 @@ trait SuggestionHelperTrait
         bool $unCamelizeAndReplaceWithSpace = false,
     ): array {
         $controllersDirectory = base_path('app/Containers/' . $section . '/' . $container . '/UI/API/Controllers');
-        $files = File::allFiles($controllersDirectory);
+        $files = $this->getAllFilesFromDirectory($controllersDirectory);
 
         $controllers = [];
 
@@ -97,5 +97,14 @@ trait SuggestionHelperTrait
         }
 
         return $controllers;
+    }
+
+    private function getAllFilesFromDirectory(string $directory): array
+    {
+        try {
+            return File::allFiles($directory);
+        } catch (\Exception) {
+            return [];
+        }
     }
 }
