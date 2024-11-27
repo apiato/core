@@ -151,12 +151,15 @@ class ModelGenerator extends FileGeneratorCommand
         $namespace->addUse($modelFullPath);
         $factoryFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Factories\\' . $this->fileName . 'Factory';
         $namespace->addUse($factoryFullPath);
+        $coversClassAttributeFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
+        $namespace->addUse($coversClassAttributeFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
             ->setFinal()
-            ->setExtends($parentUnitTestCaseFullPath);
+            ->setExtends($parentUnitTestCaseFullPath)
+            ->addAttribute($coversClassAttributeFullPath, [new Literal("$this->fileName::class")]);
 
         // test method
         $testMethod1 = $class->addMethod('testUsesCorrectTable')->setPublic();
@@ -192,10 +195,10 @@ class ModelGenerator extends FileGeneratorCommand
         $testMethod4 = $class->addMethod('testHasCorrectHiddenFields')->setPublic();
         $testMethod4->addBody("
 \$entity = $factoryName::new()->createOne();
-\$hiddens = [
+\$hidden = [
 ];
 
-\$this->assertSame(\$hiddens, \$entity->getHidden());
+\$this->assertSame(\$hidden, \$entity->getHidden());
 ");
         $testMethod4->setReturnType('void');
 
