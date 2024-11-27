@@ -11,7 +11,6 @@ use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
-use Nette\PhpGenerator\PsrPrinter;
 use Symfony\Component\Console\Input\InputOption;
 
 class ActionGenerator extends FileGeneratorCommand
