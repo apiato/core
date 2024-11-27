@@ -4,7 +4,9 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
+use Nette\PhpGenerator\PhpFile;
 
 class CriteriaGenerator extends FileGeneratorCommand
 {
@@ -42,7 +44,9 @@ class CriteriaGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Criterias');
 
         // imports
@@ -65,7 +69,7 @@ class CriteriaGenerator extends FileGeneratorCommand
         $applyMethod->addParameter('repository')->setType($repositoryInterface);
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getTestPath(): string
@@ -75,7 +79,9 @@ class CriteriaGenerator extends FileGeneratorCommand
 
     protected function getTestContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Data\Criterias');
 
         // imports
@@ -100,7 +106,7 @@ class CriteriaGenerator extends FileGeneratorCommand
         $testMethod->setReturnType('void');
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getParentTestCase(): ParentTestCase

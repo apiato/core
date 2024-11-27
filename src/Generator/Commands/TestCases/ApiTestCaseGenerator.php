@@ -3,6 +3,8 @@
 namespace Apiato\Core\Generator\Commands\TestCases;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
+use Apiato\Core\Generator\Printer;
+use Nette\PhpGenerator\PhpFile;
 
 class ApiTestCaseGenerator extends FileGeneratorCommand
 {
@@ -39,7 +41,9 @@ class ApiTestCaseGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Functional');
 
         // imports
@@ -52,7 +56,7 @@ class ApiTestCaseGenerator extends FileGeneratorCommand
             ->setAbstract()
             ->setExtends($functionalTestCaseFullPath);
 
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function runGeneratorCommands(): void
