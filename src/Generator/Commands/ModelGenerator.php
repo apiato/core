@@ -7,6 +7,7 @@ use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -105,18 +106,26 @@ class ModelGenerator extends FileGeneratorCommand
             ->setExtends($parentModelFullPath);
 
         // properties
-        $class->addProperty('fillable')
-            ->setVisibility('protected')
-            ->setValue([]);
-
-        $class->addProperty('resourceKey')
-            ->setType('string')
-            ->setVisibility('protected')
-            ->setValue($this->fileName);
-
         $class->addProperty('table')
             ->setVisibility('protected')
             ->setValue($this->table);
+
+        $class->addProperty('fillable')
+            ->setVisibility('protected')
+            ->setValue(new Literal("[\n]"));
+
+        $class->addProperty('hidden')
+            ->setVisibility('protected')
+            ->setValue(new Literal("[\n]"));
+
+        $class->addProperty('casts')
+            ->setVisibility('protected')
+            ->setValue(new Literal("[\n]"));
+
+        $class->addMethod('getResourceKey')
+            ->setReturnType('string')
+            ->setBody("return '$this->fileName';")
+            ->setPublic();
 
         return $printer->printFile($file);
     }
