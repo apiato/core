@@ -4,8 +4,10 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
 class ModelGenerator extends FileGeneratorCommand
@@ -88,7 +90,9 @@ class ModelGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models');
 
         // imports
@@ -114,7 +118,7 @@ class ModelGenerator extends FileGeneratorCommand
             ->setVisibility('protected')
             ->setValue($this->table);
 
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getTestPath(): string
@@ -125,7 +129,10 @@ class ModelGenerator extends FileGeneratorCommand
     protected function getTestContent(): string
     {
         $factoryName = $this->fileName . 'Factory';
-        $file = new \Nette\PhpGenerator\PhpFile();
+
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\Models');
 
         // imports
@@ -192,7 +199,7 @@ class ModelGenerator extends FileGeneratorCommand
         $testMethod5->setReturnType('void');
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function runGeneratorCommands(): void

@@ -3,6 +3,8 @@
 namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
+use Apiato\Core\Generator\Printer;
+use Nette\PhpGenerator\PhpFile;
 
 class JobGenerator extends FileGeneratorCommand
 {
@@ -38,7 +40,9 @@ class JobGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Jobs');
 
         // imports
@@ -59,6 +63,6 @@ class JobGenerator extends FileGeneratorCommand
             ->setPublic()
             ->setReturnType('void');
 
-        return $file;
+        return $printer->printFile($file);
     }
 }

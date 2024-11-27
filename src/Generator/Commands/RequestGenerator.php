@@ -4,8 +4,10 @@ namespace Apiato\Core\Generator\Commands;
 
 use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
+use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
 class RequestGenerator extends FileGeneratorCommand
@@ -87,7 +89,9 @@ class RequestGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Requests');
 
         // imports
@@ -156,10 +160,7 @@ class RequestGenerator extends FileGeneratorCommand
         $rulesMethod->addParameter('gate')->setType($gateFullPath);
 
         // return the file
-        return $file;
-
-        // or use the PsrPrinter for output in accordance with PSR-2 / PSR-12 / PER
-        // echo (new Nette\PhpGenerator\PsrPrinter)->printFile($file);
+        return $printer->printFile($file);
     }
 
     protected function getTestPath(): string
@@ -169,7 +170,9 @@ class RequestGenerator extends FileGeneratorCommand
 
     protected function getTestContent(): string
     {
-        $file = new \Nette\PhpGenerator\PhpFile();
+        $file = new PhpFile();
+        $printer = new Printer();
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\UI\API\Requests');
 
         // imports
@@ -249,7 +252,7 @@ parent::setUp();
         $testMethod5->setReturnType('void');
 
         // return the file
-        return $file;
+        return $printer->printFile($file);
     }
 
     protected function getParentTestCase(): ParentTestCase
