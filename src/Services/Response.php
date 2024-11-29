@@ -75,9 +75,7 @@ class Response extends Fractal
 
     private function getRequestedFieldsets(): array
     {
-        // TODO: start from here! Use the fractal.php config to get the include, exclude, and fieldset keys
-        // TODO: BREAKING CHANGE: rename the default to "fields"
-        return request()?->input(config('apiato.requests.params.filter', 'filter')) ?? [];
+        return request()?->input(config('apiato.requests.sparse_fieldsets.request_key')) ?? [];
     }
 
     private function setAvailableIncludesMeta(): void

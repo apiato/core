@@ -343,7 +343,7 @@ class ResponseTest extends UnitTestCase
     {
         parent::setUp();
 
-        config()->set('apiato.requests.params.filter', self::FIELDSET_KEY);
+        config()->set('apiato.requests.sparse_fieldsets.request_key', self::FIELDSET_KEY);
 
         $this->user = UserFactory::new()
             ->for(UserFactory::new()->has(BookFactory::new()), 'parent')
