@@ -5,8 +5,6 @@ namespace Apiato\Core\Services;
 use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Contracts\HasResourceKey;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\SerializerAbstract;
 use League\Fractal\TransformerAbstract;
@@ -27,7 +25,7 @@ class Response extends Fractal
      */
     public static function getRequestedIncludesAsModelRelation(): array
     {
-        $requestedIncludes = Request::get(Config::get('apiato.requests.params.include', 'include'), []);
+        $requestedIncludes = request()?->input(config('fractal.auto_includes.request_key'), []);
 
         return static::create()->manager->parseIncludes($requestedIncludes)->getRequestedIncludes();
     }
@@ -77,8 +75,9 @@ class Response extends Fractal
 
     private function getRequestedFieldsets(): array
     {
+        // TODO: start from here! Use the fractal.php config to get the include, exclude, and fieldset keys
         // TODO: BREAKING CHANGE: rename the default to "fields"
-        return Request::get(Config::get('apiato.requests.params.filter', 'filter')) ?? [];
+        return request()?->input(config('apiato.requests.params.filter', 'filter')) ?? [];
     }
 
     private function setAvailableIncludesMeta(): void

@@ -5,7 +5,6 @@ namespace Apiato\Core\Traits;
 use Apiato\Core\Services\Response;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
 /**
@@ -22,7 +21,7 @@ trait CanEagerLoadTrait
     protected function eagerLoadRequestedRelations(): void
     {
         $this->scopeQuery(function (Builder|Model $model) {
-            if (Request::has(config('apiato.requests.params.include', 'include'))) {
+            if (request()?->has(config('fractal.auto_includes.request_key'))) {
                 $validIncludes = [];
                 foreach (Response::getRequestedIncludesAsModelRelation() as $includeName) {
                     $relationParts = explode('.', $includeName);

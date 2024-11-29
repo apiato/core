@@ -3,7 +3,6 @@
 namespace Apiato\Core\Commands;
 
 use Apiato\Core\Abstracts\Commands\ConsoleCommand;
-use Illuminate\Support\Facades\Config;
 
 class SeedDeploymentDataCommand extends ConsoleCommand
 {
@@ -25,7 +24,7 @@ class SeedDeploymentDataCommand extends ConsoleCommand
     public function handle(): void
     {
         $this->call('db:seed', [
-            '--class' => Config::get('apiato.seeders.deployment'),
+            '--class' => config('apiato.seeders.deployment'),
         ]);
 
         $this->info('Deployment Data Seeded Successfully.');

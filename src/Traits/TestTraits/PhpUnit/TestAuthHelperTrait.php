@@ -3,7 +3,6 @@
 namespace Apiato\Core\Traits\TestTraits\PhpUnit;
 
 use Apiato\Core\Abstracts\Models\UserModel;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 
 trait TestAuthHelperTrait
@@ -64,8 +63,8 @@ trait TestAuthHelperTrait
     public function getTestingUser(array|null $userDetails = null, array|null $access = null, bool $createUserAsAdmin = false): UserModel
     {
         $this->createUserAsAdmin = $createUserAsAdmin;
-        $this->userClass = $this->userclass ?? Config::get('apiato.tests.user-class');
-        $this->userAdminState = Config::get('apiato.tests.user-admin-state');
+        $this->userClass = $this->userclass ?? config('apiato.tests.user-class');
+        $this->userAdminState = config('apiato.tests.user-admin-state');
 
         if (is_null($userDetails)) {
             return $this->findOrCreateTestingUser($userDetails, $access);

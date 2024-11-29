@@ -9,7 +9,6 @@ use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserRepository;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
 use Apiato\Core\Tests\Unit\UnitTestCase;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -344,7 +343,7 @@ class ResponseTest extends UnitTestCase
     {
         parent::setUp();
 
-        Config::set('apiato.requests.params.filter', self::FIELDSET_KEY);
+        config()->set('apiato.requests.params.filter', self::FIELDSET_KEY);
 
         $this->user = UserFactory::new()
             ->for(UserFactory::new()->has(BookFactory::new()), 'parent')

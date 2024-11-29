@@ -4,18 +4,17 @@ namespace Apiato\Core\Abstracts\Repositories;
 
 use Apiato\Core\Traits\CanEagerLoadTrait;
 use Apiato\Core\Traits\HasRequestCriteriaTrait;
-use Illuminate\Support\Facades\Request;
-use Prettus\Repository\Contracts\CacheableInterface as PrettusCacheable;
+use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Prettus\Repository\Eloquent\BaseRepository as PrettusRepository;
-use Prettus\Repository\Traits\CacheableRepository as PrettusCacheableRepository;
+use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Repository\Traits\CacheableRepository;
 
-abstract class Repository extends PrettusRepository implements PrettusCacheable
+abstract class Repository extends BaseRepository implements CacheableInterface
 {
     use HasRequestCriteriaTrait;
     use CanEagerLoadTrait;
-    use PrettusCacheableRepository {
-        PrettusCacheableRepository::paginate as cacheablePaginate;
+    use CacheableRepository {
+        CacheableRepository::paginate as cacheablePaginate;
     }
 
     // TODO: BC: set return type to void
@@ -106,7 +105,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
     {
         // the priority is for the function parameter, if not available then take
         // it from the request if available and if not keep it null.
-        return $limit ?? Request::get('limit');
+        return $limit ?? request()?->input('limit');
     }
 
     public function wantsToSkipPagination(mixed $limit): bool

@@ -4,7 +4,6 @@ namespace Apiato\Core\Traits;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\IncorrectIdException;
-use Illuminate\Support\Facades\Config;
 use Vinkla\Hashids\Facades\Hashids;
 
 trait HashIdTrait
@@ -110,7 +109,7 @@ trait HashIdTrait
     protected function decodeHashedIdsBeforeValidation(array $requestData): array
     {
         // the hash ID feature must be enabled to use this decoder feature.
-        if (!empty($this->decode) && Config::get('apiato.hash-id')) {
+        if (!empty($this->decode) && config('apiato.hash-id')) {
             // iterate over each key (ID that needs to be decoded) and call keys locator to decode them
             foreach ($this->decode as $key) {
                 $requestData = $this->locateAndDecodeIds($requestData, $key);
