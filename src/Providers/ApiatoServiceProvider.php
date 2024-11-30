@@ -35,7 +35,8 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
         $this->runLoaderRegister();
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../../config/apiato.php', 'apiato'
+            __DIR__ . '/../../config/apiato.php',
+            'apiato',
         );
     }
 

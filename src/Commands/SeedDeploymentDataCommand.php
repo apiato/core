@@ -25,11 +25,13 @@ class SeedDeploymentDataCommand extends ConsoleCommand
     {
         if (!config('apiato.seeders.deployment')) {
             $this->error('No Deployment Seeder Found, Please Check Your Config File.');
+
             return;
         }
 
         if (!class_exists(config('apiato.seeders.deployment'))) {
             $this->error('Deployment Seeder Class Not Found.');
+
             return;
         }
 

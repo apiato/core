@@ -25,11 +25,13 @@ class SeedTestingDataCommand extends ConsoleCommand
     {
         if (!config('apiato.seeders.testing')) {
             $this->error('No Testing Seeder Found, Please Check Your Config File.');
+
             return;
         }
 
         if (!class_exists(config('apiato.seeders.testing'))) {
             $this->error('Testing Seeder Class Not Found.');
+
             return;
         }
 
