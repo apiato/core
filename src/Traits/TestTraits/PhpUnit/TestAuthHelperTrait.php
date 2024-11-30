@@ -64,6 +64,11 @@ trait TestAuthHelperTrait
     {
         $this->createUserAsAdmin = $createUserAsAdmin;
         $this->userClass = $this->userclass ?? config('apiato.tests.user-class');
+
+        if (!$this->userClass) {
+            throw new \RuntimeException('User class is not defined in the test class');
+        }
+
         $this->userAdminState = config('apiato.tests.user-admin-state');
 
         if (is_null($userDetails)) {

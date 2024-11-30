@@ -33,6 +33,11 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
         parent::register();
 
         $this->runLoaderRegister();
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/../../config/apiato.php',
+            'apiato',
+        );
     }
 
     public function boot(): void
@@ -47,5 +52,9 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
 
         // Registering custom validation rules
         $this->extendValidationRules();
+
+        $this->publishes([
+            __DIR__ . '/../../config/apiato.php' => app_path('Ship/Configs/apiato.php'),
+        ], 'apiato-config');
     }
 }
