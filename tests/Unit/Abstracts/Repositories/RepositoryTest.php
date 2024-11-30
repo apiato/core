@@ -108,6 +108,6 @@ final class RepositoryTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        config()->set('fractal.auto_includes.request_key');
+        config()->set('fractal.auto_includes.request_key', 'include');
     }
 }
