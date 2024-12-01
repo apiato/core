@@ -113,8 +113,8 @@ trait TestAuthHelperTrait
     private function prepareUserDetails(array|null $userDetails = null): array
     {
         $defaultUserDetails = [
-            'name' => $this->faker->name,
-            'email' => $this->faker->email,
+            'name' => fake()->name,
+            'email' => fake()->email,
             'password' => 'testing-password',
         ];
 
@@ -125,7 +125,7 @@ trait TestAuthHelperTrait
     private function prepareUserPassword(array|null $userDetails): array|null
     {
         // get password from the user details or generate one
-        $password = $userDetails['password'] ?? $this->faker->password;
+        $password = $userDetails['password'] ?? fake()->password;
 
         // hash the password and set it back at the user details
         $userDetails['password'] = Hash::make($password);
