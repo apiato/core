@@ -10,6 +10,7 @@ use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserRepository;
 use Apiato\Core\Tests\Unit\UnitTestCase;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -123,6 +124,25 @@ final class RepositoryTest extends UnitTestCase
                 $this->assertTrue($child->relationLoaded('books'));
             }
         });
+    }
+
+    public function testCanCache(): void
+    {
+        $this->markTestIncomplete('This test has not been fully implemented yet.');
+        config()->set('repository.cache.enabled', true);
+        config()->set('repository.cache.minutes', 1);
+//        config()->set('cache.default', 'database');
+//        UserFactory::new()->create()->transformWith()->toArray();
+        $user = UserFactory::new()->createOne();
+        $repository = $this->app->make(UserRepository::class);
+        /** @var User $cachedUser */
+        $cachedUser = $repository->find($user->id);
+        DB::table('cache')->get()->dump();
+
+        $this->assertEquals($cachedUser->name, $repository->find($user->id)->name);
+        $this->assertEquals($cachedUser->name, $repository->find($user->id)->name);
+        $cachedUser->update(['name' => 'new name']);
+        $this->assertEquals($cachedUser->name, $repository->find($user->id)->name);
     }
 
     protected function setUp(): void
