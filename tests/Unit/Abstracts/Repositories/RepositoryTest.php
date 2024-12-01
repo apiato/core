@@ -61,17 +61,23 @@ final class RepositoryTest extends UnitTestCase
     #[DataProvider('includeDataProvider')]
     public function testEagerLoadSingleRelationRequestedViaRequest(
         string $include,
-        array $userMustLoadRelations,
-        array $booksMustLoadRelations,
-        array $mustNotLoadRelations,
+        array  $userMustLoadRelations,
+        array  $booksMustLoadRelations,
+        array  $mustNotLoadRelations,
     ): void {
         request()->merge(compact('include'));
         UserFactory::new()
-            ->has(UserFactory::new()->has(BookFactory::new())->count(3), 'children')
-            ->has(BookFactory::new())->count(3)
+            ->has(UserFactory::new()
+                ->has(BookFactory::new()->count(3)),
+                'children',
+            )->has(BookFactory::new()->count(3))
             ->createOne();
-
-        $repository = app(UserRepository::class);
+        $repository = new class(app()) extends UserRepository {
+            public function includesEagerLoadingEnabled(): bool
+            {
+                return true;
+            }
+        };
 
         $result = $repository->all();
 
@@ -92,16 +98,28 @@ final class RepositoryTest extends UnitTestCase
 
     public function testMultipleEagerLoadAppliesAllEagerLoads(): void
     {
-        $parent = UserFactory::new()->createOne();
-        UserFactory::new()->count(3)->create(['parent_id' => $parent->id]);
-        $repository = app(UserRepository::class);
+        UserFactory::new()
+            ->has(UserFactory::new()
+                ->has(BookFactory::new()->count(3)),
+                'children',
+            )->has(BookFactory::new()->count(3))
+            ->createOne();
+        $repository = new class(app()) extends UserRepository {
+            public function includesEagerLoadingEnabled(): bool
+            {
+                return true;
+            }
+        };
 
         /** @var Collection<int, User> $result */
-        $result = $repository->with('parent')->with('children')->all();
+        $result = $repository->with('books')->with('children.books')->all();
 
         $result->each(function (User $user) {
-            $this->assertTrue($user->relationLoaded('parent'));
+            $this->assertTrue($user->relationLoaded('books'));
             $this->assertTrue($user->relationLoaded('children'));
+            foreach ($user->children as $child) {
+                $this->assertTrue($child->relationLoaded('books'));
+            }
         });
     }
 

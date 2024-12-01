@@ -18,13 +18,6 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     // TODO: BC: set return type to void
-    public function boot()
-    {
-        parent::boot();
-
-        $this->eagerLoadRequestedRelations();
-    }
-
     /**
      * Define the maximum number of entries per page that is returned.
      * Set to 0 to "disable" this feature.
@@ -32,6 +25,24 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     protected int $maxPaginationLimit = 0;
 
     protected bool|null $allowDisablePagination = null;
+
+    public function boot()
+    {
+        parent::boot();
+
+        if ($this->includesEagerLoadingEnabled()) {
+            $this->eagerLoadRequestedRelations();
+        }
+    }
+
+    /**
+     * Enable or disable eager loading of relations requested by the client via "include" query parameter.
+     */
+    public function includesEagerLoadingEnabled(): bool
+    {
+        // TODO: BC: disable it by default for v8 and enable by default for v13
+        return false;
+    }
 
     /**
      * This function relies on strict conventions:
