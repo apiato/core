@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 trait CanEagerLoadTrait
 {
     /**
-     * Eager load relations if requested by the client via ?include=... in the URL.
+     * Eager load relations if requested by the client via "include" query parameter.
      * This is a workaround for incompatible third-party packages. (Fractal, L5Repo).
      *
      * @see https://apiato.atlassian.net/browse/API-905
