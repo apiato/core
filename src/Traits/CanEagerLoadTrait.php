@@ -23,6 +23,8 @@ trait CanEagerLoadTrait
         $this->scopeQuery(function (Builder|Model $model) {
             if (request()?->has(config('fractal.auto_includes.request_key'))) {
                 $validIncludes = [];
+                // TODO: Do we need to do the same for the excludes?
+                // TODO: Or default includes! Are they eager loaded by default?
                 foreach (Response::getRequestedIncludesAsModelRelation() as $includeName) {
                     $relationParts = explode('.', $includeName);
                     $camelCasedIncludeName = $this->filterInvalidRelations($this->model, $relationParts);
