@@ -9,6 +9,7 @@ use League\Fractal\Scope;
 use League\Fractal\Serializer\SerializerAbstract;
 use League\Fractal\TransformerAbstract;
 use Spatie\Fractal\Fractal;
+use Spatie\Fractalistic\Exceptions\NoTransformerSpecified;
 
 /**
  * A wrapper class for Spatie\Fractal\Fractal.
@@ -39,16 +40,51 @@ class Response extends Fractal
      */
     public static function create($data = null, $transformer = null, $serializer = null): static
     {
-        return parent::create($data, $transformer, $serializer);
+        $response = parent::create($data, $transformer, $serializer);
+
+        $response->parseFieldsets(self::getRequestedFieldsets());
+
+        return $response;
+    }
+
+    private static function getRequestedFieldsets(): array
+    {
+        $requestKey = config('apiato.requests.sparse_fieldsets.request_key');
+        return request()?->input($requestKey) ?? [];
     }
 
     public function createData(): Scope
     {
         $this->withResourceName($this->defaultResourceName());
-        $this->parseFieldsets($this->getRequestedFieldsets());
         $this->setAvailableIncludesMeta();
 
-        return parent::createData();
+        if (is_null($this->transformer)) {
+            throw new NoTransformerSpecified();
+        }
+
+        if (is_string($this->serializer)) {
+            $this->serializer = new $this->serializer;
+        }
+
+        if (! is_null($this->serializer)) {
+            $this->manager->setSerializer($this->serializer);
+        }
+
+        $this->manager->setRecursionLimit($this->recursionLimit);
+
+        if (! empty($this->includes)) {
+            $this->manager->parseIncludes($this->includes);
+        }
+
+        if (! empty($this->excludes)) {
+            $this->manager->parseExcludes($this->excludes);
+        }
+
+        if (! empty($this->fieldsets)) {
+            $this->manager->parseFieldsets($this->fieldsets);
+        }
+
+        return $this->manager->createData($this->getResource());
     }
 
     private function defaultResourceName(): string
@@ -71,11 +107,6 @@ class Response extends Fractal
         }
 
         return '';
-    }
-
-    private function getRequestedFieldsets(): array
-    {
-        return request()?->input(config('apiato.requests.sparse_fieldsets.request_key')) ?? [];
     }
 
     private function setAvailableIncludesMeta(): void

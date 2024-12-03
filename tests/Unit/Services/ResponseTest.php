@@ -10,6 +10,7 @@ use Apiato\Core\Tests\Infrastructure\Doubles\UserRepository;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
 use Apiato\Core\Tests\Unit\UnitTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use League\Fractal\ParamBag;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -399,5 +400,25 @@ class ResponseTest extends UnitTestCase
         $result = Response::getRequestedIncludesAsModelRelation();
 
         $this->assertEquals(['books', 'children', 'children.books'], $result);
+    }
+
+    public function testCanProcessIncludeParamsWithResourceName(): void
+    {
+        $include = 'books';
+        $includeWithParams = "$include:test(2|value)";
+        request()->merge(['include' => $includeWithParams]);
+        $response = Response::create($this->user);
+        $response->transformWith(UserTransformer::class);
+        $response->withResourceName('User');
+
+        $response->respond();
+
+        $scope = $response->getTransformer()?->getCurrentScope();
+        $identifier = $scope?->getIdentifier($include);
+        $actualParams = $scope?->getManager()->getIncludeParams($identifier);
+        $expectedParams = new ParamBag([
+            'test' => ['2', 'value'],
+        ]);
+        $this->assertEquals($expectedParams, $actualParams);
     }
 }
