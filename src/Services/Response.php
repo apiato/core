@@ -50,6 +50,7 @@ class Response extends Fractal
     private static function getRequestedFieldsets(): array
     {
         $requestKey = config('apiato.requests.sparse_fieldsets.request_key');
+
         return request()?->input($requestKey) ?? [];
     }
 
@@ -63,24 +64,24 @@ class Response extends Fractal
         }
 
         if (is_string($this->serializer)) {
-            $this->serializer = new $this->serializer;
+            $this->serializer = new $this->serializer();
         }
 
-        if (! is_null($this->serializer)) {
+        if (!is_null($this->serializer)) {
             $this->manager->setSerializer($this->serializer);
         }
 
         $this->manager->setRecursionLimit($this->recursionLimit);
 
-        if (! empty($this->includes)) {
+        if (!empty($this->includes)) {
             $this->manager->parseIncludes($this->includes);
         }
 
-        if (! empty($this->excludes)) {
+        if (!empty($this->excludes)) {
             $this->manager->parseExcludes($this->excludes);
         }
 
-        if (! empty($this->fieldsets)) {
+        if (!empty($this->fieldsets)) {
             $this->manager->parseFieldsets($this->fieldsets);
         }
 
