@@ -24,7 +24,7 @@ class Response extends Fractal
      * For example, if the include query parameter is "books,children.books", this method will return:
      * ['books', 'children', 'children.books']
      */
-    public static function getRequestedIncludesAsModelRelation(): array
+    public static function getRequestedIncludes(): array
     {
         $requestedIncludes = request()?->input(config('fractal.auto_includes.request_key'), []);
 
@@ -58,6 +58,10 @@ class Response extends Fractal
     {
         $this->withResourceName($this->defaultResourceName());
         $this->setAvailableIncludesMeta();
+
+        // TODO: enable this and remove everything below
+        //  After the Fractalistic PR's are accepted
+        // return parent::createData();
 
         if (is_null($this->transformer)) {
             throw new NoTransformerSpecified();

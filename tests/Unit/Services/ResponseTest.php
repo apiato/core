@@ -397,7 +397,7 @@ class ResponseTest extends UnitTestCase
     {
         request()->merge(['include' => 'books,children.books']);
 
-        $result = Response::getRequestedIncludesAsModelRelation();
+        $result = Response::getRequestedIncludes();
 
         $this->assertEquals(['books', 'children', 'children.books'], $result);
     }

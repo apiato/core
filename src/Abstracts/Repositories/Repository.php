@@ -30,15 +30,15 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     {
         parent::boot();
 
-        if ($this->includesEagerLoadingEnabled()) {
-            $this->eagerLoadRequestedRelations();
+        if ($this->shouldEagerLoadIncludes()) {
+            $this->eagerLoadRequestedIncludes();
         }
     }
 
     /**
      * Enable or disable eager loading of relations requested by the client via "include" query parameter.
      */
-    public function includesEagerLoadingEnabled(): bool
+    public function shouldEagerLoadIncludes(): bool
     {
         // TODO: BC: disable it by default for v8 and enable by default for v13
         return false;

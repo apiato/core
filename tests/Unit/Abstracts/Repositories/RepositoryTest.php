@@ -75,7 +75,7 @@ final class RepositoryTest extends UnitTestCase
             )->has(BookFactory::new()->count(3))
             ->createOne();
         $repository = new class(app()) extends UserRepository {
-            public function includesEagerLoadingEnabled(): bool
+            public function shouldEagerLoadIncludes(): bool
             {
                 return true;
             }
@@ -108,7 +108,7 @@ final class RepositoryTest extends UnitTestCase
             )->has(BookFactory::new()->count(3))
             ->createOne();
         $repository = new class(app()) extends UserRepository {
-            public function includesEagerLoadingEnabled(): bool
+            public function shouldEagerLoadIncludes(): bool
             {
                 return true;
             }
