@@ -41,6 +41,8 @@ trait CanEagerLoadTrait
         });
     }
 
+    // TODO: rename this method or maybe keep the name but dont return null.
+    // Returning null causes multiple if() guard clauses as you can see
     private function filterInvalidRelations(Builder|Model $model, array $relationParts): string|null
     {
         if (empty($relationParts)) {
