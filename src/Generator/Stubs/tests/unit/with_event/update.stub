@@ -6,13 +6,10 @@ use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}F
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Update{{model}}Task;
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
-use App\Ship\Exceptions\NotFoundException;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @group {{_container-name}}
- * @group unit
- */
+#[CoversClass(Update{{model}}Task::class)]
 class {{class-name}} extends UnitTestCase
 {
     // TODO TEST
@@ -21,24 +18,13 @@ class {{class-name}} extends UnitTestCase
         Event::fake();
         ${{_model}} = {{model}}Factory::new()->createOne();
         $data = [
-            // add some fillable fields here
             // 'some_field' => 'new_field_data',
         ];
 
         $updated{{model}} = app(Update{{model}}Task::class)->run($data, ${{_model}}->id);
 
         $this->assertEquals(${{_model}}->id, $updated{{model}}->id);
-        // assert if fields are updated
         // $this->assertEquals($data['some_field'], $updated{{model}}->some_field);
         Event::assertDispatched({{event}}::class);
-    }
-
-    public function testUpdate{{model}}WithInvalidId(): void
-    {
-        $this->expectException(NotFoundException::class);
-
-        $noneExistingId = 777777;
-
-        app(Update{{model}}Task::class)->run([], $noneExistingId);
     }
 }

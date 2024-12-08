@@ -3,20 +3,16 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests\Functional;
 
 use App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests\WebTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
-/**
- * @group {{_container-name}}
- * @group web
- */
+#[CoversNothing]
 class {{class-name}} extends WebTestCase
 {
-    // the endpoint to be called within this test (e.g., get@v1/users)
     protected string $endpoint = 'method@endpoint';
 
-    // fake some access rights
     protected array $access = [
-        'permissions' => '',
-        'roles' => '',
+        'permissions' => null,
+        'roles' => null,
     ];
 
     public function test(): void
@@ -29,8 +25,6 @@ class {{class-name}} extends WebTestCase
         $response = $this->makeCall($data);
 
         // assert the response status
-        $response->assertStatus(200);
-
-        // make other asserts here
+        $response->assertOk();
     }
 }

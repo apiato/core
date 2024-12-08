@@ -6,7 +6,7 @@ use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Ship\Parents\Factories\Factory as ParentFactory;
 
 /**
- * @template TModel of {{class-name}}
+ * @template TModel of {{model}}
  *
  * @extends ParentFactory<TModel>
  */
@@ -17,8 +17,6 @@ class {{class-name}} extends ParentFactory
 
     public function definition(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 }

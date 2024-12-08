@@ -51,7 +51,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
     /**
      * The name of the stub file.
      */
-    protected string $stubName = 'composer.stub';
+    protected string $stubName = '';
 
     public function getUserInputs(): array|null
     {
@@ -367,21 +367,21 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         }
 
         $generateComposerFile = [
-             'path-parameters' => [
-                 'section-name' => $this->sectionName,
-                 'container-name' => $this->containerName,
-             ],
-             'stub-parameters' => [
-                 '_section-name' => $_sectionName,
-                 'section-name' => $this->sectionName,
-                 '_container-name' => $_containerName,
-                 'container-name' => $containerName,
-                 'class-name' => $this->fileName,
-             ],
-             'file-parameters' => [
-                 'file-name' => $this->fileName,
-             ],
-         ];
+            'path-parameters' => [
+                'section-name' => $this->sectionName,
+                'container-name' => $this->containerName,
+            ],
+            'stub-parameters' => [
+                '_section-name' => $_sectionName,
+                'section-name' => $this->sectionName,
+                '_container-name' => $_containerName,
+                'container-name' => $containerName,
+                'class-name' => $this->fileName,
+            ],
+            'file-parameters' => [
+                'file-name' => $this->fileName,
+            ],
+        ];
 
         if (!$this->option('maincalled')) {
             $this->printInfoMessage('Generating Composer File');

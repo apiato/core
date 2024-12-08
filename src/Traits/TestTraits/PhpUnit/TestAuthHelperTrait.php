@@ -3,7 +3,6 @@
 namespace Apiato\Core\Traits\TestTraits\PhpUnit;
 
 use Apiato\Core\Abstracts\Models\UserModel;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 
 trait TestAuthHelperTrait
@@ -64,8 +63,13 @@ trait TestAuthHelperTrait
     public function getTestingUser(array|null $userDetails = null, array|null $access = null, bool $createUserAsAdmin = false): UserModel
     {
         $this->createUserAsAdmin = $createUserAsAdmin;
-        $this->userClass = $this->userclass ?? Config::get('apiato.tests.user-class');
-        $this->userAdminState = Config::get('apiato.tests.user-admin-state');
+        $this->userClass = $this->userclass ?? config('apiato.tests.user-class');
+
+        if (!$this->userClass) {
+            throw new \RuntimeException('User class is not defined in the test class');
+        }
+
+        $this->userAdminState = config('apiato.tests.user-admin-state');
 
         if (is_null($userDetails)) {
             return $this->findOrCreateTestingUser($userDetails, $access);
@@ -109,8 +113,8 @@ trait TestAuthHelperTrait
     private function prepareUserDetails(array|null $userDetails = null): array
     {
         $defaultUserDetails = [
-            'name' => $this->faker->name,
-            'email' => $this->faker->email,
+            'name' => fake()->name,
+            'email' => fake()->email,
             'password' => 'testing-password',
         ];
 
@@ -121,7 +125,7 @@ trait TestAuthHelperTrait
     private function prepareUserPassword(array|null $userDetails): array|null
     {
         // get password from the user details or generate one
-        $password = $userDetails['password'] ?? $this->faker->password;
+        $password = $userDetails['password'] ?? fake()->password;
 
         // hash the password and set it back at the user details
         $userDetails['password'] = Hash::make($password);

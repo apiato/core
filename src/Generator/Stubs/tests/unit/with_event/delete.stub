@@ -6,13 +6,10 @@ use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}F
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Delete{{model}}Task;
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
-use App\Ship\Exceptions\NotFoundException;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @group {{_container-name}}
- * @group unit
- */
+#[CoversClass(Delete{{model}}Task::class)]
 class {{class-name}} extends UnitTestCase
 {
     public function testDelete{{model}}(): void
@@ -24,14 +21,5 @@ class {{class-name}} extends UnitTestCase
 
         $this->assertEquals(1, $result);
         Event::assertDispatched({{event}}::class);
-    }
-
-    public function testDelete{{model}}WithInvalidId(): void
-    {
-        $this->expectException(NotFoundException::class);
-
-        $noneExistingId = 777777;
-
-        app(Delete{{model}}Task::class)->run($noneExistingId);
     }
 }

@@ -9,7 +9,6 @@ use Apiato\Core\Traits\SanitizerTrait;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 
 abstract class Request extends LaravelRequest
 {
@@ -117,7 +116,7 @@ abstract class Request extends LaravelRequest
         $user = $user ?: $this->user();
 
         if ($user) {
-            $autoAccessRoles = Config::get('apiato.requests.allow-roles-to-access-all-routes');
+            $autoAccessRoles = config('apiato.requests.allow-roles-to-access-all-routes');
             // there are some roles defined that will automatically grant access
             if (!empty($autoAccessRoles)) {
                 $hasAutoAccessByRole = $user->hasAnyRole($autoAccessRoles);

@@ -8,11 +8,9 @@ use Apiato\Core\Exceptions\InvalidTransformerException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
-use JetBrains\PhpStorm\Deprecated;
 use Spatie\Fractal\Facades\Fractal;
 
+// TODO: Remove this after migrating everything to use Response facade
 trait ResponseTrait
 {
     protected array $metaData = [];
@@ -20,10 +18,6 @@ trait ResponseTrait
     /**
      * @throws InvalidTransformerException
      */
-    #[Deprecated(
-        reason: 'This method is the cause of many bugs and its functionality is already covered by the Fractal package.',
-        replacement: '\Spatie\Fractal\Facades\Fractal::create(%parameter0%,%parameter1%)->parseIncludes(%parameter2%)->addMeta(%parameter3%)->toArray();',
-    )]
     public function transform(
         $data,
         $transformerName = null,
@@ -83,7 +77,7 @@ trait ResponseTrait
         $fractal->parseIncludes($requestIncludes);
 
         // apply request filters if available in the request
-        if ($requestFilters = Request::get(Config::get('apiato.requests.params.filter', 'filter'))) {
+        if ($requestFilters = request()?->input(config('apiato.requests.params.filter', 'filter'))) {
             $result = $this->filterResponse($fractal->toArray(), explode(';', $requestFilters));
         } else {
             $result = $fractal->toArray();
@@ -94,7 +88,7 @@ trait ResponseTrait
 
     protected function parseRequestedIncludes(): array
     {
-        return explode(',', Request::get('include') ?? '');
+        return explode(',', request()?->input('include') ?? '');
     }
 
     private function filterResponse(array $responseArray, array $filters): array
@@ -125,10 +119,6 @@ trait ResponseTrait
         return $responseArray;
     }
 
-    #[Deprecated(
-        reason: 'Its functionality is already covered by the Fractal package. Use the addMeta() method on the Fractal instance instead.',
-        replacement: '\Spatie\Fractal\Facades\Fractal::create()->addMeta(%parameter0%)->toArray();',
-    )]
     public function withMeta($data): self
     {
         $this->metaData = $data;
@@ -146,9 +136,6 @@ trait ResponseTrait
         return new JsonResponse($data, $status, $headers, $options);
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     public function deleted(Model|null $deletedModel = null): JsonResponse
     {
         if (!$deletedModel) {

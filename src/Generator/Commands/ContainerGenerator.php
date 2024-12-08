@@ -43,7 +43,7 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
     /**
      * The name of the stub file.
      */
-    protected string $stubName = 'composer.stub';
+    protected string $stubName = '';
 
     public function getUserInputs(): array|null
     {

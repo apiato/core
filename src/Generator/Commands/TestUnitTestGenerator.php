@@ -53,7 +53,7 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
         $model = $this->option('model');
         $stub = $this->option('stub');
         $event = $this->option('event');
-        $tablename = $this->option('tablename');
+        $tableName = $this->option('tablename');
 
         if ($stub) {
             if ($event) {
@@ -90,7 +90,8 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
                 'models' => $models,
                 '_models' => Str::lower($models),
                 'event' => $event,
-                'table-name' => $tablename,
+                'table-name' => $tableName,
+                '_table-name_' => Str::studly($tableName),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

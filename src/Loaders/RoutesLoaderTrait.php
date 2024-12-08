@@ -6,7 +6,6 @@ use Apiato\Core\Foundation\Facades\Apiato;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
@@ -110,9 +109,9 @@ trait RoutesLoaderTrait
     {
         $rateLimitMiddleware = null;
 
-        if (Config::get('apiato.api.throttle.enabled')) {
+        if (config('apiato.api.throttle.enabled')) {
             RateLimiter::for('api', function (Request $request) {
-                return Limit::perMinutes(Config::get('apiato.api.throttle.expires'), Config::get('apiato.api.throttle.attempts'))->by($request->user()?->id ?: $request->ip());
+                return Limit::perMinutes(config('apiato.api.throttle.expires'), config('apiato.api.throttle.attempts'))->by($request->user()?->id ?: $request->ip());
             });
 
             $rateLimitMiddleware = 'throttle:api';
@@ -123,14 +122,27 @@ trait RoutesLoaderTrait
 
     private function getApiUrl(): string
     {
-        return Config::get('apiato.api.url');
+        return config('apiato.api.url');
     }
 
     private function getApiVersionPrefix(SplFileInfo $file): string
     {
-        return Config::get('apiato.api.prefix') . (Config::get('apiato.api.enable_version_prefix') ? $this->getRouteFileVersionFromFileName($file) : '');
+        return config('apiato.api.prefix') . (config('apiato.api.enable_version_prefix') ? $this->getRouteFileVersionFromFileName($file) : '');
     }
 
+    // TODO: Refactor. Ask Isiah about his thoughts on this.
+    //  I think we should abstract this.
+    //  and the user should be able to provide his logic for parsing the version from the file name.
+    //  Maybe we can extract it into a class that implements an interface that the user can implement?
+    //   - This way we can provide a default implementation that the user can override.
+    //  This implementation is also very limiting as it only allows the versioning to be disabled as a whole or enabled.
+    //   - What if the user whats to use another versioning strategy?
+    //   - What if the user wants to use a different versioning just for some routes?
+    //  The current implementation is also very coupled with the file name.
+    //   If versioning is enabled:
+    //   - It expects version to be the one element before the last one (split on ".").
+    //   - If user forgets to add the version to the file name, it will not work.
+    //      And we will have a problem!
     private function getRouteFileVersionFromFileName(SplFileInfo $file): string|bool
     {
         $fileNameWithoutExtension = $this->getRouteFileNameWithoutExtension($file);

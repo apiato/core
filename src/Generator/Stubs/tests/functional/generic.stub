@@ -4,10 +4,6 @@ namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functi
 
 use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
 
-/**
- * @group {{_container-name}}
- * @group general
- */
 class {{class-name}} extends TestCase
 {
     public function test(): void

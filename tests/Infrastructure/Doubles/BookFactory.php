@@ -2,7 +2,6 @@
 
 namespace Apiato\Core\Tests\Infrastructure\Doubles;
 
-
 use Apiato\Core\Abstracts\Factories\Factory as CoreFactory;
 
 /**
@@ -20,7 +19,7 @@ class BookFactory extends CoreFactory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence,
+            'title' => fake()->sentence,
             'author_id' => UserFactory::new(),
         ];
     }

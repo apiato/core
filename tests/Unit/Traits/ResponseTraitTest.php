@@ -8,7 +8,9 @@ use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
 use Apiato\Core\Tests\Unit\UnitTestCase;
 use Apiato\Core\Traits\ResponseTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(ResponseTrait::class)]
 class ResponseTraitTest extends UnitTestCase
 {
     private $trait;
@@ -21,7 +23,7 @@ class ResponseTraitTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->trait = new class() {
+        $this->trait = new class {
             use ResponseTrait;
         };
 
@@ -91,14 +93,14 @@ class ResponseTraitTest extends UnitTestCase
                 'resourceKey' => [],
                 'expected' => 'User',
             ],
-//            'empty object' => [
-//                'resourceKey' => new \stdClass(),
-//                'expected' => 'User',
-//            ],
-//            'override resource key' => [
-//                'resource key' => 'override-key',
-//                'expected' => 'override-key',
-//            ],
+            //            'empty object' => [
+            //                'resourceKey' => new \stdClass(),
+            //                'expected' => 'User',
+            //            ],
+            //            'override resource key' => [
+            //                'resource key' => 'override-key',
+            //                'expected' => 'override-key',
+            //            ],
         ];
     }
 

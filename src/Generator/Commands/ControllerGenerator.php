@@ -51,7 +51,6 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
     public function getUserInputs(): array|null
     {
-        // Name of the model (singular and plural)
         $model = $this->checkParameterOrAsk('model', 'Model for the controller.', $this->containerName);
         $models = Pluralizer::plural($model);
 
@@ -71,8 +70,8 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
         $basecontroller = Str::ucfirst($ui) . 'Controller';
 
-        $entity = Str::lower($model);
-        $entities = Pluralizer::plural($entity);
+        $entity = Str::camel($model);
+        $entities = Str::of($entity)->pluralStudly()->camel()->toString();
 
         return [
             'path-parameters' => [
