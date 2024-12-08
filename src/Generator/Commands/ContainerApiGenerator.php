@@ -336,6 +336,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--section' => $sectionName,
                     '--container' => $containerName,
                     '--file' => $route['controller'],
+                    '--model' => $model,
                     '--ui' => $ui,
                     '--stub' => $route['stub'],
                 ]);
@@ -360,6 +361,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             $this->call('apiato:generate:controller', [
                 '--section' => $sectionName,
                 '--container' => $containerName,
+                '--model' => $model,
                 '--file' => 'Controller',
                 '--ui' => $ui,
                 '--stub' => 'crud',
