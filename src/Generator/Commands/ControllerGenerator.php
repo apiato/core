@@ -51,7 +51,7 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
     public function getUserInputs(): array|null
     {
-        $model = $this->checkParameterOrAsk('model', 'Model for the controller.', $this->containerName);
+        $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model that this controller uses', $this->containerName);
         $models = Pluralizer::plural($model);
 
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
