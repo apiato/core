@@ -162,7 +162,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             [
                 'stub' => 'List',
                 'name' => 'List' . $models,
-                'operation' => 'list' . $models,
+                'operation' => 'list',
                 'verb' => 'GET',
                 'url' => $url,
                 'action' => 'List' . $models . 'Action',
@@ -176,7 +176,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             [
                 'stub' => 'Find',
                 'name' => 'Find' . $model . 'ById',
-                'operation' => 'find' . $model . 'ById',
+                'operation' => 'findById',
                 'verb' => 'GET',
                 'url' => $url . '/{id}',
                 'action' => 'Find' . $model . 'ByIdAction',
@@ -190,7 +190,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             [
                 'stub' => 'Create',
                 'name' => 'Create' . $model,
-                'operation' => 'create' . $model,
+                'operation' => 'create',
                 'verb' => 'POST',
                 'url' => $url,
                 'action' => 'Create' . $model . 'Action',
@@ -204,7 +204,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             [
                 'stub' => 'Update',
                 'name' => 'Update' . $model,
-                'operation' => 'update' . $model,
+                'operation' => 'update',
                 'verb' => 'PATCH',
                 'url' => $url . '/{id}',
                 'action' => 'Update' . $model . 'Action',
@@ -218,7 +218,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             [
                 'stub' => 'Delete',
                 'name' => 'Delete' . $model,
-                'operation' => 'delete' . $model,
+                'operation' => 'delete',
                 'verb' => 'DELETE',
                 'url' => $url . '/{id}',
                 'action' => 'Delete' . $model . 'Action',
@@ -324,7 +324,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--container' => $containerName,
                     '--file' => $route['name'],
                     '--ui' => $ui,
-                    '--operation' => $route['operation'],
+                    '--operation' => '__invoke',
                     '--doctype' => $doctype,
                     '--docversion' => $version,
                     '--url' => $route['url'],
