@@ -10,7 +10,7 @@ use App\Ship\Parents\Tasks\Task as ParentTask;
 class {{class-name}} extends ParentTask
 {
     public function __construct(
-        protected readonly {{model}}Repository $repository,
+        private readonly {{model}}Repository $repository,
     ) {
     }
 

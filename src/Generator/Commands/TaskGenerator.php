@@ -80,6 +80,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
                 'model' => $model,
                 'models' => $models,
                 '_model' => Str::lower($model),
+                'model_' => Str::camel($model),
                 'event' => $event,
             ],
             'file-parameters' => [

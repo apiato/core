@@ -4,10 +4,6 @@ namespace App\Containers\{{section-name}}\{{container-name}}\UI\CLI\Tests\Functi
 
 use App\Containers\{{section-name}}\{{container-name}}\UI\CLI\Tests\CliTestCase;
 
-/**
- * @group {{_container-name}}
- * @group cli
- */
 class {{class-name}} extends CliTestCase
 {
     public function test(): void

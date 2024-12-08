@@ -3,20 +3,17 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
 
 use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
-use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
-/**
- * @group {{_container-name}}
- * @group api
- */
+#[CoversNothing]
 class {{class-name}} extends ApiTestCase
 {
     protected string $endpoint = 'delete@v1/{{url}}';
 
     protected array $access = [
-        'permissions' => '',
-        'roles' => '',
+        'permissions' => null,
+        'roles' => null,
     ];
 
     public function testDeleteExisting{{model}}(): void
@@ -25,7 +22,7 @@ class {{class-name}} extends ApiTestCase
 
         $response = $this->injectId(${{_model}}->id)->makeCall();
 
-        $response->assertStatus(204);
+        $response->assertNoContent();
     }
 
     public function testDeleteNonExisting{{model}}(): void
@@ -34,7 +31,7 @@ class {{class-name}} extends ApiTestCase
 
         $response = $this->injectId($invalidId)->makeCall([]);
 
-        $response->assertStatus(404);
+        $response->assertNotFound();
     }
 
     // TODO TEST
@@ -48,6 +45,6 @@ class {{class-name}} extends ApiTestCase
     //
     //     $response = $this->injectId(${{_model}}->id)->makeCall();
     //
-    //     $response->assertStatus(403);
+    //     $response->assertForbidden();
     // }
 }

@@ -2,12 +2,17 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Data\Repositories;
 
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Ship\Parents\Repositories\Repository as ParentRepository;
 
+/**
+ * @template TModel of {{model}}
+ *
+ * @extends ParentRepository<TModel>
+ */
 class {{class-name}} extends ParentRepository
 {
     protected $fieldSearchable = [
-        'id' => '=',
-        // ...
+        // 'id' => '=',
     ];
 }

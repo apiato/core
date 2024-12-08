@@ -70,8 +70,8 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
         $model = $this->containerName;
         $models = Pluralizer::plural($model);
 
-        $entity = Str::lower($model);
-        $entities = Pluralizer::plural($entity);
+        $entity = Str::camel($model);
+        $entities = Str::of($entity)->pluralStudly()->camel()->toString();
 
         return [
             'path-parameters' => [

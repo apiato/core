@@ -55,6 +55,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
                 '--section' => $this->sectionName,
                 '--container' => $this->containerName,
                 '--file' => $this->fileName . 'Repository',
+                '--model' => $this->fileName,
             ]);
 
             if (0 != $status) {

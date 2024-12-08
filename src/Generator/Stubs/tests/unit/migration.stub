@@ -3,25 +3,19 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
-use Illuminate\Support\Facades\Schema;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
-/**
- * @group {{_container-name}}
- * @group unit
- */
+#[CoversNothing]
 class {{class-name}} extends UnitTestCase
 {
-    public function test_{{table-name}}_table_has_expected_columns(): void
+    public function test{{_table-name_}}TableHasExpectedColumns(): void
     {
         $columns = [
-            'id',
-            // add your migration columns
-            'created_at',
-            'updated_at',
+            'id' => 'bigint',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
 
-        foreach ($columns as $column) {
-            $this->assertTrue(Schema::hasColumn('{{table-name}}', $column));
-        }
+        $this->assertDatabaseTable('{{table-name}}', $columns);
     }
 }

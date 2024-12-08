@@ -6,8 +6,4 @@ use App\Ship\Parents\Models\Model as ParentModel;
 
 class {{class-name}} extends ParentModel
 {
-    /**
-     * A resource key to be used in the serialized responses.
-     */
-    protected $resourceKey = '{{resource-key}}';
 }
