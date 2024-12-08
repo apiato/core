@@ -251,6 +251,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                     '--section' => $sectionName,
                     '--container' => $containerName,
                     '--file' => $route['controller'],
+                    '--model' => $model,
                     '--ui' => $ui,
                     '--stub' => $route['stub'],
                 ]);
@@ -276,6 +277,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                 '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => 'Controller',
+                '--model' => $model,
                 '--ui' => $ui,
                 '--stub' => 'crud',
             ]);
