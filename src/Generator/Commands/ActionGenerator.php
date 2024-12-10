@@ -133,15 +133,16 @@ class ActionGenerator extends FileGeneratorCommand
 
     protected function addRunMethod(PhpNamespace $namespace, ClassType $class, bool $isCRUD): Method
     {
+        $requestName = substr($this->fileName, 0, -6) . 'Request';
+
         $runMethod = $class->addMethod('run')->setPublic();
         if ($isCRUD) {
-            $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\' . $this->ui . '\Requests\\' . Str::ucfirst($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Request';
+            $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Requests\\' . $requestName;
             $namespace->addUse($requestFullPath);
             $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->model;
             $namespace->addUse($modelFullPath);
 
-            $runMethod->addPromotedParameter('request')
-                ->setPrivate()
+            $runMethod->addParameter('request')
                 ->setType($requestFullPath);
 
             if ('create' === $this->stub) {
