@@ -41,7 +41,7 @@ class ControllerGenerator extends FileGeneratorCommand
 
     public function getDefaultFileName(): string
     {
-        return $this->getAct() . 'Controller';
+        return ucfirst($this->stub) . ('list' == $this->stub ? ucfirst(Pluralizer::plural($this->containerName)) : ucfirst($this->containerName)) . 'Controller';
     }
 
     protected function askCustomInputs(): void
@@ -74,6 +74,8 @@ class ControllerGenerator extends FileGeneratorCommand
         $models = Pluralizer::plural($model);
         $entity = Str::lower($model);
         $entities = Pluralizer::plural($entity);
+        $requestName = substr($this->fileName, 0, -10) . 'Request';
+        $actionName = substr($this->fileName, 0, -10) . 'Action';
 
         $file = new PhpFile();
         $printer = new Printer();
@@ -85,9 +87,9 @@ class ControllerGenerator extends FileGeneratorCommand
         $namespace->addUse($jsonResponseFullPath);
         $parentActionFullPath = 'App\Ship\Parents\Controllers\ApiController';
         $namespace->addUse($parentActionFullPath);
-        $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Requests\\' . $this->getAct() . 'Request';
+        $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Requests\\' . $requestName;
         $namespace->addUse($requestFullPath);
-        $actionFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions\\' . $this->getAct() . 'Action';
+        $actionFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions\\' . $actionName;
         $namespace->addUse($actionFullPath);
         $transformerFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Transformers\\' . $model . 'Transformer';
         $namespace->addUse($transformerFullPath);
@@ -159,10 +161,5 @@ class ControllerGenerator extends FileGeneratorCommand
     protected function getParentTestCase(): ParentTestCase
     {
         return ParentTestCase::UNIT_TEST_CASE;
-    }
-
-    private function getAct(): string
-    {
-        return ucfirst($this->stub) . ('list' == $this->stub ? ucfirst(Pluralizer::plural($this->containerName)) : ucfirst($this->containerName));
     }
 }
