@@ -117,7 +117,7 @@ class ControllerGenerator extends FileGeneratorCommand
                 $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entity, $model . 'Transformer'));
                 break;
             case 'find':
-            $invoke->addBody("$$entity = \$action->run(\$request);");
+                $invoke->addBody("$$entity = \$action->run(\$request);");
                 $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entity, $model . 'Transformer'));
                 break;
             case 'delete':
