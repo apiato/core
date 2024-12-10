@@ -108,7 +108,7 @@ class ControllerGenerator extends FileGeneratorCommand
         $invoke->setReturnType($jsonResponseFullPath);
         switch ($this->stub) {
             case 'list':
-                $invoke->addBody("$$entities = \$action->run();");
+                $invoke->addBody("$$entities = \$action->run(\$request);");
                 $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entities, $model . 'Transformer'));
                 break;
             case 'create':
