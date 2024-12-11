@@ -80,7 +80,7 @@ class RouteGenerator extends FileGeneratorCommand
         $this->method = $this->checkParameterOrSelect(
             param: 'method',
             label: 'Select the method of the route:',
-            options: ['GET', 'POST', 'PUT', 'DELETE'],
+            options: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
             default: 'GET',
         );
         $this->controller = $this->checkParameterOrAskTextSuggested(
