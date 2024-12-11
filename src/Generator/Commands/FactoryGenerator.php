@@ -115,12 +115,15 @@ class FactoryGenerator extends FileGeneratorCommand
         $namespace->addUse($parentUnitTestCaseFullPath);
         $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->model;
         $namespace->addUse($modelFullPath);
-        $factoryFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Data\Factories\\$this->fileName";
-        $namespace->addUse($factoryFullPath);
+        $classFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Data\Factories\\$this->fileName";
+        $namespace->addUse($classFullPath);
+        $coversClassFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
+        $namespace->addUse($coversClassFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
+            ->addAttribute($coversClassFullPath, [new Literal("$this->fileName::class")])
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 

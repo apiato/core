@@ -7,6 +7,7 @@ use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 
 class ConfigurationGenerator extends FileGeneratorCommand
@@ -85,10 +86,13 @@ return [
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
+        $coversNothingFullPath = 'PHPUnit\Framework\Attributes\CoversNothing';
+        $namespace->addUse($coversNothingFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->containerName . 'ConfigTest')
+            ->addAttribute($coversNothingFullPath)
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 

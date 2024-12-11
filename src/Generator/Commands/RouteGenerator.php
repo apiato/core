@@ -155,14 +155,15 @@ Route::$methodLowerCase('$this->url', $this->controller::class)
         // imports
         $parentTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\Functional\\" . Str::ucfirst(Str::lower($this->ui)) . 'TestCase';
         $namespace->addUse($parentTestCaseFullPath);
-        $userModelFullPath = 'App\Containers\AppSection\User\Models\User';
-        $namespace->addUse($userModelFullPath);
         $userFactoryFullPath = "App\Containers\AppSection\User\Data\Factories\UserFactory";
         $namespace->addUse($userFactoryFullPath);
+        $coversNothingFullPath = 'PHPUnit\Framework\Attributes\CoversNothing';
+        $namespace->addUse($coversNothingFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
+            ->addAttribute($coversNothingFullPath)
             ->setFinal()
             ->setExtends($parentTestCaseFullPath);
 

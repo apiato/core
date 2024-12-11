@@ -6,6 +6,7 @@ use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 
 class CriteriaGenerator extends FileGeneratorCommand
@@ -87,12 +88,15 @@ class CriteriaGenerator extends FileGeneratorCommand
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
-        $criteriaFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Criterias\\' . $this->fileName;
-        $namespace->addUse($criteriaFullPath);
+        $classFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Criterias\\' . $this->fileName;
+        $namespace->addUse($classFullPath);
+        $coversClassFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
+        $namespace->addUse($coversClassFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
+            ->addAttribute($coversClassFullPath, [new Literal("$this->fileName::class")])
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 
