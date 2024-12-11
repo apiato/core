@@ -8,6 +8,7 @@ use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -41,7 +42,7 @@ class ControllerGenerator extends FileGeneratorCommand
 
     public function getDefaultFileName(): string
     {
-        return $this->getAct() . 'Controller';
+        return ucfirst($this->stub) . ('list' == $this->stub ? ucfirst(Pluralizer::plural($this->containerName)) : ucfirst($this->containerName)) . 'Controller';
     }
 
     protected function askCustomInputs(): void
@@ -74,6 +75,8 @@ class ControllerGenerator extends FileGeneratorCommand
         $models = Pluralizer::plural($model);
         $entity = Str::lower($model);
         $entities = Pluralizer::plural($entity);
+        $requestName = substr($this->fileName, 0, -10) . 'Request';
+        $actionName = substr($this->fileName, 0, -10) . 'Action';
 
         $file = new PhpFile();
         $printer = new Printer();
@@ -85,9 +88,9 @@ class ControllerGenerator extends FileGeneratorCommand
         $namespace->addUse($jsonResponseFullPath);
         $parentActionFullPath = 'App\Ship\Parents\Controllers\ApiController';
         $namespace->addUse($parentActionFullPath);
-        $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Requests\\' . $this->getAct() . 'Request';
+        $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Requests\\' . $requestName;
         $namespace->addUse($requestFullPath);
-        $actionFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions\\' . $this->getAct() . 'Action';
+        $actionFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions\\' . $actionName;
         $namespace->addUse($actionFullPath);
         $transformerFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Transformers\\' . $model . 'Transformer';
         $namespace->addUse($transformerFullPath);
@@ -106,17 +109,20 @@ class ControllerGenerator extends FileGeneratorCommand
         $invoke->setReturnType($jsonResponseFullPath);
         switch ($this->stub) {
             case 'list':
-                $invoke->addBody("$$entities = \$action->run();");
+                $invoke->addBody("$$entities = \$action->run(\$request);");
                 $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entities, $model . 'Transformer'));
                 break;
             case 'create':
             case 'update':
+                $invoke->addBody("$$entity = \$action->transactionalRun(\$request);");
+                $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entity, $model . 'Transformer'));
+                break;
             case 'find':
                 $invoke->addBody("$$entity = \$action->run(\$request);");
                 $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entity, $model . 'Transformer'));
                 break;
             case 'delete':
-                $invoke->addBody('$action->run($request);');
+                $invoke->addBody('$action->transactionalRun($request);');
                 $invoke->addBody('return Response::noContent();');
                 break;
         }
@@ -134,21 +140,44 @@ class ControllerGenerator extends FileGeneratorCommand
         $file = new PhpFile();
         $printer = new Printer();
 
+        $requestName = substr($this->fileName, 0, -10) . 'Request';
+        $actionName = substr($this->fileName, 0, -10) . 'Action';
+        $runMethod = (in_array($this->stub, ['create', 'update', 'delete'])) ? 'transactionalRun' : 'run';
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\UI\API\Controllers');
 
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
+        $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Requests\\' . $requestName;
+        $namespace->addUse($requestFullPath);
+        $actionFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions\\' . $actionName;
+        $namespace->addUse($actionFullPath);
+        $classFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Controllers\\' . $this->fileName;
+        $namespace->addUse($classFullPath);
+        $coversClassFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
+        $namespace->addUse($coversClassFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
+            ->addAttribute($coversClassFullPath, [new Literal("$this->fileName::class")])
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 
         // test method
-        $testMethod = $class->addMethod('testController')->setPublic();
-        $testMethod->addBody('// add your test here');
+        $testMethod = $class->addMethod('testControllerCallsCorrectAction')->setPublic();
+        $testMethod->addBody("
+\$request = $requestName::injectData();
+\$actionSpy = \$this->spy($actionName::class, function (\$mock) {
+    \$mock->shouldReceive('run');
+});
+\$controller = app($this->fileName::class);
+
+\$controller->__invoke(\$request, \$actionSpy);
+
+\$actionSpy->shouldHaveReceived('$runMethod')->once()->with(\$request);
+");
 
         $testMethod->setReturnType('void');
 
@@ -159,10 +188,5 @@ class ControllerGenerator extends FileGeneratorCommand
     protected function getParentTestCase(): ParentTestCase
     {
         return ParentTestCase::UNIT_TEST_CASE;
-    }
-
-    private function getAct(): string
-    {
-        return ucfirst($this->stub) . ('list' == $this->stub ? ucfirst(Pluralizer::plural($this->containerName)) : ucfirst($this->containerName));
     }
 }

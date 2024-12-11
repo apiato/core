@@ -80,7 +80,7 @@ class RouteGenerator extends FileGeneratorCommand
         $this->method = $this->checkParameterOrSelect(
             param: 'method',
             label: 'Select the method of the route:',
-            options: ['GET', 'POST', 'PUT', 'DELETE'],
+            options: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
             default: 'GET',
         );
         $this->controller = $this->checkParameterOrAskTextSuggested(
@@ -101,6 +101,7 @@ class RouteGenerator extends FileGeneratorCommand
     protected function getFileContent(): string
     {
         $routeTitle = Str::headline($this->fileName);
+        $methodLowerCase = strtolower($this->method);
 
         return "
 <?php
@@ -133,7 +134,7 @@ class RouteGenerator extends FileGeneratorCommand
 use App\Containers\\$this->sectionName\\$this->containerName\UI\\$this->ui\Controllers\\$this->controller;
 use Illuminate\Support\Facades\Route;
 
-Route::$this->method('$this->url', $this->controller::class)
+Route::$methodLowerCase('$this->url', $this->controller::class)
     ->middleware(['auth:api']);
 ";
     }
@@ -147,18 +148,22 @@ Route::$this->method('$this->url', $this->controller::class)
     {
         $file = new PhpFile();
         $printer = new Printer();
+        $methodLowerCase = strtolower($this->method);
 
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . "\Tests\Functional\\$this->ui");
 
         // imports
         $parentTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\Functional\\" . Str::ucfirst(Str::lower($this->ui)) . 'TestCase';
         $namespace->addUse($parentTestCaseFullPath);
-        $userModelFullPath = 'App\Containers\AppSection\User\Models\User';
-        $namespace->addUse($userModelFullPath);
+        $userFactoryFullPath = "App\Containers\AppSection\User\Data\Factories\UserFactory";
+        $namespace->addUse($userFactoryFullPath);
+        $coversNothingFullPath = 'PHPUnit\Framework\Attributes\CoversNothing';
+        $namespace->addUse($coversNothingFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
+            ->addAttribute($coversNothingFullPath)
             ->setFinal()
             ->setExtends($parentTestCaseFullPath);
 
@@ -166,18 +171,28 @@ Route::$this->method('$this->url', $this->controller::class)
         $class->addProperty('endpoint')
             ->setVisibility('protected')
             ->setType('string')
-            ->setValue("$this->method@v$this->docVersion$this->url");
+            ->setValue("$methodLowerCase@v$this->docVersion$this->url");
 
         // test methods
         $testMethod1 = $class->addMethod('testEndpoint')->setPublic();
         $testMethod1->addBody("
-\$this->markTestSkipped('This test has not been implemented yet.');
+\$data = [
+    // provide data to pass to the endpoint
+];
+\$response = \$this
+    ->makeCall(\$data);
+
+\$response->assertOk();
+\$response->assertJsonFragment([
+// 'object' => 'Object',
+// 'key' => 'value',
+]);
 ");
         $testMethod1->setReturnType('void');
 
         $testMethod2 = $class->addMethod('testEndpointWhileUnauthenticated')->setPublic();
         $testMethod2->addBody('
-$this->testingUser = User::factory()->create();
+$this->testingUser = UserFactory::new()->create();
 
 $response = $this->auth(false)->makeCall();
 
@@ -187,7 +202,7 @@ $response->assertUnauthorized();
 
         $testMethod3 = $class->addMethod('testEndpointWhileUnverified')->setPublic();
         $testMethod3->addBody('
-$this->testingUser = User::factory()->unverified()->create();
+$this->testingUser = UserFactory::new()->unverified()->create();
 
 $response = $this->makeCall();
 

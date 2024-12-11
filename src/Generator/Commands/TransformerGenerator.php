@@ -7,6 +7,7 @@ use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -135,19 +136,22 @@ return [
         $namespace->addUse($modelFullPath);
         $factoryFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Data\Factories\\$factoryName";
         $namespace->addUse($factoryFullPath);
-        $transformerFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Transformers\\' . $this->fileName;
-        $namespace->addUse($transformerFullPath);
+        $classFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Transformers\\' . $this->fileName;
+        $namespace->addUse($classFullPath);
+        $coversClassFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
+        $namespace->addUse($coversClassFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
+            ->addAttribute($coversClassFullPath, [new Literal("$this->fileName::class")])
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 
         // properties
         $class->addProperty('transformer')
             ->setVisibility('private')
-            ->setType($transformerFullPath);
+            ->setType($classFullPath);
 
         // test methods
         $testMethod1 = $class->addMethod('testCanTransformSingleObject')->setPublic();

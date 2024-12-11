@@ -108,9 +108,9 @@ return new class () extends Migration {
         // class
         $class = $file->addNamespace($namespace)
             ->addClass('MigrationTest')
+            ->addAttribute($coversNothingAttributeFullPath)
             ->setFinal()
-            ->setExtends($parentUnitTestCaseFullPath)
-            ->addAttribute($coversNothingAttributeFullPath);
+            ->setExtends($parentUnitTestCaseFullPath);
 
         // test method
         $testMethod = $class->addMethod('test' . $this->camelize($this->table) . 'TableHasExpectedColumns')->setPublic();

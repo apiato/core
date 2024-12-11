@@ -115,5 +115,12 @@ class EndpointGenerator extends CompositeGeneratorCommand
             '--method' => $featureCamelCase,
             '--test' => $this->test,
         ]);
+        $this->runGeneratorCommand(TransformerGenerator::class, [
+            '--section' => $this->sectionName,
+            '--container' => $this->containerName,
+            '--file' => $this->model . 'Transformer',
+            '--model' => $this->model,
+            '--test' => $this->test,
+        ]);
     }
 }
