@@ -147,8 +147,8 @@ class ModelGenerator extends FileGeneratorCommand
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
-        $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->fileName;
-        $namespace->addUse($modelFullPath);
+        $classFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->fileName;
+        $namespace->addUse($classFullPath);
         $factoryFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Factories\\' . $this->fileName . 'Factory';
         $namespace->addUse($factoryFullPath);
         $coversClassAttributeFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
@@ -157,9 +157,10 @@ class ModelGenerator extends FileGeneratorCommand
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
+            ->addAttribute($coversClassAttributeFullPath, [new Literal("$this->fileName::class")])
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath)
-            ->addAttribute($coversClassAttributeFullPath, [new Literal("$this->fileName::class")]);
+        ;
 
         // test method
         $testMethod1 = $class->addMethod('testUsesCorrectTable')->setPublic();
