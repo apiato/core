@@ -148,6 +148,7 @@ Route::$methodLowerCase('$this->url', $this->controller::class)
     {
         $file = new PhpFile();
         $printer = new Printer();
+        $methodLowerCase = strtolower($this->method);
 
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . "\Tests\Functional\\$this->ui");
 
@@ -167,12 +168,22 @@ Route::$methodLowerCase('$this->url', $this->controller::class)
         $class->addProperty('endpoint')
             ->setVisibility('protected')
             ->setType('string')
-            ->setValue("$this->method@v$this->docVersion$this->url");
+            ->setValue("$methodLowerCase@v$this->docVersion$this->url");
 
         // test methods
         $testMethod1 = $class->addMethod('testEndpoint')->setPublic();
         $testMethod1->addBody("
-\$this->markTestSkipped('This test has not been implemented yet.');
+\$data = [
+    // provide data to pass to the endpoint
+];
+\$response = \$this
+    ->makeCall(\$data);
+
+\$response->assertOk();
+\$response->assertJsonFragment([
+// 'object' => 'Object',
+// 'key' => 'value',
+]);
 ");
         $testMethod1->setReturnType('void');
 
