@@ -7,6 +7,7 @@ use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -180,19 +181,22 @@ class RequestGenerator extends FileGeneratorCommand
         $namespace->addUse($parentUnitTestCaseFullPath);
         $modelFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Models\\' . $this->model;
         $namespace->addUse($modelFullPath);
-        $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Requests\\' . $this->fileName;
-        $namespace->addUse($requestFullPath);
+        $classFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Requests\\' . $this->fileName;
+        $namespace->addUse($classFullPath);
+        $coversClassFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
+        $namespace->addUse($coversClassFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
+            ->addAttribute($coversClassFullPath, [new Literal("$this->fileName::class")])
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 
         // properties
         $class->addProperty('request')
             ->setVisibility('private')
-            ->setType($requestFullPath);
+            ->setType($classFullPath);
 
         // test method
         $parameter = '';

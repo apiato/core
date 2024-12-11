@@ -6,8 +6,8 @@ use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
-use Illuminate\Support\Str;
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
@@ -117,15 +117,16 @@ class ActionGenerator extends FileGeneratorCommand
 
     protected function addConstructor(PhpNamespace $namespace, ClassType $class, bool $isCRUD): Method
     {
-        $taskFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tasks\\' . Str::ucfirst($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Task';
-        $namespace->addUse($taskFullPath);
+        $repositoryName = $this->model . 'Repository';
+        $repositoryFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Data\Repositories\\' . $repositoryName;
+        $namespace->addUse($repositoryFullPath);
 
         $constructor = $class->addMethod('__construct');
         if ($isCRUD) {
-            $constructor->addPromotedParameter(Str::lower($this->stub) . $this->model . ('list' === $this->stub ? 's' : '') . 'Task')
+            $constructor->addPromotedParameter(lcfirst($repositoryName))
                 ->setPrivate()
                 ->setReadOnly()
-                ->setType($taskFullPath);
+                ->setType($repositoryFullPath);
         }
 
         return $constructor;
@@ -134,6 +135,7 @@ class ActionGenerator extends FileGeneratorCommand
     protected function addRunMethod(PhpNamespace $namespace, ClassType $class, bool $isCRUD): Method
     {
         $requestName = substr($this->fileName, 0, -6) . 'Request';
+        $repositoryName = $this->model . 'Repository';
 
         $runMethod = $class->addMethod('run')->setPublic();
         if ($isCRUD) {
@@ -153,7 +155,7 @@ $data = $request->sanitizeInput([
     // add your request data here
 ]);
             ');
-                $runMethod->addBody("return \$this->?{$this->model}Task->run(\$data);", [Str::lower($this->stub)]);
+                $runMethod->addBody('return $this->' . lcfirst($repositoryName) . '->create($data);');
             } elseif ('update' === $this->stub) {
                 $runMethod->setReturnType($modelFullPath);
 
@@ -162,19 +164,19 @@ $data = $request->sanitizeInput([
     // add your request data here
 ]);
             ');
-                $runMethod->addBody("return \$this->?{$this->model}Task->run(\$data, \$request->id);", [Str::lower($this->stub)]);
+                $runMethod->addBody('return $this->' . lcfirst($repositoryName) . '->update($data, $request->id);');
             } elseif ('delete' === $this->stub) {
                 $runMethod->setReturnType('int');
-                $runMethod->addBody("return \$this->?{$this->model}Task->run(\$request->id);", [Str::lower($this->stub)]);
+                $runMethod->addBody('return $this->' . lcfirst($repositoryName) . '->delete($request->id);');
             } elseif ('find' === $this->stub) {
                 $runMethod->setReturnType($modelFullPath);
-                $runMethod->addBody("return \$this->?{$this->model}Task->run(\$request->id);", [Str::lower($this->stub)]);
+                $runMethod->addBody('return $this->' . lcfirst($repositoryName) . '->find($request->id);');
             } elseif ('list' === $this->stub) {
                 $lengthAwarePaginatorFullPath = '\Illuminate\Contracts\Pagination\LengthAwarePaginator';
                 $namespace->addUse($lengthAwarePaginatorFullPath);
 
                 $runMethod->setReturnType($lengthAwarePaginatorFullPath);
-                $runMethod->addBody('return $this->?Task->run();', [Str::lower($this->stub) . Str::plural($this->model)]);
+                $runMethod->addBody('return $this->' . lcfirst($repositoryName) . '->paginate();');
             }
         } else {
             $runMethod->setReturnType('void');
@@ -198,10 +200,15 @@ $data = $request->sanitizeInput([
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
+        $classFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions\\' . $this->fileName;
+        $namespace->addUse($classFullPath);
+        $coversClassFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
+        $namespace->addUse($coversClassFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
+            ->addAttribute($coversClassFullPath, [new Literal("$this->fileName::class")])
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 

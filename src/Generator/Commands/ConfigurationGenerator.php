@@ -85,10 +85,13 @@ return [
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
+        $coversNothingFullPath = 'PHPUnit\Framework\Attributes\CoversNothing';
+        $namespace->addUse($coversNothingFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->containerName . 'ConfigTest')
+            ->addAttribute($coversNothingFullPath)
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 

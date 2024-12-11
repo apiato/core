@@ -8,6 +8,7 @@ use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -148,16 +149,19 @@ class ControllerGenerator extends FileGeneratorCommand
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
-        $controllerFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Controllers\\' . $this->fileName;
-        $namespace->addUse($controllerFullPath);
         $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Requests\\' . $requestName;
         $namespace->addUse($requestFullPath);
         $actionFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions\\' . $actionName;
         $namespace->addUse($actionFullPath);
+        $classFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Controllers\\' . $this->fileName;
+        $namespace->addUse($classFullPath);
+        $coversClassFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
+        $namespace->addUse($coversClassFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
+            ->addAttribute($coversClassFullPath, [new Literal("$this->fileName::class")])
             ->setFinal()
             ->setExtends($parentUnitTestCaseFullPath);
 

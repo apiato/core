@@ -6,6 +6,7 @@ use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -130,14 +131,17 @@ return true;
             // imports
             $parentUnitTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\UnitTestCase";
             $namespace->addUse($parentUnitTestCaseFullPath);
-            $policyFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Policies\\$this->fileName";
-            $namespace->addUse($policyFullPath);
             $userFactoryFullPath = "App\Containers\AppSection\User\Data\Factories\UserFactory";
             $namespace->addUse($userFactoryFullPath);
+            $classFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Policies\\$this->fileName";
+            $namespace->addUse($classFullPath);
+            $coversClassFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
+            $namespace->addUse($coversClassFullPath);
 
             // class
             $class = $file->addNamespace($namespace)
                 ->addClass($this->fileName . 'Test')
+                ->addAttribute($coversClassFullPath, [new Literal("$this->fileName::class")])
                 ->setFinal()
                 ->setExtends($parentUnitTestCaseFullPath);
         }
