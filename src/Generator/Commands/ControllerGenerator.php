@@ -150,7 +150,6 @@ class ControllerGenerator extends FileGeneratorCommand
         $coversClassFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
         $namespace->addUse($coversClassFullPath);
 
-
         // class
         $class = $file->addNamespace($namespace)
             ->addClass($this->fileName . 'Test')
