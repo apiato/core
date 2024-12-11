@@ -6,7 +6,6 @@ use Apiato\Core\Generator\FileGeneratorCommand;
 use Apiato\Core\Generator\ParentTestCase;
 use Apiato\Core\Generator\Printer;
 use Apiato\Core\Generator\Traits\HasTestTrait;
-use Illuminate\Support\Str;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
@@ -155,7 +154,7 @@ $data = $request->sanitizeInput([
     // add your request data here
 ]);
             ');
-                $runMethod->addBody("return \$this->" . lcfirst($repositoryName) . "->create(\$data);");
+                $runMethod->addBody('return $this->' . lcfirst($repositoryName) . '->create($data);');
             } elseif ('update' === $this->stub) {
                 $runMethod->setReturnType($modelFullPath);
 
@@ -164,19 +163,19 @@ $data = $request->sanitizeInput([
     // add your request data here
 ]);
             ');
-                $runMethod->addBody("return \$this->" . lcfirst($repositoryName) . "->update(\$data, \$request->id);");
+                $runMethod->addBody('return $this->' . lcfirst($repositoryName) . '->update($data, $request->id);');
             } elseif ('delete' === $this->stub) {
                 $runMethod->setReturnType('int');
-                $runMethod->addBody("return \$this->" . lcfirst($repositoryName) . "->delete(\$request->id);");
+                $runMethod->addBody('return $this->' . lcfirst($repositoryName) . '->delete($request->id);');
             } elseif ('find' === $this->stub) {
                 $runMethod->setReturnType($modelFullPath);
-                $runMethod->addBody("return \$this->" . lcfirst($repositoryName) . "->find(\$request->id);");
+                $runMethod->addBody('return $this->' . lcfirst($repositoryName) . '->find($request->id);');
             } elseif ('list' === $this->stub) {
                 $lengthAwarePaginatorFullPath = '\Illuminate\Contracts\Pagination\LengthAwarePaginator';
                 $namespace->addUse($lengthAwarePaginatorFullPath);
 
                 $runMethod->setReturnType($lengthAwarePaginatorFullPath);
-                $runMethod->addBody("return \$this->" . lcfirst($repositoryName) . "->paginate();");
+                $runMethod->addBody('return $this->' . lcfirst($repositoryName) . '->paginate();');
             }
         } else {
             $runMethod->setReturnType('void');
