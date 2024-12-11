@@ -101,6 +101,7 @@ class RouteGenerator extends FileGeneratorCommand
     protected function getFileContent(): string
     {
         $routeTitle = Str::headline($this->fileName);
+        $methodLowerCase = strtolower($this->method);
 
         return "
 <?php
@@ -133,7 +134,7 @@ class RouteGenerator extends FileGeneratorCommand
 use App\Containers\\$this->sectionName\\$this->containerName\UI\\$this->ui\Controllers\\$this->controller;
 use Illuminate\Support\Facades\Route;
 
-Route::$this->method('$this->url', $this->controller::class)
+Route::$methodLowerCase('$this->url', $this->controller::class)
     ->middleware(['auth:api']);
 ";
     }
