@@ -132,7 +132,7 @@ return true;
             $namespace->addUse($parentUnitTestCaseFullPath);
             $policyFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Policies\\$this->fileName";
             $namespace->addUse($policyFullPath);
-            $userFactoryFullPath = "App\Containers\\$this->sectionName\\$this->containerName\Data\Factories\UserFactory";
+            $userFactoryFullPath = "App\Containers\AppSection\User\Data\Factories\UserFactory";
             $namespace->addUse($userFactoryFullPath);
 
             // class
