@@ -140,11 +140,19 @@ class ControllerGenerator extends FileGeneratorCommand
         $file = new PhpFile();
         $printer = new Printer();
 
+        $requestName = substr($this->fileName, 0, -10) . 'Request';
+        $actionName = substr($this->fileName, 0, -10) . 'Action';
+        $runMethod = (in_array($this->stub, ['create', 'update', 'delete'])) ? 'transactionalRun' : 'run';
+
         $namespace = $file->addNamespace('App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Tests\Unit\UI\API\Controllers');
 
         // imports
         $parentUnitTestCaseFullPath = "App\Containers\AppSection\\$this->containerName\Tests\UnitTestCase";
         $namespace->addUse($parentUnitTestCaseFullPath);
+        $requestFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Requests\\' . $requestName;
+        $namespace->addUse($requestFullPath);
+        $actionFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Actions\\' . $actionName;
+        $namespace->addUse($actionFullPath);
         $classFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\API\Controllers\\' . $this->fileName;
         $namespace->addUse($classFullPath);
         $coversClassFullPath = 'PHPUnit\Framework\Attributes\CoversClass';
@@ -158,8 +166,18 @@ class ControllerGenerator extends FileGeneratorCommand
             ->setExtends($parentUnitTestCaseFullPath);
 
         // test method
-        $testMethod = $class->addMethod('testController')->setPublic();
-        $testMethod->addBody('// add your test here');
+        $testMethod = $class->addMethod('testControllerCallsCorrectAction')->setPublic();
+        $testMethod->addBody("
+\$request = $requestName::injectData();
+\$actionSpy = \$this->spy($actionName::class, function (\$mock) {
+    \$mock->shouldReceive('run');
+});
+\$controller = app($this->fileName::class);
+
+\$controller->__invoke(\$request, \$actionSpy);
+
+\$actionSpy->shouldHaveReceived('$runMethod')->once()->with(\$request);
+");
 
         $testMethod->setReturnType('void');
 
