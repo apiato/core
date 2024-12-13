@@ -16,6 +16,7 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
     public array $inputs = [
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['event-listeners', null, InputOption::VALUE_OPTIONAL, 'The Event Listeners that this Provider should register.'],
+        ['event-service-provider', null, InputOption::VALUE_OPTIONAL, 'The Event Service Provider that this Provider should register.'],
     ];
     /**
      * The console command name.
@@ -52,6 +53,7 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
     public function getUserInputs(): array|null
     {
         $stub = $this->option('stub');
+        $eventServiceProvider = $this->option('event-service-provider');
         if (!$stub) {
             $stub = $this->checkParameterOrChoice(
                 'stub',
@@ -126,6 +128,7 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
                 'class-name' => $this->fileName,
                 'event-listeners' => $eventListenersString,
                 'use-statements' => $useStatements,
+                'event-service-provider' => $eventServiceProvider,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

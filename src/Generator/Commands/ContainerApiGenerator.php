@@ -81,14 +81,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--file' => Str::camel($this->sectionName) . '-' . Str::camel($this->containerName),
         ]);
 
-        $this->printInfoMessage('Generating MainServiceProvider');
-        $this->call('apiato:generate:provider', [
-            '--section' => $sectionName,
-            '--container' => $containerName,
-            '--file' => 'MainServiceProvider',
-            '--stub' => 'main-service-provider',
-        ]);
-
         $this->printInfoMessage('Generating Model and Repository');
         $this->call('apiato:generate:model', [
             '--section' => $sectionName,
@@ -416,6 +408,23 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 '--file' => 'EventServiceProvider',
                 '--stub' => $stub,
                 '--event-listeners' => $listeners,
+            ]);
+
+            $this->printInfoMessage('Generating MainServiceProvider');
+            $this->call('apiato:generate:provider', [
+                '--section' => $sectionName,
+                '--container' => $containerName,
+                '--file' => 'MainServiceProvider',
+                '--stub' => 'main-service-provider-with-event-provider',
+                '--event-service-provider' => 'EventServiceProvider',
+            ]);
+        } else {
+            $this->printInfoMessage('Generating MainServiceProvider');
+            $this->call('apiato:generate:provider', [
+                '--section' => $sectionName,
+                '--container' => $containerName,
+                '--file' => 'MainServiceProvider',
+                '--stub' => 'main-service-provider',
             ]);
         }
 
