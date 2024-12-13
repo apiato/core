@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit\Data\Migrations;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;

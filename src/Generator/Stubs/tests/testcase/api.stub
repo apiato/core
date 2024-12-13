@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional;
 
-use App\Ship\Parents\Tests\TestCase as ParentTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\FunctionalTestCase;
 
-class {{class-name}} extends ParentTestCase
+class {{class-name}} extends FunctionalTestCase
 {
 }

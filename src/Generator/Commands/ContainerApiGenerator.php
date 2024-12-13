@@ -57,19 +57,15 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
     {
         $ui = 'api';
 
-        // section name as inputted and lower
         $sectionName = $this->sectionName;
         $_sectionName = Str::lower($this->sectionName);
 
-        // container name as inputted and lower
         $containerName = $this->containerName;
         $_containerName = Str::lower($this->containerName);
 
-        // name of the model (singular and plural)
         $model = $this->containerName;
         $models = Pluralizer::plural($model);
 
-        // add the README file
         $this->printInfoMessage('Generating README File');
         $this->call('apiato:generate:readme', [
             '--section' => $sectionName,
@@ -77,7 +73,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--file' => 'README',
         ]);
 
-        // create the configuration file
         $this->printInfoMessage('Generating Configuration File');
         $this->call('apiato:generate:configuration', [
             '--section' => $sectionName,
@@ -85,7 +80,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--file' => Str::camel($this->sectionName) . '-' . Str::camel($this->containerName),
         ]);
 
-        // create the MainServiceProvider for the container
         $this->printInfoMessage('Generating MainServiceProvider');
         $this->call('apiato:generate:provider', [
             '--section' => $sectionName,
@@ -94,7 +88,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--stub' => 'mainserviceprovider',
         ]);
 
-        // create the model and repository for this container
         $this->printInfoMessage('Generating Model and Repository');
         $this->call('apiato:generate:model', [
             '--section' => $sectionName,
@@ -103,7 +96,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--repository' => true,
         ]);
 
-        // create the migration file for the model
         $this->printInfoMessage('Generating a basic Migration file');
         $this->call('apiato:generate:migration', [
             '--section' => $sectionName,
@@ -112,7 +104,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--tablename' => Str::snake($models),
         ]);
 
-        // create a transformer for the model
         $this->printInfoMessage('Generating Transformer for the Model');
         $this->call('apiato:generate:transformer', [
             '--section' => $sectionName,
@@ -122,7 +113,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--full' => false,
         ]);
 
-        // create a factory for the model
         $this->printInfoMessage('Generating Factory for the Model');
         $this->call('apiato:generate:factory', [
             '--section' => $sectionName,
@@ -131,7 +121,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--model' => $model,
         ]);
 
-        // create the default routes for this container
         $this->printInfoMessage('Generating Default Routes');
         $version = $this->checkParameterOrAsk('docversion', 'Enter the version for all API endpoints (integer)', 1);
         $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for all API endpoints', ['private', 'public'], 0);
@@ -147,8 +136,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         if ($generateEvents) {
             $generateListeners = $this->checkParameterOrConfirm('listeners', 'Do you want to generate the corresponding Event Listeners for this Events?', false);
         }
-
-        $generateTests = $this->checkParameterOrConfirm('tests', 'Do you want to generate the corresponding Tests for this Container?', false);
+        $generateTests = $this->checkParameterOrConfirm('tests', 'Do you want to generate the corresponding Tests for this Container?', true);
 
         $generateEvents ?: $this->printInfoMessage('Generating CRUD Events');
         $generateListeners ?: $this->printInfoMessage('Generating Event Listeners');
@@ -168,7 +156,13 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'List' . $models . 'Action',
                 'request' => 'List' . $models . 'Request',
                 'task' => 'List' . $models . 'Task',
-                'unittest' => 'List' . $models . 'TaskTest',
+                'unittest' => [
+                    'task' => [
+                        'stubfoldername' => 'tasks',
+                        'foldername' => 'Tasks',
+                        'filename' => 'List' . $models . 'TaskTest',
+                    ],
+                ],
                 'functionaltest' => 'List' . $models . 'Test',
                 'event' => $models . 'ListedEvent',
                 'controller' => 'List' . $models . 'Controller',
@@ -182,7 +176,13 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Find' . $model . 'ByIdAction',
                 'request' => 'Find' . $model . 'ByIdRequest',
                 'task' => 'Find' . $model . 'ByIdTask',
-                'unittest' => 'Find' . $model . 'ByIdTaskTest',
+                'unittest' => [
+                    'task' => [
+                        'stubfoldername' => 'tasks',
+                        'foldername' => 'Tasks',
+                        'filename' => 'Find' . $model . 'ByIdTaskTest',
+                    ],
+                ],
                 'functionaltest' => 'Find' . $model . 'ByIdTest',
                 'event' => $model . 'FoundByIdEvent',
                 'controller' => 'Find' . $model . 'ByIdController',
@@ -196,7 +196,13 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Create' . $model . 'Action',
                 'request' => 'Create' . $model . 'Request',
                 'task' => 'Create' . $model . 'Task',
-                'unittest' => 'Create' . $model . 'TaskTest',
+                'unittest' => [
+                    'task' => [
+                        'stubfoldername' => 'tasks',
+                        'foldername' => 'Tasks',
+                        'filename' => 'Create' . $model . 'TaskTest',
+                    ],
+                ],
                 'functionaltest' => 'Create' . $model . 'Test',
                 'event' => $model . 'CreatedEvent',
                 'controller' => 'Create' . $model . 'Controller',
@@ -210,7 +216,13 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Update' . $model . 'Action',
                 'request' => 'Update' . $model . 'Request',
                 'task' => 'Update' . $model . 'Task',
-                'unittest' => 'Update' . $model . 'TaskTest',
+                'unittest' => [
+                    'task' => [
+                        'stubfoldername' => 'tasks',
+                        'foldername' => 'Tasks',
+                        'filename' => 'Update' . $model . 'TaskTest',
+                    ],
+                ],
                 'functionaltest' => 'Update' . $model . 'Test',
                 'event' => $model . 'UpdatedEvent',
                 'controller' => 'Update' . $model . 'Controller',
@@ -224,7 +236,13 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 'action' => 'Delete' . $model . 'Action',
                 'request' => 'Delete' . $model . 'Request',
                 'task' => 'Delete' . $model . 'Task',
-                'unittest' => 'Delete' . $model . 'TaskTest',
+                'unittest' => [
+                    'task' => [
+                        'stubfoldername' => 'tasks',
+                        'foldername' => 'Tasks',
+                        'filename' => 'Delete' . $model . 'TaskTest',
+                    ],
+                ],
                 'functionaltest' => 'Delete' . $model . 'Test',
                 'event' => $model . 'DeletedEvent',
                 'controller' => 'Delete' . $model . 'Controller',
@@ -268,7 +286,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--listener' => $generateListeners,
                 ]);
 
-                // create the EventServiceProvider for the container
                 $this->printInfoMessage('Generating EventServiceProvider');
                 $this->call('apiato:generate:provider', [
                     '--section' => $sectionName,
@@ -282,7 +299,9 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 $this->call('apiato:generate:test:unit', [
                     '--section' => $sectionName,
                     '--container' => $containerName,
-                    '--file' => $route['unittest'],
+                    '--file' => $route['unittest']['task']['filename'],
+                    '--stubfoldername' => $route['unittest']['task']['stubfoldername'],
+                    '--foldername' => $route['unittest']['task']['foldername'],
                     '--model' => $model,
                     '--stub' => $route['stub'],
                     '--event' => $generateEvents ? $route['event'] : false,
@@ -292,6 +311,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--section' => $sectionName,
                     '--container' => $containerName,
                     '--file' => $model . 'FactoryTest',
+                    '--foldername' => 'Factories',
                     '--model' => $model,
                     '--stub' => 'factory',
                     '--event' => false,
@@ -301,6 +321,8 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--section' => $sectionName,
                     '--container' => $containerName,
                     '--file' => $models . 'MigrationTest',
+                    '--stubfoldername' => 'data',
+                    '--foldername' => 'Data/Migrations',
                     '--model' => $model,
                     '--stub' => 'migration',
                     '--event' => false,
@@ -394,9 +416,6 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         return null;
     }
 
-    /**
-     * Get the default file name for this component to be generated.
-     */
     public function getDefaultFileName(): string
     {
         return 'composer';
