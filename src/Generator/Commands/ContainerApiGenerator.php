@@ -21,6 +21,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
         ['controllertype', null, InputOption::VALUE_OPTIONAL, 'The controller type (SAC, MAC)'],
         ['events', null, InputOption::VALUE_OPTIONAL, 'Generate Events for this Container?'],
         ['listeners', null, InputOption::VALUE_OPTIONAL, 'Generate Event Listeners for Events of this Container?'],
+        ['register-listeners', null, InputOption::VALUE_OPTIONAL, 'Register the Event Listeners in the EventServiceProvider?'],
         ['tests', null, InputOption::VALUE_OPTIONAL, 'Generate Tests for this Container?'],
         ['maincalled', false, InputOption::VALUE_NONE],
     ];
@@ -85,7 +86,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
             '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => 'MainServiceProvider',
-            '--stub' => 'mainserviceprovider',
+            '--stub' => 'main-service-provider',
         ]);
 
         $this->printInfoMessage('Generating Model and Repository');
@@ -133,19 +134,23 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
 
         $generateEvents = $this->checkParameterOrConfirm('events', 'Do you want to generate the corresponding CRUD Events for this Container?', false);
         $generateListeners = false;
+        $registerListeners = false;
         if ($generateEvents) {
             $generateListeners = $this->checkParameterOrConfirm('listeners', 'Do you want to generate the corresponding Event Listeners for this Events?', false);
+            if ($generateListeners) {
+                $registerListeners = $this->checkParameterOrConfirm('register-listeners', 'Do you want the Event Listeners to be registered in the EventServiceProvider?', true);
+            }
         }
         $generateTests = $this->checkParameterOrConfirm('tests', 'Do you want to generate the corresponding Tests for this Container?', true);
 
         $generateEvents ?: $this->printInfoMessage('Generating CRUD Events');
-        $generateListeners ?: $this->printInfoMessage('Generating Event Listeners');
         $generateTests ?: $this->printInfoMessage('Generating Tests for Container');
         $this->printInfoMessage('Generating Requests for Routes');
         $this->printInfoMessage('Generating Default Actions');
         $this->printInfoMessage('Generating Default Tasks');
         $this->printInfoMessage('Generating Default Controller/s');
 
+        $events = [];
         $routes = [
             [
                 'stub' => 'List',
@@ -164,7 +169,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     ],
                 ],
                 'functionaltest' => 'List' . $models . 'Test',
-                'event' => $models . 'ListedEvent',
+                'event' => $models . 'Listed',
                 'controller' => 'List' . $models . 'Controller',
             ],
             [
@@ -184,7 +189,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     ],
                 ],
                 'functionaltest' => 'Find' . $model . 'ByIdTest',
-                'event' => $model . 'FoundByIdEvent',
+                'event' => $model . 'Requested',
                 'controller' => 'Find' . $model . 'ByIdController',
             ],
             [
@@ -204,7 +209,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     ],
                 ],
                 'functionaltest' => 'Create' . $model . 'Test',
-                'event' => $model . 'CreatedEvent',
+                'event' => $model . 'Created',
                 'controller' => 'Create' . $model . 'Controller',
             ],
             [
@@ -224,7 +229,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     ],
                 ],
                 'functionaltest' => 'Update' . $model . 'Test',
-                'event' => $model . 'UpdatedEvent',
+                'event' => $model . 'Updated',
                 'controller' => 'Update' . $model . 'Controller',
             ],
             [
@@ -244,7 +249,7 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     ],
                 ],
                 'functionaltest' => 'Delete' . $model . 'Test',
-                'event' => $model . 'DeletedEvent',
+                'event' => $model . 'Deleted',
                 'controller' => 'Delete' . $model . 'Controller',
             ],
         ];
@@ -283,16 +288,9 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                     '--file' => $route['event'],
                     '--model' => $model,
                     '--stub' => $route['stub'],
-                    '--listener' => $generateListeners,
+                    '--listener' => false,
                 ]);
-
-                $this->printInfoMessage('Generating EventServiceProvider');
-                $this->call('apiato:generate:provider', [
-                    '--section' => $sectionName,
-                    '--container' => $containerName,
-                    '--file' => 'EventServiceProvider',
-                    '--stub' => 'eventserviceprovider',
-                ]);
+                $events[] = $route['event'];
             }
 
             if ($generateTests) {
@@ -387,6 +385,37 @@ class ContainerApiGenerator extends GeneratorCommand implements ComponentsGenera
                 '--file' => 'Controller',
                 '--ui' => $ui,
                 '--stub' => 'crud',
+            ]);
+        }
+
+        if ($generateEvents) {
+            $listeners = [];
+            if ($generateListeners) {
+                $this->printInfoMessage('Generating Event Listeners');
+                foreach ($events as $event) {
+                    $listener = $event . 'Listener';
+                    $listeners[$listener] = [$event];
+                    $this->call('apiato:generate:listener', [
+                        '--section' => $this->sectionName,
+                        '--container' => $this->containerName,
+                        '--file' => $listener,
+                        '--event' => $event,
+                    ]);
+                }
+            }
+
+            $stub = 'generic-event-service-provider';
+            if ($generateListeners && $registerListeners) {
+                $stub = 'event-service-provider-with-listener';
+            }
+
+            $this->printInfoMessage('Generating EventServiceProvider');
+            $this->call('apiato:generate:provider', [
+                '--section' => $sectionName,
+                '--container' => $containerName,
+                '--file' => 'EventServiceProvider',
+                '--stub' => $stub,
+                '--event-listeners' => $listeners,
             ]);
         }
 

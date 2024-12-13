@@ -80,7 +80,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => 'MainServiceProvider',
-            '--stub' => 'mainserviceprovider',
+            '--stub' => 'main-service-provider',
         ]);
 
         $this->printInfoMessage('Generating Model and Repository');
