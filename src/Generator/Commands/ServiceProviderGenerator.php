@@ -66,7 +66,6 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
                 'MiddlewareServiceProvide' => 'middleware-service-provider',
                 default => 'generic',
             };
-
         }
         $this->stubName = "providers/$stub.stub";
         $eventListeners = $this->option('event-listeners');
@@ -82,16 +81,20 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
                     $carry .= self::TAB2 . $key . ' => [' . PHP_EOL;
                     $carry .= array_reduce($item[$key], static function ($carry, $event) {
                         $carry .= self::TAB3 . $event . ',' . PHP_EOL;
+
                         return $carry;
                     });
                     $carry .= self::TAB2 . '],' . PHP_EOL;
+
                     return $carry;
                 });
+
                 return $carry;
             }) . '    ]';
             $listenersUseStatements = array_reduce(array_keys($eventListeners), function ($carry, $item) {
-                    $carry .= 'use App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Listeners\\' . $item . ';' . PHP_EOL;
-                    return $carry;
+                $carry .= 'use App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\Listeners\\' . $item . ';' . PHP_EOL;
+
+                return $carry;
             });
 
             $eventsUseStatements = array_map(function ($listeners, $listener) {
@@ -100,8 +103,10 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
             $eventsUseStatements = array_reduce($eventsUseStatements, static function ($carry, $item) {
                 $carry .= array_reduce(array_keys($item), static function ($carry, $key) use ($item) {
                     $carry .= $item[$key] . PHP_EOL;
+
                     return $carry;
                 });
+
                 return $carry;
             });
         }
