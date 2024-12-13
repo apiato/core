@@ -7,38 +7,40 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class TestFunctionalTestGenerator extends GeneratorCommand implements ComponentsGenerator
+class UnitTestGenerator extends GeneratorCommand implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
      */
     public array $inputs = [
-        ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Test for.'],
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model this tests is for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
-        ['url', null, InputOption::VALUE_OPTIONAL, 'The URL of the endpoint (/stores, /cars, ...)'],
+        ['event', null, InputOption::VALUE_OPTIONAL, 'The Event to generate tests for'],
+        ['tablename', null, InputOption::VALUE_OPTIONAL, 'The DB Table to generate tests for'],
+        ['foldername', null, InputOption::VALUE_OPTIONAL, 'The folder name to create the test in'],
+        ['stubfoldername', null, InputOption::VALUE_OPTIONAL, 'The folder name to load the stub from'],
     ];
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'apiato:generate:test:functional';
+    protected $name = 'apiato:generate:test:unit';
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a Functional Test file.';
+    protected $description = 'Create a Unit Test file.';
     /**
      * The type of class being generated.
      */
-    protected string $fileType = 'Functional Test';
+    protected string $fileType = 'Unit Test';
     /**
      * The structure of the file path.
      */
-    protected string $pathStructure = '{section-name}/{container-name}/UI/{user-interface}/Tests/Functional/*';
+    protected string $pathStructure = '{section-name}/{container-name}/Tests/Unit/*';
     /**
      * The structure of the file name.
      */
@@ -46,37 +48,41 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
     /**
      * The name of the stub file.
      */
-    protected string $stubName = 'tests/functional/generic.stub';
+    protected string $stubName = 'tests/unit/generic.stub';
 
     public function getUserInputs(): array|null
     {
-        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the Test', ['API', 'WEB', 'CLI'], 0));
+        $folderName = $this->checkParameterOrAsk('foldername', 'Enter the folder name to create the test in');
+        if ($folderName) {
+            $this->pathStructure = '{section-name}/{container-name}/Tests/Unit/' . $folderName . '/*';
+        }
 
         $model = $this->option('model');
         $stub = $this->option('stub');
-        $url = $this->option('url');
+        $event = $this->option('event');
+        $tableName = $this->option('tablename');
+        $stubFolderName = $this->option('stubfoldername');
 
-        $this->stubName = $stub ? 'tests/functional/' . Str::lower($stub) . '.stub' : 'tests/functional/' . $ui . '.stub';
+        if ($stub) {
+            $stubBasePath = 'tests/unit';
+            if ($stubFolderName) {
+                $stubBasePath = 'tests/unit/' . $stubFolderName;
+            }
+
+            if ($event) {
+                $this->stubName = $stubBasePath . '/with_event/' . Str::lower($stub) . '.stub';
+            } else {
+                $this->stubName = $stubBasePath . '/' . Str::lower($stub) . '.stub';
+            }
+        }
 
         $model = $model ?? $this->containerName;
         $models = Str::plural($model);
-
-        // We need to generate the TestCase class before
-        $this->call('apiato:generate:test:testcase', [
-            '--section' => $this->sectionName,
-            '--container' => $this->containerName,
-            // $ui will be prepended to this string while creating the file.
-            // So the final file name will become something like Api + TestCase => ApiTestCase
-            '--file' => 'TestCase',
-            '--type' => 'functional',
-            '--ui' => $ui,
-        ]);
 
         return [
             'path-parameters' => [
                 'section-name' => $this->sectionName,
                 'container-name' => $this->containerName,
-                'user-interface' => Str::upper($ui),
             ],
             'stub-parameters' => [
                 '_section-name' => Str::lower($this->sectionName),
@@ -88,7 +94,9 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
                 '_model' => Str::camel($model),
                 'models' => $models,
                 '_models' => Str::lower($models),
-                'url' => $url,
+                'event' => $event,
+                'table-name' => $tableName,
+                '_table-name_' => Str::studly($tableName),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -98,6 +106,6 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
 
     public function getDefaultFileName(): string
     {
-        return 'DefaultFunctionalTest';
+        return 'DefaultUnitTest';
     }
 }

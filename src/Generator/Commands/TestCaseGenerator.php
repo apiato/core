@@ -7,7 +7,7 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenerator
+class TestCaseGenerator extends GeneratorCommand implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -15,7 +15,6 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
      */
     public array $inputs = [
         ['type', null, InputOption::VALUE_OPTIONAL, 'The TestCase type.'],
-        ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the TestCase for.'],
     ];
     /**
      * The console command name.
@@ -48,19 +47,19 @@ class TestTestCaseGenerator extends GeneratorCommand implements ComponentsGenera
 
     public function getUserInputs(): array|null
     {
-        $type = Str::lower($this->checkParameterOrChoice('type', 'Select the TestCase type', ['Unit', 'Functional'], 0));
+        $type = Str::lower($this->checkParameterOrChoice('type', 'Select the TestCase type', ['Container', 'Unit', 'Functional', 'E2E', 'API', 'CLI', 'WEB'], 0));
 
-        if ('functional' === $type) {
-            $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the TestCase', ['API', 'WEB', 'CLI'], 0));
-            $this->stubName = 'tests/testcase/' . $ui . '.stub';
-            $this->fileName = Str::ucfirst($ui) . $this->fileName;
-            $this->pathStructure = '{section-name}/{container-name}/UI/' . Str::upper($ui) . '/Tests/*';
+        $this->stubName = 'tests/testcase/' . $type . '.stub';
+        if ('e2e' === $type) {
+            $this->fileName = Str::upper($type) . $this->fileName;
+        } else {
+            $this->fileName = Str::ucfirst($type) . $this->fileName;
         }
-
-        if ('unit' === $type) {
-            $this->stubName = 'tests/testcase/unit.stub';
-            $this->fileName = 'Unit' . $this->fileName;
-            $this->pathStructure = '{section-name}/{container-name}/Tests/*';
+        if ('api' === $type || 'cli' === $type) {
+            $this->pathStructure = '{section-name}/{container-name}/Tests/Functional/*';
+        }
+        if ('web' === $type) {
+            $this->pathStructure = '{section-name}/{container-name}/Tests/E2E/*';
         }
 
         return [
