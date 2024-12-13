@@ -72,7 +72,7 @@ class UnitTestGenerator extends GeneratorCommand implements ComponentsGenerator
             if ($event) {
                 $this->stubName = $stubBasePath . '/with_event/' . Str::lower($stub) . '.stub';
             } else {
-                $this->stubName = $stubBasePath. '/' . Str::lower($stub) . '.stub';
+                $this->stubName = $stubBasePath . '/' . Str::lower($stub) . '.stub';
             }
         }
 
