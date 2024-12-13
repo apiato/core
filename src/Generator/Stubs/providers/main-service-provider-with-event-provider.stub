@@ -11,12 +11,10 @@ use App\Ship\Parents\Providers\MainServiceProvider as ParentMainServiceProvider;
 class {{class-name}} extends ParentMainServiceProvider
 {
     public array $serviceProviders = [
-        // InternalServiceProviderExample::class,
+        {{event-service-provider}}::class,
     ];
 
-    public array $aliases = [
-        // 'Foo' => Bar::class,
-    ];
+    public array $aliases = [];
 
     public function register(): void
     {
