@@ -5,24 +5,15 @@ namespace Apiato\Core\Tests\Unit\Traits;
 use Apiato\Core\Exceptions\IncorrectIdException;
 use Apiato\Core\Tests\Unit\UnitTestCase;
 use Apiato\Core\Traits\HashIdTrait;
+use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(HashIdTrait::class)]
 class HashIdTraitTest extends UnitTestCase
 {
     private $trait;
-    private $mockTrait;
-
-    public static function resourceKeyProvider(): array
-    {
-        return [
-            'null' => [
-                'resourceKey' => null,
-                'expected' => 'User',
-            ],
-        ];
-    }
+    private LegacyMockInterface|MockInterface $mockTrait;
 
     public function setUp(): void
     {
@@ -208,21 +199,5 @@ class HashIdTraitTest extends UnitTestCase
         $result = $this->trait->publicDecodeHashedIdsBeforeValidation($requestData);
 
         $this->assertEquals($requestData, $result);
-    }
-
-    #[DataProvider('resourceKeyProvider')]
-    public function testCanOverrideResourceKey($resourceKey, $expected): void
-    {
-        $this->markTestSkipped();
-        $result = $this->trait
-            ->withMeta($this->metadata)
-            ->transform(
-                data: $this->user,
-                transformerName: $this->transformer,
-                meta: $this->customMetadata,
-                resourceKey: $resourceKey,
-            );
-
-        $this->assertEquals($expected, $result['data']['object']);
     }
 }
