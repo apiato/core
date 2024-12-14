@@ -20,6 +20,7 @@ class HashIdTraitTest extends UnitTestCase
     {
         $firstId = 1;
         $secondId = 2;
+
         return [
             'top level value' => [
                 ['id' => $firstId],
@@ -235,6 +236,7 @@ class HashIdTraitTest extends UnitTestCase
             if (is_int($value)) {
                 return $this->trait->encode($value);
             }
+
             return $value;
         }, $data);
     }
