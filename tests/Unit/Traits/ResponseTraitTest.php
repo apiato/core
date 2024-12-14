@@ -105,7 +105,6 @@ class ResponseTraitTest extends UnitTestCase
         ];
     }
 
-
     #[DataProvider('resourceKeyProvider')]
     public function testCanOverrideResourceKey($resourceKey, $expected): void
     {
