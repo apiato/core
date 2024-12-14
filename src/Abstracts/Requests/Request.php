@@ -172,6 +172,7 @@ abstract class Request extends LaravelRequest
      * Be sure you know what you do!
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     public function mapInput(array $fields): void
     {
@@ -199,6 +200,7 @@ abstract class Request extends LaravelRequest
      * @param null $keys
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     public function all($keys = null): array
     {
@@ -232,6 +234,7 @@ abstract class Request extends LaravelRequest
      * This method mimics the $request->input() method but works on the "decoded" values.
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     public function getInputByKey($key = null, $default = null): mixed
     {
