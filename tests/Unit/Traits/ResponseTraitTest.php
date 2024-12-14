@@ -9,6 +9,7 @@ use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
 use Apiato\Core\Tests\Unit\UnitTestCase;
 use Apiato\Core\Traits\ResponseTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(ResponseTrait::class)]
 class ResponseTraitTest extends UnitTestCase
@@ -104,9 +105,8 @@ class ResponseTraitTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider resourceKeyProvider
-     */
+
+    #[DataProvider('resourceKeyProvider')]
     public function testCanOverrideResourceKey($resourceKey, $expected): void
     {
         $result = $this->trait
