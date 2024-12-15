@@ -13,9 +13,4 @@ class {{class-name}} extends ParentMainServiceProvider
     public array $serviceProviders = [];
 
     public array $aliases = [];
-
-    public function register(): void
-    {
-        parent::register();
-    }
 }
