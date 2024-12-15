@@ -6,7 +6,6 @@ use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Contracts\HasResourceKey;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Scope;
-use League\Fractal\Serializer\SerializerAbstract;
 use League\Fractal\TransformerAbstract;
 use Spatie\Fractal\Fractal;
 use Spatie\Fractalistic\Exceptions\NoTransformerSpecified;
@@ -29,29 +28,6 @@ class Response extends Fractal
         $requestedIncludes = request()?->input(config('fractal.auto_includes.request_key'), []);
 
         return static::create()->manager->parseIncludes($requestedIncludes)->getRequestedIncludes();
-    }
-
-    /**
-     * Create a new Response instance.
-     *
-     * @param mixed|null $data
-     * @param callable|TransformerAbstract|string|null $transformer
-     * @param SerializerAbstract|string|null $serializer
-     */
-    public static function create($data = null, $transformer = null, $serializer = null): static
-    {
-        $response = parent::create($data, $transformer, $serializer);
-
-        $response->parseFieldsets(self::getRequestedFieldsets());
-
-        return $response;
-    }
-
-    private static function getRequestedFieldsets(): array
-    {
-        $requestKey = config('apiato.requests.sparse_fieldsets.request_key');
-
-        return request()?->input($requestKey) ?? [];
     }
 
     public function createData(): Scope
