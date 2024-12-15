@@ -8,7 +8,7 @@ class {{class-name}} extends ServiceProvider
 {
     public function boot(): void
     {
-
+        parent::boot();
     }
 
     public function register(): void
