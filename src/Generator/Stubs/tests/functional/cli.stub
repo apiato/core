@@ -1,19 +1,14 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\UI\CLI\Tests\Functional;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\CLI;
 
-use App\Containers\{{section-name}}\{{container-name}}\UI\CLI\Tests\CliTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\CliTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
-/**
- * @group {{_container-name}}
- * @group cli
- */
+#[CoversNothing]
 class {{class-name}} extends CliTestCase
 {
-    public function test(): void
+    public function testABC(): void
     {
-        // make something here
-
-        // assert basic stuff here
     }
 }

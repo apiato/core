@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Providers;
+
+{{use-statements}}
+use App\Ship\Parents\Providers\EventServiceProvider as ParentEventServiceProvider;
+
+class {{class-name}} extends ParentEventServiceProvider
+{
+    protected $listen = {{event-listeners}};
+}

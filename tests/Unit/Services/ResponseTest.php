@@ -9,15 +9,15 @@ use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserRepository;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
 use Apiato\Core\Tests\Unit\UnitTestCase;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Testing\Fluent\AssertableJson;
+use League\Fractal\ParamBag;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Response::class)]
 class ResponseTest extends UnitTestCase
 {
-    private const FIELDSET_KEY = 'fieldset';
+    private const FIELDSET_KEY = 'fields';
     private User $user;
 
     public static function csvIncludeDataProvider(): array
@@ -83,42 +83,6 @@ class ResponseTest extends UnitTestCase
             ],
             'multiple array nested' => [
                 'include' => ['parent.books', 'children'],
-            ],
-        ];
-    }
-
-    public static function fieldsetDataProvider(): array
-    {
-        return [
-            'without includes' => [
-                self::FIELDSET_KEY => ['User:id;email'],
-                'expected' => ['data.id', 'data.email'],
-                'missing' => ['data.object', 'data.name', 'data.created_at', 'data.updated_at', 'data.children', 'data.books'],
-            ],
-            'only filter nested include keys' => [
-                self::FIELDSET_KEY => ['Book:author;title'],
-                'expected' => ['data.object', 'data.id', 'data.email', 'data.name', 'data.created_at', 'data.updated_at', 'data.books.data.0.author', 'data.books.data.0.title'],
-                'missing' => ['data.books.data.0.id', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
-            ],
-            'with first level includes - no filter' => [
-                self::FIELDSET_KEY => ['User:object,id;email;books'],
-                'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.author', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
-                'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
-            ],
-            'with first level includes - filter' => [
-                self::FIELDSET_KEY => ['User:object,id;email;books', 'Book:object,author'],
-                'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.author'],
-                'missing' => ['data.children', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.created_at', 'data.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
-            ],
-            'with nested includes - no filter' => [
-                self::FIELDSET_KEY => ['User:object,id;email,children;books'],
-                'expected' => ['data.object', 'data.id', 'data.email', 'data.children.data.0.object', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.id', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at'],
-                'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
-            ],
-            'with nested includes - filter' => [
-                self::FIELDSET_KEY => ['User:id;email;children;books', 'Book:id'],
-                'expected' => ['data.id', 'data.email', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.id'],
-                'missing' => ['data.object', 'data.children.data.0.object', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
             ],
         ];
     }
@@ -214,11 +178,47 @@ class ResponseTest extends UnitTestCase
         ];
     }
 
+    public static function fieldsetDataProvider(): array
+    {
+        return [
+            'without includes' => [
+                self::FIELDSET_KEY => ['User' => 'id,email'],
+                'expected' => ['data.id', 'data.email'],
+                'missing' => ['data.object', 'data.name', 'data.created_at', 'data.updated_at', 'data.children', 'data.books'],
+            ],
+            'only filter nested include keys' => [
+                self::FIELDSET_KEY => ['Book' => 'author,title'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.name', 'data.created_at', 'data.updated_at', 'data.books.data.0.author', 'data.books.data.0.title'],
+                'missing' => ['data.books.data.0.id', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
+            ],
+            'with first level includes - no filter' => [
+                self::FIELDSET_KEY => ['User' => 'object,id,email,books'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.author', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
+                'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
+            ],
+            'with first level includes - filter' => [
+                self::FIELDSET_KEY => ['User' => 'object,id,email,books', 'Book' => 'object,author'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.author'],
+                'missing' => ['data.children', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.created_at', 'data.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
+            ],
+            'with nested includes - no filter' => [
+                self::FIELDSET_KEY => ['User' => 'object,id,email,children,books'],
+                'expected' => ['data.object', 'data.id', 'data.email', 'data.children.data.0.object', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.id', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at'],
+                'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
+            ],
+            'with nested includes - filter' => [
+                self::FIELDSET_KEY => ['User' => 'id,email,children,books', 'Book' => 'id'],
+                'expected' => ['data.id', 'data.email', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.id'],
+                'missing' => ['data.object', 'data.children.data.0.object', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
+            ],
+        ];
+    }
+
     #[DataProvider('csvIncludeDataProvider')]
     public function testSingleResourceCanHandleCSVInclude($include, $expected): void
     {
         request()->merge(compact('include'));
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -232,7 +232,7 @@ class ResponseTest extends UnitTestCase
     public function testSingleResourceCanHandleArrayInclude($include, $expected): void
     {
         request()->merge(compact('include'));
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -248,7 +248,7 @@ class ResponseTest extends UnitTestCase
         request()->merge(compact('include'));
         UserFactory::new()->count(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
-        $response = Response::createFrom($users)->transformWith(UserTransformer::class);
+        $response = Response::create($users)->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
 
@@ -259,7 +259,7 @@ class ResponseTest extends UnitTestCase
     public function testCanFilterResponse($fieldset, $expected, $missing): void
     {
         request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => $fieldset]);
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -277,7 +277,7 @@ class ResponseTest extends UnitTestCase
     public function testSingleResourceCanHandleCSVExclude($exclude, $expected): void
     {
         request()->merge(compact('exclude'));
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -291,7 +291,7 @@ class ResponseTest extends UnitTestCase
     public function testSingleResourceCanHandleArrayExclude($exclude, $expected): void
     {
         request()->merge(compact('exclude'));
-        $response = Response::createFrom($this->user);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -307,7 +307,7 @@ class ResponseTest extends UnitTestCase
         request()->merge(compact('exclude'));
         UserFactory::new()->count(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
-        $response = Response::createFrom($users)->transformWith(UserTransformer::class)->parseIncludes($exclude);
+        $response = Response::create($users)->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
         $result = AssertableJson::fromArray($response->toArray());
 
@@ -317,8 +317,8 @@ class ResponseTest extends UnitTestCase
     #[DataProvider('validResourceNameProvider')]
     public function testCanOverrideMainResourceName($resourceName): void
     {
-        request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => ["{$resourceName}:id", 'Book:author,title']]);
-        $response = Response::createFrom($this->user);
+        request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => [$resourceName => 'id', 'Book' => 'author,title']]);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
         $response->withResourceName($resourceName);
 
@@ -330,8 +330,8 @@ class ResponseTest extends UnitTestCase
     #[DataProvider('invalidResourceNameProvider')]
     public function testGivenInvalidNameProvidedRevertToDefaultMainResourceName($resourceName): void
     {
-        request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => ["{$resourceName}:id", 'Book:author,title']]);
-        $response = Response::createFrom($this->user);
+        request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => [$resourceName => 'id', 'Book' => 'author,title']]);
+        $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
         $response->withResourceName($resourceName);
 
@@ -344,12 +344,81 @@ class ResponseTest extends UnitTestCase
     {
         parent::setUp();
 
-        Config::set('apiato.requests.params.filter', self::FIELDSET_KEY);
+        config()->set('apiato.requests.sparse_fieldsets.request_key', self::FIELDSET_KEY);
 
         $this->user = UserFactory::new()
             ->for(UserFactory::new()->has(BookFactory::new()), 'parent')
             ->has(UserFactory::new()->has(BookFactory::new())->count(2), 'children')
             ->has(BookFactory::new()->count(2))
             ->createOne();
+    }
+
+    public function testCanGenerate200OKResponse(): void
+    {
+        $response = Response::create($this->user);
+        $response->transformWith(UserTransformer::class);
+
+        $result = $response->ok();
+
+        $this->assertEquals(200, $result->getStatusCode());
+    }
+
+    public function testCanGenerate202OAcceptedResponse(): void
+    {
+        $response = Response::create($this->user);
+        $response->transformWith(UserTransformer::class);
+
+        $result = $response->accepted();
+
+        $this->assertEquals(202, $result->getStatusCode());
+    }
+
+    public function testCanGenerate201CreatedResponse(): void
+    {
+        $response = Response::create($this->user);
+        $response->transformWith(UserTransformer::class);
+
+        $result = $response->created();
+
+        $this->assertEquals(201, $result->getStatusCode());
+    }
+
+    public function testCanGenerate204NoContentResponse(): void
+    {
+        $response = Response::create($this->user);
+        $response->transformWith(UserTransformer::class);
+
+        $result = $response->noContent();
+
+        $this->assertEquals(204, $result->getStatusCode());
+    }
+
+    public function testCanGetRequestedIncludes(): void
+    {
+        request()->merge(['include' => 'books,children.books']);
+
+        $result = Response::getRequestedIncludes();
+
+        $this->assertEquals(['books', 'children', 'children.books'], $result);
+    }
+
+    public function testCanProcessIncludeParamsWithResourceName(): void
+    {
+        $include = 'books';
+        $includeWithParams = "$include:test(2|value)";
+        request()->merge(['include' => $includeWithParams]);
+        $response = Response::create($this->user);
+        $response->transformWith(UserTransformer::class);
+        $response->withResourceName('User');
+
+        $response->respond();
+
+        $scope = $response->getTransformer()?->getCurrentScope();
+        $identifier = $scope?->getIdentifier($include);
+        $actualParams = $scope?->getManager()->getIncludeParams($identifier);
+        $expectedParams = new ParamBag([
+            'test' => ['2', 'value'],
+        ]);
+        $this->assertEquals($expectedParams, $actualParams);
     }
 }

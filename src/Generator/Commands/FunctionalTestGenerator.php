@@ -7,7 +7,7 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class TestFunctionalTestGenerator extends GeneratorCommand implements ComponentsGenerator
+class FunctionalTestGenerator extends GeneratorCommand implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -38,7 +38,7 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
     /**
      * The structure of the file path.
      */
-    protected string $pathStructure = '{section-name}/{container-name}/UI/{user-interface}/Tests/Functional/*';
+    protected string $pathStructure = '{section-name}/{container-name}/Tests/Functional/*';
     /**
      * The structure of the file name.
      */
@@ -50,27 +50,23 @@ class TestFunctionalTestGenerator extends GeneratorCommand implements Components
 
     public function getUserInputs(): array|null
     {
-        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the Test', ['API', 'WEB', 'CLI'], 0));
+        $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the Test', ['API', 'CLI'], 0));
 
         $model = $this->option('model');
         $stub = $this->option('stub');
         $url = $this->option('url');
 
+        if ('api' === $ui) {
+            $this->pathStructure = '{section-name}/{container-name}/Tests/Functional/API/*';
+        }
+        if ('cli' === $ui) {
+            $this->pathStructure = '{section-name}/{container-name}/Tests/Functional/CLI/*';
+        }
+
         $this->stubName = $stub ? 'tests/functional/' . Str::lower($stub) . '.stub' : 'tests/functional/' . $ui . '.stub';
 
         $model = $model ?? $this->containerName;
         $models = Str::plural($model);
-
-        // We need to generate the TestCase class before
-        $this->call('apiato:generate:test:testcase', [
-            '--section' => $this->sectionName,
-            '--container' => $this->containerName,
-            // $ui will be prepended to this string while creating the file.
-            // So the final file name will become something like Api + TestCase => ApiTestCase
-            '--file' => 'TestCase',
-            '--type' => 'functional',
-            '--ui' => $ui,
-        ]);
 
         return [
             'path-parameters' => [

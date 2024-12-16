@@ -7,7 +7,6 @@ use Apiato\Core\Foundation\Apiato;
 use Apiato\Core\Loaders\AutoLoaderTrait;
 use Apiato\Core\Providers\MacroProviders\CollectionMacroServiceProvider;
 use Apiato\Core\Providers\MacroProviders\ConfigMacroServiceProvider;
-use Apiato\Core\Providers\MacroProviders\ResponseMacroServiceProvider;
 use Apiato\Core\Traits\ValidationTrait;
 use Illuminate\Support\Facades\Schema;
 
@@ -19,7 +18,6 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
     public array $serviceProviders = [
         CollectionMacroServiceProvider::class,
         ConfigMacroServiceProvider::class,
-        ResponseMacroServiceProvider::class,
     ];
 
     public function register(): void
@@ -35,6 +33,11 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
         parent::register();
 
         $this->runLoaderRegister();
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/../../config/apiato.php',
+            'apiato',
+        );
     }
 
     public function boot(): void
@@ -49,5 +52,9 @@ class ApiatoServiceProvider extends AbstractMainServiceProvider
 
         // Registering custom validation rules
         $this->extendValidationRules();
+
+        $this->publishes([
+            __DIR__ . '/../../config/apiato.php' => app_path('Ship/Configs/apiato.php'),
+        ], 'apiato-config');
     }
 }

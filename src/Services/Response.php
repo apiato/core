@@ -2,46 +2,70 @@
 
 namespace Apiato\Core\Services;
 
+use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Contracts\HasResourceKey;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\JsonResponse;
 use League\Fractal\Scope;
-use Spatie\Fractal\Fractal as SpatieFractal;
+use League\Fractal\TransformerAbstract;
+use Spatie\Fractal\Fractal;
+use Spatie\Fractalistic\Exceptions\NoTransformerSpecified;
 
 /**
  * A wrapper class for Spatie\Fractal\Fractal.
  *
- * @see SpatieFractal
+ * @see Fractal
  */
-class Response extends SpatieFractal
+class Response extends Fractal
 {
+    /**
+     * Parse the Request's include query parameter and return the requested includes as model relations.
+     *
+     * For example, if the include query parameter is "books,children.books", this method will return:
+     * ['books', 'children', 'children.books']
+     */
+    public static function getRequestedIncludes(): array
+    {
+        $requestedIncludes = request()?->input(config('fractal.auto_includes.request_key'), []);
+
+        return static::create()->manager->parseIncludes($requestedIncludes)->getRequestedIncludes();
+    }
+
     public function createData(): Scope
     {
         $this->withResourceName($this->defaultResourceName());
-        $this->parseFieldsets($this->getRequestedFieldsets());
         $this->setAvailableIncludesMeta();
 
-        return parent::createData();
-    }
+        // TODO: enable this and remove everything below
+        //  After the Fractalistic PR's are accepted
+        // return parent::createData();
 
-    private function setAvailableIncludesMeta(): void
-    {
-        $this->addMeta([
-            'include' => $this->getTransformerAvailableIncludes(),
-        ]);
-    }
-
-    private function getTransformerAvailableIncludes(): array
-    {
-        if (is_null($this->transformer) || is_callable($this->transformer)) {
-            return [];
+        if (is_null($this->transformer)) {
+            throw new NoTransformerSpecified();
         }
 
-        if (is_string($this->transformer)) {
-            return (new $this->transformer())->getAvailableIncludes();
+        if (is_string($this->serializer)) {
+            $this->serializer = new $this->serializer();
         }
 
-        return $this->transformer->getAvailableIncludes();
+        if (!is_null($this->serializer)) {
+            $this->manager->setSerializer($this->serializer);
+        }
+
+        $this->manager->setRecursionLimit($this->recursionLimit);
+
+        if (!empty($this->includes)) {
+            $this->manager->parseIncludes($this->includes);
+        }
+
+        if (!empty($this->excludes)) {
+            $this->manager->parseExcludes($this->excludes);
+        }
+
+        if (!empty($this->fieldsets)) {
+            $this->manager->parseFieldsets($this->fieldsets);
+        }
+
+        return $this->manager->createData($this->getResource());
     }
 
     private function defaultResourceName(): string
@@ -66,20 +90,74 @@ class Response extends SpatieFractal
         return '';
     }
 
-    private function getRequestedFieldsets(): array
+    private function setAvailableIncludesMeta(): void
     {
-        $fieldSets = [];
-        // TODO: BREAKING CHANGE: rename the default to fieldset
-        if ($requestFieldSets = Request::get(Config::get('apiato.requests.params.filter', 'filter'))) {
-            foreach ($requestFieldSets as $fieldSet) {
-                [$resourceName, $fields] = explode(':', $fieldSet);
-                // TODO: Maybe just split by comma and remove the explode?
-                //  Decide between the two ';', & ',' and stick with one
-                $field = explode(';', $fields);
-                $fieldSets[$resourceName] = $field;
-            }
+        $this->addMeta([
+            'include' => $this->getTransformerAvailableIncludes(),
+        ]);
+    }
+
+    private function getTransformerAvailableIncludes(): array
+    {
+        if (is_null($this->transformer) || is_callable($this->transformer)) {
+            return [];
         }
 
-        return $fieldSets;
+        if (is_string($this->transformer)) {
+            return (new $this->transformer())->getAvailableIncludes();
+        }
+
+        return $this->transformer->getAvailableIncludes();
+    }
+
+    /**
+     * Returns a 202 Accepted response.
+     */
+    public function accepted(): JsonResponse
+    {
+        if (is_null($this->getTransformer())) {
+            $this->transformWith(Transformer::empty());
+        }
+
+        return $this->respond(202);
+    }
+
+    public function getTransformer(): string|callable|TransformerAbstract|null
+    {
+        return $this->transformer;
+    }
+
+    /**
+     * Returns a 201 Created response.
+     */
+    public function created(): JsonResponse
+    {
+        if (is_null($this->getTransformer())) {
+            $this->transformWith(Transformer::empty());
+        }
+
+        return $this->respond(201);
+    }
+
+    /**
+     * Returns a 204 No Content response.
+     */
+    public function noContent(): JsonResponse
+    {
+        $this->transformWith(Transformer::empty());
+
+        return $this->respond(204);
+    }
+
+    /**
+     * Returns a 200 OK response.
+     */
+    public function ok(): JsonResponse
+    {
+        if (is_null($this->getTransformer())) {
+            $this->transformWith(Transformer::empty());
+        }
+
+        return $this->respond(200);
     }
 }

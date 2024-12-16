@@ -15,6 +15,10 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
      */
     public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
+        ['events', null, InputOption::VALUE_OPTIONAL, 'Generate Events for this Container?'],
+        ['listeners', null, InputOption::VALUE_OPTIONAL, 'Generate Event Listeners for Events of this Container?'],
+        ['register-listeners', null, InputOption::VALUE_OPTIONAL, 'Register the Event Listeners in the EventServiceProvider?'],
+        ['tests', null, InputOption::VALUE_OPTIONAL, 'Generate Tests for this Container?'],
     ];
     /**
      * The console command name.
@@ -48,20 +52,75 @@ class ContainerGenerator extends GeneratorCommand implements ComponentsGenerator
     public function getUserInputs(): array|null
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for this container', ['API', 'WEB', 'BOTH'], 0));
+        $generateEvents = $this->checkParameterOrConfirm('events', 'Do you want to generate the corresponding CRUD Events for this Container?', false);
+        $generateListeners = false;
+        $registerListeners = false;
+        if ($generateEvents) {
+            $generateListeners = $this->checkParameterOrConfirm('listeners', 'Do you want to generate the corresponding Event Listeners for this Events?', false);
+            if ($generateListeners) {
+                $registerListeners = $this->checkParameterOrConfirm('register-listeners', 'Do you want the Event Listeners to be registered in the EventServiceProvider?', true);
+            }
+        }
+        $generateTests = $this->checkParameterOrConfirm('tests', 'Do you want to generate the corresponding Tests for this Container?', true);
+        if ($generateTests) {
+            $this->call('apiato:generate:test:testcase', [
+                '--section' => $this->sectionName,
+                '--container' => $this->containerName,
+                '--file' => 'TestCase',
+                '--type' => 'container',
+            ]);
+            $this->call('apiato:generate:test:testcase', [
+                '--section' => $this->sectionName,
+                '--container' => $this->containerName,
+                '--file' => 'TestCase',
+                '--type' => 'unit',
+            ]);
+            $this->call('apiato:generate:test:testcase', [
+                '--section' => $this->sectionName,
+                '--container' => $this->containerName,
+                '--file' => 'TestCase',
+                '--type' => 'functional',
+            ]);
+            // $this->call('apiato:generate:test:testcase', [
+            //     '--section' => $this->sectionName,
+            //     '--container' => $this->containerName,
+            //     '--file' => 'TestCase',
+            //     '--type' => 'e2e',
+            // ]);
+            $this->call('apiato:generate:test:testcase', [
+                '--section' => $this->sectionName,
+                '--container' => $this->containerName,
+                '--file' => 'TestCase',
+                '--type' => 'api',
+            ]);
+            // $this->call('apiato:generate:test:testcase', [
+            //     '--section' => $this->sectionName,
+            //     '--container' => $this->containerName,
+            //     '--file' => 'TestCase',
+            //     '--type' => 'cli',
+            // ]);
+            // $this->call('apiato:generate:test:testcase', [
+            //     '--section' => $this->sectionName,
+            //     '--container' => $this->containerName,
+            //     '--file' => 'TestCase',
+            //     '--type' => 'web',
+            // ]);
+        }
 
-        // container name as inputted and lower
-        $sectionName = $this->sectionName;
-        $_sectionName = Str::lower($this->sectionName);
-
-        // container name as inputted and lower
         $containerName = $this->containerName;
         $_containerName = Str::lower($this->containerName);
+        $sectionName = $this->sectionName;
+        $_sectionName = Str::lower($this->sectionName);
 
         if ('api' === $ui || 'both' === $ui) {
             $this->call('apiato:generate:container:api', [
                 '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => 'composer',
+                '--events' => $generateEvents,
+                '--listeners' => $generateListeners,
+                '--register-listeners' => $registerListeners,
+                '--tests' => $generateTests,
                 '--maincalled' => true,
             ]);
         }

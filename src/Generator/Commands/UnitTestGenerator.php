@@ -7,7 +7,7 @@ use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenerator
+class UnitTestGenerator extends GeneratorCommand implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -18,6 +18,8 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['event', null, InputOption::VALUE_OPTIONAL, 'The Event to generate tests for'],
         ['tablename', null, InputOption::VALUE_OPTIONAL, 'The DB Table to generate tests for'],
+        ['foldername', null, InputOption::VALUE_OPTIONAL, 'The folder name to create the test in'],
+        ['stubfoldername', null, InputOption::VALUE_OPTIONAL, 'The folder name to load the stub from'],
     ];
     /**
      * The console command name.
@@ -50,29 +52,32 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
 
     public function getUserInputs(): array|null
     {
+        $folderName = $this->checkParameterOrAsk('foldername', 'Enter the folder name to create the test in');
+        if ($folderName) {
+            $this->pathStructure = '{section-name}/{container-name}/Tests/Unit/' . $folderName . '/*';
+        }
+
         $model = $this->option('model');
         $stub = $this->option('stub');
         $event = $this->option('event');
-        $tablename = $this->option('tablename');
+        $tableName = $this->option('tablename');
+        $stubFolderName = $this->option('stubfoldername');
 
         if ($stub) {
+            $stubBasePath = 'tests/unit';
+            if ($stubFolderName) {
+                $stubBasePath = 'tests/unit/' . $stubFolderName;
+            }
+
             if ($event) {
-                $this->stubName = 'tests/unit/with_event/' . Str::lower($stub) . '.stub';
+                $this->stubName = $stubBasePath . '/with_event/' . Str::lower($stub) . '.stub';
             } else {
-                $this->stubName = 'tests/unit/' . Str::lower($stub) . '.stub';
+                $this->stubName = $stubBasePath . '/' . Str::lower($stub) . '.stub';
             }
         }
 
         $model = $model ?? $this->containerName;
         $models = Str::plural($model);
-
-        // We need to generate the TestCase class before
-        $this->call('apiato:generate:test:testcase', [
-            '--section' => $this->sectionName,
-            '--container' => $this->containerName,
-            '--file' => 'TestCase',
-            '--type' => 'unit',
-        ]);
 
         return [
             'path-parameters' => [
@@ -90,7 +95,8 @@ class TestUnitTestGenerator extends GeneratorCommand implements ComponentsGenera
                 'models' => $models,
                 '_models' => Str::lower($models),
                 'event' => $event,
-                'table-name' => $tablename,
+                'table-name' => $tableName,
+                '_table-name_' => Str::studly($tableName),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

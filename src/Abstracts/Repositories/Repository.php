@@ -4,28 +4,20 @@ namespace Apiato\Core\Abstracts\Repositories;
 
 use Apiato\Core\Traits\CanEagerLoadTrait;
 use Apiato\Core\Traits\HasRequestCriteriaTrait;
-use Illuminate\Support\Facades\Request;
-use Prettus\Repository\Contracts\CacheableInterface as PrettusCacheable;
+use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Prettus\Repository\Eloquent\BaseRepository as PrettusRepository;
-use Prettus\Repository\Traits\CacheableRepository as PrettusCacheableRepository;
+use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Repository\Traits\CacheableRepository;
 
-abstract class Repository extends PrettusRepository implements PrettusCacheable
+abstract class Repository extends BaseRepository implements CacheableInterface
 {
     use HasRequestCriteriaTrait;
     use CanEagerLoadTrait;
-    use PrettusCacheableRepository {
-        PrettusCacheableRepository::paginate as cacheablePaginate;
+    use CacheableRepository {
+        CacheableRepository::paginate as cacheablePaginate;
     }
 
     // TODO: BC: set return type to void
-    public function boot()
-    {
-        parent::boot();
-
-        $this->eagerLoadRequestedRelations();
-    }
-
     /**
      * Define the maximum number of entries per page that is returned.
      * Set to 0 to "disable" this feature.
@@ -33,6 +25,24 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
     protected int $maxPaginationLimit = 0;
 
     protected bool|null $allowDisablePagination = null;
+
+    public function boot()
+    {
+        parent::boot();
+
+        if ($this->shouldEagerLoadIncludes()) {
+            $this->eagerLoadRequestedIncludes();
+        }
+    }
+
+    /**
+     * Enable or disable eager loading of relations requested by the client via "include" query parameter.
+     */
+    public function shouldEagerLoadIncludes(): bool
+    {
+        // TODO: BC: disable it by default for v8 and enable by default for v13
+        return false;
+    }
 
     /**
      * This function relies on strict conventions:
@@ -106,7 +116,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
     {
         // the priority is for the function parameter, if not available then take
         // it from the request if available and if not keep it null.
-        return $limit ?? Request::get('limit');
+        return $limit ?? request()?->input('limit');
     }
 
     public function wantsToSkipPagination(mixed $limit): bool

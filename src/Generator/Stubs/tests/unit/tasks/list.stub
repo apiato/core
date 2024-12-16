@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit\Tasks;
 
 use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\List{{models}}Task;
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @group {{_container-name}}
- * @group unit
- */
+#[CoversClass(List{{models}}Task::class)]
 class {{class-name}} extends UnitTestCase
 {
     public function testList{{models}}(): void

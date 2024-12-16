@@ -4,7 +4,6 @@ namespace Apiato\Core\Traits;
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\IncorrectIdException;
-use Illuminate\Support\Facades\Config;
 use Vinkla\Hashids\Facades\Hashids;
 
 trait HashIdTrait
@@ -17,6 +16,7 @@ trait HashIdTrait
     ];
 
     /**
+     * TODO: BC: This method is only used on Models and should be moved there
      * Hashes the value of a field (e.g., ID).
      *
      * Will be used by the Eloquent Models (since it's used as trait there).
@@ -82,14 +82,9 @@ trait HashIdTrait
         }
 
         // do the decoding if the ID looks like a hashed one
-        if (!empty($this->decoder($id))) {
-            $id = $this->decoder($id)[0];
-
-            if (is_string($id)) {
-                return null;
-            }
-
-            return $id;
+        $decoded = $this->decoder($id);
+        if (!empty($decoded)) {
+            return $decoded[0];
         }
 
         return null;
@@ -110,7 +105,7 @@ trait HashIdTrait
     protected function decodeHashedIdsBeforeValidation(array $requestData): array
     {
         // the hash ID feature must be enabled to use this decoder feature.
-        if (!empty($this->decode) && Config::get('apiato.hash-id')) {
+        if (!empty($this->decode) && config('apiato.hash-id')) {
             // iterate over each key (ID that needs to be decoded) and call keys locator to decode them
             foreach ($this->decode as $key) {
                 $requestData = $this->locateAndDecodeIds($requestData, $key);
@@ -174,7 +169,7 @@ trait HashIdTrait
         $field = array_shift($keysTodo);
 
         // is the current field an array?! we need to process it like crazy
-        if ('*' == $field) {
+        if ('*' === $field) {
             // make sure field value is an array
             $data = is_array($data) ? $data : [$data];
 

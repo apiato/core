@@ -56,20 +56,26 @@ class RouteGenerator extends GeneratorCommand implements ComponentsGenerator
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
         $version = $this->checkParameterOrAsk('docversion', 'Enter the endpoint version (integer)', 1);
         $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for this endpoint', ['private', 'public'], 0);
-        $operation = $this->checkParameterOrAsk('operation', 'Enter the name of the controller function that needs to be invoked when calling this endpoint');
-        $verb = Str::upper($this->checkParameterOrAsk('verb', 'Enter the HTTP verb of this endpoint (GET, POST,...)'));
+        $operation = $this->checkParameterOrAsk('operation', 'Enter the name of the controller action', '__invoke');
+        $verb = Str::upper($this->checkParameterOrAsk('verb', 'Enter the HTTP verb of this endpoint (GET, POST,...)', 'GET'));
         // Get the URI and remove the first trailing slash
         $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the endpoint URI (foo/bar/{id})'));
         $url = ltrim($url, '/');
 
-        $controllerName = $this->checkParameterOrAsk('controller', 'Enter the controller name', Str::studly($operation) . 'Controller');
+        $invokable = false;
+        if ('__invoke' === $operation) {
+            $invokable = true;
+        }
+        $controllerName = $this->checkParameterOrAsk('controller', 'Enter the controller name', 'Controller');
 
         $docUrl = preg_replace('~{(.+?)}~', ':$1', $url);
 
         $routeName = Str::lower($ui . '_' . $this->containerName . '_' . Str::snake($operation));
 
-        // Change the stub to the currently selected UI (API / WEB)
-        $this->stubName = 'routes/' . $ui . '.stub';
+        $this->stubName = 'routes/' . $ui . '.mac.stub';
+        if ($invokable) {
+            $this->stubName = 'routes/' . $ui . '.sac.stub';
+        }
 
         return [
             'path-parameters' => [

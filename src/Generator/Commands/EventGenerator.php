@@ -50,30 +50,21 @@ class EventGenerator extends GeneratorCommand implements ComponentsGenerator
     public function getUserInputs(): array|null
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Event for', Str::ucfirst($this->containerName));
-
-        $listener = $this->checkParameterOrConfirm('listener', 'Do you want to generate a Listener for this Event?', false);
-        if ($listener) {
-            // We need to generate a corresponding listener
-            // so call the other command
-            $status = $this->call('apiato:generate:listener', [
-                '--section' => $this->sectionName,
-                '--container' => $this->containerName,
-                '--file' => $this->fileName . 'Listener',
-                '--event' => $this->fileName,
-            ]);
-
-            if (0 == $status) {
-                $this->printInfoMessage('The Listener for Event was successfully generated');
-            } else {
-                $this->printErrorMessage('Could not generate the corresponding Listener!');
+        $listener = $this->option('listener');
+        if (is_null($listener)) {
+            $listener = $this->checkParameterOrConfirm('listener', 'Do you want to generate a Listener for this Event?', false);
+            if ($listener) {
+                $this->call('apiato:generate:listener', [
+                    '--section' => $this->sectionName,
+                    '--container' => $this->containerName,
+                    '--file' => $this->fileName . 'Listener',
+                    '--event' => $this->fileName,
+                ]);
             }
         }
 
-        $this->printInfoMessage('!!! Do not forget to register the Event and/or EventListener !!!');
-
         $stub = Str::lower($this->option('stub')) ?: 'generic';
 
-        // Load a new stub-file based on the users choice
         $this->stubName = 'events/' . $stub . '.stub';
 
         return [

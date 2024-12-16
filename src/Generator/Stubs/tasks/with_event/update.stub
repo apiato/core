@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class {{class-name}} extends ParentTask
 {
     public function __construct(
-        protected readonly {{model}}Repository $repository,
+        private readonly {{model}}Repository $repository,
     ) {
     }
 
@@ -24,10 +24,10 @@ class {{class-name}} extends ParentTask
     public function run(array $data, $id): {{model}}
     {
         try {
-            ${{_model}} = $this->repository->update($data, $id);
-            {{event}}::dispatch(${{_model}});
+            ${{model_}} = $this->repository->update($data, $id);
+            {{event}}::dispatch(${{model_}});
 
-            return ${{_model}};
+            return ${{model_}};
         } catch (ModelNotFoundException) {
             throw new NotFoundException();
         } catch (\Exception) {

@@ -7,11 +7,9 @@ use Illuminate\Support\Facades\Schema;
 return new class() extends Migration {
     public function up(): void
     {
-        Schema::create('{{table-name}}', function (Blueprint $table) {
+        Schema::create('{{table-name}}', static function (Blueprint $table) {
             $table->id();
-
             $table->timestamps();
-            // $table->softDeletes();
         });
     }
 

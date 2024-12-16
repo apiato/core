@@ -9,7 +9,6 @@ use Apiato\Core\Traits\SanitizerTrait;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 
 abstract class Request extends LaravelRequest
 {
@@ -117,7 +116,7 @@ abstract class Request extends LaravelRequest
         $user = $user ?: $this->user();
 
         if ($user) {
-            $autoAccessRoles = Config::get('apiato.requests.allow-roles-to-access-all-routes');
+            $autoAccessRoles = config('apiato.requests.allow-roles-to-access-all-routes');
             // there are some roles defined that will automatically grant access
             if (!empty($autoAccessRoles)) {
                 $hasAutoAccessByRole = $user->hasAnyRole($autoAccessRoles);
@@ -173,6 +172,7 @@ abstract class Request extends LaravelRequest
      * Be sure you know what you do!
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     public function mapInput(array $fields): void
     {
@@ -200,6 +200,7 @@ abstract class Request extends LaravelRequest
      * @param null $keys
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     public function all($keys = null): array
     {
@@ -233,6 +234,7 @@ abstract class Request extends LaravelRequest
      * This method mimics the $request->input() method but works on the "decoded" values.
      *
      * @throws IncorrectIdException
+     * @throws \Throwable
      */
     public function getInputByKey($key = null, $default = null): mixed
     {

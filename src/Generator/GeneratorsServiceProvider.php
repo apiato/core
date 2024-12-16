@@ -11,6 +11,7 @@ use Apiato\Core\Generator\Commands\ControllerGenerator;
 use Apiato\Core\Generator\Commands\EventGenerator;
 use Apiato\Core\Generator\Commands\EventListenerGenerator;
 use Apiato\Core\Generator\Commands\ExceptionGenerator;
+use Apiato\Core\Generator\Commands\FunctionalTestGenerator;
 use Apiato\Core\Generator\Commands\JobGenerator;
 use Apiato\Core\Generator\Commands\MailGenerator;
 use Apiato\Core\Generator\Commands\MiddlewareGenerator;
@@ -27,18 +28,14 @@ use Apiato\Core\Generator\Commands\SeederGenerator;
 use Apiato\Core\Generator\Commands\ServiceProviderGenerator;
 use Apiato\Core\Generator\Commands\SubActionGenerator;
 use Apiato\Core\Generator\Commands\TaskGenerator;
-use Apiato\Core\Generator\Commands\TestFunctionalTestGenerator;
-use Apiato\Core\Generator\Commands\TestTestCaseGenerator;
-use Apiato\Core\Generator\Commands\TestUnitTestGenerator;
+use Apiato\Core\Generator\Commands\TestCaseGenerator;
 use Apiato\Core\Generator\Commands\TransformerGenerator;
+use Apiato\Core\Generator\Commands\UnitTestGenerator;
 use Apiato\Core\Generator\Commands\ValueGenerator;
 use Illuminate\Support\ServiceProvider;
 
 class GeneratorsServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
     public function boot()
     {
         if ($this->app->runningInConsole()) {
@@ -48,8 +45,7 @@ class GeneratorsServiceProvider extends ServiceProvider
 
     private function getGeneratorCommands(): array
     {
-        // add your generators here
-        return $generatorCommands = [
+        return [
             ActionGenerator::class,
             ConfigurationGenerator::class,
             ContainerGenerator::class,
@@ -74,9 +70,9 @@ class GeneratorsServiceProvider extends ServiceProvider
             SeederGenerator::class,
             ServiceProviderGenerator::class,
             SubActionGenerator::class,
-            TestFunctionalTestGenerator::class,
-            TestTestCaseGenerator::class,
-            TestUnitTestGenerator::class,
+            FunctionalTestGenerator::class,
+            TestCaseGenerator::class,
+            UnitTestGenerator::class,
             TaskGenerator::class,
             TransformerGenerator::class,
             ValueGenerator::class,

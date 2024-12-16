@@ -3,7 +3,6 @@
 namespace Apiato\Core\Abstracts\Exceptions;
 
 use Exception as BaseException;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
 abstract class Exception extends BaseException
@@ -17,7 +16,7 @@ abstract class Exception extends BaseException
         \Throwable|null $previous = null,
     ) {
         // Detect and set the running environment
-        $this->environment = Config::get('app.env');
+        $this->environment = config('app.env');
 
         parent::__construct($this->prepareMessage($message), $this->prepareStatusCode($code), $previous);
     }

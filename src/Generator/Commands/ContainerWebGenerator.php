@@ -52,19 +52,15 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
     {
         $ui = 'web';
 
-        // container name as inputted and lower
         $sectionName = $this->sectionName;
         $_sectionName = Str::lower($this->sectionName);
 
-        // container name as inputted and lower
         $containerName = $this->containerName;
         $_containerName = Str::lower($this->containerName);
 
-        // name of the model (singular and plural)
         $model = $this->containerName;
         $models = Pluralizer::plural($model);
 
-        // add the README file
         $this->printInfoMessage('Generating README File');
         $this->call('apiato:generate:readme', [
             '--section' => $sectionName,
@@ -72,7 +68,6 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             '--file' => 'README',
         ]);
 
-        // create the configuration file
         $this->printInfoMessage('Generating Configuration File');
         $this->call('apiato:generate:configuration', [
             '--section' => $sectionName,
@@ -80,16 +75,14 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             '--file' => Str::camel($this->sectionName) . '-' . Str::camel($this->containerName),
         ]);
 
-        // create the MainServiceProvider for the container
         $this->printInfoMessage('Generating MainServiceProvider');
         $this->call('apiato:generate:provider', [
             '--section' => $sectionName,
             '--container' => $containerName,
             '--file' => 'MainServiceProvider',
-            '--stub' => 'mainserviceprovider',
+            '--stub' => 'main-service-provider',
         ]);
 
-        // create the model and repository for this container
         $this->printInfoMessage('Generating Model and Repository');
         $this->call('apiato:generate:model', [
             '--section' => $sectionName,
@@ -98,7 +91,6 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             '--repository' => true,
         ]);
 
-        // create the migration file for the model
         $this->printInfoMessage('Generating a basic Migration file');
         $this->call('apiato:generate:migration', [
             '--section' => $sectionName,
@@ -107,12 +99,10 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
             '--tablename' => Str::snake($models),
         ]);
 
-        // create the default routes for this container
         $this->printInfoMessage('Generating Default Routes');
         $version = 1;
         $doctype = 'private';
 
-        // get the URI and remove the first trailing slash
         $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the base URI for all WEB endpoints (foo/bar/{id})', Str::kebab($models)));
         $url = ltrim($url, '/');
 
@@ -251,6 +241,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                     '--section' => $sectionName,
                     '--container' => $containerName,
                     '--file' => $route['controller'],
+                    '--model' => $model,
                     '--ui' => $ui,
                     '--stub' => $route['stub'],
                 ]);
@@ -276,6 +267,7 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
                 '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => 'Controller',
+                '--model' => $model,
                 '--ui' => $ui,
                 '--stub' => 'crud',
             ]);
@@ -307,9 +299,6 @@ class ContainerWebGenerator extends GeneratorCommand implements ComponentsGenera
         return null;
     }
 
-    /**
-     * Get the default file name for this component to be generated.
-     */
     public function getDefaultFileName(): string
     {
         return 'composer';

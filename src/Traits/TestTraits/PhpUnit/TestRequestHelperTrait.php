@@ -6,7 +6,6 @@ use Apiato\Core\Exceptions\MissingTestEndpointException;
 use Apiato\Core\Exceptions\UndefinedMethodException;
 use Apiato\Core\Exceptions\WrongEndpointFormatException;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 use Vinkla\Hashids\Facades\Hashids;
@@ -139,7 +138,7 @@ trait TestRequestHelperTrait
 
     private function buildUrlForUri($uri): string
     {
-        $uri = Config::get('apiato.api.prefix') . $uri;
+        $uri = config('apiato.api.prefix') . $uri;
 
         if (!Str::startsWith($uri, '/')) {
             $uri = '/' . $uri;
@@ -151,7 +150,7 @@ trait TestRequestHelperTrait
     private function getUrl(): string
     {
         // 'API_URL' value comes from `phpunit.xml` during testing
-        return $this->url ?? Config::get('apiato.api.url');
+        return $this->url ?? config('apiato.api.url');
     }
 
     private function dataArrayToQueryParam(array $data, string $url): string
@@ -260,7 +259,7 @@ trait TestRequestHelperTrait
 
     private function hashIdIfEnabled($id): string
     {
-        if (Config::get('apiato.hash-id')) {
+        if (config('apiato.hash-id')) {
             return Hashids::encode($id);
         }
 

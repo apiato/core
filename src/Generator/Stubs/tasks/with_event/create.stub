@@ -11,7 +11,7 @@ use App\Ship\Parents\Tasks\Task as ParentTask;
 class {{class-name}} extends ParentTask
 {
     public function __construct(
-        protected readonly {{model}}Repository $repository,
+        private readonly {{model}}Repository $repository,
     ) {
     }
 
@@ -21,10 +21,10 @@ class {{class-name}} extends ParentTask
     public function run(array $data): {{model}}
     {
         try {
-            ${{_model}} = $this->repository->create($data);
-            {{event}}::dispatch(${{_model}});
+            ${{model_}} = $this->repository->create($data);
+            {{event}}::dispatch(${{model_}});
 
-            return ${{_model}};
+            return ${{model_}};
         } catch (\Exception) {
             throw new CreateResourceFailedException();
         }

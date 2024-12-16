@@ -8,7 +8,6 @@ use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\TestCaseTrait;
 use Apiato\Core\Traits\TestTraits\PhpUnit\TestAssertionHelperTrait;
 use Apiato\Core\Traits\TestTraits\PhpUnit\TestAuthHelperTrait;
-use Apiato\Core\Traits\TestTraits\PhpUnit\TestDatabaseProfilerTrait;
 use Apiato\Core\Traits\TestTraits\PhpUnit\TestRequestHelperTrait;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -25,7 +24,6 @@ final class TestCaseTest extends UnitTestCase
             TestAssertionHelperTrait::class,
             HashIdTrait::class,
             LazilyRefreshDatabase::class,
-            TestDatabaseProfilerTrait::class,
         ];
 
         foreach ($traits as $trait) {
