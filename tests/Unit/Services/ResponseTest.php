@@ -256,9 +256,9 @@ class ResponseTest extends UnitTestCase
     }
 
     #[DataProvider('fieldsetDataProvider')]
-    public function testCanFilterResponse($fieldset, $expected, $missing): void
+    public function testCanFilterResponse($fields, $expected, $missing): void
     {
-        request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => $fieldset]);
+        request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => $fields]);
         $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
@@ -344,7 +344,8 @@ class ResponseTest extends UnitTestCase
     {
         parent::setUp();
 
-        config()->set('apiato.requests.sparse_fieldsets.request_key', self::FIELDSET_KEY);
+        config()->set('fractal.auto_fieldsets.enabled', true);
+        config()->set('fractal.auto_fieldsets.request_key', self::FIELDSET_KEY);
 
         $this->user = UserFactory::new()
             ->for(UserFactory::new()->has(BookFactory::new()), 'parent')
