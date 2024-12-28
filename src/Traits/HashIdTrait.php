@@ -2,8 +2,8 @@
 
 namespace Apiato\Core\Traits;
 
-use Apiato\Core\Exceptions\InternalError;
 use Apiato\Core\Exceptions\IncorrectId;
+use Apiato\Core\Exceptions\InternalError;
 use Vinkla\Hashids\Facades\Hashids;
 
 trait HashIdTrait
