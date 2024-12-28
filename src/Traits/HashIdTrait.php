@@ -151,14 +151,13 @@ trait HashIdTrait
             }
 
             throw_if(
-                null !== $data && !is_string($data),
-                (new CoreInternalErrorException('String expected, got ' . gettype($data), 422))
-                    ->withErrors([$currentFieldName => 'String expected, got ' . gettype($data)]),
+                !is_string($data),
+                (new CoreInternalErrorException('String expected, got ' . gettype($data), 422)),
             );
 
             $decodedField = $this->decode($data);
 
-            if (null === $decodedField) {
+            if (is_null($decodedField)) {
                 throw new IncorrectIdException('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
             }
 
