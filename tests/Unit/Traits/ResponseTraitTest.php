@@ -6,7 +6,7 @@ use Apiato\Core\Abstracts\Transformers\Transformer;
 use Apiato\Core\Tests\Infrastructure\Doubles\User;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
-use Apiato\Core\Tests\Unit\UnitTestCase;
+use Apiato\Core\Tests\UnitTestCase;
 use Apiato\Core\Traits\ResponseTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;

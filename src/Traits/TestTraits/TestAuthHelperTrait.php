@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Traits\TestTraits\PhpUnit;
+namespace Apiato\Core\Traits\TestTraits;
 
 use Apiato\Core\Abstracts\Models\UserModel;
 use Illuminate\Support\Facades\Hash;

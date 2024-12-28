@@ -8,7 +8,7 @@ use Apiato\Core\Tests\Infrastructure\Doubles\User;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserRepository;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
-use Apiato\Core\Tests\Unit\UnitTestCase;
+use Apiato\Core\Tests\UnitTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use League\Fractal\ParamBag;
 use PHPUnit\Framework\Attributes\CoversClass;

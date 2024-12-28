@@ -3,7 +3,7 @@
 namespace Apiato\Core\Tests\Unit\Traits;
 
 use Apiato\Core\Exceptions\IncorrectIdException;
-use Apiato\Core\Tests\Unit\UnitTestCase;
+use Apiato\Core\Tests\UnitTestCase;
 use Apiato\Core\Traits\HashIdTrait;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;

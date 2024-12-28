@@ -8,7 +8,7 @@ use Apiato\Core\Tests\Infrastructure\Doubles\BookFactory;
 use Apiato\Core\Tests\Infrastructure\Doubles\User;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
 use Apiato\Core\Tests\Infrastructure\Doubles\UserRepository;
-use Apiato\Core\Tests\Unit\UnitTestCase;
+use Apiato\Core\Tests\UnitTestCase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\CoversClass;

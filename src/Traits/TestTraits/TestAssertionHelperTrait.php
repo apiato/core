@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Traits\TestTraits\PhpUnit;
+namespace Apiato\Core\Traits\TestTraits;
 
 use Apiato\Core\Abstracts\Models\Model;
 use Illuminate\Auth\Access\Gate;
