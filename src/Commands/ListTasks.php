@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Commands;
 
-use Apiato\Core\Abstracts\Console\Commands\Command;
+use Apiato\Core\Abstracts\Commands\Command;
 use Apiato\Core\Utilities\PathHelper;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Console\Output\ConsoleOutput;
