@@ -28,31 +28,25 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "apiato/container-installer": "^2.0.8",
-        "prettus/l5-repository": "^2.9.0",
-        "spatie/laravel-fractal": "^6.0",
-        "vinkla/hashids": "^11.0",
-        "ext-json": "*",
-        "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^10.0",
-        "laravel/passport": "^11.0.0",
-        "ext-gettext": "*"
+        "prettus/l5-repository": "^2.9.1",
+        "spatie/laravel-fractal": "^6.3.1",
+        "vinkla/hashids": "^12.0",
+        "laravel/framework": "^11.0",
+        "laravel/tinker": "^2.0",
+        "webmozart/assert": "^1.11"
     },
     "require-dev": {
         "fakerphp/faker": "^1.19.1",
-        "friendsofphp/php-cs-fixer": "^3.8.0",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "jetbrains/phpstorm-attributes": "^1.0",
         "mockery/mockery": "^1.4.4",
-        "orchestra/testbench": "^8.15",
-        "php-standard-library/psalm-plugin": "^2.3",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.7",
         "phpmd/phpmd": "@stable",
-        "phpunit/phpunit": "^10.0",
-        "psalm/plugin-laravel": "^2.8",
-        "psalm/plugin-mockery": "^1.1",
-        "psalm/plugin-phpunit": "^0.18.4",
-        "roave/security-advisories": "dev-latest",
-        "vimeo/psalm": "^5.8.0"
+        "roave/security-advisories": "dev-latest"
     },
     "autoload": {
         "psr-4": {
@@ -70,16 +64,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Apiato\\Core\\Providers\\ApiatoServiceProvider",
-                "Vinkla\\Hashids\\HashidsServiceProvider",
-                "Prettus\\Repository\\Providers\\RepositoryServiceProvider",
-                "Spatie\\Fractal\\FractalServiceProvider",
-                "Apiato\\Core\\Generator\\GeneratorsServiceProvider"
-            ],
-            "aliases": {
-                "Hashids": "Vinkla\\Hashids\\Facades\\Hashids",
-                "Fractal": "Spatie\\Fractal\\Facades\\Fractal"
-            }
+                "Apiato\\Core\\Providers\\ApiatoServiceProvider"
+            ]
         }
     },
     "scripts": {
