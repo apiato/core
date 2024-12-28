@@ -6,7 +6,7 @@ use Apiato\Core\Abstracts\Middlewares\Middleware;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ProfilerMiddleware extends Middleware
+class Profiler extends Middleware
 {
     public function handle(Request $request, \Closure $next)
     {

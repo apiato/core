@@ -6,7 +6,7 @@ use Apiato\Core\Abstracts\Middlewares\Middleware;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 
-class ProcessETagHeadersMiddleware extends Middleware
+class ProcessETag extends Middleware
 {
     public function handle(Request $request, \Closure $next)
     {
