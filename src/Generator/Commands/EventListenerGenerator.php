@@ -48,8 +48,6 @@ class EventListenerGenerator extends Generator implements ComponentsGenerator
     {
         $event = $this->checkParameterOrAsk('event', 'Enter the name of the Event to generate this Listener for');
 
-        $this->printInfoMessage('!!! Do not forget to register the Event and/or Event Listener !!!');
-
         return [
             'path-parameters' => [
                 'section-name' => $this->sectionName,
