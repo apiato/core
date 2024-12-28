@@ -152,7 +152,7 @@ trait HashIdTrait
 
             throw_if(
                 !is_string($data),
-                (new CoreInternalErrorException('String expected, got ' . gettype($data), 422)),
+                new CoreInternalErrorException('String expected, got ' . gettype($data), 422),
             );
 
             $decodedField = $this->decode($data);

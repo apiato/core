@@ -167,7 +167,7 @@ final readonly class PathHelper
     /**
      * @param string $subDirectory The subdirectory to append to the container path. Without leading slash.
      *
-     * @return string[] Array of container directories paths.
+     * @return string[] array of container directories paths
      */
     public static function getContainersSubDirectories(string $subDirectory): array
     {
