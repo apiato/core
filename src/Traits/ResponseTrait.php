@@ -4,7 +4,7 @@ namespace Apiato\Core\Traits;
 
 use Apiato\Core\Abstracts\Models\Model;
 use Apiato\Core\Abstracts\Transformers\Transformer;
-use Apiato\Core\Exceptions\InvalidTransformerException;
+use Apiato\Core\Exceptions\InvalidTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
@@ -16,7 +16,7 @@ trait ResponseTrait
     protected array $metaData = [];
 
     /**
-     * @throws InvalidTransformerException
+     * @throws InvalidTransformer
      */
     public function transform(
         $data,
@@ -36,7 +36,7 @@ trait ResponseTrait
 
         // now, finally check, if the class is really a TRANSFORMER
         if (!($transformer instanceof Transformer)) {
-            throw new InvalidTransformerException();
+            throw new InvalidTransformer();
         }
 
         // add specific meta information to the response message

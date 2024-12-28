@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Tests\Unit\Traits;
 
-use Apiato\Core\Exceptions\IncorrectIdException;
+use Apiato\Core\Exceptions\IncorrectId;
 use Apiato\Core\Tests\UnitTestCase;
 use Apiato\Core\Traits\HashIdTrait;
 use Mockery\LegacyMockInterface;
@@ -260,7 +260,7 @@ class HashIdTraitTest extends UnitTestCase
     #[DataProvider('invalidHashedIdsProvider')]
     public function testThrowsIncorrectIdException(array $requestData, array $decode): void
     {
-        $this->expectException(IncorrectIdException::class);
+        $this->expectException(IncorrectId::class);
 
         $this->trait->decode = $decode;
 

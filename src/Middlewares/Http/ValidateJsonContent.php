@@ -3,18 +3,18 @@
 namespace Apiato\Core\Middlewares\Http;
 
 use Apiato\Core\Abstracts\Middlewares\Middleware;
-use Apiato\Core\Exceptions\MissingJSONHeaderException;
+use Apiato\Core\Exceptions\MissingJSONHeader;
 use Illuminate\Http\Request;
 
 class ValidateJsonContent extends Middleware
 {
     /**
-     * @throws MissingJSONHeaderException
+     * @throws MissingJSONHeader
      */
     public function handle(Request $request, \Closure $next)
     {
         if (!$request->expectsJson() && config('apiato.requests.force-accept-header')) {
-            throw new MissingJSONHeaderException();
+            throw new MissingJSONHeader();
         }
 
         return $next($request);

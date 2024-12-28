@@ -2,9 +2,9 @@
 
 namespace Apiato\Core\Traits\TestTraits;
 
-use Apiato\Core\Exceptions\MissingTestEndpointException;
-use Apiato\Core\Exceptions\UndefinedMethodException;
-use Apiato\Core\Exceptions\WrongEndpointFormatException;
+use Apiato\Core\Exceptions\MissingTestEndpoint;
+use Apiato\Core\Exceptions\UndefinedMethod;
+use Apiato\Core\Exceptions\WrongEndpointFormat;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
@@ -43,9 +43,9 @@ trait TestRequestHelperTrait
     private string|null $url;
 
     /**
-     * @throws WrongEndpointFormatException
-     * @throws MissingTestEndpointException
-     * @throws UndefinedMethodException
+     * @throws WrongEndpointFormat
+     * @throws MissingTestEndpoint
+     * @throws UndefinedMethod
      */
     public function makeCall(array $data = [], array $headers = []): TestResponse
     {
@@ -69,7 +69,7 @@ trait TestRequestHelperTrait
             case 'delete':
                 break;
             default:
-                throw new UndefinedMethodException('Unsupported HTTP Verb (' . $verb . ')!');
+                throw new UndefinedMethod('Unsupported HTTP Verb (' . $verb . ')!');
         }
 
         $httpResponse = $this->json($verb, $url, $data, $this->injectAccessToken($headers));
@@ -82,8 +82,8 @@ trait TestRequestHelperTrait
      *
      * @return array<string, string>
      *
-     * @throws WrongEndpointFormatException
-     * @throws MissingTestEndpointException
+     * @throws WrongEndpointFormat
+     * @throws MissingTestEndpoint
      */
     private function parseEndpoint(): array
     {
@@ -108,18 +108,18 @@ trait TestRequestHelperTrait
     }
 
     /**
-     * @throws MissingTestEndpointException
+     * @throws MissingTestEndpoint
      */
     private function validateEndpointExist(): void
     {
         if (!$this->getEndpoint()) {
-            throw new MissingTestEndpointException();
+            throw new MissingTestEndpoint();
         }
     }
 
     public function getEndpoint(): string
     {
-        if (null !== $this->overrideEndpoint) {
+        if (!is_null($this->overrideEndpoint)) {
             return $this->overrideEndpoint;
         }
 
@@ -127,12 +127,12 @@ trait TestRequestHelperTrait
     }
 
     /**
-     * @throws WrongEndpointFormatException
+     * @throws WrongEndpointFormat
      */
     private function validateEndpointFormat(string $separator): void
     {
         if (!strpos($this->getEndpoint(), $separator)) {
-            throw new WrongEndpointFormatException();
+            throw new WrongEndpointFormat();
         }
     }
 
@@ -184,7 +184,7 @@ trait TestRequestHelperTrait
 
     public function getAuth(): bool
     {
-        if (null === $this->overrideAuth) {
+        if (is_null($this->overrideAuth)) {
             return $this->auth;
         }
 
@@ -248,7 +248,7 @@ trait TestRequestHelperTrait
             $id = $this->hashIdIfEnabled($id);
         }
 
-        if (null === $this->overrideEndpoint) {
+        if (is_null($this->overrideEndpoint)) {
             $this->endpoint = str_replace($replace, $id, $this->endpoint);
         } else {
             $this->overrideEndpoint = str_replace($replace, $id, $this->overrideEndpoint);

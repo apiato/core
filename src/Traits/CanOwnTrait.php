@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
-use Apiato\Core\Exceptions\CoreInternalErrorException;
+use Apiato\Core\Exceptions\InternalError;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -18,7 +18,7 @@ trait CanOwnTrait
      *
      * If the relation name is different, you can pass it as the second parameter.
      *
-     * @throws CoreInternalErrorException
+     * @throws InternalError
      */
     public function isOwnedBy(Model $owner, string|null $relation = null): bool
     {
@@ -35,7 +35,7 @@ trait CanOwnTrait
      *
      * If the relation name is different, you can pass it as the second parameter.
      *
-     * @throws CoreInternalErrorException
+     * @throws InternalError
      */
     public function owns(Model $ownable, string|null $relation = null): bool
     {
@@ -53,7 +53,7 @@ trait CanOwnTrait
             return null !== $this->$relation()->find($ownable);
         }
 
-        throw new CoreInternalErrorException('No relationship found. Please pass the relationship name as the second parameter.');
+        throw new InternalError('No relationship found. Please pass the relationship name as the second parameter.');
     }
 
     protected function guessSingularRelationshipName(Model $ownable): string

@@ -2,8 +2,8 @@
 
 namespace Apiato\Core\Abstracts\Transformers;
 
-use Apiato\Core\Exceptions\CoreInternalErrorException;
-use Apiato\Core\Exceptions\UnsupportedFractalIncludeException;
+use Apiato\Core\Exceptions\InternalError;
+use Apiato\Core\Exceptions\UnsupportedInclude;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
@@ -47,10 +47,10 @@ abstract class Transformer extends FractalTransformer
             return parent::callIncludeMethod($scope, $includeName, $data);
         } catch (\ErrorException $exception) {
             if (config('apiato.requests.force-valid-includes', true)) {
-                throw new UnsupportedFractalIncludeException($exception->getMessage());
+                throw new UnsupportedInclude($exception->getMessage());
             }
         } catch (\Exception $exception) {
-            throw new CoreInternalErrorException($exception->getMessage());
+            throw new InternalError($exception->getMessage());
         }
     }
 

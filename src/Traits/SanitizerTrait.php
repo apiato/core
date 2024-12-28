@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Traits;
 
-use Apiato\Core\Exceptions\IncorrectIdException;
+use Apiato\Core\Exceptions\IncorrectId;
 use Illuminate\Support\Arr;
 
 trait SanitizerTrait
@@ -15,7 +15,8 @@ trait SanitizerTrait
      *
      * @return array an array containing the values if the field was present in the request and the intersection array
      *
-     * @throws IncorrectIdException
+     * @throws IncorrectId
+     * @throws \Throwable
      */
     public function sanitizeInput(array $fields): array
     {

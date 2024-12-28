@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Generator;
 
-use Apiato\Core\Exceptions\GeneratorErrorException;
+use Apiato\Core\Exceptions\GeneratorError;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Apiato\Core\Generator\Traits\FileSystemTrait;
 use Apiato\Core\Generator\Traits\FormatterTrait;
@@ -90,7 +90,7 @@ abstract class Generator extends Command
     /**
      * @void
      *
-     * @throws GeneratorErrorException|FileNotFoundException
+     * @throws GeneratorError|FileNotFoundException
      */
     public function handle()
     {
@@ -138,12 +138,12 @@ abstract class Generator extends Command
     }
 
     /**
-     * @throws GeneratorErrorException
+     * @throws GeneratorError
      */
     private function validateGenerator($generator): void
     {
         if (!$generator instanceof ComponentsGenerator) {
-            throw new GeneratorErrorException('Your component maker command should implement ComponentsGenerator interface.');
+            throw new GeneratorError('Your component maker command should implement ComponentsGenerator interface.');
         }
     }
 
