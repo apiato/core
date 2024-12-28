@@ -2,12 +2,12 @@
 
 namespace Apiato\Core\Commands;
 
-use Apiato\Core\Abstracts\Commands\ConsoleCommand;
-use Apiato\Core\Foundation\Facades\Apiato;
+use Apiato\Core\Abstracts\Console\Commands\Command;
+use Apiato\Core\Utilities\PathHelper;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-class ListTasksCommand extends ConsoleCommand
+class ListTasks extends Command
 {
     /**
      * The name and signature of the console command.
@@ -28,8 +28,8 @@ class ListTasksCommand extends ConsoleCommand
 
     public function handle(): void
     {
-        foreach (Apiato::getSectionNames() as $sectionName) {
-            foreach (Apiato::getSectionContainerNames($sectionName) as $containerName) {
+        foreach (PathHelper::getSectionNames() as $sectionName) {
+            foreach (PathHelper::getSectionContainerNames($sectionName) as $containerName) {
                 $this->console->writeln("<fg=yellow> [$containerName]</fg=yellow>");
 
                 $directory = base_path('app/Containers/' . $sectionName . '/' . $containerName . '/Tasks');

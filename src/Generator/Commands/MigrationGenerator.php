@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
+use Apiato\Core\Generator\Generator;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
@@ -10,7 +10,7 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class MigrationGenerator extends GeneratorCommand implements ComponentsGenerator
+class MigrationGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.

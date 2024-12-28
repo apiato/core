@@ -1,10 +1,10 @@
 <?php
 
-namespace Apiato\Core\Abstracts\Commands;
+namespace Apiato\Core\Abstracts\Console\Commands;
 
 use Illuminate\Console\Command as LaravelCommand;
 
-abstract class ConsoleCommand extends LaravelCommand
+abstract class Command extends LaravelCommand
 {
     /**
      * The type of this controller. This will be accessibly mirrored in the Actions.

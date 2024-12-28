@@ -2,9 +2,9 @@
 
 namespace Apiato\Core\Commands;
 
-use Apiato\Core\Abstracts\Commands\ConsoleCommand;
+use Apiato\Core\Abstracts\Console\Commands\Command;
 
-class SeedDeploymentDataCommand extends ConsoleCommand
+class SeedDeploymentData extends Command
 {
     /**
      * The name and signature of the console command.

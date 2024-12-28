@@ -2,13 +2,13 @@
 
 namespace Apiato\Core\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
+use Apiato\Core\Generator\Generator;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ControllerGenerator extends GeneratorCommand implements ComponentsGenerator
+class ControllerGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * The options which can be passed to the command. All options are optional. You do not need to pass the

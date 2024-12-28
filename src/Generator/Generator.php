@@ -14,7 +14,7 @@ use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-abstract class GeneratorCommand extends Command
+abstract class Generator extends Command
 {
     use ParserTrait;
     use PrinterTrait;

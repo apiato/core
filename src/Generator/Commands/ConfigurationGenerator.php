@@ -2,11 +2,11 @@
 
 namespace Apiato\Core\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
+use Apiato\Core\Generator\Generator;
 use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-class ConfigurationGenerator extends GeneratorCommand implements ComponentsGenerator
+class ConfigurationGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
