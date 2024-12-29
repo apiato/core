@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Tests;
 
+use Illuminate\Config\Repository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Vinkla\Hashids\Facades\Hashids;
@@ -25,5 +26,12 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public function encode(int $id): string
     {
         return Hashids::encode($id);
+    }
+
+    protected function defineEnvironment($app)
+    {
+        tap($app['config'], static function (Repository $config) {
+            $config->set('core.tests.running', true);
+        });
     }
 }
