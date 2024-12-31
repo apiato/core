@@ -4,15 +4,20 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Providers;
 
 use App\Ship\Parents\Providers\MainServiceProvider as ParentMainServiceProvider;
 
-/**
- * The Main Service Provider of this container.
- * It will be automatically registered by the framework.
- */
 class {{class-name}} extends ParentMainServiceProvider
 {
-    public array $serviceProviders = [
+    public array $bindings = [];
+    public array $singletons = [];
+    protected $providers = [
         {{event-service-provider}}::class,
     ];
+    protected array $aliases = [];
 
-    public array $aliases = [];
+    public function register(): void
+    {
+    }
+
+    public function boot(): void
+    {
+    }
 }

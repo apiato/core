@@ -8,6 +8,11 @@ use Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Providers\ServiceProvide
 
 class BookServiceProvider extends ServiceProvider
 {
+    public array $bindings = [];
+    public array $singletons = [];
+    protected $providers = [];
+    protected array $aliases = [];
+
     public function boot(): void
     {
         app()->afterResolving(Kernel::class, function (Kernel $kernel) {

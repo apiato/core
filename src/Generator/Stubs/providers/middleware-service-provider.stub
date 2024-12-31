@@ -4,6 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Providers;
 
 use App\Ship\Parents\Providers\MiddlewareServiceProvider as ParentMiddlewareServiceProvider;
 
+// TODO REMOVE THIS stub. we dont provide middleware providers anymore. use the new way of registering middlewares in the container service provider
 class {{class-name}} extends ParentMiddlewareServiceProvider
 {
     protected array $middlewares = [];
