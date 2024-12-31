@@ -7,8 +7,8 @@ use Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Providers\EventServicePr
 class EventServiceProvider extends ParentEventServiceProvider
 {
     protected $listen = [
-//        BookCreatedListener::class => [
-//            BookCreated::class,
-//        ],
+        //        BookCreatedListener::class => [
+        //            BookCreated::class,
+        //        ],
     ];
 }

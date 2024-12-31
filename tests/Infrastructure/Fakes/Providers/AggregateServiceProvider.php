@@ -3,11 +3,11 @@
 namespace Tests\Infrastructure\Fakes\Providers;
 
 use Apiato\Core\Abstracts\Providers\AggregateServiceProvider as CoreAggregateServiceProvider;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Tests\Infrastructure\Dummies\SingletonClass;
 use Tests\Infrastructure\Dummies\SingletonInterface;
 use Tests\Infrastructure\Dummies\UselessClass;
 use Tests\Infrastructure\Dummies\UselessInterface;
-use Illuminate\Contracts\Support\DeferrableProvider;
 
 class AggregateServiceProvider extends CoreAggregateServiceProvider implements DeferrableProvider
 {
@@ -29,11 +29,9 @@ class AggregateServiceProvider extends CoreAggregateServiceProvider implements D
 
     public function register(): void
     {
-
     }
 
     public function boot(): void
     {
-
     }
 }

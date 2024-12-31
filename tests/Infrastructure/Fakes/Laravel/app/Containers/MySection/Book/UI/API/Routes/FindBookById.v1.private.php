@@ -2,12 +2,15 @@
 
 /**
  * @apiGroup           Book
+ *
  * @apiName            Invoke
  *
  * @api                {GET} /v1/books/:id Invoke
+ *
  * @apiDescription     Endpoint description here...
  *
  * @apiVersion         1.0.0
+ *
  * @apiPermission      Authenticated ['permissions' => '', 'roles' => '']
  *
  * @apiHeader          {String} accept=application/json
@@ -22,9 +25,8 @@
  * }
  */
 
-use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Controllers\FindBookByIdController;
 use Illuminate\Support\Facades\Route;
+use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Controllers\FindBookByIdController;
 
 Route::get('books/{id}', FindBookByIdController::class)
     ->middleware(['auth:api']);
-

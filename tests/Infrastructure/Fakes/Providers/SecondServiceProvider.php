@@ -13,11 +13,9 @@ class SecondServiceProvider extends CoreAggregateServiceProvider implements Defe
 
     public function register(): void
     {
-
     }
 
     public function boot(): void
     {
-
     }
 }

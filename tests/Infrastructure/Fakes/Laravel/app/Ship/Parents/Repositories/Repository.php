@@ -3,7 +3,6 @@
 namespace Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Repositories;
 
 use Apiato\Core\Abstracts\Repositories\Repository as AbstractRepository;
-use Tests\Infrastructure\Fakes\Laravel\app\Ship\Exceptions\ResourceNotFound;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Collection;
@@ -11,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Exceptions\RepositoryException;
+use Tests\Infrastructure\Fakes\Laravel\app\Ship\Exceptions\ResourceNotFound;
 
 /**
  * @template TModel of Model

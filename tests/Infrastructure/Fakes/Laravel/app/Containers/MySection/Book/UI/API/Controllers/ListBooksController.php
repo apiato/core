@@ -4,11 +4,11 @@ namespace Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\AP
 
 use Apiato\Core\Exceptions\CoreInternalErrorException;
 use Apiato\Core\Exceptions\InvalidTransformerException;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Actions\ListBooksAction;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Requests\ListBooksRequest;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Transformers\BookTransformer;
 use Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Controllers\ApiController;
-use Prettus\Repository\Exceptions\RepositoryException;
 
 class ListBooksController extends ApiController
 {

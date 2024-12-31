@@ -3,8 +3,8 @@
 namespace Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Tests;
 
 use Apiato\Core\Abstracts\Tests\TestCase as AbstractTestCase;
-use Tests\Infrastructure\Fakes\Laravel\app\Ship\Enums\AuthGuard;
 use Illuminate\Support\Facades\Artisan;
+use Tests\Infrastructure\Fakes\Laravel\app\Ship\Enums\AuthGuard;
 
 abstract class TestCase extends AbstractTestCase
 {

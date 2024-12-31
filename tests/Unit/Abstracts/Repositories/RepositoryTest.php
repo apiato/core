@@ -3,16 +3,16 @@
 namespace Tests\Unit\Abstracts\Repositories;
 
 use Apiato\Core\Abstracts\Repositories\Repository;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Infrastructure\Doubles\Book;
 use Tests\Infrastructure\Doubles\BookFactory;
 use Tests\Infrastructure\Doubles\User;
 use Tests\Infrastructure\Doubles\UserFactory;
 use Tests\Infrastructure\Doubles\UserRepository;
 use Tests\UnitTestCase;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Repository::class)]
 final class RepositoryTest extends UnitTestCase

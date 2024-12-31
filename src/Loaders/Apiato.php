@@ -122,6 +122,7 @@ final class Apiato
     private function getFilesSortedByName(string $apiRoutesPath): array
     {
         $files = File::allFiles($apiRoutesPath);
+
         return Arr::sort($files, static fn ($file) => $file->getFilename());
     }
 
@@ -166,6 +167,7 @@ final class Apiato
         $fileNameWithoutExtensionExploded = explode('.', $fileNameWithoutExtension);
 
         end($fileNameWithoutExtensionExploded);
+
         return prev($fileNameWithoutExtensionExploded);
     }
 

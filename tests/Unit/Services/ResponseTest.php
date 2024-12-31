@@ -3,16 +3,16 @@
 namespace Tests\Unit\Services;
 
 use Apiato\Core\Services\Response;
+use Illuminate\Testing\Fluent\AssertableJson;
+use League\Fractal\ParamBag;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Infrastructure\Doubles\BookFactory;
 use Tests\Infrastructure\Doubles\User;
 use Tests\Infrastructure\Doubles\UserFactory;
 use Tests\Infrastructure\Doubles\UserRepository;
 use Tests\Infrastructure\Doubles\UserTransformer;
 use Tests\UnitTestCase;
-use Illuminate\Testing\Fluent\AssertableJson;
-use League\Fractal\ParamBag;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Response::class)]
 class ResponseTest extends UnitTestCase

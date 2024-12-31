@@ -4,6 +4,7 @@ use Apiato\Core\Generator\GeneratorsServiceProvider;
 use Apiato\Core\Providers\ApiatoServiceProvider;
 use Apiato\Core\Providers\MacroProviders\CollectionMacroServiceProvider;
 use Apiato\Core\Providers\MacroProviders\ConfigMacroServiceProvider;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Pest\Expectation;
 use Tests\Infrastructure\Dummies\AnotherSingletonClass;
@@ -19,7 +20,6 @@ use Tests\Infrastructure\Fakes\Providers\AggregateServiceProvider;
 use Tests\Infrastructure\Fakes\Providers\DeferredServiceProvider;
 use Tests\Infrastructure\Fakes\Providers\FirstServiceProvider;
 use Tests\Infrastructure\Fakes\Providers\SecondServiceProvider;
-use Illuminate\Foundation\AliasLoader;
 
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('registers the providers that are listed in the $providers property', function (): void {
@@ -38,7 +38,6 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
         }
     });
 
-
     it('adds aliases from all registered providers', function (): void {
         $aliases = [
             'Foo' => FirstServiceProvider::class,
@@ -56,7 +55,7 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('binds the bindings that are listed in the $bindings property', function (): void {
         $bindings = [
             UselessInterface::class => UselessClass::class,
-            AnotherUselessInterface::class => AnotherUselessClass::class
+            AnotherUselessInterface::class => AnotherUselessClass::class,
         ];
 
         foreach ($bindings as $key => $value) {
@@ -69,7 +68,7 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('binds the singletons that are listed in the $singletons property', function (): void {
         $singletons = [
             SingletonInterface::class => SingletonClass::class,
-            AnotherSingletonInterface::class => AnotherSingletonClass::class
+            AnotherSingletonInterface::class => AnotherSingletonClass::class,
         ];
 
         foreach ($singletons as $key => $value) {

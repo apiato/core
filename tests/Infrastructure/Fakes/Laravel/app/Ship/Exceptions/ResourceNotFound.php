@@ -2,8 +2,8 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Ship\Exceptions;
 
-use Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Exceptions\HttpException as ParentHttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Exceptions\HttpException as ParentHttpException;
 
 class ResourceNotFound extends ParentHttpException
 {

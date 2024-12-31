@@ -12,11 +12,9 @@ class DeferredServiceProvider extends CoreAggregateServiceProvider
 
     public function register(): void
     {
-
     }
 
     public function boot(): void
     {
-
     }
 }

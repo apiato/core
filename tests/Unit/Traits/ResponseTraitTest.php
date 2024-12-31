@@ -3,13 +3,13 @@
 namespace Tests\Unit\Traits;
 
 use Apiato\Core\Abstracts\Transformers\Transformer;
+use Apiato\Core\Traits\ResponseTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Infrastructure\Doubles\User;
 use Tests\Infrastructure\Doubles\UserFactory;
 use Tests\Infrastructure\Doubles\UserTransformer;
 use Tests\UnitTestCase;
-use Apiato\Core\Traits\ResponseTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(ResponseTrait::class)]
 class ResponseTraitTest extends UnitTestCase

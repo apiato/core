@@ -2,11 +2,11 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Tasks;
 
-use Tests\Infrastructure\Fakes\Laravel\app\Ship\Exceptions\ResourceNotFound;
-use Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Tasks\Task as ParentTask;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Data\Repositories\BookRepository;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Events\BookRequested;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Models\Book;
+use Tests\Infrastructure\Fakes\Laravel\app\Ship\Exceptions\ResourceNotFound;
+use Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Tasks\Task as ParentTask;
 
 class FindBookByIdTask extends ParentTask
 {

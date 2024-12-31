@@ -2,10 +2,10 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Events;
 
-use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Models\Book;
-use Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Events\Event as ParentEvent;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
+use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Models\Book;
+use Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Events\Event as ParentEvent;
 
 class BookCreated extends ParentEvent
 {

@@ -2,11 +2,11 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Actions\CreateBookAction;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Requests\CreateBookRequest;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Transformers\BookTransformer;
 use Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Controllers\ApiController;
-use Illuminate\Http\JsonResponse;
 
 class CreateBookController extends ApiController
 {

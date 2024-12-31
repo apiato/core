@@ -3,13 +3,13 @@
 namespace Tests\Unit\Abstracts\Tests\PhpUnit;
 
 use Apiato\Core\Abstracts\Tests\TestCase;
-use Tests\UnitTestCase;
 use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\TestTraits\TestAssertionHelperTrait;
 use Apiato\Core\Traits\TestTraits\TestAuthHelperTrait;
 use Apiato\Core\Traits\TestTraits\TestRequestHelperTrait;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Tests\UnitTestCase;
 
 #[CoversClass(TestCase::class)]
 final class TestCaseTest extends UnitTestCase

@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Utilities;
 
-use Tests\Infrastructure\Dummies\UselessClass;
-use Tests\UnitTestCase;
 use Apiato\Core\Utilities\PathHelper;
 use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Tests\Infrastructure\Dummies\UselessClass;
+use Tests\UnitTestCase;
 
 #[CoversClass(PathHelper::class)]
 class PathHelperTest extends UnitTestCase

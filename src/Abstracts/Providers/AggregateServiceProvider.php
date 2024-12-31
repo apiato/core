@@ -14,7 +14,7 @@ abstract class AggregateServiceProvider extends LaravelAggregateServiceProvider
 
     final public function runRegister(): void
     {
-        /** @var  $instances */
+        /* @var  $instances */
         $this->instances = [];
 
         foreach ($this->providers as $provider) {

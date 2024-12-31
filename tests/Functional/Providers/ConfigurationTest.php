@@ -50,14 +50,16 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
 
     it('can discover events from configured path', function (): void {
         Event::fake()
-            ->assertListening(BookCreated::class,
+            ->assertListening(
+                BookCreated::class,
                 BookCreatedListener::class,
             );
     });
 
     it('can manually register events', function (): void {
         Event::fake()
-            ->assertListening(BookCreated::class,
+            ->assertListening(
+                BookCreated::class,
                 BookCreatedListener::class,
             );
     })->todo();

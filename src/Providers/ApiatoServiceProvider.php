@@ -132,13 +132,15 @@ class ApiatoServiceProvider extends AggregateServiceProvider
     protected function configureRateLimiting(): void
     {
         if (config('apiato.api.rate-limiter.enabled')) {
-            RateLimiter::for(config('apiato.api.rate-limiter.name'),
+            RateLimiter::for(
+                config('apiato.api.rate-limiter.name'),
                 static function (Request $request) {
                     return Limit::perMinutes(
                         config('apiato.api.rate-limiter.expires'),
                         config('apiato.api.rate-limiter.attempts'),
                     )->by($request->user()?->id ?: $request->ip());
-                });
+                },
+            );
         }
     }
 }
