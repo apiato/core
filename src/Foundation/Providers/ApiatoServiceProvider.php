@@ -108,27 +108,27 @@ class ApiatoServiceProvider extends AggregateServiceProvider
 
         $this->configureRateLimiting(); // TODO: move to route service provider
 
-//        dd(Apiato::create()->getServiceProviders());
-//        dd(app()->getProviders(AggregateServiceProvider::class));
-//        dd(AliasLoader::getInstance()->getAliases());
-//        dd(Event::getRawListeners());
+        //        dd(Apiato::create()->getServiceProviders());
+        //        dd(app()->getProviders(AggregateServiceProvider::class));
+        //        dd(AliasLoader::getInstance()->getAliases());
+        //        dd(Event::getRawListeners());
 
         AboutCommand::add('Apiato', static fn () => ['Version' => '13.0.0']);
     }
 
     public function runLoadersBoot(): void
     {
-//        $this->loadShipMigrations();
-//        $this->loadShipLanguages();
-//        $this->loadShipViews();
-//        $this->loadShipHelpers();
+        //        $this->loadShipMigrations();
+        //        $this->loadShipLanguages();
+        //        $this->loadShipViews();
+        //        $this->loadShipHelpers();
         $this->loadCoreCommands();
 
         foreach (PathHelper::getContainerPaths() as $containerPath) {
-//            $this->loadContainerMigrations($containerPath);
-//            $this->loadContainerLanguages($containerPath);
-//            $this->loadContainerViews($containerPath);
-//            $this->loadContainerHelpers($containerPath);
+            //            $this->loadContainerMigrations($containerPath);
+            //            $this->loadContainerLanguages($containerPath);
+            //            $this->loadContainerViews($containerPath);
+            //            $this->loadContainerHelpers($containerPath);
         }
     }
 
