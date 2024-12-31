@@ -30,8 +30,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
 
     protected $providers = [
         GeneratorsServiceProvider::class,
-        CollectionMacroServiceProvider::class,
-        ConfigMacroServiceProvider::class,
+        MacroServiceProvider::class,
     ];
 
     public function register(): void
