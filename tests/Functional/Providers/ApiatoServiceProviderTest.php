@@ -84,6 +84,24 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
         expect($this->app->isDeferredService(DeferredServiceProvider::class))->toBeTrue();
     })->todo();
 
+    it('registers Core commands', function (): void {
+        $actual = collect(Artisan::all());
+        $commands = [
+            'apiato:list:actions',
+            'apiato:list:tasks',
+            'apiato:seed-deploy',
+            'apiato:seed-test',
+        ];
+
+        expect($commands)
+            ->each(function (Expectation $command) use ($actual) {
+                expect($actual->has($command->value))->toBeTrue();
+            });
+    });
+
+
+
+
     it('can register middlewares in the service provider', function (): void {
         expect(app(Kernel::class)
             ->hasMiddleware(BeforeMiddleware::class))
