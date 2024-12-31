@@ -6,5 +6,4 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as LaravelAuthSe
 
 abstract class AuthServiceProvider extends LaravelAuthServiceProvider
 {
-    protected $policies = [];
 }
