@@ -53,6 +53,7 @@ final readonly class PathHelper
         return self::getClassNamespaceFromFile($filePathName) . '\\' . self::getClassNameFromFile($filePathName);
     }
 
+    // reference: https://stackoverflow.com/questions/7153000/get-class-name-from-file
     protected static function getClassNamespaceFromFile(string $filePathName): string|null
     {
         $src = file_get_contents($filePathName);
