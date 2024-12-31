@@ -119,13 +119,13 @@ class ApiatoServiceProvider extends AggregateServiceProvider
 
     public function runLoadersBoot(): void
     {
-                $this->loadShipLanguages();
+        $this->loadShipLanguages();
         //        $this->loadShipMigrations();
         //        $this->loadShipViews();
-                $this->loadShipHelpers();
+        $this->loadShipHelpers();
 
         foreach (PathHelper::getContainerPaths() as $containerPath) {
-                        $this->loadContainerLanguages($containerPath);
+            $this->loadContainerLanguages($containerPath);
             //            $this->loadContainerMigrations($containerPath);
             //            $this->loadContainerViews($containerPath);
         }
