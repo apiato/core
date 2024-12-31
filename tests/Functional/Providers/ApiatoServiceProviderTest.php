@@ -99,6 +99,11 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
             });
     });
 
+    it('loads helper functions form Ship', function (): void {
+        expect(function_exists('this_is_a_test_function_to_test_functions_file'))->toBeTrue()
+            ->and(function_exists('this_is_a_test_function_to_test_helpers_file'))->toBeTrue();
+    });
+
     it('can register middlewares in the service provider', function (): void {
         expect(app(Kernel::class)
             ->hasMiddleware(BeforeMiddleware::class))

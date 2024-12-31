@@ -153,9 +153,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
             $files = File::files($shipHelpersDirectory);
 
             foreach ($files as $file) {
-                if (!class_exists($file->getBasename('.php'))) {
-                    require $file;
-                }
+                require_once $file;
             }
         }
     }
