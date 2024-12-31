@@ -6,7 +6,11 @@ $finder = Symfony\Component\Finder\Finder::create()
         __DIR__ . '/tests',
     ])
     ->name('*.php')
-    ->notName('*.blade.php');
+    ->notName('*.blade.php')
+    ->exclude([
+        'Infrastructure/Fakes/Laravel/bootstrap',
+        'Infrastructure/Fakes/Laravel/storage',
+    ]);
 
 return (new PhpCsFixer\Config())
     ->setRules([
