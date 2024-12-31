@@ -5,9 +5,9 @@ namespace Apiato\Core\Loaders;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-trait ViewsLoaderTrait
+trait ViewLoaderTrait
 {
-    public function loadViewsFromContainers($containerPath): void
+    public function loadContainerViews($containerPath): void
     {
         $containerViewDirectory = $containerPath . '/UI/WEB/Views/';
         $containerMailTemplatesDirectory = $containerPath . '/Mails/Templates/';
@@ -29,10 +29,14 @@ trait ViewsLoaderTrait
 
     private function buildViewNamespace(string|null $sectionName, string $containerName): string
     {
-        return $sectionName ? (Str::camel($sectionName) . '@' . Str::camel($containerName)) : Str::camel($containerName);
+        if ($sectionName) {
+            return Str::camel($sectionName) . '@' . Str::camel($containerName);
+        }
+
+        return Str::camel($containerName);
     }
 
-    public function loadViewsFromShip(): void
+    public function loadShipViews(): void
     {
         $shipMailTemplatesDirectory = base_path('app/Ship/Mails/Templates/');
         $this->loadViews($shipMailTemplatesDirectory, 'ship');

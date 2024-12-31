@@ -2,18 +2,18 @@
 
 namespace Apiato\Core\Loaders;
 
-use Apiato\Core\Foundation\Facades\Apiato;
+use Apiato\Core\Utilities\PathHelper;
 use Illuminate\Support\Facades\File;
 
-trait CommandsLoaderTrait
+trait CommandLoaderTrait
 {
-    public function loadCommandsFromContainers($containerPath): void
+    public function loadContainerCommands($containerPath): void
     {
         $containerCommandsDirectory = $containerPath . '/UI/CLI/Commands';
-        $this->loadTheConsoles($containerCommandsDirectory);
+        $this->loadCommands($containerCommandsDirectory);
     }
 
-    private function loadTheConsoles($directory): void
+    private function loadCommands($directory): void
     {
         if (File::isDirectory($directory)) {
             $files = File::allFiles($directory);
@@ -21,7 +21,7 @@ trait CommandsLoaderTrait
             foreach ($files as $consoleFile) {
                 // Do not load route files
                 if (!$this->isRouteFile($consoleFile)) {
-                    $consoleClass = Apiato::getClassFullNameFromFile($consoleFile->getPathname());
+                    $consoleClass = PathHelper::getFQCNFromFile($consoleFile->getPathname());
                     // When user from the Main Service Provider, which extends Laravel
                     // service provider you get access to `$this->commands`
                     $this->commands([$consoleClass]);
@@ -35,15 +35,15 @@ trait CommandsLoaderTrait
         return 'closures.php' === $consoleFile->getFilename();
     }
 
-    public function loadCommandsFromShip(): void
+    public function loadShipCommands(): void
     {
         $shipCommandsDirectory = base_path('app/Ship/Commands');
-        $this->loadTheConsoles($shipCommandsDirectory);
+        $this->loadCommands($shipCommandsDirectory);
     }
 
-    public function loadCommandsFromCore(): void
+    public function loadCoreCommands(): void
     {
         $coreCommandsDirectory = __DIR__ . '/../Commands';
-        $this->loadTheConsoles($coreCommandsDirectory);
+        $this->loadCommands($coreCommandsDirectory);
     }
 }

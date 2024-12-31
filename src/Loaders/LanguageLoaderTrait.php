@@ -5,9 +5,9 @@ namespace Apiato\Core\Loaders;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-trait LocalizationLoaderTrait
+trait LanguageLoaderTrait
 {
-    public function loadLocalsFromContainers($containerPath): void
+    public function loadContainerLanguages($containerPath): void
     {
         $containerLocaleDirectory = $containerPath . '/Languages';
         $containerName = basename($containerPath);
@@ -30,7 +30,7 @@ trait LocalizationLoaderTrait
         return $sectionName ? (Str::camel($sectionName) . '@' . Str::camel($containerName)) : Str::camel($containerName);
     }
 
-    public function loadLocalsFromShip(): void
+    public function loadShipLanguages(): void
     {
         $shipLocaleDirectory = base_path('app/Ship/Languages');
         $this->loadLocals($shipLocaleDirectory, 'ship');

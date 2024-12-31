@@ -5,9 +5,9 @@ namespace Apiato\Core\Loaders;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
 
-trait HelpersLoaderTrait
+trait HelperLoaderTrait
 {
-    public function loadHelpersFromContainers($containerPath): void
+    public function loadContainerHelpers($containerPath): void
     {
         $containerHelpersDirectory = $containerPath . '/Helpers';
         $this->loadHelpers($containerHelpersDirectory);
@@ -27,7 +27,7 @@ trait HelpersLoaderTrait
         }
     }
 
-    public function loadHelpersFromShip(): void
+    public function loadShipHelpers(): void
     {
         $shipHelpersDirectory = base_path('app/Ship/Helpers');
         $this->loadHelpers($shipHelpersDirectory);

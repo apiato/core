@@ -4,9 +4,9 @@ namespace Apiato\Core\Loaders;
 
 use Illuminate\Support\Facades\File;
 
-trait MigrationsLoaderTrait
+trait MigrationLoaderTrait
 {
-    public function loadMigrationsFromContainers($containerPath): void
+    public function loadContainerMigrations($containerPath): void
     {
         $containerMigrationDirectory = $containerPath . '/Data/Migrations';
         $this->loadMigrations($containerMigrationDirectory);
@@ -19,7 +19,7 @@ trait MigrationsLoaderTrait
         }
     }
 
-    public function loadMigrationsFromShip(): void
+    public function loadShipMigrations(): void
     {
         $shipMigrationDirectory = base_path('app/Ship/Migrations');
         $this->loadMigrations($shipMigrationDirectory);
