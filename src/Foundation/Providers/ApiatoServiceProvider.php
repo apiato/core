@@ -3,9 +3,11 @@
 namespace Apiato\Foundation\Providers;
 
 use Apiato\Abstract\Providers\AggregateServiceProvider;
+use Apiato\Commands\ListActions;
+use Apiato\Commands\ListTasks;
+use Apiato\Commands\SeedDeploymentData;
+use Apiato\Commands\SeedTestingData;
 use Apiato\Foundation\Loaders\Apiato;
-use Apiato\Foundation\Loaders\CommandLoaderTrait;
-use Apiato\Foundation\Loaders\HelperLoaderTrait;
 use Apiato\Foundation\Loaders\LanguageLoaderTrait;
 use Apiato\Foundation\Loaders\MigrationLoaderTrait;
 use Apiato\Foundation\Loaders\ViewLoaderTrait;
@@ -22,8 +24,6 @@ use Tests\Support\Doubles\Fakes\Providers\SecondServiceProvider;
 
 class ApiatoServiceProvider extends AggregateServiceProvider
 {
-    use CommandLoaderTrait;
-    use HelperLoaderTrait;
     use LanguageLoaderTrait;
     use MigrationLoaderTrait;
     use ViewLoaderTrait;
@@ -38,6 +38,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         $this->providers = $this->mergeProviders($this->providers, $this->serviceProviders());
 
         $this->runRegister();
+        $this->registerCoreCommands();
 
         $this->mergeConfigs();
 
@@ -99,6 +100,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
     public function boot(): void
     {
         $this->runBoot();
+
         $this->runLoadersBoot();
 
         $this->publishes([
@@ -117,17 +119,15 @@ class ApiatoServiceProvider extends AggregateServiceProvider
 
     public function runLoadersBoot(): void
     {
+                $this->loadShipLanguages();
         //        $this->loadShipMigrations();
-        //        $this->loadShipLanguages();
         //        $this->loadShipViews();
-        //        $this->loadShipHelpers();
-        $this->loadCoreCommands();
+                $this->loadShipHelpers();
 
         foreach (PathHelper::getContainerPaths() as $containerPath) {
+                        $this->loadContainerLanguages($containerPath);
             //            $this->loadContainerMigrations($containerPath);
-            //            $this->loadContainerLanguages($containerPath);
             //            $this->loadContainerViews($containerPath);
-            //            $this->loadContainerHelpers($containerPath);
         }
     }
 
@@ -143,6 +143,32 @@ class ApiatoServiceProvider extends AggregateServiceProvider
                     )->by($request->user()?->id ?: $request->ip());
                 },
             );
+        }
+    }
+
+    private function loadShipHelpers(): void
+    {
+        $shipHelpersDirectory = base_path('app/Ship/Helpers');
+        if (File::isDirectory($shipHelpersDirectory)) {
+            $files = File::files($shipHelpersDirectory);
+
+            foreach ($files as $file) {
+                if (!class_exists($file->getBasename('.php'))) {
+                    require $file;
+                }
+            }
+        }
+    }
+
+    private function registerCoreCommands(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ListActions::class,
+                ListTasks::class,
+                SeedDeploymentData::class,
+                SeedTestingData::class,
+            ]);
         }
     }
 }
