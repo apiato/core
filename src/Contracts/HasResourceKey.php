@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Contracts;
+namespace Apiato\Contracts;
 
 interface HasResourceKey
 {

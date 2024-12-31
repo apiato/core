@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Utilities;
 
-use Apiato\Core\Utilities\PathHelper;
+use Apiato\Foundation\Support\PathHelper;
 use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\Infrastructure\Dummies\UselessClass;

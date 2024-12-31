@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Generator\Traits;
+namespace Apiato\Generator\Traits;
 
 trait FormatterTrait
 {

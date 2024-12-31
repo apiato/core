@@ -1,10 +1,10 @@
 <?php
 
-use Apiato\Core\Loaders\Apiato;
-use Apiato\Core\Loaders\ApplicationBuilder;
-use Apiato\Core\Middlewares\ProcessETag;
-use Apiato\Core\Middlewares\Profiler;
-use Apiato\Core\Middlewares\ValidateJsonContent;
+use Apiato\Foundation\Loaders\Apiato;
+use Apiato\Foundation\Loaders\ApplicationBuilder;
+use Apiato\Foundation\Middlewares\ProcessETag;
+use Apiato\Foundation\Middlewares\Profiler;
+use Apiato\Foundation\Middlewares\ValidateJsonContent;
 use Illuminate\Support\Facades\Event;
 use Pest\Expectation;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Events\BookCreated;

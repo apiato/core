@@ -1,13 +1,13 @@
 <?php
 
-namespace Apiato\Core\Generator;
+namespace Apiato\Generator;
 
-use Apiato\Core\Exceptions\GeneratorError;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
-use Apiato\Core\Generator\Traits\FileSystemTrait;
-use Apiato\Core\Generator\Traits\FormatterTrait;
-use Apiato\Core\Generator\Traits\ParserTrait;
-use Apiato\Core\Generator\Traits\PrinterTrait;
+use Apiato\Foundation\Exceptions\GeneratorError;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Traits\FileSystemTrait;
+use Apiato\Generator\Traits\FormatterTrait;
+use Apiato\Generator\Traits\ParserTrait;
+use Apiato\Generator\Traits\PrinterTrait;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;

@@ -2,8 +2,8 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use Apiato\Core\Exceptions\IncorrectIdException;
-use Apiato\Core\Exceptions\InvalidTransformerException;
+use Apiato\Exceptions\IncorrectIdException;
+use Apiato\Exceptions\InvalidTransformerException;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Update{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;

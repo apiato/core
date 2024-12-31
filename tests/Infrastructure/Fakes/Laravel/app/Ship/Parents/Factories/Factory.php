@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Factories;
 
-use Apiato\Core\Abstracts\Factories\Factory as AbstractFactory;
+use Apiato\Abstract\Factories\Factory as AbstractFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**

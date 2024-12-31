@@ -1,25 +1,13 @@
 <?php
 
-namespace Apiato\Core\Commands;
+namespace Apiato\Commands;
 
-use Apiato\Core\Abstracts\Commands\Command;
+use Apiato\Abstract\Commands\Command;
 
 class SeedTestingData extends Command
 {
-    /**
-     * The name and signature of the console command.
-     */
     protected $signature = 'apiato:seed-test';
-
-    /**
-     * The console command description.
-     */
-    protected $description = 'Seed testing data.';
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Seed testing data';
 
     public function handle(): void
     {

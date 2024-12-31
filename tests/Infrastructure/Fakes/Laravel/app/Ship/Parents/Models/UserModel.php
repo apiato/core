@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Models;
 
-use Apiato\Core\Abstracts\Models\UserModel as AbstractUserModel;
+use Apiato\Abstract\Models\UserModel as AbstractUserModel;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;

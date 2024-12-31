@@ -50,10 +50,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Apiato\\Core\\": "src/"
+            "Apiato\\": "src/"
         },
         "files": [
-            "src/Helpers/helpers.php"
+            "src/Foundation/Support/helpers.php"
         ]
     },
     "autoload-dev": {
@@ -64,7 +64,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Apiato\\Core\\Providers\\ApiatoServiceProvider"
+                "Apiato\\Foundation\\Providers\\ApiatoServiceProvider"
             ]
         }
     },

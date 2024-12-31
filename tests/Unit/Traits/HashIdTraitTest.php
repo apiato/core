@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Traits;
 
-use Apiato\Core\Exceptions\IncorrectId;
-use Apiato\Core\Traits\HashIdTrait;
+use Apiato\Foundation\Exceptions\IncorrectId;
+use Apiato\Foundation\Support\Traits\HashIdTrait;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;

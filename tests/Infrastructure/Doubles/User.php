@@ -2,8 +2,8 @@
 
 namespace Tests\Infrastructure\Doubles;
 
-use Apiato\Core\Abstracts\Models\UserModel;
-use Apiato\Core\Traits\ModelTrait;
+use Apiato\Abstract\Models\UserModel;
+use Apiato\Foundation\Support\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;

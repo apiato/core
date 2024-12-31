@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Abstracts\Repositories;
 
-use Apiato\Core\Abstracts\Repositories\Repository;
+use Apiato\Abstract\Repositories\Repository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\CoversClass;

@@ -1,25 +1,13 @@
 <?php
 
-namespace Apiato\Core\Commands;
+namespace Apiato\Commands;
 
-use Apiato\Core\Abstracts\Commands\Command;
+use Apiato\Abstract\Commands\Command;
 
 class SeedDeploymentData extends Command
 {
-    /**
-     * The name and signature of the console command.
-     */
     protected $signature = 'apiato:seed-deploy';
-
-    /**
-     * The console command description.
-     */
-    protected $description = 'Seed data for initial deployment.';
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Seed data for initial deployment';
 
     public function handle(): void
     {

@@ -1,23 +1,17 @@
 <?php
 
-namespace Apiato\Core\Commands;
+namespace Apiato\Commands;
 
-use Apiato\Core\Abstracts\Commands\Command;
-use Apiato\Core\Utilities\PathHelper;
+use Apiato\Abstract\Commands\Command;
+use Apiato\Foundation\Support\PathHelper;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 class ListActions extends Command
 {
-    /**
-     * The name and signature of the console command.
-     */
     protected $signature = 'apiato:list:actions {--withfilename}';
-
-    /**
-     * The console command description.
-     */
-    protected $description = 'List all Actions in the Application.';
+    protected $description = 'List all Actions';
 
     public function __construct(ConsoleOutput $console)
     {
@@ -37,18 +31,15 @@ class ListActions extends Command
                 if (File::isDirectory($directory)) {
                     $files = File::allFiles($directory);
 
-                    foreach ($files as $action) {
-                        // Get the file name as is
-                        $fileName = $originalFileName = $action->getFilename();
+                    foreach ($files as $file) {
+                        $originalFileName = $file->getFilename();
+                        $fileName = $originalFileName;
+                        $fileName = Str::of($fileName)
+                            ->replace('Action.php', '')
+                            ->replace('.php', '')
+                            ->replace('_', ' ')
+                            ->headline();
 
-                        // Remove the Action.php postfix from each file name
-                        // Further, remove the `.php', if the file does not end on 'Action.php'
-                        $fileName = str_replace(['Action.php', '.php'], '', $fileName);
-
-                        // UnCamelize the word and replace it with spaces
-                        $fileName = uncamelize($fileName);
-
-                        // Check if flag exists
                         $includeFileName = '';
                         if ($this->option('withfilename')) {
                             $includeFileName = "<fg=red>($originalFileName)</fg=red>";

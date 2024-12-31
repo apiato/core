@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Doubles;
 
-use Apiato\Core\Abstracts\Factories\Factory as CoreFactory;
+use Apiato\Abstract\Factories\Factory as CoreFactory;
 
 /**
  * @template TModel of Book

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services;
 
-use Apiato\Core\Services\Response;
+use Apiato\Support\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
 use League\Fractal\ParamBag;
 use PHPUnit\Framework\Attributes\CoversClass;

@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Core\Loaders\Apiato;
+use Apiato\Foundation\Loaders\Apiato;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Middleware;
 

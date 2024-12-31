@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Policies;
 
-use Apiato\Core\Abstracts\Policies\Policy as AbstractPolicy;
+use Apiato\Abstract\Policies\Policy as AbstractPolicy;
 use Tests\Infrastructure\Fakes\Laravel\app\Ship\Contracts\Authorizable;
 
 abstract class Policy extends AbstractPolicy

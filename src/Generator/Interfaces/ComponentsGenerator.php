@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Generator\Interfaces;
+namespace Apiato\Generator\Interfaces;
 
 interface ComponentsGenerator
 {

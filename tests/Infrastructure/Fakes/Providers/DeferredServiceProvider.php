@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Fakes\Providers;
 
-use Apiato\Core\Abstracts\Providers\AggregateServiceProvider as CoreAggregateServiceProvider;
+use Apiato\Abstract\Providers\AggregateServiceProvider as CoreAggregateServiceProvider;
 
 class DeferredServiceProvider extends CoreAggregateServiceProvider
 {

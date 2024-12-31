@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\Console\Commands;
 
-use Apiato\Core\Abstracts\Commands\Command;
+use Apiato\Abstract\Commands\Command;
 
 class ContainerTestCommand extends Command
 {

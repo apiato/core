@@ -2,7 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use Apiato\Core\Exceptions\InvalidTransformerException;
+use Apiato\Exceptions\InvalidTransformerException;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Find{{model}}ByIdAction;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Find{{model}}ByIdRequest;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;

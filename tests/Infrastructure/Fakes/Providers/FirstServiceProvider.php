@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Fakes\Providers;
 
-use Apiato\Core\Abstracts\Providers\AggregateServiceProvider as CoreAggregateServiceProvider;
+use Apiato\Abstract\Providers\AggregateServiceProvider as CoreAggregateServiceProvider;
 use Tests\Infrastructure\Dummies\AnotherSingletonClass;
 use Tests\Infrastructure\Dummies\AnotherSingletonInterface;
 use Tests\Infrastructure\Dummies\AnotherUselessClass;

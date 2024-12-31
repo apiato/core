@@ -2,8 +2,8 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use Apiato\Core\Exceptions\CoreInternalErrorException;
-use Apiato\Core\Exceptions\InvalidTransformerException;
+use Apiato\Exceptions\CoreInternalErrorException;
+use Apiato\Exceptions\InvalidTransformerException;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\List{{models}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\List{{models}}Request;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;

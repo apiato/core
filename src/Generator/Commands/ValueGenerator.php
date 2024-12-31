@@ -1,9 +1,9 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\Generator;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 

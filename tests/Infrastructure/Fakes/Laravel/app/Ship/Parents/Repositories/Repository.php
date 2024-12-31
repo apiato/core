@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Ship\Parents\Repositories;
 
-use Apiato\Core\Abstracts\Repositories\Repository as AbstractRepository;
+use Apiato\Abstract\Repositories\Repository as AbstractRepository;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Collection;

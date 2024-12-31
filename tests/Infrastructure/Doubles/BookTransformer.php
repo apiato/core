@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Doubles;
 
-use Apiato\Core\Abstracts\Transformers\Transformer;
+use Apiato\Abstract\Transformers\Transformer;
 use League\Fractal\Resource\Item;
 
 class BookTransformer extends Transformer

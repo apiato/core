@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Abstracts\Tests\PhpUnit;
 
-use Apiato\Core\Abstracts\Tests\TestCase;
-use Apiato\Core\Traits\HashIdTrait;
-use Apiato\Core\Traits\TestTraits\TestAssertionHelperTrait;
-use Apiato\Core\Traits\TestTraits\TestAuthHelperTrait;
-use Apiato\Core\Traits\TestTraits\TestRequestHelperTrait;
+use Apiato\Abstract\Tests\TestCase;
+use Apiato\Foundation\Support\Traits\HashIdTrait;
+use Apiato\Foundation\Support\Traits\Testing\AssertionTrait;
+use Apiato\Foundation\Support\Traits\Testing\TestingUserTrait;
+use Apiato\Foundation\Support\Traits\Testing\RequestHelperTrait;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\UnitTestCase;
@@ -17,9 +17,9 @@ final class TestCaseTest extends UnitTestCase
     public function testUsesTraits(): void
     {
         $traits = [
-            TestAuthHelperTrait::class,
-            TestRequestHelperTrait::class,
-            TestAssertionHelperTrait::class,
+            TestingUserTrait::class,
+            RequestHelperTrait::class,
+            AssertionTrait::class,
             HashIdTrait::class,
             LazilyRefreshDatabase::class,
         ];

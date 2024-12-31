@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Ship\Commands;
 
-use Apiato\Core\Abstracts\Commands\Command;
+use Apiato\Abstract\Commands\Command;
 
 class ShipTestCommand extends Command
 {

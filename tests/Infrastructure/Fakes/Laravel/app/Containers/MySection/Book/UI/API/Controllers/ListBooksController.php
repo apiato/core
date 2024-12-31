@@ -2,8 +2,8 @@
 
 namespace Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Controllers;
 
-use Apiato\Core\Exceptions\CoreInternalErrorException;
-use Apiato\Core\Exceptions\InvalidTransformerException;
+use Apiato\Exceptions\CoreInternalErrorException;
+use Apiato\Exceptions\InvalidTransformerException;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Actions\ListBooksAction;
 use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Requests\ListBooksRequest;

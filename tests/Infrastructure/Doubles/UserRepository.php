@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Doubles;
 
-use Apiato\Core\Abstracts\Repositories\Repository as ParentRepository;
+use Apiato\Abstract\Repositories\Repository as ParentRepository;
 
 class UserRepository extends ParentRepository
 {

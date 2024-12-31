@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Traits;
 
-use Apiato\Core\Abstracts\Transformers\Transformer;
-use Apiato\Core\Traits\ResponseTrait;
+use Apiato\Abstract\Transformers\Transformer;
+use Apiato\Foundation\Support\Traits\ResponseTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Infrastructure\Doubles\User;

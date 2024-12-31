@@ -2,7 +2,7 @@
 
 namespace Tests\Infrastructure\Doubles;
 
-use Apiato\Core\Abstracts\Models\Model;
+use Apiato\Abstract\Models\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Book extends Model
