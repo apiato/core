@@ -2,6 +2,7 @@
 
 namespace Apiato\Core\Generator;
 
+use Apiato\Core\Abstracts\Providers\AggregateServiceProvider;
 use Apiato\Core\Generator\Commands\ActionGenerator;
 use Apiato\Core\Generator\Commands\ConfigurationGenerator;
 use Apiato\Core\Generator\Commands\ContainerApiGenerator;
@@ -32,11 +33,10 @@ use Apiato\Core\Generator\Commands\TestCaseGenerator;
 use Apiato\Core\Generator\Commands\TransformerGenerator;
 use Apiato\Core\Generator\Commands\UnitTestGenerator;
 use Apiato\Core\Generator\Commands\ValueGenerator;
-use Illuminate\Support\ServiceProvider;
 
-class GeneratorsServiceProvider extends ServiceProvider
+class GeneratorsServiceProvider extends AggregateServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->commands($this->getGeneratorCommands());
