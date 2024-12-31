@@ -1,9 +1,9 @@
 <?php
 
+use Apiato\Foundation\Providers\ApiatoServiceProvider;
 use Apiato\Foundation\Providers\CollectionMacroServiceProvider;
 use Apiato\Foundation\Providers\ConfigMacroServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
-use Apiato\Foundation\Providers\ApiatoServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Pest\Expectation;
