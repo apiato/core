@@ -20,7 +20,7 @@ class EventListenerGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:listener';
+    protected $name = 'apiato:make:listener';
     /**
      * The console command description.
      *

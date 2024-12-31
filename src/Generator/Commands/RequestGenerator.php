@@ -23,7 +23,7 @@ class RequestGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:request';
+    protected $name = 'apiato:make:request';
 
     /**
      * The console command description.

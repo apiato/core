@@ -19,7 +19,7 @@ class ReadmeGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:readme';
+    protected $name = 'apiato:make:readme';
     /**
      * The console command description.
      *

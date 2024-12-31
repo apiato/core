@@ -23,7 +23,7 @@ class TransformerGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:transformer';
+    protected $name = 'apiato:make:transformer';
     /**
      * The console command description.
      *

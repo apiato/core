@@ -21,7 +21,7 @@ class TestCaseGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:test:testcase';
+    protected $name = 'apiato:make:test:testcase';
     /**
      * The console command description.
      *

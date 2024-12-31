@@ -19,7 +19,7 @@ class PolicyGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:policy';
+    protected $name = 'apiato:make:policy';
     /**
      * The console command description.
      *

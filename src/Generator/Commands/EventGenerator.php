@@ -23,7 +23,7 @@ class EventGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:event';
+    protected $name = 'apiato:make:event';
     /**
      * The console command description.
      *
@@ -54,7 +54,7 @@ class EventGenerator extends Generator implements ComponentsGenerator
         if (is_null($listener)) {
             $listener = $this->checkParameterOrConfirm('listener', 'Do you want to generate a Listener for this Event?', false);
             if ($listener) {
-                $this->call('apiato:generate:listener', [
+                $this->call('apiato:make:listener', [
                     '--section' => $this->sectionName,
                     '--container' => $this->containerName,
                     '--file' => $this->fileName . 'Listener',

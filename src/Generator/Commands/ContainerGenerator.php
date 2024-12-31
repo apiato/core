@@ -25,7 +25,7 @@ class ContainerGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:container';
+    protected $name = 'apiato:make:container';
     /**
      * The console command description.
      *
@@ -63,43 +63,43 @@ class ContainerGenerator extends Generator implements ComponentsGenerator
         }
         $generateTests = $this->checkParameterOrConfirm('tests', 'Do you want to generate the corresponding Tests for this Container?', true);
         if ($generateTests) {
-            $this->call('apiato:generate:test:testcase', [
+            $this->call('apiato:make:test:testcase', [
                 '--section' => $this->sectionName,
                 '--container' => $this->containerName,
                 '--file' => 'TestCase',
                 '--type' => 'container',
             ]);
-            $this->call('apiato:generate:test:testcase', [
+            $this->call('apiato:make:test:testcase', [
                 '--section' => $this->sectionName,
                 '--container' => $this->containerName,
                 '--file' => 'TestCase',
                 '--type' => 'unit',
             ]);
-            $this->call('apiato:generate:test:testcase', [
+            $this->call('apiato:make:test:testcase', [
                 '--section' => $this->sectionName,
                 '--container' => $this->containerName,
                 '--file' => 'TestCase',
                 '--type' => 'functional',
             ]);
-            // $this->call('apiato:generate:test:testcase', [
+            // $this->call('apiato:make:test:testcase', [
             //     '--section' => $this->sectionName,
             //     '--container' => $this->containerName,
             //     '--file' => 'TestCase',
             //     '--type' => 'e2e',
             // ]);
-            $this->call('apiato:generate:test:testcase', [
+            $this->call('apiato:make:test:testcase', [
                 '--section' => $this->sectionName,
                 '--container' => $this->containerName,
                 '--file' => 'TestCase',
                 '--type' => 'api',
             ]);
-            // $this->call('apiato:generate:test:testcase', [
+            // $this->call('apiato:make:test:testcase', [
             //     '--section' => $this->sectionName,
             //     '--container' => $this->containerName,
             //     '--file' => 'TestCase',
             //     '--type' => 'cli',
             // ]);
-            // $this->call('apiato:generate:test:testcase', [
+            // $this->call('apiato:make:test:testcase', [
             //     '--section' => $this->sectionName,
             //     '--container' => $this->containerName,
             //     '--file' => 'TestCase',
@@ -113,7 +113,7 @@ class ContainerGenerator extends Generator implements ComponentsGenerator
         $_sectionName = Str::lower($this->sectionName);
 
         if ('api' === $ui || 'both' === $ui) {
-            $this->call('apiato:generate:container:api', [
+            $this->call('apiato:make:container:api', [
                 '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => 'composer',
@@ -126,7 +126,7 @@ class ContainerGenerator extends Generator implements ComponentsGenerator
         }
 
         if ('web' === $ui || 'both' === $ui) {
-            $this->call('apiato:generate:container:web', [
+            $this->call('apiato:make:container:web', [
                 '--section' => $sectionName,
                 '--container' => $containerName,
                 '--file' => 'composer',

@@ -19,7 +19,7 @@ class SeederGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:seeder';
+    protected $name = 'apiato:make:seeder';
     /**
      * The console command description.
      *

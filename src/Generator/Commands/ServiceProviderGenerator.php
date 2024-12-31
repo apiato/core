@@ -23,7 +23,7 @@ class ServiceProviderGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:provider';
+    protected $name = 'apiato:make:provider';
     /**
      * The console command description.
      *

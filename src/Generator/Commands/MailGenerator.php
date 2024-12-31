@@ -21,7 +21,7 @@ class MailGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:mail';
+    protected $name = 'apiato:make:mail';
     /**
      * The console command description.
      *

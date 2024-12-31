@@ -26,7 +26,7 @@ class UnitTestGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:test:unit';
+    protected $name = 'apiato:make:test:unit';
     /**
      * The console command description.
      *

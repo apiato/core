@@ -19,7 +19,7 @@ class ExceptionGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:exception';
+    protected $name = 'apiato:make:exception';
     /**
      * The console command description.
      *

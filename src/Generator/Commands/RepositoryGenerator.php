@@ -21,7 +21,7 @@ class RepositoryGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:repository';
+    protected $name = 'apiato:make:repository';
     /**
      * The console command description.
      *

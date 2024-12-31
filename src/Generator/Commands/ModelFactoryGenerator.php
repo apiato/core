@@ -21,7 +21,7 @@ class ModelFactoryGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:factory';
+    protected $name = 'apiato:make:factory';
     /**
      * The console command description.
      *

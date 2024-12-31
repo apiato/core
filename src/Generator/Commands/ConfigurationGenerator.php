@@ -19,7 +19,7 @@ class ConfigurationGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:configuration';
+    protected $name = 'apiato:make:configuration';
     /**
      * The console command description.
      *

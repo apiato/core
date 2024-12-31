@@ -19,7 +19,7 @@ class MiddlewareGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:middleware';
+    protected $name = 'apiato:make:middleware';
     /**
      * The console command description.
      *

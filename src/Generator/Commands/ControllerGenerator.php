@@ -25,7 +25,7 @@ class ControllerGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:controller';
+    protected $name = 'apiato:make:controller';
     /**
      * The console command description.
      *

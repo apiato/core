@@ -20,7 +20,7 @@ class ValueGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:value';
+    protected $name = 'apiato:make:value';
     /**
      * The console command description.
      *

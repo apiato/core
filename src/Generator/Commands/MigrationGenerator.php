@@ -24,7 +24,7 @@ class MigrationGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:migration';
+    protected $name = 'apiato:make:migration';
     /**
      * The console command description.
      *

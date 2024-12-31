@@ -24,7 +24,7 @@ class FunctionalTestGenerator extends Generator implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:test:functional';
+    protected $name = 'apiato:make:test:functional';
     /**
      * The console command description.
      *
