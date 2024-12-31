@@ -146,4 +146,4 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
                 });
         })->todo();
     });
-})->coversClass(ApiatoServiceProvider::class);
+})->covers(ApiatoServiceProvider::class);
