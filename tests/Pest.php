@@ -1,7 +1,7 @@
 <?php
 
-use Apiato\Core\Tests\FunctionalTestCase;
-use Apiato\Core\Tests\UnitTestCase;
+use Tests\FunctionalTestCase;
+use Tests\UnitTestCase;
 
 /*
 |--------------------------------------------------------------------------

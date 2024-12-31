@@ -1,12 +1,12 @@
 <?php
 
-namespace Apiato\Core\Tests\Unit\Traits;
+namespace Tests\Unit\Traits;
 
 use Apiato\Core\Abstracts\Transformers\Transformer;
-use Apiato\Core\Tests\Infrastructure\Doubles\User;
-use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
-use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
-use Apiato\Core\Tests\UnitTestCase;
+use Tests\Infrastructure\Doubles\User;
+use Tests\Infrastructure\Doubles\UserFactory;
+use Tests\Infrastructure\Doubles\UserTransformer;
+use Tests\UnitTestCase;
 use Apiato\Core\Traits\ResponseTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Tests\Infrastructure\Doubles;
+namespace Tests\Infrastructure\Doubles;
 
 use Apiato\Core\Abstracts\Models\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

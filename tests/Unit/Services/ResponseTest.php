@@ -1,14 +1,14 @@
 <?php
 
-namespace Apiato\Core\Tests\Unit\Services;
+namespace Tests\Unit\Services;
 
 use Apiato\Core\Services\Response;
-use Apiato\Core\Tests\Infrastructure\Doubles\BookFactory;
-use Apiato\Core\Tests\Infrastructure\Doubles\User;
-use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
-use Apiato\Core\Tests\Infrastructure\Doubles\UserRepository;
-use Apiato\Core\Tests\Infrastructure\Doubles\UserTransformer;
-use Apiato\Core\Tests\UnitTestCase;
+use Tests\Infrastructure\Doubles\BookFactory;
+use Tests\Infrastructure\Doubles\User;
+use Tests\Infrastructure\Doubles\UserFactory;
+use Tests\Infrastructure\Doubles\UserRepository;
+use Tests\Infrastructure\Doubles\UserTransformer;
+use Tests\UnitTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use League\Fractal\ParamBag;
 use PHPUnit\Framework\Attributes\CoversClass;

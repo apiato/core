@@ -58,7 +58,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Apiato\\Core\\Tests\\": "tests/"
+            "Tests\\": "tests/"
         }
     },
     "extra": {

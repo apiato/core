@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Tests;
+namespace Tests;
 
 class FunctionalTestCase extends TestCase
 {

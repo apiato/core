@@ -1,14 +1,14 @@
 <?php
 
-namespace Apiato\Core\Tests\Unit\Abstracts\Repositories;
+namespace Tests\Unit\Abstracts\Repositories;
 
 use Apiato\Core\Abstracts\Repositories\Repository;
-use Apiato\Core\Tests\Infrastructure\Doubles\Book;
-use Apiato\Core\Tests\Infrastructure\Doubles\BookFactory;
-use Apiato\Core\Tests\Infrastructure\Doubles\User;
-use Apiato\Core\Tests\Infrastructure\Doubles\UserFactory;
-use Apiato\Core\Tests\Infrastructure\Doubles\UserRepository;
-use Apiato\Core\Tests\UnitTestCase;
+use Tests\Infrastructure\Doubles\Book;
+use Tests\Infrastructure\Doubles\BookFactory;
+use Tests\Infrastructure\Doubles\User;
+use Tests\Infrastructure\Doubles\UserFactory;
+use Tests\Infrastructure\Doubles\UserRepository;
+use Tests\UnitTestCase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\CoversClass;

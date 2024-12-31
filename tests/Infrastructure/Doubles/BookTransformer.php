@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Tests\Infrastructure\Doubles;
+namespace Tests\Infrastructure\Doubles;
 
 use Apiato\Core\Abstracts\Transformers\Transformer;
 use League\Fractal\Resource\Item;

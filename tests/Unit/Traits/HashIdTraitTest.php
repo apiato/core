@@ -1,9 +1,9 @@
 <?php
 
-namespace Apiato\Core\Tests\Unit\Traits;
+namespace Tests\Unit\Traits;
 
 use Apiato\Core\Exceptions\IncorrectId;
-use Apiato\Core\Tests\UnitTestCase;
+use Tests\UnitTestCase;
 use Apiato\Core\Traits\HashIdTrait;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;

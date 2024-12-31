@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Tests;
+namespace Tests;
 
 use Illuminate\Config\Repository;
 use Illuminate\Foundation\Testing\RefreshDatabase;

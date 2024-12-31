@@ -1,9 +1,9 @@
 <?php
 
-namespace Apiato\Core\Tests\Unit\Utilities;
+namespace Tests\Unit\Utilities;
 
-use Apiato\Core\Tests\Infrastructure\Dummies\UselessClass;
-use Apiato\Core\Tests\UnitTestCase;
+use Tests\Infrastructure\Dummies\UselessClass;
+use Tests\UnitTestCase;
 use Apiato\Core\Utilities\PathHelper;
 use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Attributes\CoversClass;

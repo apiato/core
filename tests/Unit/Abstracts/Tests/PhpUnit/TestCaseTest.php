@@ -1,9 +1,9 @@
 <?php
 
-namespace Apiato\Core\Tests\Unit\Abstracts\Tests\PhpUnit;
+namespace Tests\Unit\Abstracts\Tests\PhpUnit;
 
 use Apiato\Core\Abstracts\Tests\TestCase;
-use Apiato\Core\Tests\UnitTestCase;
+use Tests\UnitTestCase;
 use Apiato\Core\Traits\HashIdTrait;
 use Apiato\Core\Traits\TestTraits\TestAssertionHelperTrait;
 use Apiato\Core\Traits\TestTraits\TestAuthHelperTrait;
