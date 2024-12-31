@@ -2,7 +2,7 @@
 
 namespace Apiato\Core\Loaders;
 
-use Apiato\Core\Foundation\Facades\Apiato;
+use Apiato\Core\Utilities\PathHelper;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 
@@ -26,8 +26,8 @@ trait SeederLoaderTrait
 
         $containersDirectories = [];
 
-        foreach (Apiato::getSectionNames() as $sectionName) {
-            foreach (Apiato::getSectionContainerNames($sectionName) as $containerName) {
+        foreach (PathHelper::getSectionNames() as $sectionName) {
+            foreach (PathHelper::getSectionContainerNames($sectionName) as $containerName) {
                 $containersDirectories[] = base_path('app/Containers/' . $sectionName . '/' . $containerName . $this->seedersPath);
             }
         }
@@ -48,7 +48,7 @@ trait SeederLoaderTrait
                     if (File::isFile($seederClass)) {
                         // do not seed the classes now, just store them in a collection and w
                         $seedersClasses->push(
-                            Apiato::getClassFullNameFromFile(
+                            PathHelper::getFQCNFromFile(
                                 $seederClass->getPathname(),
                             ),
                         );
