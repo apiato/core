@@ -99,9 +99,6 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
             });
     });
 
-
-
-
     it('can register middlewares in the service provider', function (): void {
         expect(app(Kernel::class)
             ->hasMiddleware(BeforeMiddleware::class))
