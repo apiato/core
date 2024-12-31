@@ -7,11 +7,11 @@ use Apiato\Foundation\Middlewares\Profiler;
 use Apiato\Foundation\Middlewares\ValidateJsonContent;
 use Illuminate\Support\Facades\Event;
 use Pest\Expectation;
-use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Events\BookCreated;
-use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Listeners\BookCreatedListener;
-use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Providers\BookServiceProvider;
-use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Providers\EventServiceProvider;
-use Tests\Infrastructure\Fakes\Laravel\app\Ship\Providers\ShipServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Events\BookCreated;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Listeners\BookCreatedListener;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\BookServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\EventServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\ShipServiceProvider;
 
 describe(class_basename(ApplicationBuilder::class), function (): void {
     it('provides default paths', function (): void {

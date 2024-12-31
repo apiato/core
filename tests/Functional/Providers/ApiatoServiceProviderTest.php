@@ -1,32 +1,30 @@
 <?php
 
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
-use Apiato\Foundation\Providers\CollectionMacroServiceProvider;
-use Apiato\Foundation\Providers\ConfigMacroServiceProvider;
+use Apiato\Foundation\Providers\MacroServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Pest\Expectation;
-use Tests\Infrastructure\Dummies\AnotherSingletonClass;
-use Tests\Infrastructure\Dummies\AnotherSingletonInterface;
-use Tests\Infrastructure\Dummies\AnotherUselessClass;
-use Tests\Infrastructure\Dummies\AnotherUselessInterface;
-use Tests\Infrastructure\Dummies\SingletonClass;
-use Tests\Infrastructure\Dummies\SingletonInterface;
-use Tests\Infrastructure\Dummies\UselessClass;
-use Tests\Infrastructure\Dummies\UselessInterface;
-use Tests\Infrastructure\Fakes\Laravel\app\Containers\MySection\Book\Middlewares\BeforeMiddleware;
-use Tests\Infrastructure\Fakes\Providers\AggregateServiceProvider;
-use Tests\Infrastructure\Fakes\Providers\DeferredServiceProvider;
-use Tests\Infrastructure\Fakes\Providers\FirstServiceProvider;
-use Tests\Infrastructure\Fakes\Providers\SecondServiceProvider;
+use Tests\Support\Doubles\Dummies\AnotherSingletonClass;
+use Tests\Support\Doubles\Dummies\AnotherSingletonInterface;
+use Tests\Support\Doubles\Dummies\AnotherUselessClass;
+use Tests\Support\Doubles\Dummies\AnotherUselessInterface;
+use Tests\Support\Doubles\Dummies\SingletonClass;
+use Tests\Support\Doubles\Dummies\SingletonInterface;
+use Tests\Support\Doubles\Dummies\UselessClass;
+use Tests\Support\Doubles\Dummies\UselessInterface;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Middlewares\BeforeMiddleware;
+use Tests\Support\Doubles\Fakes\Providers\AggregateServiceProvider;
+use Tests\Support\Doubles\Fakes\Providers\DeferredServiceProvider;
+use Tests\Support\Doubles\Fakes\Providers\FirstServiceProvider;
+use Tests\Support\Doubles\Fakes\Providers\SecondServiceProvider;
 
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('registers the providers that are listed in the $providers property', function (): void {
         $providers = [
             GeneratorsServiceProvider::class,
-            CollectionMacroServiceProvider::class,
-            ConfigMacroServiceProvider::class,
+            MacroServiceProvider::class,
             // test providers
             AggregateServiceProvider::class,
             FirstServiceProvider::class,

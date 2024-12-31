@@ -17,8 +17,8 @@ use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
-use Tests\Infrastructure\Fakes\Providers\FirstServiceProvider;
-use Tests\Infrastructure\Fakes\Providers\SecondServiceProvider;
+use Tests\Support\Doubles\Fakes\Providers\FirstServiceProvider;
+use Tests\Support\Doubles\Fakes\Providers\SecondServiceProvider;
 
 class ApiatoServiceProvider extends AggregateServiceProvider
 {
