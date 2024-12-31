@@ -4,6 +4,7 @@ namespace Apiato\Commands;
 
 use Apiato\Abstract\Commands\Command;
 
+// TODO: should this and the other seeder commands be moved to the Apiato from Core?
 class SeedDeploymentData extends Command
 {
     protected $signature = 'apiato:seed-deploy';
