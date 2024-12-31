@@ -113,19 +113,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         AboutCommand::add('Apiato', static fn () => ['Version' => '13.0.0']);
     }
 
-    protected function configureRateLimiting(): void
-    {
-        if (config('apiato.api.rate-limiter.enabled')) {
-            RateLimiter::for(config('apiato.api.rate-limiter.name'),
-                static function (Request $request) {
-                    return Limit::perMinutes(
-                        config('apiato.api.rate-limiter.expires'),
-                        config('apiato.api.rate-limiter.attempts'),
-                    )->by($request->user()?->id ?: $request->ip());
-                });
-        }
-    }
-
     public function runLoadersBoot(): void
     {
         $this->loadShipMigrations();
@@ -139,6 +126,19 @@ class ApiatoServiceProvider extends AggregateServiceProvider
             $this->loadContainerLanguages($containerPath);
             $this->loadContainerViews($containerPath);
             $this->loadContainerHelpers($containerPath);
+        }
+    }
+
+    protected function configureRateLimiting(): void
+    {
+        if (config('apiato.api.rate-limiter.enabled')) {
+            RateLimiter::for(config('apiato.api.rate-limiter.name'),
+                static function (Request $request) {
+                    return Limit::perMinutes(
+                        config('apiato.api.rate-limiter.expires'),
+                        config('apiato.api.rate-limiter.attempts'),
+                    )->by($request->user()?->id ?: $request->ip());
+                });
         }
     }
 }
