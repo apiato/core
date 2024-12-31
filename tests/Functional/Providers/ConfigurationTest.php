@@ -102,4 +102,4 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
         expect((new ApplicationBuilder())->apiMiddlewares())
             ->toBe($middlewares);
     });
-});
+})->covers(ApplicationBuilder::class);
