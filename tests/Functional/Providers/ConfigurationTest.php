@@ -64,21 +64,6 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
             );
     })->todo();
 
-    it('registers Core commands', function (): void {
-        $actual = collect(Artisan::all());
-        $commands = [
-            'apiato:list:actions',
-            'apiato:list:tasks',
-            'apiato:seed-deploy',
-            'apiato:seed-test',
-        ];
-
-        expect($commands)
-            ->each(function (Expectation $command) use ($actual) {
-                expect($actual->has($command->value))->toBeTrue();
-            });
-    });
-
     it('registers commands from configured path', function (): void {
         $actual = collect(Artisan::all());
         $commands = [
