@@ -8,9 +8,34 @@ final readonly class PathHelper
 {
     private const CONTAINERS_DIRECTORY_NAME = 'Containers';
 
-    public static function getShipDirectory(): string
+
+    public static function getSharedDirectoryPath(): string
     {
-        return app_path('Ship');
+        return app_path(self::getSharedDirectoryName());
+    }
+
+    public static function getAppDirectoryPath(): string
+    {
+        return app_path();
+    }
+
+    public static function getAppDirectoryName(): string
+    {
+        return 'app';
+    }
+
+    public static function getSharedDirectoryName(): string
+    {
+        return 'Ship';
+    }
+
+    public static function getContainersDirectoryName(): string
+    {
+        return 'Containers';
+    }
+
+    public static function getSectionDirectoryPath(): string {
+        return app_path(self::getContainersDirectoryName());
     }
 
     public static function getShipFolderNames(): array
@@ -26,7 +51,7 @@ final readonly class PathHelper
 
     public static function getShipSubDirectories(): array
     {
-        return File::directories(self::getShipDirectory());
+        return File::directories(self::getSharedDirectoryPath());
     }
 
     public static function getSectionContainerNames(string $sectionName): array
@@ -180,6 +205,6 @@ final readonly class PathHelper
      */
     public static function getShipSubDirectory(string $subDirectory): string
     {
-        return self::getShipDirectory() . DIRECTORY_SEPARATOR . $subDirectory;
+        return self::getSharedDirectoryPath() . DIRECTORY_SEPARATOR . $subDirectory;
     }
 }

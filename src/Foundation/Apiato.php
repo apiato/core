@@ -1,11 +1,14 @@
 <?php
 
-namespace Apiato\Foundation\Loaders;
+namespace Apiato\Foundation;
 
+use Apiato\Foundation\Configuration\ApplicationBuilder;
+use Apiato\Foundation\Configuration\Localization;
 use Apiato\Foundation\Middlewares\ProcessETag;
 use Apiato\Foundation\Middlewares\Profiler;
 use Apiato\Foundation\Middlewares\ValidateJsonContent;
 use Apiato\Foundation\Support\PathHelper;
+use Composer\Autoload\ClassLoader;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -13,17 +16,33 @@ use Symfony\Component\Finder\SplFileInfo;
 
 final class Apiato
 {
-    private static string $basePath;
-    private static array $providerPaths = [];
-    private static array $configPaths = [];
-    private static array $listenerPaths = [];
-    private static array $commandPaths = [];
+    private static self $instance;
+    private array $providerPaths = [];
+    private array $configPaths = [];
+    private array $listenerPaths = [];
+    private array $commandPaths = [];
+    private array $helperPaths = [];
+    private Localization $localization;
 
-    public static function configure(string $basePath): ApplicationBuilder
+    private function __construct(
+        private string $basePath,
+    ) {
+    }
+
+    public static function configure(string|null $basePath = null): ApplicationBuilder
     {
-        self::$basePath = $basePath;
+        if (isset(self::$instance)) {
+            return new ApplicationBuilder(self::$instance);
+        }
 
-        return (new ApplicationBuilder())
+        $basePath = match (true) {
+            is_string($basePath) => $basePath,
+            default => self::inferBasePath(),
+        };
+
+        self::$instance = new self($basePath);
+
+        return (new ApplicationBuilder(self::$instance))
             ->withProviders(
                 $basePath . '/app/Ship/Providers',
                 ...glob($basePath . '/app/Containers/*/*/Providers', GLOB_ONLYDIR | GLOB_NOSORT),
@@ -36,45 +55,95 @@ final class Apiato
             )->withCommands(
                 $basePath . '/app/Ship/Commands',
                 ...glob($basePath . '/app/Containers/*/*/UI/Console', GLOB_ONLYDIR | GLOB_NOSORT),
-            );
+            )->withHelpers(
+                $basePath . '/app/Ship/Helpers',
+            )->withTranslations();
     }
 
-    public static function loadProvidersFrom(string ...$path): void
+    /**
+     * Infer the application's base directory from the environment.
+     */
+    public static function inferBasePath(): string
     {
-        self::$providerPaths = $path;
+        return match (true) {
+            isset($_ENV['APP_BASE_PATH']) => $_ENV['APP_BASE_PATH'],
+            default => dirname(array_keys(ClassLoader::getRegisteredLoaders())[0]),
+        };
     }
 
-    public static function loadConfigsFrom(string ...$path): void
+    public static function instance(): self
     {
-        self::$configPaths = $path;
+        return self::$instance;
     }
 
-    public static function loadEventsFrom(string ...$path): void
+    public function withProviders(string ...$path): self
     {
-        self::$listenerPaths = $path;
+        $this->providerPaths = $path;
+
+        return $this;
     }
 
-    public static function loadCommandsFrom(string ...$path): void
+    public function withTranslations(callable|null $callback = null): self
     {
-        self::$commandPaths = $path;
+        $this->localization = (new Localization())
+            ->loadTranslationsFrom(
+            $this->basePath . '/app/Ship/Languages',
+            ...glob($this->basePath . '/app/Containers/*/*/Languages', GLOB_ONLYDIR | GLOB_NOSORT),
+        );
+
+        if (!is_null($callback)) {
+            $callback($this->localization);
+        }
+
+        return $this;
     }
 
-    public static function providerPaths(): array
+    public function withConfigs(string ...$path): void
     {
-        return self::$providerPaths;
+        $this->configPaths = $path;
     }
 
-    public static function configPaths(): array
+    public function withEvents(string ...$path): void
     {
-        return self::$configPaths;
+        $this->listenerPaths = $path;
     }
 
-    public static function getListeners(): array
+    public function withCommands(string ...$path): void
     {
-        return self::$listenerPaths;
+        $this->commandPaths = $path;
     }
 
-    public static function getApiMiddlewares(): array
+    public function withHelpers(string ...$path): void
+    {
+        $this->helperPaths = $path;
+    }
+
+    public function providerPaths(): array
+    {
+        return $this->providerPaths;
+    }
+
+    public function configPaths(): array
+    {
+        return $this->configPaths;
+    }
+
+    public function helperPaths(): array
+    {
+        return $this->helperPaths;
+    }
+
+    public function localization(): Localization
+    {
+        return $this->localization;
+    }
+
+    public function events(): array
+    {
+        return $this->listenerPaths;
+    }
+
+    public function apiMiddlewares(): array
     {
         return [
             ValidateJsonContent::class,
@@ -83,9 +152,9 @@ final class Apiato
         ];
     }
 
-    public static function getCommands(): array
+    public function commands(): array
     {
-        return self::$commandPaths;
+        return $this->commandPaths;
     }
 
     // TODO: separate Api and Web route registration

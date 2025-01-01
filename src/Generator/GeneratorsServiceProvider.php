@@ -2,7 +2,7 @@
 
 namespace Apiato\Generator;
 
-use Apiato\Abstract\Providers\AggregateServiceProvider;
+use Apiato\Abstract\Providers\ServiceProvider;
 use Apiato\Generator\Commands\ActionGenerator;
 use Apiato\Generator\Commands\ConfigurationGenerator;
 use Apiato\Generator\Commands\ContainerApiGenerator;
@@ -34,7 +34,7 @@ use Apiato\Generator\Commands\TransformerGenerator;
 use Apiato\Generator\Commands\UnitTestGenerator;
 use Apiato\Generator\Commands\ValueGenerator;
 
-class GeneratorsServiceProvider extends AggregateServiceProvider
+class GeneratorsServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {

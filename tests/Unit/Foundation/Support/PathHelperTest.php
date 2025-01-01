@@ -14,7 +14,7 @@ class PathHelperTest extends UnitTestCase
     public function testGetShipFoldersNamesReturnsCorrectNames(): void
     {
         File::shouldReceive('directories')
-            ->with(PathHelper::getShipDirectory())
+            ->with(PathHelper::getSharedDirectoryPath())
             ->andReturn(['/path/to/ship1', '/path/to/ship2']);
 
         $result = PathHelper::getShipFolderNames();

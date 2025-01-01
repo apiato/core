@@ -7,11 +7,13 @@ use Apiato\Commands\ListActions;
 use Apiato\Commands\ListTasks;
 use Apiato\Commands\SeedDeploymentData;
 use Apiato\Commands\SeedTestingData;
-use Apiato\Foundation\Loaders\Apiato;
-use Apiato\Foundation\Loaders\LanguageLoaderTrait;
+use Apiato\Foundation\Apiato;
+use Apiato\Foundation\Loaders\HelperLoader;
+use Apiato\Foundation\Loaders\Loader;
 use Apiato\Foundation\Loaders\MigrationLoaderTrait;
 use Apiato\Foundation\Loaders\ViewLoaderTrait;
 use Apiato\Foundation\Support\PathHelper;
+use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
@@ -24,13 +26,13 @@ use Tests\Support\Doubles\Fakes\Providers\SecondServiceProvider;
 
 class ApiatoServiceProvider extends AggregateServiceProvider
 {
-    use LanguageLoaderTrait;
     use MigrationLoaderTrait;
     use ViewLoaderTrait;
 
     protected $providers = [
         GeneratorsServiceProvider::class,
         MacroServiceProvider::class,
+        LocalizationServiceProvider::class,
     ];
 
     public function register(): void
@@ -58,7 +60,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
     private function serviceProviders(): array
     {
         $providers = [];
-        foreach (Apiato::providerPaths() as $directory) {
+        foreach (Apiato::instance()->providerPaths() as $directory) {
             foreach (File::files($directory) as $file) {
                 $fqcn = PathHelper::getFQCNFromFile($file);
                 $providers[] = $fqcn;
@@ -68,10 +70,24 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         return $providers;
     }
 
+    private function registerCoreCommands(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ListActions::class,
+                ListTasks::class,
+                SeedDeploymentData::class,
+                SeedTestingData::class,
+            ]);
+        }
+    }
+
+    // TODO: can we NOT do this and move the providers in the fake Laravel app?
+
     private function mergeConfigs(): void
     {
         // The order of these statements matter! DO NOT CHANGE!
-        foreach (Apiato::configPaths() as $dir) {
+        foreach (Apiato::instance()->configPaths() as $dir) {
             foreach (File::files($dir) as $file) {
                 $this->mergeConfigFrom($file->getPathname(), $file->getFilenameWithoutExtension());
             }
@@ -83,7 +99,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         );
     }
 
-    // TODO: can we NOT do this and move the providers in the fake Laravel app?
     private function setUpTestProviders(Application $app): void
     {
         $currentProviders = $this->providers;
@@ -101,7 +116,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
     {
         $this->runBoot();
 
-        $this->runLoadersBoot();
+        $this->runLoaders();
 
         $this->publishes([
             __DIR__ . '/../../../config/apiato.php' => app_path('Ship/Configs/apiato.php'),
@@ -109,7 +124,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
 
         $this->configureRateLimiting(); // TODO: move to route service provider
 
-        //        dd(Apiato::create()->getServiceProviders());
+        //        dd(Apiato::instance()->create()->getServiceProviders());
         //        dd(app()->getProviders(AggregateServiceProvider::class));
         //        dd(AliasLoader::getInstance()->getAliases());
         //        dd(Event::getRawListeners());
@@ -117,17 +132,25 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         AboutCommand::add('Apiato', static fn () => ['Version' => '13.0.0']);
     }
 
-    public function runLoadersBoot(): void
+    public function runLoaders(): void
     {
-        $this->loadShipLanguages();
+        $this->load(
+            HelperLoader::create(),
+        );
+
         //        $this->loadShipMigrations();
         //        $this->loadShipViews();
-        $this->loadShipHelpers();
 
         foreach (PathHelper::getContainerPaths() as $containerPath) {
-            $this->loadContainerLanguages($containerPath);
             //            $this->loadContainerMigrations($containerPath);
             //            $this->loadContainerViews($containerPath);
+        }
+    }
+
+    private function load(Loader ...$loader): void
+    {
+        foreach ($loader as $load) {
+            $load->load();
         }
     }
 
@@ -143,30 +166,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
                     )->by($request->user()?->id ?: $request->ip());
                 },
             );
-        }
-    }
-
-    private function loadShipHelpers(): void
-    {
-        $shipHelpersDirectory = base_path('app/Ship/Helpers');
-        if (File::isDirectory($shipHelpersDirectory)) {
-            $files = File::files($shipHelpersDirectory);
-
-            foreach ($files as $file) {
-                require_once $file;
-            }
-        }
-    }
-
-    private function registerCoreCommands(): void
-    {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                ListActions::class,
-                ListTasks::class,
-                SeedDeploymentData::class,
-                SeedTestingData::class,
-            ]);
         }
     }
 }

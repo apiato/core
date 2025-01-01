@@ -1,11 +1,12 @@
 <?php
 
-use Apiato\Foundation\Loaders\Apiato;
+use Apiato\Foundation\Apiato;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Middleware;
 
 $basePath = dirname(__DIR__);
-$apiato = Apiato::configure(basePath: $basePath);
+$apiato = Apiato::configure(basePath: $basePath)
+    ->create();
 
 return Application::configure(basePath: $basePath)
     ->withEvents($apiato->events())

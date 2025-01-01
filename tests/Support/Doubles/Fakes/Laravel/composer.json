@@ -9,10 +9,5 @@
             "Tests\\Support\\Doubles\\Fakes\\Laravel\\app\\": "app"
         }
     },
-    "extra": {
-        "laravel": {
-            "dont-discover": []
-        }
-    },
     "minimum-stability": "dev"
 }

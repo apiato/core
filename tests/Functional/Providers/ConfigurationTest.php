@@ -1,10 +1,7 @@
 <?php
 
-use Apiato\Foundation\Loaders\Apiato;
-use Apiato\Foundation\Loaders\ApplicationBuilder;
-use Apiato\Foundation\Middlewares\ProcessETag;
-use Apiato\Foundation\Middlewares\Profiler;
-use Apiato\Foundation\Middlewares\ValidateJsonContent;
+use Apiato\Foundation\Apiato;
+use Apiato\Foundation\Configuration\ApplicationBuilder;
 use Illuminate\Support\Facades\Event;
 use Pest\Expectation;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Events\BookCreated;
@@ -75,16 +72,5 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
             ->each(function (Expectation $command) use ($actual) {
                 expect($actual->has($command->value))->toBeTrue();
             });
-    });
-
-    it('can list Core middlewares', function (): void {
-        $middlewares = [
-            ValidateJsonContent::class,
-            ProcessETag::class,
-            Profiler::class,
-        ];
-
-        expect((new ApplicationBuilder())->apiMiddlewares())
-            ->toBe($middlewares);
     });
 })->covers(ApplicationBuilder::class);

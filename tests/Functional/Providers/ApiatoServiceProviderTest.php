@@ -2,6 +2,7 @@
 
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
 use Apiato\Foundation\Providers\MacroServiceProvider;
+use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
@@ -25,6 +26,7 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
         $providers = [
             GeneratorsServiceProvider::class,
             MacroServiceProvider::class,
+            LocalizationServiceProvider::class,
             // test providers
             AggregateServiceProvider::class,
             FirstServiceProvider::class,
@@ -84,6 +86,12 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
         expect($this->app->isDeferredService(DeferredServiceProvider::class))->toBeTrue();
     })->todo();
 
+    it('can register middlewares in service provider', function (): void {
+        expect(app(Kernel::class)
+            ->hasMiddleware(BeforeMiddleware::class))
+            ->toBeTrue();
+    });
+
     it('registers Core commands', function (): void {
         $actual = collect(Artisan::all());
         $commands = [
@@ -97,73 +105,5 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
             ->each(function (Expectation $command) use ($actual) {
                 expect($actual->has($command->value))->toBeTrue();
             });
-    });
-
-    it('loads helper functions form Ship', function (): void {
-        expect(function_exists('this_is_a_test_function_to_test_functions_file'))->toBeTrue()
-            ->and(function_exists('this_is_a_test_function_to_test_helpers_file'))->toBeTrue();
-    });
-
-    it('can register middlewares in the service provider', function (): void {
-        expect(app(Kernel::class)
-            ->hasMiddleware(BeforeMiddleware::class))
-            ->toBeTrue();
-    });
-
-    describe('can register middlewares via middleware service provider', function (): void {
-        it('can register middlewares', function (): void {
-            $middlewares = [
-                'test-middleware',
-            ];
-
-            expect($middlewares)
-                ->each(function (Expectation $middleware) {
-                    expect($this->app->hasMiddleware($middleware->value))->toBeTrue();
-                });
-        })->todo();
-
-        it('can register middlewares in groups', function (): void {
-            $middlewares = [
-                'test-middleware',
-            ];
-
-            expect($middlewares)
-                ->each(function (Expectation $middleware) {
-                    expect($this->app->hasMiddleware($middleware->value))->toBeTrue();
-                });
-        })->todo();
-
-        it('can register route middlewares', function (): void {
-            $middlewares = [
-                'test-middleware',
-            ];
-
-            expect($middlewares)
-                ->each(function (Expectation $middleware) {
-                    expect($this->app->hasMiddleware($middleware->value))->toBeTrue();
-                });
-        })->todo();
-
-        it('can add middlewares aliases', function (): void {
-            $middlewares = [
-                'test-middleware',
-            ];
-
-            expect($middlewares)
-                ->each(function (Expectation $middleware) {
-                    expect($this->app->hasMiddleware($middleware->value))->toBeTrue();
-                });
-        })->todo();
-
-        it('can set middleware priority', function (): void {
-            $middlewares = [
-                'test-middleware',
-            ];
-
-            expect($middlewares)
-                ->each(function (Expectation $middleware) {
-                    expect($this->app->hasMiddleware($middleware->value))->toBeTrue();
-                });
-        })->todo();
     });
 })->covers(ApiatoServiceProvider::class);

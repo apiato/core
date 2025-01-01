@@ -2,14 +2,14 @@
 
 namespace Apiato\Foundation\Providers;
 
-use Apiato\Abstract\Providers\AggregateServiceProvider;
+use Apiato\Abstract\Providers\ServiceProvider;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Vinkla\Hashids\Facades\Hashids;
 
-final class MacroServiceProvider extends AggregateServiceProvider
+final class MacroServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {

@@ -2,7 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Apiato\Abstract\Providers\ServiceProvider;
 
 class {{class-name}} extends ServiceProvider
 {
