@@ -4,15 +4,11 @@ namespace Apiato\Foundation;
 
 use Apiato\Foundation\Configuration\ApplicationBuilder;
 use Apiato\Foundation\Configuration\Localization;
+use Apiato\Foundation\Configuration\Routing;
 use Apiato\Foundation\Middlewares\ProcessETag;
 use Apiato\Foundation\Middlewares\Profiler;
 use Apiato\Foundation\Middlewares\ValidateJsonContent;
-use Apiato\Foundation\Support\PathHelper;
 use Composer\Autoload\ClassLoader;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Route;
-use Symfony\Component\Finder\SplFileInfo;
 
 final class Apiato
 {
@@ -23,9 +19,10 @@ final class Apiato
     private array $commandPaths = [];
     private array $helperPaths = [];
     private Localization $localization;
+    private Routing $routing;
 
     private function __construct(
-        private string $basePath,
+        private readonly string $basePath,
     ) {
     }
 
@@ -57,7 +54,8 @@ final class Apiato
                 ...glob($basePath . '/app/Containers/*/*/UI/Console', GLOB_ONLYDIR | GLOB_NOSORT),
             )->withHelpers(
                 $basePath . '/app/Ship/Helpers',
-            )->withTranslations();
+            )->withTranslations()
+            ->withRouting();
     }
 
     /**
@@ -71,14 +69,19 @@ final class Apiato
         };
     }
 
-    public static function instance(): self
+    public function withRouting(callable|null $callback = null): self
     {
-        return self::$instance;
-    }
+        // TODO: maybe make the configuration parametrized like web: api:, like the way Laravel does it?
+        $this->routing = (new Routing())
+            ->loadApiRoutesFrom(
+                ...glob($this->basePath . '/app/Containers/*/*/UI/API/Routes', GLOB_ONLYDIR | GLOB_NOSORT),
+            )->loadWebRoutesFrom(
+                ...glob($this->basePath . '/app/Containers/*/*/UI/WEB/Routes', GLOB_ONLYDIR | GLOB_NOSORT),
+            );
 
-    public function withProviders(string ...$path): self
-    {
-        $this->providerPaths = $path;
+        if (!is_null($callback)) {
+            $callback($this->routing);
+        }
 
         return $this;
     }
@@ -86,7 +89,7 @@ final class Apiato
     public function withTranslations(callable|null $callback = null): self
     {
         $this->localization = (new Localization())
-            ->loadTranslationsFrom(
+            ->loadFrom(
                 $this->basePath . '/app/Ship/Languages',
                 ...glob($this->basePath . '/app/Containers/*/*/Languages', GLOB_ONLYDIR | GLOB_NOSORT),
             );
@@ -98,14 +101,9 @@ final class Apiato
         return $this;
     }
 
-    public function withConfigs(string ...$path): void
+    public function withHelpers(string ...$path): void
     {
-        $this->configPaths = $path;
-    }
-
-    public function withEvents(string ...$path): void
-    {
-        $this->listenerPaths = $path;
+        $this->helperPaths = $path;
     }
 
     public function withCommands(string ...$path): void
@@ -113,9 +111,26 @@ final class Apiato
         $this->commandPaths = $path;
     }
 
-    public function withHelpers(string ...$path): void
+    public function withEvents(string ...$path): void
     {
-        $this->helperPaths = $path;
+        $this->listenerPaths = $path;
+    }
+
+    public function withConfigs(string ...$path): void
+    {
+        $this->configPaths = $path;
+    }
+
+    public function withProviders(string ...$path): self
+    {
+        $this->providerPaths = $path;
+
+        return $this;
+    }
+
+    public static function instance(): self
+    {
+        return self::$instance;
     }
 
     public function providerPaths(): array
@@ -157,107 +172,13 @@ final class Apiato
         return $this->commandPaths;
     }
 
-    // TODO: separate Api and Web route registration
     public function registerRoutes(): void
     {
-        $allContainerPaths = PathHelper::getContainerPaths();
-
-        foreach ($allContainerPaths as $containerPath) {
-            $this->loadContainerApiRoutes($containerPath);
-            $this->loadContainerWebRoutes($containerPath);
-        }
+        $this->routing->registerApiRoutes();
     }
 
-    private function loadContainerApiRoutes(string $containerPath): void
+    public function webRoutes(): array
     {
-        $apiRoutesPath = $this->getRoutePathsForUI($containerPath, 'API');
-
-        if (File::isDirectory($apiRoutesPath)) {
-            $files = $this->getFilesSortedByName($apiRoutesPath);
-            foreach ($files as $file) {
-                $this->loadApiRoute($file);
-            }
-        }
-    }
-
-    private function getRoutePathsForUI(string $containerPath, string $ui): string
-    {
-        return $containerPath . DIRECTORY_SEPARATOR . 'UI' . DIRECTORY_SEPARATOR . $ui . DIRECTORY_SEPARATOR . 'Routes';
-    }
-
-    /**
-     * @return array|SplFileInfo[]
-     */
-    private function getFilesSortedByName(string $apiRoutesPath): array
-    {
-        $files = File::allFiles($apiRoutesPath);
-
-        return Arr::sort($files, static fn ($file) => $file->getFilename());
-    }
-
-    private function loadApiRoute(SplFileInfo $file): void
-    {
-        $routeGroupArray = $this->getApiRouteGroup($file);
-
-        Route::group($routeGroupArray, static function () use ($file): void {
-            require $file->getPathname();
-        });
-    }
-
-    public function getApiRouteGroup(SplFileInfo|string $endpointFileOrPrefixString): array
-    {
-        return [
-            'middleware' => $this->getMiddlewares(),
-            'domain' => config('apiato.api.url'),
-            // If $endpointFileOrPrefixString is a string, use that string as prefix
-            // else, if it is a file then get the version name from the file name, and use it as prefix
-            'prefix' => is_string($endpointFileOrPrefixString) ? $endpointFileOrPrefixString : $this->getApiVersionPrefix($endpointFileOrPrefixString),
-        ];
-    }
-
-    private function getMiddlewares(): array
-    {
-        $middlewares = ['api'];
-        if (config('apiato.api.rate-limiter.enabled')) {
-            $middlewares[] = 'throttle:' . config('apiato.api.rate-limiter.name');
-        }
-
-        return $middlewares;
-    }
-
-    private function getApiVersionPrefix(SplFileInfo $file): string
-    {
-        return config('apiato.api.prefix') . (config('apiato.api.enable_version_prefix') ? $this->getRouteFileVersionFromFileName($file) : '');
-    }
-
-    private function getRouteFileVersionFromFileName(SplFileInfo $file): string|bool
-    {
-        $fileNameWithoutExtension = pathinfo($file->getFilename(), PATHINFO_FILENAME);
-        $fileNameWithoutExtensionExploded = explode('.', $fileNameWithoutExtension);
-
-        end($fileNameWithoutExtensionExploded);
-
-        return prev($fileNameWithoutExtensionExploded);
-    }
-
-    private function loadContainerWebRoutes($containerPath): void
-    {
-        $webRoutesPath = $this->getRoutePathsForUI($containerPath, 'WEB');
-
-        if (File::isDirectory($webRoutesPath)) {
-            $files = $this->getFilesSortedByName($webRoutesPath);
-            foreach ($files as $file) {
-                $this->loadWebRoute($file);
-            }
-        }
-    }
-
-    private function loadWebRoute(SplFileInfo $file): void
-    {
-        Route::group([
-            'middleware' => ['web'],
-        ], static function () use ($file) {
-            require $file->getPathname();
-        });
+        return $this->routing->webRoutes();
     }
 }

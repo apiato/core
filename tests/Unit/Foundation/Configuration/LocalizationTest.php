@@ -25,7 +25,7 @@ describe(class_basename(Localization::class), function (): void {
     it('can set translation paths', function (): void {
         $localization = new Localization();
 
-        $localization->loadTranslationsFrom(
+        $localization->loadFrom(
             __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Ship/Languages',
             __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Containers/MySection/Book/Languages',
         );

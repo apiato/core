@@ -73,4 +73,30 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
                 expect($actual->has($command->value))->toBeTrue();
             });
     });
+
+    it('load web routes from configured path', function (): void {
+        $endpoints = [
+            '/authors',
+            '/books',
+        ];
+
+        expect($endpoints)
+            ->each(function (Expectation $endpoint) {
+                $response = $this->get($endpoint->value);
+                $response->assertOk();
+            });
+    });
+
+    it('load api routes from configured path', function (): void {
+        $endpoints = [
+            '/v3/authors',
+            '/v1/books',
+        ];
+
+        expect($endpoints)
+            ->each(function (Expectation $endpoint) {
+                $response = $this->get($endpoint->value);
+                $response->assertOk();
+            });
+    });
 })->covers(ApplicationBuilder::class);

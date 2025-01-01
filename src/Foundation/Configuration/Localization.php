@@ -38,7 +38,7 @@ final class Localization
         return $this->paths;
     }
 
-    public function loadTranslationsFrom(string ...$paths): self
+    public function loadFrom(string ...$paths): self
     {
         $this->paths = $paths;
 
