@@ -17,7 +17,6 @@ describe(class_basename(LocalizationServiceProvider::class), function (): void {
         }
     });
 
-
     it('loads json translation files', function (): void {
         $localization = Apiato::instance()->localization();
 

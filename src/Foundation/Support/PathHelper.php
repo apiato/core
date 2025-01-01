@@ -8,7 +8,6 @@ final readonly class PathHelper
 {
     private const CONTAINERS_DIRECTORY_NAME = 'Containers';
 
-
     public static function getSharedDirectoryPath(): string
     {
         return app_path(self::getSharedDirectoryName());
@@ -34,7 +33,8 @@ final readonly class PathHelper
         return 'Containers';
     }
 
-    public static function getSectionDirectoryPath(): string {
+    public static function getSectionDirectoryPath(): string
+    {
         return app_path(self::getContainersDirectoryName());
     }
 

@@ -87,9 +87,9 @@ final class Apiato
     {
         $this->localization = (new Localization())
             ->loadTranslationsFrom(
-            $this->basePath . '/app/Ship/Languages',
-            ...glob($this->basePath . '/app/Containers/*/*/Languages', GLOB_ONLYDIR | GLOB_NOSORT),
-        );
+                $this->basePath . '/app/Ship/Languages',
+                ...glob($this->basePath . '/app/Containers/*/*/Languages', GLOB_ONLYDIR | GLOB_NOSORT),
+            );
 
         if (!is_null($callback)) {
             $callback($this->localization);

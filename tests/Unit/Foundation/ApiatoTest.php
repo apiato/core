@@ -6,7 +6,6 @@ use Apiato\Foundation\Middlewares\ProcessETag;
 use Apiato\Foundation\Middlewares\Profiler;
 use Apiato\Foundation\Middlewares\ValidateJsonContent;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
-use Illuminate\Translation\Translator;
 
 describe(class_basename(Apiato::class), function (): void {
     it('can be configured via a closure to customize translation namespaces', function (): void {
