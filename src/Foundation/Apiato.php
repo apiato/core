@@ -5,9 +5,9 @@ namespace Apiato\Foundation;
 use Apiato\Foundation\Configuration\ApplicationBuilder;
 use Apiato\Foundation\Configuration\Localization;
 use Apiato\Foundation\Configuration\Routing;
-use Apiato\Foundation\Middlewares\ProcessETag;
-use Apiato\Foundation\Middlewares\Profiler;
-use Apiato\Foundation\Middlewares\ValidateJsonContent;
+use Apiato\Foundation\Middleware\ProcessETag;
+use Apiato\Foundation\Middleware\Profiler;
+use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Composer\Autoload\ClassLoader;
 
 final class Apiato

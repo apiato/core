@@ -2,9 +2,9 @@
 
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Localization;
-use Apiato\Foundation\Middlewares\ProcessETag;
-use Apiato\Foundation\Middlewares\Profiler;
-use Apiato\Foundation\Middlewares\ValidateJsonContent;
+use Apiato\Foundation\Middleware\ProcessETag;
+use Apiato\Foundation\Middleware\Profiler;
+use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 
 describe(class_basename(Apiato::class), function (): void {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Foundation\Middlewares;
+namespace Apiato\Foundation\Middleware;
 
 use Apiato\Abstract\Middlewares\Middleware;
 use Apiato\Foundation\Exceptions\MissingJSONHeader;
