@@ -3,6 +3,7 @@
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
 use Apiato\Foundation\Providers\MacroServiceProvider;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
+use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
@@ -27,6 +28,7 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
             GeneratorsServiceProvider::class,
             MacroServiceProvider::class,
             LocalizationServiceProvider::class,
+            ViewServiceProvider::class,
             // test providers
             AggregateServiceProvider::class,
             FirstServiceProvider::class,
