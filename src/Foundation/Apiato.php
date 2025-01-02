@@ -18,6 +18,7 @@ final class Apiato
     private array $configPaths = [];
     private array $listenerPaths = [];
     private array $commandPaths = [];
+    private array $migrationPaths = [];
     private array $helperPaths = [];
     private Routing $routing;
     private Localization $localization;
@@ -56,6 +57,9 @@ final class Apiato
                 ...glob($basePath . '/app/Containers/*/*/UI/Console', GLOB_ONLYDIR | GLOB_NOSORT),
             )->withHelpers(
                 $basePath . '/app/Ship/Helpers',
+            )->withMigrations(
+                $basePath . '/app/Ship/Migrations',
+                ...glob($basePath . '/app/Containers/*/*/Data/Migrations', GLOB_ONLYDIR | GLOB_NOSORT),
             )->withTranslations()
             ->withViews()
             ->withRouting();
@@ -89,6 +93,21 @@ final class Apiato
         return $this;
     }
 
+    public function withTranslations(callable|null $callback = null): self
+    {
+        $this->localization = (new Localization())
+            ->loadFrom(
+                $this->basePath . '/app/Ship/Languages',
+                ...glob($this->basePath . '/app/Containers/*/*/Languages', GLOB_ONLYDIR | GLOB_NOSORT),
+            );
+
+        if (!is_null($callback)) {
+            $callback($this->localization);
+        }
+
+        return $this;
+    }
+
     public function withViews(callable|null $callback = null): self
     {
         $this->view = (new View())
@@ -106,34 +125,16 @@ final class Apiato
         return $this;
     }
 
-    public function withTranslations(callable|null $callback = null): self
-    {
-        $this->localization = (new Localization())
-            ->loadFrom(
-                $this->basePath . '/app/Ship/Languages',
-                ...glob($this->basePath . '/app/Containers/*/*/Languages', GLOB_ONLYDIR | GLOB_NOSORT),
-            );
-
-        if (!is_null($callback)) {
-            $callback($this->localization);
-        }
-
-        return $this;
-    }
-
     public function withHelpers(string ...$path): void
     {
         $this->helperPaths = $path;
     }
 
-    public function withCommands(string ...$path): void
+    public function withProviders(string ...$path): self
     {
-        $this->commandPaths = $path;
-    }
+        $this->providerPaths = $path;
 
-    public function withEvents(string ...$path): void
-    {
-        $this->listenerPaths = $path;
+        return $this;
     }
 
     public function withConfigs(string ...$path): void
@@ -141,9 +142,19 @@ final class Apiato
         $this->configPaths = $path;
     }
 
-    public function withProviders(string ...$path): self
+    public function withEvents(string ...$path): void
     {
-        $this->providerPaths = $path;
+        $this->listenerPaths = $path;
+    }
+
+    public function withCommands(string ...$path): void
+    {
+        $this->commandPaths = $path;
+    }
+
+    public function withMigrations(string ...$path): self
+    {
+        $this->migrationPaths = $path;
 
         return $this;
     }
@@ -166,6 +177,11 @@ final class Apiato
     public function helperPaths(): array
     {
         return $this->helperPaths;
+    }
+
+    public function migrationPaths(): array
+    {
+        return $this->migrationPaths;
     }
 
     public function localization(): Localization

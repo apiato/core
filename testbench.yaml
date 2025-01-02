@@ -2,11 +2,8 @@ workbench:
   - install: true
 laravel: tests/Support/Doubles/Fakes/Laravel
 providers:
+  - Apiato\Foundation\Providers\ApiatoServiceProvider
   - Illuminate\Foundation\Support\Providers\EventServiceProvider
   - Vinkla\Hashids\HashidsServiceProvider
   - Prettus\Repository\Providers\RepositoryServiceProvider
   - Spatie\Fractal\FractalServiceProvider
-  - Apiato\Foundation\Providers\ApiatoServiceProvider
-migrations:
-  - tests/Support/Migrations/2022_10_12_000000_testbench_update_users_table.php
-  - tests/Support/Migrations/2022_11_12_000000_create_books_table.php

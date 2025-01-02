@@ -6,9 +6,9 @@ use Apiato\Abstract\Transformers\Transformer;
 use Apiato\Foundation\Support\Traits\ResponseTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\Support\User;
-use Tests\Support\UserFactory;
-use Tests\Support\UserTransformer;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Data\Factories\UserFactory;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Models\User;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\UI\API\Transformers\UserTransformer;
 use Tests\UnitTestCase;
 
 #[CoversClass(ResponseTrait::class)]

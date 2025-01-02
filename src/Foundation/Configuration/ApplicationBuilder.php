@@ -60,6 +60,13 @@ final readonly class ApplicationBuilder
         return $this;
     }
 
+    public function withMigrations(string ...$path): self
+    {
+        $this->apiato->withMigrations(...$path);
+
+        return $this;
+    }
+
     public function withRouting(callable|null $callback = null): self
     {
         $this->apiato->withRouting($callback);

@@ -1,14 +1,15 @@
 <?php
 
-namespace Tests\Support;
+namespace Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Models;
 
-use Apiato\Abstract\Models\UserModel;
 use Apiato\Foundation\Support\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Models\Book;
+use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Parents\Models\UserModel as ParentUserModel;
 
-class User extends UserModel
+class User extends ParentUserModel
 {
     use ModelTrait;
     use Notifiable;

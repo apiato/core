@@ -2,24 +2,33 @@
 
 namespace Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Transformers;
 
+use Apiato\Abstract\Transformers\Transformer;
+use League\Fractal\Resource\Item;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Models\Book;
-use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Parents\Transformers\Transformer as ParentTransformer;
+use Tests\Support\UserTransformer;
 
-class BookTransformer extends ParentTransformer
+class BookTransformer extends Transformer
 {
-    protected array $defaultIncludes = [];
+    protected array $availableIncludes = [
+        'author',
+    ];
 
-    protected array $availableIncludes = [];
+    protected array $defaultIncludes = [];
 
     public function transform(Book $book): array
     {
         return [
             'object' => $book->getResourceKey(),
             'id' => $book->getHashedKey(),
+            'title' => $book->title,
+            'author' => $book->author->name,
             'created_at' => $book->created_at,
             'updated_at' => $book->updated_at,
-            'readable_created_at' => $book->created_at->diffForHumans(),
-            'readable_updated_at' => $book->updated_at->diffForHumans(),
         ];
+    }
+
+    public function includeAuthor(Book $book): Item
+    {
+        return $this->item($book->author, new UserTransformer());
     }
 }

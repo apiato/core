@@ -9,6 +9,8 @@ return new class extends Migration {
     {
         Schema::create('books', static function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->foreignId('author_id')->nullable();
             $table->timestamps();
         });
     }

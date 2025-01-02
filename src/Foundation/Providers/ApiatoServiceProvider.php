@@ -10,9 +10,9 @@ use Apiato\Commands\SeedTestingData;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Loaders\HelperLoader;
 use Apiato\Foundation\Loaders\Loader;
-use Apiato\Foundation\Loaders\MigrationLoaderTrait;
 use Apiato\Foundation\Support\PathHelper;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
+use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -26,13 +26,12 @@ use Tests\Support\Doubles\Fakes\Providers\SecondServiceProvider;
 
 class ApiatoServiceProvider extends AggregateServiceProvider
 {
-    use MigrationLoaderTrait;
-
     protected $providers = [
         GeneratorsServiceProvider::class,
         MacroServiceProvider::class,
         LocalizationServiceProvider::class,
         ViewServiceProvider::class,
+        MigrationServiceProvider::class,
     ];
 
     public function register(): void

@@ -1,11 +1,13 @@
 <?php
 
-namespace Tests\Support;
+namespace Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\UI\API\Transformers;
 
 use Apiato\Abstract\Transformers\Transformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Models\User;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\UI\API\Transformers\BookTransformer;
 
 class UserTransformer extends Transformer
 {

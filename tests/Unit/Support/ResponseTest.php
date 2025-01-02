@@ -7,11 +7,11 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use League\Fractal\ParamBag;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\Support\BookFactory;
-use Tests\Support\User;
-use Tests\Support\UserFactory;
-use Tests\Support\UserRepository;
-use Tests\Support\UserTransformer;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Data\Factories\UserFactory;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Data\Repositories\UserRepository;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Models\User;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\UI\API\Transformers\UserTransformer;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Data\Factories\BookFactory;
 use Tests\UnitTestCase;
 
 #[CoversClass(Response::class)]

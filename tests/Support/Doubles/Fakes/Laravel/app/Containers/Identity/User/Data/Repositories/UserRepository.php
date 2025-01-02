@@ -1,8 +1,9 @@
 <?php
 
-namespace Tests\Support;
+namespace Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Data\Repositories;
 
 use Apiato\Abstract\Repositories\Repository as ParentRepository;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Models\User;
 
 class UserRepository extends ParentRepository
 {

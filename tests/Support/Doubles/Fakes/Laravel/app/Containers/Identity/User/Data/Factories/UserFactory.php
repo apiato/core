@@ -1,8 +1,9 @@
 <?php
 
-namespace Tests\Support;
+namespace Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Data\Factories;
 
 use Orchestra\Testbench\Factories\UserFactory as TestbenchUserFactory;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Models\User;
 
 /**
  * @template TModel of User
