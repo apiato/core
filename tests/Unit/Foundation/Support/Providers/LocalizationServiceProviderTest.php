@@ -5,15 +5,15 @@ use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 
 describe(class_basename(LocalizationServiceProvider::class), function (): void {
     it('loads translation files', function (): void {
-        $localization = Apiato::instance()->localization();
+        $configuration = Apiato::instance()->localization();
         $this->app->setLocale('en');
-        foreach ($localization->paths() as $path) {
-            expect(__($localization->buildNamespaceFor($path) . '::errors.forbidden'))->toBe('forbidden');
+        foreach ($configuration->paths() as $path) {
+            expect(__($configuration->buildNamespaceFor($path) . '::errors.forbidden'))->toBe('forbidden');
         }
 
         $this->app->setLocale('fa');
-        foreach ($localization->paths() as $path) {
-            expect(__($localization->buildNamespaceFor($path) . '::errors.forbidden'))->toBe('ممنوع');
+        foreach ($configuration->paths() as $path) {
+            expect(__($configuration->buildNamespaceFor($path) . '::errors.forbidden'))->toBe('ممنوع');
         }
     });
 
