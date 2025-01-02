@@ -11,9 +11,9 @@ use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Loaders\HelperLoader;
 use Apiato\Foundation\Loaders\Loader;
 use Apiato\Foundation\Loaders\MigrationLoaderTrait;
-use Apiato\Foundation\Loaders\ViewLoaderTrait;
 use Apiato\Foundation\Support\PathHelper;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
+use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
@@ -27,12 +27,12 @@ use Tests\Support\Doubles\Fakes\Providers\SecondServiceProvider;
 class ApiatoServiceProvider extends AggregateServiceProvider
 {
     use MigrationLoaderTrait;
-    use ViewLoaderTrait;
 
     protected $providers = [
         GeneratorsServiceProvider::class,
         MacroServiceProvider::class,
         LocalizationServiceProvider::class,
+        ViewServiceProvider::class,
     ];
 
     public function register(): void
@@ -133,11 +133,9 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         );
 
         //        $this->loadShipMigrations();
-        //        $this->loadShipViews();
 
         foreach (PathHelper::getContainerPaths() as $containerPath) {
             //            $this->loadContainerMigrations($containerPath);
-            //            $this->loadContainerViews($containerPath);
         }
     }
 

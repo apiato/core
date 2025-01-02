@@ -5,6 +5,7 @@ namespace Apiato\Foundation;
 use Apiato\Foundation\Configuration\ApplicationBuilder;
 use Apiato\Foundation\Configuration\Localization;
 use Apiato\Foundation\Configuration\Routing;
+use Apiato\Foundation\Configuration\View;
 use Apiato\Foundation\Middleware\ProcessETag;
 use Apiato\Foundation\Middleware\Profiler;
 use Apiato\Foundation\Middleware\ValidateJsonContent;
@@ -18,8 +19,9 @@ final class Apiato
     private array $listenerPaths = [];
     private array $commandPaths = [];
     private array $helperPaths = [];
-    private Localization $localization;
     private Routing $routing;
+    private Localization $localization;
+    private View $view;
 
     private function __construct(
         private readonly string $basePath,
@@ -55,6 +57,7 @@ final class Apiato
             )->withHelpers(
                 $basePath . '/app/Ship/Helpers',
             )->withTranslations()
+            ->withViews()
             ->withRouting();
     }
 
@@ -81,6 +84,23 @@ final class Apiato
 
         if (!is_null($callback)) {
             $callback($this->routing);
+        }
+
+        return $this;
+    }
+
+    public function withViews(callable|null $callback = null): self
+    {
+        $this->view = (new View())
+            ->loadFrom(
+                $this->basePath . '/app/Ship/Views',
+                $this->basePath . '/app/Ship/Mails',
+                ...glob($this->basePath . '/app/Containers/*/*/Views', GLOB_ONLYDIR | GLOB_NOSORT),
+                ...glob($this->basePath . '/app/Containers/*/*/Mails', GLOB_ONLYDIR | GLOB_NOSORT),
+            );
+
+        if (!is_null($callback)) {
+            $callback($this->view);
         }
 
         return $this;
@@ -151,6 +171,11 @@ final class Apiato
     public function localization(): Localization
     {
         return $this->localization;
+    }
+
+    public function view(): View
+    {
+        return $this->view;
     }
 
     public function events(): array

@@ -53,6 +53,13 @@ final readonly class ApplicationBuilder
         return $this;
     }
 
+    public function withViews(callable|null $callback = null): self
+    {
+        $this->apiato->withViews($callback);
+
+        return $this;
+    }
+
     public function withRouting(callable|null $callback = null): self
     {
         $this->apiato->withRouting($callback);
