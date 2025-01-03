@@ -8,6 +8,7 @@ use Apiato\Commands\ListTasks;
 use Apiato\Commands\SeedDeploymentData;
 use Apiato\Commands\SeedTestingData;
 use Apiato\Foundation\Apiato;
+use Apiato\Foundation\DatabaseSeeder;
 use Apiato\Foundation\Loaders\HelperLoader;
 use Apiato\Foundation\Loaders\Loader;
 use Apiato\Foundation\Support\PathHelper;
@@ -17,6 +18,7 @@ use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -32,6 +34,10 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         LocalizationServiceProvider::class,
         ViewServiceProvider::class,
         MigrationServiceProvider::class,
+    ];
+
+    protected array $aliases = [
+        'DatabaseSeeder' => DatabaseSeeder::class,
     ];
 
     public function register(): void
@@ -112,9 +118,12 @@ class ApiatoServiceProvider extends AggregateServiceProvider
 
     public function boot(): void
     {
+        $this->addAliases();
         $this->runBoot();
 
-        $this->runLoaders();
+        $this->load(
+            HelperLoader::create(),
+        );
 
         $this->publishes([
             __DIR__ . '/../../../config/apiato.php' => app_path('Ship/Configs/apiato.php'),
@@ -123,19 +132,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         $this->configureRateLimiting(); // TODO: move to route service provider
 
         AboutCommand::add('Apiato', static fn () => ['Version' => '13.0.0']);
-    }
-
-    public function runLoaders(): void
-    {
-        $this->load(
-            HelperLoader::create(),
-        );
-
-        //        $this->loadShipMigrations();
-
-        foreach (PathHelper::getContainerPaths() as $containerPath) {
-            //            $this->loadContainerMigrations($containerPath);
-        }
     }
 
     private function load(Loader ...$loader): void
@@ -157,6 +153,14 @@ class ApiatoServiceProvider extends AggregateServiceProvider
                     )->by($request->user()?->id ?: $request->ip());
                 },
             );
+        }
+    }
+
+    private function addAliases(): void
+    {
+        $loader = AliasLoader::getInstance();
+        foreach ($this->aliases as $alias => $class) {
+            $loader->alias($alias, $class);
         }
     }
 }

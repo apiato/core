@@ -1,5 +1,6 @@
 <?php
 
+use Apiato\Foundation\DatabaseSeeder;
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
 use Apiato\Foundation\Providers\MacroServiceProvider;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
@@ -52,7 +53,19 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
         $availableAliases = AliasLoader::getInstance()->getAliases();
 
         foreach ($aliases as $alias => $class) {
-            expect($availableAliases[$alias])->toBe($class);
+            expect($availableAliases)->toHaveKey($alias, $class);
+        }
+    });
+
+    it('can add its own aliases', function (): void {
+        $aliases = [
+            'DatabaseSeeder' => DatabaseSeeder::class,
+        ];
+
+        $availableAliases = AliasLoader::getInstance()->getAliases();
+
+        foreach ($aliases as $alias => $class) {
+            expect($availableAliases)->toHaveKey($alias, $class);
         }
     });
 
