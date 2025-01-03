@@ -8,8 +8,8 @@ $finder = Symfony\Component\Finder\Finder::create()
     ->name('*.php')
     ->notName('*.blade.php')
     ->exclude([
-        'Infrastructure/Fakes/Laravel/bootstrap',
-        'Infrastructure/Fakes/Laravel/storage',
+        'Support/Doubles/Fakes/Laravel/bootstrap',
+        'Support/Doubles/Fakes/Laravel/storage',
     ]);
 
 return (new PhpCsFixer\Config())
