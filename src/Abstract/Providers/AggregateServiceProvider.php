@@ -49,7 +49,7 @@ abstract class AggregateServiceProvider extends LaravelAggregateServiceProvider
     // TODO: maybe we can use the booting() method callbacks?
     final public function runBoot(): void
     {
-        $this->addAliases();
+        $this->recursiveAddAlias();
         foreach ($this->instances as $provider) {
             if ($provider instanceof self) {
                 $provider->runBoot();
@@ -57,7 +57,7 @@ abstract class AggregateServiceProvider extends LaravelAggregateServiceProvider
         }
     }
 
-    private function addAliases(): void
+    private function recursiveAddAlias(): void
     {
         $loader = AliasLoader::getInstance();
         // TODO: does it mae sense to get all subclasses of aggregateProvider instead of $instances?
