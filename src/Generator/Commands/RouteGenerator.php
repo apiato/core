@@ -103,8 +103,7 @@ class RouteGenerator extends FileGeneratorCommand
         $routeTitle = Str::headline($this->fileName);
         $methodLowerCase = strtolower($this->method);
 
-        return "
-<?php
+        return "<?php
 
 /**
  * @apiGroup           $this->containerName
