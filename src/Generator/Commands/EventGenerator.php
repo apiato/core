@@ -106,20 +106,22 @@ class EventGenerator extends FileGeneratorCommand
         // test 1
         $class->addMethod('testEventExtendsExpectedModel')
             ->setPublic()
-            ->setBody("
+            ->setBody(
+                "
 \$this->assertSubclassOf(StorableEvent::class, $this->fileName::class);
 \$this->assertSubclassOf(StoreInDatabaseEvent::class, $this->fileName::class);
-"
+",
             );
         // test 2
         $class->addMethod('testShouldSetProperty')
             ->setPublic()
-            ->setBody("
+            ->setBody(
+                "
 // \$model = ModelFactory::new()->make();
 // \$event = new $this->fileName(\$model);
 
 // \$this->assertSame(\$model, \$event->model);
-"
+",
             );
 
         return $printer->printFile($file);
