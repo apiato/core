@@ -62,8 +62,7 @@ class MigrationGenerator extends FileGeneratorCommand
 
     protected function getFileContent(): string
     {
-        return "
-<?php
+        return "<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

@@ -88,7 +88,7 @@ class RepositoryGenerator extends FileGeneratorCommand
             ->setValue(new Literal("$this->model::class"));
         $class->addProperty('fieldSearchable')
             ->setVisibility('protected')
-            ->setValue(['id' => '=']);
+            ->setValue([]);
 
         return $printer->printFile($file);
     }
@@ -128,7 +128,6 @@ class RepositoryGenerator extends FileGeneratorCommand
         $testMethod1 = $class->addMethod('testRepositoryHasExpectedSearchableFieldsSet')->setPublic();
         $testMethod1->addBody("
 \$data = [
-    'id' => '=',
 ];
 \$repository = app($this->fileName::class);
 
