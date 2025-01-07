@@ -2,7 +2,7 @@
 
 namespace Apiato\Abstract\Tests;
 
-use Apiato\Foundation\Support\Traits\HashIdTrait;
+use Apiato\Foundation\Support\Traits\HashId;
 use Apiato\Foundation\Support\Traits\Testing\AssertionTrait;
 use Apiato\Foundation\Support\Traits\Testing\RequestHelperTrait;
 use Apiato\Foundation\Support\Traits\Testing\TestingUserTrait;
@@ -14,7 +14,7 @@ abstract class TestCase extends LaravelTestCase
     use TestingUserTrait;
     use RequestHelperTrait;
     use AssertionTrait;
-    use HashIdTrait;
+    use HashId;
     use LazilyRefreshDatabase;
 
     /**

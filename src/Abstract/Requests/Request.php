@@ -4,7 +4,7 @@ namespace Apiato\Abstract\Requests;
 
 use Apiato\Abstract\Models\UserModel as User;
 use Apiato\Foundation\Exceptions\IncorrectId;
-use Apiato\Foundation\Support\Traits\HashIdTrait;
+use Apiato\Foundation\Support\Traits\HashId;
 use Apiato\Foundation\Support\Traits\SanitizerTrait;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Arr;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\App;
 
 abstract class Request extends LaravelRequest
 {
-    use HashIdTrait;
+    use HashId;
     use SanitizerTrait;
 
     /**

@@ -10,7 +10,7 @@ class Wondered_3 extends Seeder
     public function run(): void
     {
         BookFactory::new()->createOne([
-            'title' => '3',
+            'title' => 'Testing DatabaseSeeder',
         ]);
     }
 }

@@ -6,7 +6,7 @@ use Apiato\Foundation\Exceptions\IncorrectId;
 use Apiato\Foundation\Exceptions\InternalError;
 use Vinkla\Hashids\Facades\Hashids;
 
-trait HashIdTrait
+trait HashId
 {
     /**
      * endpoint to be skipped from decoding their ID's (example for external ID's).

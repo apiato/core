@@ -3,6 +3,7 @@
 namespace Apiato\Foundation;
 
 use Apiato\Foundation\Configuration\ApplicationBuilder;
+use Apiato\Foundation\Configuration\FactoryDiscovery;
 use Apiato\Foundation\Configuration\Localization;
 use Apiato\Foundation\Configuration\Routing;
 use Apiato\Foundation\Configuration\Seeding;
@@ -25,6 +26,7 @@ class Apiato
     private Localization $localization;
     private View $view;
     private Seeding $seeding;
+    private FactoryDiscovery $factoryDiscovery;
 
     private function __construct(
         private readonly string $basePath,
@@ -65,6 +67,7 @@ class Apiato
             )->withSeeders()
             ->withTranslations()
             ->withViews()
+            ->withFactories()
             ->withRouting();
     }
 
@@ -142,6 +145,17 @@ class Apiato
         return $this;
     }
 
+    public function withFactories(callable|null $callback = null): self
+    {
+        $this->factoryDiscovery = new FactoryDiscovery();
+
+        if (!is_null($callback)) {
+            $callback($this->factoryDiscovery);
+        }
+
+        return $this;
+    }
+
     public function withHelpers(string ...$path): void
     {
         $this->helperPaths = $path;
@@ -205,6 +219,11 @@ class Apiato
     public function seeding(): Seeding
     {
         return $this->seeding;
+    }
+
+    public function factoryDiscovery(): FactoryDiscovery
+    {
+        return $this->factoryDiscovery;
     }
 
     public function localization(): Localization

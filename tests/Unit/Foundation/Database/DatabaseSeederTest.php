@@ -4,22 +4,14 @@ use Apiato\Abstract\Seeders\Seeder;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Mockery\MockInterface;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Data\Factories\BookFactory;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Data\Seeders\Wondered_3;
 
 describe(class_basename(DatabaseSeeder::class), function (): void {
-it('can call seeders', function (): void {
+    it('can call seeders', function (): void {
         $seeder = new DatabaseSeeder();
-        $apiato = $this->mock(Apiato::class, function (MockInterface $mock) {
+        $apiato = Mockery::mock(Apiato::class, static function (MockInterface $mock) {
             $mock->expects('seeding->seeders')->andReturn([
-                (new class extends Seeder
-                {
-                    public function run(): void
-                    {
-                        BookFactory::new()->createOne([
-                            'title' => 'Testing DatabaseSeeder',
-                        ]);
-                    }
-                })::class,
+                Wondered_3::class
             ]);
         });
 
@@ -28,6 +20,7 @@ it('can call seeders', function (): void {
         $this->assertDatabaseHas('books', [
             'title' => 'Testing DatabaseSeeder',
         ]);
+        $this->assertDatabaseCount('books', 1);
         expect(DatabaseSeeder::class)->toExtend(Seeder::class);
     });
 })->covers(DatabaseSeeder::class);

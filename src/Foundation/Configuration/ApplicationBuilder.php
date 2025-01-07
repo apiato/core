@@ -81,6 +81,13 @@ final readonly class ApplicationBuilder
         return $this;
     }
 
+    public function withFactories(callable|null $callback = null): self
+    {
+        $this->apiato->withFactories($callback);
+
+        return $this;
+    }
+
     public function create(): Apiato
     {
         return $this->apiato;

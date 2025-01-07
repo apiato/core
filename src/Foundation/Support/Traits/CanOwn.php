@@ -6,7 +6,7 @@ use Apiato\Foundation\Exceptions\InternalError;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-trait CanOwnTrait
+trait CanOwn
 {
     /**
      * Checks if the model is owned by the $owner model.

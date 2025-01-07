@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
 
-trait HashedRouteBindingTrait
+trait HashedRouteBinding
 {
     /**
      * Retrieve the model for a bound value.

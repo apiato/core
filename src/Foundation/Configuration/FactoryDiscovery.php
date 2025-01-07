@@ -1,0 +1,45 @@
+<?php
+
+namespace Apiato\Foundation\Configuration;
+
+use Apiato\Abstract\Factories\Factory;
+use Illuminate\Support\Str;
+
+final class FactoryDiscovery
+{
+    protected static \Closure $factoryNameResolver;
+
+    public function __construct()
+    {
+        $this->resolveFactoryNameUsing(static function (string $modelName): string {
+            $factoryNamespace = Str::of($modelName)->beforeLast('Models\\')
+                ->append('Data\\Factories\\');
+
+            return $factoryNamespace
+                ->append(class_basename($modelName) . 'Factory')
+                ->value();
+        });
+    }
+
+    public function resolveFactoryNameUsing(callable $callback): self
+    {
+        self::$factoryNameResolver = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param string $modelName
+     * @return class-string<Factory>|null
+     */
+    public function resolveFactoryName(string $modelName): string|null
+    {
+        $factoryName = app()->call(self::$factoryNameResolver, compact('modelName'));
+
+        if (!class_exists($factoryName)) {
+            return null;
+        }
+
+        return $factoryName;
+    }
+}

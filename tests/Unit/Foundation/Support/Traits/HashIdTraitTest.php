@@ -3,14 +3,14 @@
 namespace Tests\Unit\Foundation\Support\Traits;
 
 use Apiato\Foundation\Exceptions\IncorrectId;
-use Apiato\Foundation\Support\Traits\HashIdTrait;
+use Apiato\Foundation\Support\Traits\HashId;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\UnitTestCase;
 
-#[CoversClass(HashIdTrait::class)]
+#[CoversClass(HashId::class)]
 class HashIdTraitTest extends UnitTestCase
 {
     private $trait;
@@ -104,7 +104,7 @@ class HashIdTraitTest extends UnitTestCase
         config()->set('apiato.hash-id', true);
 
         $this->trait = new class {
-            use HashIdTrait;
+            use HashId;
 
             public function publicDecodeHashedIdsBeforeValidation(array $requestData)
             {
@@ -112,7 +112,7 @@ class HashIdTraitTest extends UnitTestCase
             }
         };
 
-        $this->mockTrait = $this->mock(HashIdTrait::class)->makePartial();
+        $this->mockTrait = $this->mock(HashId::class)->makePartial();
     }
 
     public function testCanEncodeId(): void

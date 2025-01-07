@@ -3,7 +3,7 @@
 namespace Tests\Unit\Abstract\Tests;
 
 use Apiato\Abstract\Tests\TestCase;
-use Apiato\Foundation\Support\Traits\HashIdTrait;
+use Apiato\Foundation\Support\Traits\HashId;
 use Apiato\Foundation\Support\Traits\Testing\AssertionTrait;
 use Apiato\Foundation\Support\Traits\Testing\RequestHelperTrait;
 use Apiato\Foundation\Support\Traits\Testing\TestingUserTrait;
@@ -20,7 +20,7 @@ final class TestCaseTest extends UnitTestCase
             TestingUserTrait::class,
             RequestHelperTrait::class,
             AssertionTrait::class,
-            HashIdTrait::class,
+            HashId::class,
             LazilyRefreshDatabase::class,
         ];
 

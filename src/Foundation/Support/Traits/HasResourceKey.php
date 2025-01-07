@@ -2,7 +2,7 @@
 
 namespace Apiato\Foundation\Support\Traits;
 
-trait HasResourceKeyTrait
+trait HasResourceKey
 {
     /**
      * Returns the type for JSON API Serializer.
