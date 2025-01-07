@@ -11,7 +11,7 @@ describe(class_basename(DatabaseSeeder::class), function (): void {
         $seeder = new DatabaseSeeder();
         $apiato = Mockery::mock(Apiato::class, static function (MockInterface $mock) {
             $mock->expects('seeding->seeders')->andReturn([
-                Wondered_3::class
+                Wondered_3::class,
             ]);
         });
 

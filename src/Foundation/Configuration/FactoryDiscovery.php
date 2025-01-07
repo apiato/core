@@ -29,7 +29,6 @@ final class FactoryDiscovery
     }
 
     /**
-     * @param string $modelName
      * @return class-string<Factory>|null
      */
     public function resolveFactoryName(string $modelName): string|null

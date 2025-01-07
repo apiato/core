@@ -3,9 +3,6 @@
 namespace Apiato\Foundation\Support\Traits\Model;
 
 use Apiato\Foundation\Support\Traits\HashId;
-use Apiato\Foundation\Support\Traits\Model\CanOwn;
-use Apiato\Foundation\Support\Traits\Model\FactoryDiscovery;
-use Apiato\Foundation\Support\Traits\Model\HashedRouteBinding;
 use Apiato\Foundation\Support\Traits\HasResourceKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
