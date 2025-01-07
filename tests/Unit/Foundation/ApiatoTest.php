@@ -11,7 +11,7 @@ describe(class_basename(Apiato::class), function (): void {
     it('can be configured via a closure to customize translation namespaces', function (): void {
         Apiato::configure()
             ->withTranslations(function (Localization $localization): void {
-                $localization->buildNamespaceUsing(fn (string $path): string => 'test');
+                $localization->buildNamespaceUsing(static fn (string $path): string => 'test');
             })
             ->create();
 
@@ -28,7 +28,7 @@ describe(class_basename(Apiato::class), function (): void {
             Profiler::class,
         ];
 
-        expect(Apiato::instance()->apiMiddlewares())
+        expect($this->app->make(Apiato::class)->apiMiddlewares())
             ->toBe($middlewares);
     });
 })->covers(Apiato::class);

@@ -7,8 +7,8 @@ use Apiato\Foundation\Apiato;
 
 class MigrationServiceProvider extends ServiceProvider
 {
-    public function boot(): void
+    public function boot(Apiato $apiato): void
     {
-        $this->loadMigrationsFrom(Apiato::instance()->migrationPaths());
+        $this->loadMigrationsFrom($apiato->migrationPaths());
     }
 }

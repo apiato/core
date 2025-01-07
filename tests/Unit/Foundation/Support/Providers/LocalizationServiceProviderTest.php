@@ -5,7 +5,7 @@ use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 
 describe(class_basename(LocalizationServiceProvider::class), function (): void {
     it('loads translation files', function (): void {
-        $configuration = Apiato::instance()->localization();
+        $configuration = $this->app->make(Apiato::class)->localization();
         $this->app->setLocale('en');
         foreach ($configuration->paths() as $path) {
             expect(__($configuration->buildNamespaceFor($path) . '::errors.forbidden'))->toBe('forbidden');
@@ -18,7 +18,7 @@ describe(class_basename(LocalizationServiceProvider::class), function (): void {
     });
 
     it('loads json translation files', function (): void {
-        $localization = Apiato::instance()->localization();
+        $localization = $this->app->make(Apiato::class)->localization();
 
         $this->app->setLocale('fr');
 

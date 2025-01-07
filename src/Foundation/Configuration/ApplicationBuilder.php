@@ -67,6 +67,13 @@ final readonly class ApplicationBuilder
         return $this;
     }
 
+    public function withSeeders(callable|null $callback = null): self
+    {
+        $this->apiato->withSeeders($callback);
+
+        return $this;
+    }
+
     public function withRouting(callable|null $callback = null): self
     {
         $this->apiato->withRouting($callback);

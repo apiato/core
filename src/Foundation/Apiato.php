@@ -5,13 +5,14 @@ namespace Apiato\Foundation;
 use Apiato\Foundation\Configuration\ApplicationBuilder;
 use Apiato\Foundation\Configuration\Localization;
 use Apiato\Foundation\Configuration\Routing;
+use Apiato\Foundation\Configuration\Seeding;
 use Apiato\Foundation\Configuration\View;
 use Apiato\Foundation\Middleware\ProcessETag;
 use Apiato\Foundation\Middleware\Profiler;
 use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Composer\Autoload\ClassLoader;
 
-final class Apiato
+class Apiato
 {
     private static self $instance;
     private array $providerPaths = [];
@@ -23,6 +24,7 @@ final class Apiato
     private Routing $routing;
     private Localization $localization;
     private View $view;
+    private Seeding $seeding;
 
     private function __construct(
         private readonly string $basePath,
@@ -58,9 +60,10 @@ final class Apiato
             )->withHelpers(
                 $basePath . '/app/Ship/Helpers',
             )->withMigrations(
-                $basePath . '/app/Ship/Migrations',
+                $basePath . '/app/Ship/Data/Migrations',
                 ...glob($basePath . '/app/Containers/*/*/Data/Migrations', GLOB_ONLYDIR | GLOB_NOSORT),
-            )->withTranslations()
+            )->withSeeders()
+            ->withTranslations()
             ->withViews()
             ->withRouting();
     }
@@ -103,6 +106,20 @@ final class Apiato
 
         if (!is_null($callback)) {
             $callback($this->localization);
+        }
+
+        return $this;
+    }
+
+    public function withSeeders(callable|null $callback = null): self
+    {
+        $this->seeding = (new Seeding())
+            ->loadFrom(
+                ...glob($this->basePath . '/app/Containers/*/*/Data/Seeders', GLOB_ONLYDIR | GLOB_NOSORT),
+            );
+
+        if (!is_null($callback)) {
+            $callback($this->seeding);
         }
 
         return $this;
@@ -159,6 +176,7 @@ final class Apiato
         return $this;
     }
 
+    // TODO: add arch tests to make sure this method is only used in ApiatoServiceProvider
     public static function instance(): self
     {
         return self::$instance;
@@ -182,6 +200,11 @@ final class Apiato
     public function migrationPaths(): array
     {
         return $this->migrationPaths;
+    }
+
+    public function seeding(): Seeding
+    {
+        return $this->seeding;
     }
 
     public function localization(): Localization

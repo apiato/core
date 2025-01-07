@@ -8,9 +8,8 @@ use Apiato\Commands\ListTasks;
 use Apiato\Commands\SeedDeploymentData;
 use Apiato\Commands\SeedTestingData;
 use Apiato\Foundation\Apiato;
-use Apiato\Foundation\DatabaseSeeder;
+use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Loaders\HelperLoader;
-use Apiato\Foundation\Loaders\Loader;
 use Apiato\Foundation\Support\PathHelper;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
@@ -46,6 +45,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
 
         $this->runRegister();
         $this->registerCoreCommands();
+        $this->app->singletonIf(Apiato::class, static fn () => Apiato::instance());
 
         $this->mergeConfigs();
 
@@ -121,9 +121,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         $this->addAliases();
         $this->runBoot();
 
-        $this->load(
-            HelperLoader::create(),
-        );
+        HelperLoader::create()->load();
 
         $this->publishes([
             __DIR__ . '/../../../config/apiato.php' => app_path('Ship/Configs/apiato.php'),
@@ -132,13 +130,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         $this->configureRateLimiting(); // TODO: move to route service provider
 
         AboutCommand::add('Apiato', static fn () => ['Version' => '13.0.0']);
-    }
-
-    private function load(Loader ...$loader): void
-    {
-        foreach ($loader as $load) {
-            $load->load();
-        }
     }
 
     protected function configureRateLimiting(): void

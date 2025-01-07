@@ -7,9 +7,9 @@ use Apiato\Foundation\Apiato;
 
 class LocalizationServiceProvider extends ServiceProvider
 {
-    public function boot(): void
+    public function boot(Apiato $apiato): void
     {
-        $configuration = Apiato::instance()->localization();
+        $configuration = $apiato->localization();
         foreach ($configuration->paths() as $path) {
             $this->loadTranslationsFrom($path, $configuration->buildNamespaceFor($path));
             $this->loadJsonTranslationsFrom($path);

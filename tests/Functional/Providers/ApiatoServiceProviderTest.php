@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Foundation\DatabaseSeeder;
+use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
 use Apiato\Foundation\Providers\MacroServiceProvider;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;

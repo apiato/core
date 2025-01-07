@@ -1,0 +1,16 @@
+<?php
+
+namespace Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Data\Seeders;
+
+use Apiato\Abstract\Seeders\Seeder;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Data\Factories\BookFactory;
+
+class Ordered_1 extends Seeder
+{
+    public function run(): void
+    {
+        BookFactory::new()->createOne([
+            'title' => '1',
+        ]);
+    }
+}

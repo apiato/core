@@ -7,9 +7,9 @@ use Apiato\Foundation\Apiato;
 
 class ViewServiceProvider extends ServiceProvider
 {
-    public function boot(): void
+    public function boot(Apiato $apiato): void
     {
-        $configuration = Apiato::instance()->view();
+        $configuration = $apiato->view();
         foreach ($configuration->paths() as $path) {
             $this->loadViewsFrom($path, $configuration->buildNamespaceFor($path));
         }
