@@ -5,7 +5,7 @@ namespace Apiato\Foundation\Support\Traits\Testing;
 use Apiato\Abstract\Models\UserModel;
 use Illuminate\Support\Facades\Hash;
 
-trait TestingUserTrait
+trait TestingUser
 {
     /**
      * Logged in user object.

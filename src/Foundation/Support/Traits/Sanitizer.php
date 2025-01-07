@@ -5,7 +5,7 @@ namespace Apiato\Foundation\Support\Traits;
 use Apiato\Foundation\Exceptions\IncorrectId;
 use Illuminate\Support\Arr;
 
-trait SanitizerTrait
+trait Sanitizer
 {
     /**
      * Sanitizes the data of a request. This is a superior version of php built-in array_filter() as it preserves

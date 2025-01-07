@@ -11,7 +11,7 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
-trait AssertionTrait
+trait Assertions
 {
     /**
      * Assert that the Gate::allows() method is called once with the given arguments.

@@ -2,7 +2,7 @@
 
 namespace Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Models;
 
-use Apiato\Foundation\Support\Traits\ModelTrait;
+use Apiato\Foundation\Support\Traits\Model\ModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;

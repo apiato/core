@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 use Spatie\Fractal\Facades\Fractal;
 
 // TODO: Remove this after migrating everything to use Response facade
-trait ResponseTrait
+trait Response
 {
     protected array $metaData = [];
 

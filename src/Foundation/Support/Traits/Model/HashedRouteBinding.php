@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Foundation\Support\Traits;
+namespace Apiato\Foundation\Support\Traits\Model;
 
 use Apiato\Foundation\Exceptions\IncorrectId;
 use Illuminate\Database\Eloquent\Model;

@@ -9,8 +9,9 @@ use Illuminate\Support\Str;
 
 /**
  * @internal
+ * TODO: maybe move this into repository class itself. What are we gaining by using a trait?
  */
-trait CanEagerLoadTrait
+trait EagerLoad
 {
     /**
      * Eager load relations if requested by the client via "include" query parameter.

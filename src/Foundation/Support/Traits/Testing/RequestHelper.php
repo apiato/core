@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 use Vinkla\Hashids\Facades\Hashids;
 
-trait RequestHelperTrait
+trait RequestHelper
 {
     /**
      * property to be set on the user test class.

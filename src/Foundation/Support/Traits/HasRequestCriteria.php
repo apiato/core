@@ -6,7 +6,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Vinkla\Hashids\Facades\Hashids;
 
-trait HasRequestCriteriaTrait
+trait HasRequestCriteria
 {
     /**
      * @throws RepositoryException

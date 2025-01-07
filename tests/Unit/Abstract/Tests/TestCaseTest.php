@@ -4,9 +4,9 @@ namespace Tests\Unit\Abstract\Tests;
 
 use Apiato\Abstract\Tests\TestCase;
 use Apiato\Foundation\Support\Traits\HashId;
-use Apiato\Foundation\Support\Traits\Testing\AssertionTrait;
-use Apiato\Foundation\Support\Traits\Testing\RequestHelperTrait;
-use Apiato\Foundation\Support\Traits\Testing\TestingUserTrait;
+use Apiato\Foundation\Support\Traits\Testing\Assertions;
+use Apiato\Foundation\Support\Traits\Testing\RequestHelper;
+use Apiato\Foundation\Support\Traits\Testing\TestingUser;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\UnitTestCase;
@@ -17,9 +17,9 @@ final class TestCaseTest extends UnitTestCase
     public function testUsesTraits(): void
     {
         $traits = [
-            TestingUserTrait::class,
-            RequestHelperTrait::class,
-            AssertionTrait::class,
+            TestingUser::class,
+            RequestHelper::class,
+            Assertions::class,
             HashId::class,
             LazilyRefreshDatabase::class,
         ];

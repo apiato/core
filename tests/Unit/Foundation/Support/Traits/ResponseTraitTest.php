@@ -3,7 +3,7 @@
 namespace Tests\Unit\Foundation\Support\Traits;
 
 use Apiato\Abstract\Transformers\Transformer;
-use Apiato\Foundation\Support\Traits\ResponseTrait;
+use Apiato\Foundation\Support\Traits\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Data\Factories\UserFactory;
@@ -11,7 +11,7 @@ use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Models\User
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\UI\API\Transformers\UserTransformer;
 use Tests\UnitTestCase;
 
-#[CoversClass(ResponseTrait::class)]
+#[CoversClass(Response::class)]
 class ResponseTraitTest extends UnitTestCase
 {
     private $trait;
@@ -25,7 +25,7 @@ class ResponseTraitTest extends UnitTestCase
         parent::setUp();
 
         $this->trait = new class {
-            use ResponseTrait;
+            use Response;
         };
 
         $this->user = UserFactory::new()->withParent()->createOne();

@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Foundation\Support\Traits\FactoryDiscovery;
+use Apiato\Foundation\Support\Traits\Model\FactoryDiscovery;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Data\Factories\BookFactory;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Models\Book;
 
