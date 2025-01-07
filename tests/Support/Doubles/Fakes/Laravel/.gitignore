@@ -5,3 +5,5 @@
 testbench.yaml
 testbench.yaml.backup
 storage
+bootstrap/cache/*
+!.gitkeep
