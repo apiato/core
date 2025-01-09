@@ -10,7 +10,6 @@ use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
-use Illuminate\Support\Facades\DB;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\EventServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\BookServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\ShipServiceProvider;
