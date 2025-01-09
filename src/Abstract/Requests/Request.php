@@ -66,7 +66,7 @@ abstract class Request extends LaravelRequest
         // For now doesn't matter which URI or Method is used.
         $request = parent::create('/', 'GET', $parameters, $cookies, $files, $server);
 
-        $request->setUserResolver(function () use ($user) {
+        $request->setUserResolver(static function () use ($user) {
             return $user;
         });
 

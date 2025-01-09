@@ -56,7 +56,7 @@ abstract class Transformer extends FractalTransformer
 
     public static function empty(): callable
     {
-        return static function () {
+        return static function (): array {
             return [];
         };
     }

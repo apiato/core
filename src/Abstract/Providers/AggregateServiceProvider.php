@@ -25,7 +25,7 @@ abstract class AggregateServiceProvider extends LaravelAggregateServiceProvider
             }
         }
 
-        $this->booting(function () {
+        $this->booting(function (): void {
             $loader = AliasLoader::getInstance();
 
             $this->addSelfAliases($loader);

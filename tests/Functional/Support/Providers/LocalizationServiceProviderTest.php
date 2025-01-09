@@ -22,7 +22,7 @@ describe(class_basename(LocalizationServiceProvider::class), function (): void {
 
         $this->app->setLocale('fr');
 
-        expect($localization->paths())->each(function () {
+        expect($localization->paths())->each(function (): void {
             expect(__('forbidden'))->toBe('interdit');
         });
     });
