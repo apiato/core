@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
+// TODO: update to use Laravel Prompts
 class ListActions extends Command
 {
     protected $signature = 'apiato:list:actions {--withfilename}';
