@@ -5,7 +5,7 @@ namespace Apiato\Foundation\Support\Providers;
 use Apiato\Abstract\Providers\ServiceProvider;
 use Apiato\Foundation\Apiato;
 
-class LocalizationServiceProvider extends ServiceProvider
+final class LocalizationServiceProvider extends ServiceProvider
 {
     public function boot(Apiato $apiato): void
     {

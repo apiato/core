@@ -6,7 +6,7 @@ use Apiato\Abstract\Providers\ServiceProvider;
 use Apiato\Foundation\Apiato;
 use Illuminate\Support\Facades\File;
 
-class HelperServiceProvider extends ServiceProvider
+final class HelperServiceProvider extends ServiceProvider
 {
     public function boot(Apiato $apiato): void
     {
