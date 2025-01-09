@@ -5,8 +5,6 @@ namespace Apiato\Foundation\Providers;
 use Apiato\Abstract\Providers\AggregateServiceProvider;
 use Apiato\Commands\ListActions;
 use Apiato\Commands\ListTasks;
-use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Commands\SeedDeploymentData;
-use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Commands\SeedTestingData;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Support\PathHelper;
@@ -17,7 +15,6 @@ use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -82,8 +79,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
             $this->commands([
                 ListActions::class,
                 ListTasks::class,
-                SeedDeploymentData::class,
-                SeedTestingData::class,
             ]);
         }
     }
