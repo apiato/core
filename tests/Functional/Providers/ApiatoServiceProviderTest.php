@@ -115,8 +115,6 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
         $commands = [
             'apiato:list:actions',
             'apiato:list:tasks',
-            'apiato:seed-deploy',
-            'apiato:seed-test',
         ];
 
         expect($commands)
