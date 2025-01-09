@@ -10,6 +10,7 @@ use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
+use Illuminate\Support\Facades\DB;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\EventServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\BookServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\ShipServiceProvider;
@@ -46,5 +47,17 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
         $aliases = $provider->aliases();
 
         expect($aliases)->toBe($expected);
+    });
+
+    it('overrides default Laravel seeder with Apiato seeder', function (): void {
+        $this->artisan('db:seed')
+            ->assertExitCode(0);
+
+        expect(DB::table('books')->count())->toBe(8);
+
+        $this->artisan('migrate --seed')
+            ->assertExitCode(0);
+
+        expect(DB::table('books')->count())->toBe(16);
     });
 })->covers(ApiatoServiceProvider::class);
