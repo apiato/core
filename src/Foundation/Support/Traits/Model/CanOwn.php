@@ -40,17 +40,17 @@ trait CanOwn
     public function owns(Model $ownable, string|null $relation = null): bool
     {
         if ($relation) {
-            return null !== $this->$relation()->find($ownable);
+            return !is_null($this->$relation()->find($ownable));
         }
 
         $relation = $this->guessSingularRelationshipName($ownable);
         if (method_exists($this, $relation)) {
-            return null !== $this->$relation()->find($ownable);
+            return !is_null($this->$relation()->find($ownable));
         }
 
         $relation = $this->guessPluralRelationshipName($ownable);
         if (method_exists($this, $relation)) {
-            return null !== $this->$relation()->find($ownable);
+            return !is_null($this->$relation()->find($ownable));
         }
 
         throw new InternalError('No relationship found. Please pass the relationship name as the second parameter.');
