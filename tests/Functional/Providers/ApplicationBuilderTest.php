@@ -62,15 +62,18 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
     })->todo();
 
     it('registers commands from configured path', function (): void {
-        $actual = collect(Artisan::all());
-        $commands = [
+        $mustLoad = [
             'ship:test-command',
             'container:test-command',
+            'apiato:seed-deploy',
+            'apiato:seed-test',
         ];
 
-        expect($commands)
-            ->each(function (Expectation $command) use ($actual) {
-                expect($actual->has($command->value))->toBeTrue();
+        $registeredCommands = collect(Artisan::all());
+
+        expect($mustLoad)
+            ->each(function (Expectation $command) use ($registeredCommands) {
+                expect($registeredCommands->has($command->value))->toBeTrue();
             });
     });
 
