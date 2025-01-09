@@ -20,7 +20,6 @@ use Tests\Support\Doubles\Dummies\SingletonInterface;
 use Tests\Support\Doubles\Dummies\UselessClass;
 use Tests\Support\Doubles\Dummies\UselessInterface;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Middlewares\BeforeMiddleware;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\AggregateServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Author\Providers\DeferredServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Providers\FirstServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\SecondServiceProvider;
