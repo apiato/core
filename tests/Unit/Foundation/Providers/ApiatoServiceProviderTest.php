@@ -11,13 +11,13 @@ use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
 use Apiato\Foundation\Support\Providers\RateLimitingServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\EventServiceProvider;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\BookServiceProvider;
-use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\ShipServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Providers\FirstServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Author\Providers\DeferredServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\AggregateServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\BookServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\EventServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\SecondServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\ShipServiceProvider;
 
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('registers expected providers', function (): void {
@@ -39,7 +39,6 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
             DeferredServiceProvider::class,
             FirstServiceProvider::class,
         ];
-
 
         $registeredProviders = $provider->providers();
 

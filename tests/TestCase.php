@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-use Illuminate\Config\Repository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Vinkla\Hashids\Facades\Hashids;

@@ -8,8 +8,8 @@ use Tests\Support\Doubles\Dummies\SingletonClass;
 use Tests\Support\Doubles\Dummies\SingletonInterface;
 use Tests\Support\Doubles\Dummies\UselessClass;
 use Tests\Support\Doubles\Dummies\UselessInterface;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Author\Providers\DeferredServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Providers\FirstServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Author\Providers\DeferredServiceProvider;
 
 class AggregateServiceProvider extends CoreAggregateServiceProvider implements DeferrableProvider
 {
