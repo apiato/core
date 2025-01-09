@@ -97,10 +97,10 @@ class ApiatoServiceProvider extends AggregateServiceProvider
 
     public function boot(): void
     {
+        AboutCommand::add('Apiato', static fn () => ['Version' => '13.0.0']);
+
         $this->publishes([
             __DIR__ . '/../../../config/apiato.php' => app_path('Ship/Configs/apiato.php'),
         ], 'apiato-config');
-
-        AboutCommand::add('Apiato', static fn () => ['Version' => '13.0.0']);
     }
 }
