@@ -12,7 +12,7 @@ abstract class AggregateServiceProvider extends LaravelAggregateServiceProvider
     protected $providers = [];
     protected array $aliases = [];
 
-    final public function runRegister(): void
+    final public function registerRecursive(): void
     {
         /* @var  $instances */
         $this->instances = [];
@@ -21,9 +21,16 @@ abstract class AggregateServiceProvider extends LaravelAggregateServiceProvider
             $instance = $this->app->register($provider);
             $this->instances[] = $instance;
             if ($instance instanceof self) {
-                $instance->runRegister();
+                $instance->registerRecursive();
             }
         }
+
+        $this->booting(function () {
+            $loader = AliasLoader::getInstance();
+
+            $this->addSelfAliases($loader);
+            $this->addSubProviderAliases($loader);
+        });
     }
 
     final public function providers(): array
@@ -46,21 +53,15 @@ abstract class AggregateServiceProvider extends LaravelAggregateServiceProvider
         return $this->aliases;
     }
 
-    // TODO: maybe we can use the booting() method callbacks?
-    final public function runBoot(): void
+    private function addSelfAliases(AliasLoader $loader): void
     {
-        $this->recursiveAddAlias();
-        foreach ($this->instances as $provider) {
-            if ($provider instanceof self) {
-                $provider->runBoot();
-            }
+        foreach ($this->aliases as $alias => $class) {
+            $loader->alias($alias, $class);
         }
     }
 
-    private function recursiveAddAlias(): void
+    private function addSubProviderAliases(AliasLoader $loader): void
     {
-        $loader = AliasLoader::getInstance();
-        // TODO: does it mae sense to get all subclasses of aggregateProvider instead of $instances?
         foreach ($this->instances as $provider) {
             // If there are aliases set as properties on the provider, we
             // will spin through them and register them with the application.

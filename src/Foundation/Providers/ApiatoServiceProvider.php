@@ -44,7 +44,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
     {
         $this->providers = $this->mergeProviders($this->providers, $this->serviceProviders());
 
-        $this->runRegister();
+        $this->registerRecursive();
         $this->registerCoreCommands();
         $this->app->singletonIf(Apiato::class, static fn () => Apiato::instance());
 
@@ -112,16 +112,13 @@ class ApiatoServiceProvider extends AggregateServiceProvider
                 FirstServiceProvider::class,
                 SecondServiceProvider::class,
             ];
-            $this->runRegister();
+            $this->registerRecursive();
             $this->providers = $currentProviders;
         }
     }
 
     public function boot(): void
     {
-        $this->addAliases();
-        $this->runBoot();
-
         $this->publishes([
             __DIR__ . '/../../../config/apiato.php' => app_path('Ship/Configs/apiato.php'),
         ], 'apiato-config');
@@ -143,14 +140,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
                     )->by($request->user()?->id ?: $request->ip());
                 },
             );
-        }
-    }
-
-    private function addAliases(): void
-    {
-        $loader = AliasLoader::getInstance();
-        foreach ($this->aliases as $alias => $class) {
-            $loader->alias($alias, $class);
         }
     }
 }
