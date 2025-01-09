@@ -8,6 +8,7 @@ use Apiato\Foundation\Providers\MacroServiceProvider;
 use Apiato\Foundation\Support\Providers\HelperServiceProvider;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
+use Apiato\Foundation\Support\Providers\RateLimitingServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\EventServiceProvider;
@@ -28,6 +29,7 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
             HelperServiceProvider::class,
             LocalizationServiceProvider::class,
             MigrationServiceProvider::class,
+            RateLimitingServiceProvider::class,
             ViewServiceProvider::class,
             SecondServiceProvider::class,
             ShipServiceProvider::class,
