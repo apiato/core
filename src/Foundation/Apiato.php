@@ -257,7 +257,7 @@ class Apiato
         return $this->commandPaths;
     }
 
-    public function registerRoutes(): void
+    public function registerApiRoutes(): void
     {
         $this->routing->registerApiRoutes();
     }

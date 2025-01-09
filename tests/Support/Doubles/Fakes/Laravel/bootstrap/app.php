@@ -12,7 +12,7 @@ return Application::configure(basePath: $basePath)
     ->withEvents($apiato->events())
     ->withRouting(
         web: $apiato->webRoutes(),
-        then: static fn () => $apiato->registerRoutes(),
+        then: static fn () => $apiato->registerApiRoutes(),
     )
     ->withMiddleware(function (Middleware $middleware) use ($apiato) {
         $middleware->api($apiato->apiMiddlewares());
