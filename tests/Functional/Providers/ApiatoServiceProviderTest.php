@@ -9,6 +9,7 @@ use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
+use Illuminate\Support\Facades\DB;
 use Pest\Expectation;
 use Tests\Support\Doubles\Dummies\AnotherSingletonClass;
 use Tests\Support\Doubles\Dummies\AnotherSingletonInterface;
@@ -122,5 +123,17 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
             ->each(function (Expectation $command) use ($actual) {
                 expect($actual->has($command->value))->toBeTrue();
             });
+    });
+
+    it('overrides default Laravel seeder with Apiato seeder', function (): void {
+        $this->artisan('db:seed')
+            ->assertExitCode(0);
+
+        expect(DB::table('books')->count())->toBe(8);
+
+        $this->artisan('migrate --seed')
+            ->assertExitCode(0);
+
+        expect(DB::table('books')->count())->toBe(16);
     });
 })->covers(ApiatoServiceProvider::class);

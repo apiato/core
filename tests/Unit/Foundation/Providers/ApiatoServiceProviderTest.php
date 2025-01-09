@@ -48,16 +48,4 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
 
         expect($aliases)->toBe($expected);
     });
-
-    it('overrides default Laravel seeder with Apiato seeder', function (): void {
-        $this->artisan('db:seed')
-            ->assertExitCode(0);
-
-        expect(DB::table('books')->count())->toBe(8);
-
-        $this->artisan('migrate --seed')
-            ->assertExitCode(0);
-
-        expect(DB::table('books')->count())->toBe(16);
-    });
 })->covers(ApiatoServiceProvider::class);
