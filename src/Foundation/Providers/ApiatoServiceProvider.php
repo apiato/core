@@ -55,7 +55,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         });
     }
 
-    public function mergeProviders(array ...$providers): array
+    private function mergeProviders(array ...$providers): array
     {
         return collect($providers)
             ->flatten()
