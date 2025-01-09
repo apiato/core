@@ -36,10 +36,15 @@ class ApiatoServiceProvider extends AggregateServiceProvider
 
     public function register(): void
     {
-        $this->providers = $this->mergeProviders($this->providers, $this->serviceProviders());
+        $this->providers = $this->mergeProviders(
+            $this->providers,
+            $this->serviceProviders(),
+        );
 
         $this->registerRecursive();
+
         $this->registerCoreCommands();
+
         $this->app->singletonIf(Apiato::class, static fn () => Apiato::instance());
 
         $this->mergeConfigs();
