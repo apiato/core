@@ -9,8 +9,8 @@ use Apiato\Commands\SeedDeploymentData;
 use Apiato\Commands\SeedTestingData;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Database\DatabaseSeeder;
-use Apiato\Foundation\Loaders\HelperLoader;
 use Apiato\Foundation\Support\PathHelper;
+use Apiato\Foundation\Support\Providers\HelperServiceProvider;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
@@ -30,9 +30,10 @@ class ApiatoServiceProvider extends AggregateServiceProvider
     protected $providers = [
         GeneratorsServiceProvider::class,
         MacroServiceProvider::class,
+        HelperServiceProvider::class,
         LocalizationServiceProvider::class,
-        ViewServiceProvider::class,
         MigrationServiceProvider::class,
+        ViewServiceProvider::class,
     ];
 
     protected array $aliases = [
@@ -120,8 +121,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
     {
         $this->addAliases();
         $this->runBoot();
-
-        HelperLoader::create()->load();
 
         $this->publishes([
             __DIR__ . '/../../../config/apiato.php' => app_path('Ship/Configs/apiato.php'),

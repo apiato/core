@@ -61,6 +61,7 @@ class Apiato
                 ...glob($basePath . '/app/Containers/*/*/UI/Console', GLOB_ONLYDIR | GLOB_NOSORT),
             )->withHelpers(
                 $basePath . '/app/Ship/Helpers',
+                ...glob($basePath . '/app/Containers/*/*/Helpers', GLOB_ONLYDIR | GLOB_NOSORT),
             )->withMigrations(
                 $basePath . '/app/Ship/Data/Migrations',
                 ...glob($basePath . '/app/Containers/*/*/Data/Migrations', GLOB_ONLYDIR | GLOB_NOSORT),
@@ -99,6 +100,34 @@ class Apiato
         return $this;
     }
 
+    public function withFactories(callable|null $callback = null): self
+    {
+        $this->factoryDiscovery = new FactoryDiscovery();
+
+        if (!is_null($callback)) {
+            $callback($this->factoryDiscovery);
+        }
+
+        return $this;
+    }
+
+    public function withViews(callable|null $callback = null): self
+    {
+        $this->view = (new View())
+            ->loadFrom(
+                $this->basePath . '/app/Ship/Views',
+                $this->basePath . '/app/Ship/Mails',
+                ...glob($this->basePath . '/app/Containers/*/*/Views', GLOB_ONLYDIR | GLOB_NOSORT),
+                ...glob($this->basePath . '/app/Containers/*/*/Mails', GLOB_ONLYDIR | GLOB_NOSORT),
+            );
+
+        if (!is_null($callback)) {
+            $callback($this->view);
+        }
+
+        return $this;
+    }
+
     public function withTranslations(callable|null $callback = null): self
     {
         $this->localization = (new Localization())
@@ -128,30 +157,9 @@ class Apiato
         return $this;
     }
 
-    public function withViews(callable|null $callback = null): self
+    public function withMigrations(string ...$path): self
     {
-        $this->view = (new View())
-            ->loadFrom(
-                $this->basePath . '/app/Ship/Views',
-                $this->basePath . '/app/Ship/Mails',
-                ...glob($this->basePath . '/app/Containers/*/*/Views', GLOB_ONLYDIR | GLOB_NOSORT),
-                ...glob($this->basePath . '/app/Containers/*/*/Mails', GLOB_ONLYDIR | GLOB_NOSORT),
-            );
-
-        if (!is_null($callback)) {
-            $callback($this->view);
-        }
-
-        return $this;
-    }
-
-    public function withFactories(callable|null $callback = null): self
-    {
-        $this->factoryDiscovery = new FactoryDiscovery();
-
-        if (!is_null($callback)) {
-            $callback($this->factoryDiscovery);
-        }
+        $this->migrationPaths = $path;
 
         return $this;
     }
@@ -161,16 +169,9 @@ class Apiato
         $this->helperPaths = $path;
     }
 
-    public function withProviders(string ...$path): self
+    public function withCommands(string ...$path): void
     {
-        $this->providerPaths = $path;
-
-        return $this;
-    }
-
-    public function withConfigs(string ...$path): void
-    {
-        $this->configPaths = $path;
+        $this->commandPaths = $path;
     }
 
     public function withEvents(string ...$path): void
@@ -178,19 +179,20 @@ class Apiato
         $this->listenerPaths = $path;
     }
 
-    public function withCommands(string ...$path): void
+    public function withConfigs(string ...$path): void
     {
-        $this->commandPaths = $path;
+        $this->configPaths = $path;
     }
 
-    public function withMigrations(string ...$path): self
+    public function withProviders(string ...$path): self
     {
-        $this->migrationPaths = $path;
+        $this->providerPaths = $path;
 
         return $this;
     }
 
     // TODO: add arch tests to make sure this method is only used in ApiatoServiceProvider
+
     public static function instance(): self
     {
         return self::$instance;
