@@ -27,11 +27,4 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         return Hashids::encode($id);
     }
-
-    protected function defineEnvironment($app)
-    {
-        tap($app['config'], static function (Repository $config) {
-            $config->set('core.tests.running', true);
-        });
-    }
 }

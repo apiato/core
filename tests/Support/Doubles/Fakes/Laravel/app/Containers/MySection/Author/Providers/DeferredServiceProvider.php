@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Support\Doubles\Fakes\Providers;
+namespace Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Author\Providers;
 
 use Apiato\Abstract\Providers\AggregateServiceProvider as CoreAggregateServiceProvider;
 

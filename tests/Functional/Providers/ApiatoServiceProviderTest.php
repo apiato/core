@@ -20,10 +20,10 @@ use Tests\Support\Doubles\Dummies\SingletonInterface;
 use Tests\Support\Doubles\Dummies\UselessClass;
 use Tests\Support\Doubles\Dummies\UselessInterface;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Middlewares\BeforeMiddleware;
-use Tests\Support\Doubles\Fakes\Providers\AggregateServiceProvider;
-use Tests\Support\Doubles\Fakes\Providers\DeferredServiceProvider;
-use Tests\Support\Doubles\Fakes\Providers\FirstServiceProvider;
-use Tests\Support\Doubles\Fakes\Providers\SecondServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\AggregateServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Author\Providers\DeferredServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Providers\FirstServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\SecondServiceProvider;
 
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('registers the providers that are listed in the $providers property', function (): void {
@@ -33,10 +33,6 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
             LocalizationServiceProvider::class,
             ViewServiceProvider::class,
             MigrationServiceProvider::class,
-            // test providers
-            AggregateServiceProvider::class,
-            FirstServiceProvider::class,
-            SecondServiceProvider::class,
         ];
 
         foreach ($providers as $provider) {

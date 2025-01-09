@@ -14,13 +14,10 @@ use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
-use Tests\Support\Doubles\Fakes\Providers\FirstServiceProvider;
-use Tests\Support\Doubles\Fakes\Providers\SecondServiceProvider;
 
 class ApiatoServiceProvider extends AggregateServiceProvider
 {
@@ -46,10 +43,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         $this->app->singletonIf(Apiato::class, static fn () => Apiato::instance());
 
         $this->mergeConfigs();
-
-        $this->booting(function (Application $app) {
-            $this->setUpTestProviders($app);
-        });
     }
 
     private function mergeProviders(array ...$providers): array
@@ -96,20 +89,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
             __DIR__ . '/../../../config/apiato.php',
             'apiato',
         );
-    }
-
-    // TODO: can we NOT do this and move the providers in the fake Laravel app?
-    private function setUpTestProviders(Application $app): void
-    {
-        $currentProviders = $this->providers;
-        if ($app['config']->get('core.tests.running')) {
-            $this->providers = [
-                FirstServiceProvider::class,
-                SecondServiceProvider::class,
-            ];
-            $this->registerRecursive();
-            $this->providers = $currentProviders;
-        }
     }
 
     public function boot(): void

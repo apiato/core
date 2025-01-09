@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Support\Doubles\Fakes\Providers;
+namespace Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers;
 
 use Apiato\Abstract\Providers\AggregateServiceProvider as CoreAggregateServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;

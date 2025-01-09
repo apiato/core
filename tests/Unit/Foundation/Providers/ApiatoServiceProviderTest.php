@@ -13,6 +13,10 @@ use Apiato\Generator\GeneratorsServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\EventServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\BookServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\ShipServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Providers\FirstServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Author\Providers\DeferredServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\AggregateServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\SecondServiceProvider;
 
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('registers expected providers', function (): void {
@@ -25,9 +29,13 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
             LocalizationServiceProvider::class,
             MigrationServiceProvider::class,
             ViewServiceProvider::class,
+            SecondServiceProvider::class,
             ShipServiceProvider::class,
+            AggregateServiceProvider::class,
             BookServiceProvider::class,
             EventServiceProvider::class,
+            DeferredServiceProvider::class,
+            FirstServiceProvider::class,
         ];
 
 
