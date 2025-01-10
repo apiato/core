@@ -53,7 +53,7 @@ final class Routing
         });
     }
 
-    public function getApiRouteGroup(SplFileInfo|string $endpointFileOrPrefixString): array
+    private function getApiRouteGroup(SplFileInfo|string $endpointFileOrPrefixString): array
     {
         return [
             'middleware' => $this->getMiddlewares(),
