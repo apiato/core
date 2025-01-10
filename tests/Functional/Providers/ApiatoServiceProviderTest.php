@@ -10,7 +10,6 @@ use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\DB;
-use Pest\Expectation;
 use Tests\Support\Doubles\Dummies\AnotherSingletonClass;
 use Tests\Support\Doubles\Dummies\AnotherSingletonInterface;
 use Tests\Support\Doubles\Dummies\AnotherUselessClass;
@@ -103,19 +102,6 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
         expect(app(Kernel::class)
             ->hasMiddleware(BeforeMiddleware::class))
             ->toBeTrue();
-    });
-
-    it('registers Core commands', function (): void {
-        $actual = collect(Artisan::all());
-        $commands = [
-            'apiato:list:actions',
-            'apiato:list:tasks',
-        ];
-
-        expect($commands)
-            ->each(function (Expectation $command) use ($actual) {
-                expect($actual->has($command->value))->toBeTrue();
-            });
     });
 
     it('overrides default Laravel seeder with Apiato seeder', function (): void {

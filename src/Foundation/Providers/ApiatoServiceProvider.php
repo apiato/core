@@ -8,6 +8,7 @@ use Apiato\Commands\ListTasks;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Support\PathHelper;
+use Apiato\Foundation\Support\Providers\CommandServiceProvider;
 use Apiato\Foundation\Support\Providers\ConfigServiceProvider;
 use Apiato\Foundation\Support\Providers\HelperServiceProvider;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
@@ -23,6 +24,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
     protected $providers = [
         GeneratorsServiceProvider::class,
         MacroServiceProvider::class,
+        CommandServiceProvider::class,
         ConfigServiceProvider::class,
         HelperServiceProvider::class,
         LocalizationServiceProvider::class,
@@ -43,8 +45,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         );
 
         $this->registerRecursive();
-
-        $this->registerCoreCommands();
 
         $this->app->singletonIf(Apiato::class, static fn () => Apiato::instance());
     }
@@ -68,16 +68,6 @@ class ApiatoServiceProvider extends AggregateServiceProvider
         }
 
         return $providers;
-    }
-
-    private function registerCoreCommands(): void
-    {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                ListActions::class,
-                ListTasks::class,
-            ]);
-        }
     }
 
     public function boot(): void
