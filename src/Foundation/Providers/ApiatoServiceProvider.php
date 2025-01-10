@@ -37,7 +37,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
     {
         $this->providers = $this->mergeProviders(
             $this->providers,
-            $this->serviceProviders(),
+            $this->appProviders(),
         );
 
         $this->registerRecursive();
@@ -57,7 +57,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
             ->toArray();
     }
 
-    private function serviceProviders(): array
+    private function appProviders(): array
     {
         $providers = [];
         foreach (Apiato::instance()->providerPaths() as $directory) {
