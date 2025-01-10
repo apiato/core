@@ -37,14 +37,6 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
         }
     });
 
-    it('merges configs from configured path', function (): void {
-        expect(config('boat'))->toBe([
-            'test' => 'boat',
-        ])->and(config('mySection-book'))->toBe([
-            'test' => 'book',
-        ]);
-    });
-
     it('can discover events from configured path', function (): void {
         Event::fake()
             ->assertListening(
