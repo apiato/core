@@ -46,30 +46,7 @@ class Apiato
 
         self::$instance = new self($basePath);
 
-        return (new ApplicationBuilder(self::$instance))
-            ->withProviders(
-                $basePath . '/app/Ship/Providers',
-                ...glob($basePath . '/app/Containers/*/*/Providers', GLOB_ONLYDIR | GLOB_NOSORT),
-            )->withConfigs(
-                $basePath . '/app/Ship/Configs',
-                ...glob($basePath . '/app/Containers/*/*/Configs', GLOB_ONLYDIR | GLOB_NOSORT),
-            )->withEvents(
-                $basePath . '/app/Ship/Listeners',
-                ...glob($basePath . '/app/Containers/*/*/Listeners', GLOB_ONLYDIR | GLOB_NOSORT),
-            )->withCommands(
-                $basePath . '/app/Ship/Commands',
-                ...glob($basePath . '/app/Containers/*/*/UI/Console', GLOB_ONLYDIR | GLOB_NOSORT),
-            )->withHelpers(
-                $basePath . '/app/Ship/Helpers',
-                ...glob($basePath . '/app/Containers/*/*/Helpers', GLOB_ONLYDIR | GLOB_NOSORT),
-            )->withMigrations(
-                $basePath . '/app/Ship/Data/Migrations',
-                ...glob($basePath . '/app/Containers/*/*/Data/Migrations', GLOB_ONLYDIR | GLOB_NOSORT),
-            )->withSeeders()
-            ->withTranslations()
-            ->withViews()
-            ->withFactories()
-            ->withRouting();
+        return new ApplicationBuilder(self::$instance);
     }
 
     /**
@@ -83,15 +60,15 @@ class Apiato
         };
     }
 
+    public function basePath(): string
+    {
+        return $this->basePath;
+    }
+
     public function withRouting(callable|null $callback = null): self
     {
         // TODO: maybe make the configuration parametrized like web: api:, like the way Laravel does it?
-        $this->routing = (new Routing())
-            ->loadApiRoutesFrom(
-                ...glob($this->basePath . '/app/Containers/*/*/UI/API/Routes', GLOB_ONLYDIR | GLOB_NOSORT),
-            )->loadWebRoutesFrom(
-                ...glob($this->basePath . '/app/Containers/*/*/UI/WEB/Routes', GLOB_ONLYDIR | GLOB_NOSORT),
-            );
+        $this->routing ??= new Routing();
 
         if (!is_null($callback)) {
             $callback($this->routing);
@@ -102,7 +79,7 @@ class Apiato
 
     public function withFactories(callable|null $callback = null): self
     {
-        $this->factoryDiscovery = new FactoryDiscovery();
+        $this->factoryDiscovery ??= new FactoryDiscovery();
 
         if (!is_null($callback)) {
             $callback($this->factoryDiscovery);
@@ -113,13 +90,7 @@ class Apiato
 
     public function withViews(callable|null $callback = null): self
     {
-        $this->view = (new View())
-            ->loadFrom(
-                $this->basePath . '/app/Ship/Views',
-                $this->basePath . '/app/Ship/Mails',
-                ...glob($this->basePath . '/app/Containers/*/*/Views', GLOB_ONLYDIR | GLOB_NOSORT),
-                ...glob($this->basePath . '/app/Containers/*/*/Mails', GLOB_ONLYDIR | GLOB_NOSORT),
-            );
+        $this->view ??= new View();
 
         if (!is_null($callback)) {
             $callback($this->view);
@@ -130,11 +101,7 @@ class Apiato
 
     public function withTranslations(callable|null $callback = null): self
     {
-        $this->localization = (new Localization())
-            ->loadFrom(
-                $this->basePath . '/app/Ship/Languages',
-                ...glob($this->basePath . '/app/Containers/*/*/Languages', GLOB_ONLYDIR | GLOB_NOSORT),
-            );
+        $this->localization ??= new Localization();
 
         if (!is_null($callback)) {
             $callback($this->localization);
@@ -145,10 +112,7 @@ class Apiato
 
     public function withSeeders(callable|null $callback = null): self
     {
-        $this->seeding = (new Seeding())
-            ->loadFrom(
-                ...glob($this->basePath . '/app/Containers/*/*/Data/Seeders', GLOB_ONLYDIR | GLOB_NOSORT),
-            );
+        $this->seeding ??= new Seeding();
 
         if (!is_null($callback)) {
             $callback($this->seeding);
