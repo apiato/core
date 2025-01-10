@@ -25,15 +25,10 @@ use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\SecondServiceProvider
 
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('registers the providers that are listed in the $providers property', function (): void {
-        $providers = [
-            GeneratorsServiceProvider::class,
-            MacroServiceProvider::class,
-            LocalizationServiceProvider::class,
-            ViewServiceProvider::class,
-            MigrationServiceProvider::class,
-        ];
+        /** @var ApiatoServiceProvider $provider */
+        $provider = $this->app->getProvider(ApiatoServiceProvider::class);
 
-        foreach ($providers as $provider) {
+        foreach ($provider->providers() as $provider) {
             expect($this->app->providerIsLoaded($provider))->toBeTrue();
         }
     });

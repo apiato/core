@@ -2,19 +2,15 @@
 
 namespace Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Author\Providers;
 
-use Apiato\Abstract\Providers\AggregateServiceProvider as CoreAggregateServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Parents\Providers\ServiceProvider;
 
-class DeferredServiceProvider extends CoreAggregateServiceProvider
+class DeferredServiceProvider extends ServiceProvider
 {
     public array $aliases = [
         'Baz' => self::class,
     ];
 
     public function register(): void
-    {
-    }
-
-    public function boot(): void
     {
     }
 }

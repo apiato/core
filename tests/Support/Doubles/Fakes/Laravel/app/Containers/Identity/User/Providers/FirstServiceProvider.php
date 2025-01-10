@@ -2,17 +2,17 @@
 
 namespace Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Providers;
 
-use Apiato\Abstract\Providers\AggregateServiceProvider as CoreAggregateServiceProvider;
 use Tests\Support\Doubles\Dummies\AnotherSingletonClass;
 use Tests\Support\Doubles\Dummies\AnotherSingletonInterface;
 use Tests\Support\Doubles\Dummies\AnotherUselessClass;
 use Tests\Support\Doubles\Dummies\AnotherUselessInterface;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\AggregateServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\ThirdServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Parents\Providers\ServiceProvider;
 
-class FirstServiceProvider extends CoreAggregateServiceProvider
+class FirstServiceProvider extends ServiceProvider
 {
-    protected $providers = [
-        AggregateServiceProvider::class,
+    protected array $providers = [
+        ThirdServiceProvider::class,
     ];
 
     public array $bindings = [
@@ -24,10 +24,6 @@ class FirstServiceProvider extends CoreAggregateServiceProvider
     ];
 
     public function register(): void
-    {
-    }
-
-    public function boot(): void
     {
     }
 }

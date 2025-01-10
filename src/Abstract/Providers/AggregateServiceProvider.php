@@ -3,18 +3,35 @@
 namespace Apiato\Abstract\Providers;
 
 use Illuminate\Foundation\AliasLoader;
-use Illuminate\Support\AggregateServiceProvider as LaravelAggregateServiceProvider;
+use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
-abstract class AggregateServiceProvider extends LaravelAggregateServiceProvider
+abstract class AggregateServiceProvider extends LaravelServiceProvider
 {
     public array $bindings = [];
     public array $singletons = [];
-    protected $providers = [];
+
+    /**
+     * The provider class names.
+     */
+    protected array $providers = [];
+
+    /**
+     * The provider aliases.
+     */
     protected array $aliases = [];
+
+    /**
+     * An array of the service provider instances.
+     */
+    protected array $instances = [];
+
+    public function register(): void
+    {
+        $this->registerRecursive();
+    }
 
     final public function registerRecursive(): void
     {
-        /* @var  $instances */
         $this->instances = [];
 
         foreach ($this->providers as $provider) {
@@ -31,26 +48,6 @@ abstract class AggregateServiceProvider extends LaravelAggregateServiceProvider
             $this->addSelfAliases($loader);
             $this->addSubProviderAliases($loader);
         });
-    }
-
-    final public function providers(): array
-    {
-        return $this->providers;
-    }
-
-    final public function bindings(): array
-    {
-        return $this->bindings;
-    }
-
-    final public function singletons(): array
-    {
-        return $this->singletons;
-    }
-
-    final public function aliases(): array
-    {
-        return $this->aliases;
     }
 
     private function addSelfAliases(AliasLoader $loader): void
@@ -71,5 +68,30 @@ abstract class AggregateServiceProvider extends LaravelAggregateServiceProvider
                 }
             }
         }
+    }
+
+    /**
+     * Get the service providers provided by the provider.
+     *
+     * @return string[]
+     */
+    final public function providers(): array
+    {
+        return $this->providers;
+    }
+
+    final public function bindings(): array
+    {
+        return $this->bindings;
+    }
+
+    final public function singletons(): array
+    {
+        return $this->singletons;
+    }
+
+    final public function aliases(): array
+    {
+        return $this->aliases;
     }
 }

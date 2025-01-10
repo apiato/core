@@ -10,8 +10,13 @@ class BookServiceProvider extends ServiceProvider
 {
     public array $bindings = [];
     public array $singletons = [];
-    protected $providers = [];
+    protected array $providers = [];
     protected array $aliases = [];
+
+    public function register(): void
+    {
+        // overriding the method and not calling the parents for testing purposes
+    }
 
     public function boot(): void
     {

@@ -2,10 +2,10 @@
 
 namespace Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers;
 
-use Apiato\Abstract\Providers\AggregateServiceProvider as CoreAggregateServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Parents\Providers\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
 
-class SecondServiceProvider extends CoreAggregateServiceProvider implements DeferrableProvider
+class SecondServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     public array $aliases = [
         'Bar' => self::class,

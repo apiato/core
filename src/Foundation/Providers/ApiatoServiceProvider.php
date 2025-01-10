@@ -3,8 +3,6 @@
 namespace Apiato\Foundation\Providers;
 
 use Apiato\Abstract\Providers\AggregateServiceProvider;
-use Apiato\Commands\ListActions;
-use Apiato\Commands\ListTasks;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Support\PathHelper;
@@ -21,7 +19,7 @@ use Illuminate\Support\Facades\File;
 
 class ApiatoServiceProvider extends AggregateServiceProvider
 {
-    protected $providers = [
+    protected array $providers = [
         GeneratorsServiceProvider::class,
         MacroServiceProvider::class,
         CommandServiceProvider::class,
@@ -44,7 +42,7 @@ class ApiatoServiceProvider extends AggregateServiceProvider
             $this->appProviders(),
         );
 
-        $this->registerRecursive();
+        parent::register();
 
         $this->app->singletonIf(Apiato::class, static fn () => Apiato::instance());
     }

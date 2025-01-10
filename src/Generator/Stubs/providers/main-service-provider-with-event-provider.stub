@@ -8,7 +8,7 @@ class {{class-name}} extends ParentMainServiceProvider
 {
     public array $bindings = [];
     public array $singletons = [];
-    protected $providers = [
+    protected array $providers = [
         {{event-service-provider}}::class,
     ];
     protected array $aliases = [];
