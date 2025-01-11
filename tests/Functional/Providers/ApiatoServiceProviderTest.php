@@ -14,10 +14,7 @@ use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\DB;
-use Tests\Support\Doubles\Dummies\DeferredSingletonInterface;
-use Tests\Support\Doubles\Dummies\DeferredUselessInterface;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Middlewares\BeforeMiddleware;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\DeferrableServiceProvider;
 
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('registers expected providers', function (): void {
@@ -47,16 +44,6 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
     beforeEach(function (): void {
         $this->artisan('optimize:clear');
     });
-    it('respects deferred providers registration', function (): void {
-        // we have to test that this provider is not loaded, but it is actually deferred
-        // also check that all providers, bindings, singletons and aliases are also working properly
-        // and also test that differed provider works on first level provider calls and also any nested provider calls and registration
-        //        expect(new DeferrableServiceProvider($this->app))->isDeferred()->toBeTrue();
-        expect($this->app->providerIsLoaded(DeferrableServiceProvider::class))->toBeFalse();
-        //        expect($this->app->isDeferredService(DeferredUselessInterface::class))->toBeTrue();
-        //        expect($this->app->isDeferredService(DeferredSingletonInterface::class))->toBeTrue();
-        //        expect($this->app->isDeferredService('TestDeferredProviderAlias'))->toBeTrue();
-    })->todo();
 
     it('can register middlewares in service provider', function (): void {
         expect(app(Kernel::class)
