@@ -2,7 +2,7 @@
 
 namespace Apiato\Foundation\Providers;
 
-use Apiato\Abstract\Providers\AggregateServiceProvider;
+use Apiato\Abstract\Providers\ServiceProvider;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Support\Providers\CommandServiceProvider;
@@ -16,7 +16,7 @@ use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Console\AboutCommand;
 
-class ApiatoServiceProvider extends AggregateServiceProvider
+class ApiatoServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
