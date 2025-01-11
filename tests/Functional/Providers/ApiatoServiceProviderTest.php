@@ -2,11 +2,6 @@
 
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
-use Apiato\Foundation\Providers\MacroServiceProvider;
-use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
-use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
-use Apiato\Foundation\Support\Providers\ViewServiceProvider;
-use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\DB;

@@ -2,8 +2,8 @@
 
 namespace Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers;
 
-use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Parents\Providers\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Parents\Providers\ServiceProvider;
 
 class SecondServiceProvider extends ServiceProvider implements DeferrableProvider
 {

@@ -15,9 +15,9 @@ use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Providers\FirstServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Author\Providers\DeferredServiceProvider;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\ThirdServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\BookServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\EventServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\ThirdServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\SecondServiceProvider;
 use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\ShipServiceProvider;
 
