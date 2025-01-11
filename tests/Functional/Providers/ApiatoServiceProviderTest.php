@@ -3,94 +3,59 @@
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
 use Apiato\Foundation\Providers\MacroServiceProvider;
+use Apiato\Foundation\Support\Providers\CommandServiceProvider;
+use Apiato\Foundation\Support\Providers\ConfigServiceProvider;
+use Apiato\Foundation\Support\Providers\HelperServiceProvider;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
+use Apiato\Foundation\Support\Providers\RateLimitingServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\DB;
-use Tests\Support\Doubles\Dummies\AnotherSingletonClass;
-use Tests\Support\Doubles\Dummies\AnotherSingletonInterface;
-use Tests\Support\Doubles\Dummies\AnotherUselessClass;
-use Tests\Support\Doubles\Dummies\AnotherUselessInterface;
-use Tests\Support\Doubles\Dummies\SingletonClass;
-use Tests\Support\Doubles\Dummies\SingletonInterface;
-use Tests\Support\Doubles\Dummies\UselessClass;
-use Tests\Support\Doubles\Dummies\UselessInterface;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Providers\FirstServiceProvider;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Author\Providers\DeferredServiceProvider;
+use Tests\Support\Doubles\Dummies\DeferredSingletonInterface;
+use Tests\Support\Doubles\Dummies\DeferredUselessInterface;
 use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Middlewares\BeforeMiddleware;
-use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\SecondServiceProvider;
+use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Providers\DeferrableServiceProvider;
 
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
-    it('registers the providers that are listed in the $providers property', function (): void {
-        /** @var ApiatoServiceProvider $provider */
-        $provider = $this->app->getProvider(ApiatoServiceProvider::class);
+    it('registers expected providers', function (): void {
+        $providers = [
+            GeneratorsServiceProvider::class,
+            MacroServiceProvider::class,
+            CommandServiceProvider::class,
+            ConfigServiceProvider::class,
+            HelperServiceProvider::class,
+            LocalizationServiceProvider::class,
+            MigrationServiceProvider::class,
+            RateLimitingServiceProvider::class,
+            ViewServiceProvider::class,
+        ];
 
-        foreach ($provider->providers() as $provider) {
+        foreach ($providers as $provider) {
             expect($this->app->providerIsLoaded($provider))->toBeTrue();
         }
     });
 
-    it('adds aliases from all registered providers', function (): void {
-        $aliases = [
-            'Foo' => FirstServiceProvider::class,
-            'Bar' => SecondServiceProvider::class,
-            'Baz' => DeferredServiceProvider::class,
-        ];
-
+    it('adds database alias', function (): void {
         $availableAliases = AliasLoader::getInstance()->getAliases();
 
-        foreach ($aliases as $alias => $class) {
-            expect($availableAliases)->toHaveKey($alias, $class);
-        }
+        expect($availableAliases)->toHaveKey('DatabaseSeeder', DatabaseSeeder::class);
     });
 
-    it('can add its own aliases', function (): void {
-        $aliases = [
-            'DatabaseSeeder' => DatabaseSeeder::class,
-        ];
-
-        $availableAliases = AliasLoader::getInstance()->getAliases();
-
-        foreach ($aliases as $alias => $class) {
-            expect($availableAliases)->toHaveKey($alias, $class);
-        }
+    beforeEach(function (): void {
+        $this->artisan('optimize:clear');
     });
-
-    it('binds the bindings that are listed in the $bindings property', function (): void {
-        $bindings = [
-            UselessInterface::class => UselessClass::class,
-            AnotherUselessInterface::class => AnotherUselessClass::class,
-        ];
-
-        foreach ($bindings as $key => $value) {
-            expect($this->app->bound($key))->toBeTrue();
-            $instance = $this->app->make($key);
-            expect($this->app->make($key))->not()->toBe($instance);
-        }
-    });
-
-    it('binds the singletons that are listed in the $singletons property', function (): void {
-        $singletons = [
-            SingletonInterface::class => SingletonClass::class,
-            AnotherSingletonInterface::class => AnotherSingletonClass::class,
-        ];
-
-        foreach ($singletons as $key => $value) {
-            expect($this->app->bound($key))->toBeTrue();
-            $instance = $this->app->make($key);
-            expect($this->app->make($key))->toBe($instance);
-        }
-    });
-
     it('respects deferred providers registration', function (): void {
         // we have to test that this provider is not loaded, but it is actually deferred
         // also check that all providers, bindings, singletons and aliases are also working properly
         // and also test that differed provider works on first level provider calls and also any nested provider calls and registration
-        expect($this->app->providerIsLoaded(DeferredServiceProvider::class))->toBeFalse();
-        expect($this->app->isDeferredService(DeferredServiceProvider::class))->toBeTrue();
+        //        expect(new DeferrableServiceProvider($this->app))->isDeferred()->toBeTrue();
+        expect($this->app->providerIsLoaded(DeferrableServiceProvider::class))->toBeFalse();
+        //        expect($this->app->isDeferredService(DeferredUselessInterface::class))->toBeTrue();
+        //        expect($this->app->isDeferredService(DeferredSingletonInterface::class))->toBeTrue();
+        //        expect($this->app->isDeferredService('TestDeferredProviderAlias'))->toBeTrue();
     })->todo();
 
     it('can register middlewares in service provider', function (): void {

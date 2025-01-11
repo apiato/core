@@ -2,6 +2,6 @@
 
 namespace Tests\Support\Doubles\Dummies;
 
-class SingletonClass implements SingletonInterface
+interface DeferredUselessInterface
 {
 }

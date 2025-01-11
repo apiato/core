@@ -12,6 +12,7 @@ use Apiato\Foundation\Middleware\ProcessETag;
 use Apiato\Foundation\Middleware\Profiler;
 use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Composer\Autoload\ClassLoader;
+use Composer\ClassMapGenerator\ClassMapGenerator;
 
 class Apiato
 {
@@ -162,9 +163,14 @@ class Apiato
         return self::$instance;
     }
 
-    public function providerPaths(): array
+    public function providers(): array
     {
-        return $this->providerPaths;
+        $classMapper = new ClassMapGenerator();
+        foreach ($this->providerPaths as $path) {
+            $classMapper->scanPaths($path);
+        }
+
+        return array_keys($classMapper->getClassMap()->getMap());
     }
 
     public function configPaths(): array

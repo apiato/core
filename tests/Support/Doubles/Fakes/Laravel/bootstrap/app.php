@@ -9,6 +9,7 @@ $apiato = Apiato::configure(basePath: $basePath)
     ->create();
 
 return Application::configure(basePath: $basePath)
+    ->withProviders($apiato->providers())
     ->withEvents($apiato->events())
     ->withRouting(
         web: $apiato->webRoutes(),
@@ -16,7 +17,6 @@ return Application::configure(basePath: $basePath)
     )
     ->withMiddleware(function (Middleware $middleware) use ($apiato) {
         $middleware->api($apiato->apiMiddlewares());
-        //        $middleware->redirectUsersTo('login');
     })
     ->withCommands($apiato->commands())
     ->create();

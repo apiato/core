@@ -2,6 +2,6 @@
 
 namespace Tests\Support\Doubles\Dummies;
 
-interface AnotherSingletonInterface
+interface DeferredSingletonInterface
 {
 }
