@@ -5,7 +5,6 @@ namespace Tests\Unit\Foundation\Support;
 use Apiato\Foundation\Support\PathHelper;
 use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Tests\Support\Doubles\Dummies\UselessClass;
 use Tests\UnitTestCase;
 
 #[CoversClass(PathHelper::class)]
@@ -31,25 +30,6 @@ class PathHelperTest extends UnitTestCase
         $result = PathHelper::getSectionContainerNames('Section1');
 
         $this->assertEquals(['container1', 'container2'], $result);
-    }
-
-    public function testGetClassFullNameFromFileReturnsCorrectFullName(): void
-    {
-        $filePath = realpath(__DIR__ . '/../../../Support/Doubles/Dummies/UselessClass.php');
-        File::shouldReceive('get')
-            ->with($filePath)
-            ->andReturn();
-
-        $result = PathHelper::getFQCNFromFile($filePath);
-
-        $this->assertEquals(UselessClass::class, $result);
-    }
-
-    public function testGetClassTypeReturnsCorrectType(): void
-    {
-        $result = PathHelper::getClassType('HelloDearWorld');
-
-        $this->assertEquals('World', $result);
     }
 
     public function testGetAllContainerNamesReturnsCorrectNames(): void

@@ -8,11 +8,6 @@ final readonly class PathHelper
 {
     private const CONTAINERS_DIRECTORY_NAME = 'Containers';
 
-    public static function getSharedDirectoryPath(): string
-    {
-        return app_path(self::getSharedDirectoryName());
-    }
-
     public static function getAppDirectoryPath(): string
     {
         return app_path();
@@ -23,19 +18,14 @@ final readonly class PathHelper
         return 'app';
     }
 
-    public static function getSharedDirectoryName(): string
+    public static function getSectionDirectoryPath(): string
     {
-        return 'Ship';
+        return app_path(self::getContainersDirectoryName());
     }
 
     public static function getContainersDirectoryName(): string
     {
         return 'Containers';
-    }
-
-    public static function getSectionDirectoryPath(): string
-    {
-        return app_path(self::getContainersDirectoryName());
     }
 
     public static function getShipFolderNames(): array
@@ -54,6 +44,16 @@ final readonly class PathHelper
         return File::directories(self::getSharedDirectoryPath());
     }
 
+    public static function getSharedDirectoryPath(): string
+    {
+        return app_path(self::getSharedDirectoryName());
+    }
+
+    public static function getSharedDirectoryName(): string
+    {
+        return 'Ship';
+    }
+
     public static function getSectionContainerNames(string $sectionName): array
     {
         $names = [];
@@ -67,81 +67,6 @@ final readonly class PathHelper
     private static function getSectionPath(string $sectionName): string
     {
         return app_path(self::CONTAINERS_DIRECTORY_NAME . DIRECTORY_SEPARATOR . $sectionName);
-    }
-
-    /**
-     * Get the full name (name \ namespace) of a class from its file path
-     * result example: (string) "I\Am\The\Namespace\Of\This\Class".
-     */
-    public static function getFQCNFromFile(string $filePathName): string
-    {
-        return self::getClassNamespaceFromFile($filePathName) . '\\' . self::getClassNameFromFile($filePathName);
-    }
-
-    // reference: https://stackoverflow.com/questions/7153000/get-class-name-from-file
-    protected static function getClassNamespaceFromFile(string $filePathName): string|null
-    {
-        $src = file_get_contents($filePathName);
-
-        $tokens = token_get_all($src);
-        $count = count($tokens);
-        $i = 0;
-        $namespace = '';
-        $isValidNameSpace = false;
-        while ($i < $count) {
-            $token = $tokens[$i];
-            if (is_array($token) && T_NAMESPACE === $token[0]) {
-                // Found namespace declaration
-                while (++$i < $count) {
-                    if (';' === $tokens[$i]) {
-                        $isValidNameSpace = true;
-                        $namespace = trim($namespace);
-
-                        break;
-                    }
-                    $namespace .= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
-                }
-
-                break;
-            }
-            ++$i;
-        }
-        if (!$isValidNameSpace) {
-            return null;
-        }
-
-        return $namespace;
-    }
-
-    protected static function getClassNameFromFile(string $filePathName): mixed
-    {
-        $phpCode = file_get_contents($filePathName);
-
-        $classes = [];
-        $tokens = token_get_all($phpCode);
-        $count = count($tokens);
-        for ($i = 2; $i < $count; ++$i) {
-            if (T_CLASS == $tokens[$i - 2][0]
-                && T_WHITESPACE == $tokens[$i - 1][0]
-                && T_STRING == $tokens[$i][0]
-            ) {
-                $className = $tokens[$i][1];
-                $classes[] = $className;
-            }
-        }
-
-        return $classes[0];
-    }
-
-    /**
-     * Get the last part of a camel case string.
-     * Example input = helloDearWorld | returns = World.
-     */
-    public static function getClassType(string $className): mixed
-    {
-        $array = preg_split('/(?=[A-Z])/', $className);
-
-        return end($array);
     }
 
     public static function getContainerNames(): array
