@@ -3,7 +3,7 @@
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
 use Apiato\Foundation\Providers\MacroServiceProvider;
-use Apiato\Foundation\Support\Providers\CommandServiceProvider;
+use Apiato\Foundation\Providers\CommandServiceProvider;
 use Apiato\Foundation\Support\Providers\ConfigServiceProvider;
 use Apiato\Foundation\Support\Providers\HelperServiceProvider;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;

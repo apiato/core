@@ -5,7 +5,6 @@ namespace Apiato\Foundation\Providers;
 use Apiato\Abstract\Providers\ServiceProvider;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Database\DatabaseSeeder;
-use Apiato\Foundation\Support\Providers\CommandServiceProvider;
 use Apiato\Foundation\Support\Providers\ConfigServiceProvider;
 use Apiato\Foundation\Support\Providers\HelperServiceProvider;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;

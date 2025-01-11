@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Foundation\Support\Providers;
+namespace Apiato\Foundation\Providers;
 
 use Apiato\Abstract\Providers\ServiceProvider;
 use Apiato\Commands\ListActions;

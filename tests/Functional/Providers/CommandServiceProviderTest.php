@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Foundation\Support\Providers\CommandServiceProvider;
+use Apiato\Foundation\Providers\CommandServiceProvider;
 use Pest\Expectation;
 
 describe(class_basename(CommandServiceProvider::class), function (): void {
