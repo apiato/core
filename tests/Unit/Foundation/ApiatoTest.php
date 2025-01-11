@@ -12,8 +12,7 @@ describe(class_basename(Apiato::class), function (): void {
         Apiato::configure()
             ->withTranslations(function (Localization $localization): void {
                 $localization->buildNamespaceUsing(static fn (string $path): string => 'test');
-            })
-            ->create();
+            })->create();
 
         app()->register(LocalizationServiceProvider::class, true);
 
