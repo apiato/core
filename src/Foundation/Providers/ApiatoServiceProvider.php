@@ -16,7 +16,7 @@ use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Console\AboutCommand;
 
-class ApiatoServiceProvider extends ServiceProvider
+final class ApiatoServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
