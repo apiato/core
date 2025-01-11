@@ -6,11 +6,6 @@ use App\Ship\Parents\Providers\MainServiceProvider as ParentMainServiceProvider;
 
 class {{class-name}} extends ParentMainServiceProvider
 {
-    public array $bindings = [];
-    public array $singletons = [];
-    protected array $providers = [];
-    protected array $aliases = [];
-
     public function register(): void
     {
     }
