@@ -63,7 +63,7 @@ class Apiato
 
     /**
      * Get the singleton instance of the class.
-     * TODO: add arch tests to make sure this method is only used in ApiatoServiceProvider
+     * TODO: add arch tests to make sure this method is only used in ApiatoServiceProvider.
      */
     public static function instance(): self
     {
