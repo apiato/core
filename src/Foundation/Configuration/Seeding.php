@@ -2,10 +2,9 @@
 
 namespace Apiato\Foundation\Configuration;
 
-use Apiato\Foundation\Support\PathHelper;
+use Composer\ClassMapGenerator\ClassMapGenerator;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
 
 class Seeding
 {
@@ -15,16 +14,21 @@ class Seeding
     public function __construct()
     {
         $this->sortUsing(
-            static fn (Collection $filePathsByDirectory) => $filePathsByDirectory
+            static fn (
+                array $classMapGroupedByDirectory,
+            ) => collect($classMapGroupedByDirectory)
                 ->flatMap(
-                    static fn ($files): Collection => $files
+                    static fn (array $directoryClassMap): Collection => collect($directoryClassMap)
                         ->sortBy(
-                            static fn ($fineName) => substr(
-                                $fineName,
-                                strpos($fineName, '_') + 1,
-                            ),
+                            static function ($path, $class) {
+                                return substr(
+                                    $class,
+                                    strpos($class, '_') + 1,
+                                );
+                            },
                         ),
-                ),
+                )->keys()
+                ->toArray(),
         );
     }
 
@@ -40,30 +44,22 @@ class Seeding
      */
     public function seeders(): array
     {
-        $filePathsByDirectory = collect($this->paths)
-            ->map(
-                static function ($path): Collection {
-                    return collect(File::files($path));
-                },
-            );
+        $classMapGroupedByDirectory = [];
+        foreach ($this->paths as $path) {
+            $classMapGroupedByDirectory[] = ClassMapGenerator::createMap($path);
+        }
 
-        return $this->getSortedFiles($filePathsByDirectory)
-            ->filter(static fn (\SplFileInfo $file): bool => 'php' === $file->getExtension())
-            ->map(
-                static fn (\SplFileInfo $file): string => PathHelper::getFQCNFromFile(
-                    $file->getPathname(),
-                ),
-            )->toArray();
+        return $this->getSortedFiles($classMapGroupedByDirectory);
     }
 
     /**
-     * @param Collection<int, Collection<int, string>> $filePathsByDirectory
+     * @param array<array-key, array<string, string>> $classMapGroupedByDirectory
      *
-     * @return Collection<int, string>
+     * @return array<array-key, string>
      */
-    private function getSortedFiles(Collection $filePathsByDirectory): Collection
+    private function getSortedFiles(array $classMapGroupedByDirectory): array
     {
-        return app()->call(self::$seederSorter, compact('filePathsByDirectory'));
+        return app()->call(self::$seederSorter, compact('classMapGroupedByDirectory'));
     }
 
     public function loadFrom(string ...$paths): self
