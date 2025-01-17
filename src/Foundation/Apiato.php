@@ -203,7 +203,7 @@ class Apiato
     public function configs(): array
     {
         return collect($this->configPaths)->flatMap(
-            static fn (string $path) => glob($path . '/*.php')
+            static fn (string $path) => glob($path . '/*.php'),
         )->toArray();
     }
 
@@ -215,38 +215,13 @@ class Apiato
     public function helpers(): array
     {
         return collect($this->helperPaths)->flatMap(
-            static fn (string $path) => glob($path . '/*.php')
+            static fn (string $path) => glob($path . '/*.php'),
         )->toArray();
     }
 
     public function migrationPaths(): array
     {
         return $this->migrationPaths;
-    }
-
-    public function seeding(): Seeding
-    {
-        return $this->seeding;
-    }
-
-    public function routing(): Routing
-    {
-        return $this->routing;
-    }
-
-    public function factoryDiscovery(): FactoryDiscovery
-    {
-        return $this->factoryDiscovery;
-    }
-
-    public function localization(): Localization
-    {
-        return $this->localization;
-    }
-
-    public function view(): View
-    {
-        return $this->view;
     }
 
     public function events(): array
@@ -276,5 +251,30 @@ class Apiato
     public function webRoutes(): array
     {
         return $this->routing->webRoutes();
+    }
+
+    public function seeding(): Seeding
+    {
+        return $this->seeding;
+    }
+
+    public function routing(): Routing
+    {
+        return $this->routing;
+    }
+
+    public function factoryDiscovery(): FactoryDiscovery
+    {
+        return $this->factoryDiscovery;
+    }
+
+    public function localization(): Localization
+    {
+        return $this->localization;
+    }
+
+    public function view(): View
+    {
+        return $this->view;
     }
 }
