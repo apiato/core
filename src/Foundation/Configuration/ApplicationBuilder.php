@@ -4,6 +4,8 @@ namespace Apiato\Foundation\Configuration;
 
 use Apiato\Foundation\Apiato;
 
+use function Illuminate\Filesystem\join_paths;
+
 final readonly class ApplicationBuilder
 {
     public function __construct(
@@ -15,58 +17,48 @@ final readonly class ApplicationBuilder
     private function withDefaults(string $basePath): void
     {
         $this->useSharedPath(
-            $basePath . '/app/Ship',
+            $this->joinPaths($basePath, 'app/Ship'),
         )->withProviders(
-            $basePath . '/app/Ship/Providers',
-            ...glob($basePath . '/app/Containers/*/*/Providers', GLOB_ONLYDIR | GLOB_NOSORT),
+            shared_path('Providers'),
+            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Providers')),
         )->withConfigs(
-            $basePath . '/app/Ship/Configs',
-            ...glob($basePath . '/app/Containers/*/*/Configs', GLOB_ONLYDIR | GLOB_NOSORT),
+            shared_path('Configs'),
+            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Configs')),
         )->withEvents(
-            $basePath . '/app/Ship/Listeners',
-            ...glob($basePath . '/app/Containers/*/*/Listeners', GLOB_ONLYDIR | GLOB_NOSORT),
+            shared_path('Listeners'),
+            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Listeners')),
         )->withCommands(
-            $basePath . '/app/Ship/Commands',
-            ...glob($basePath . '/app/Containers/*/*/UI/Console', GLOB_ONLYDIR | GLOB_NOSORT),
+            shared_path('Commands'),
+            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/UI/Console')),
         )->withHelpers(
-            $basePath . '/app/Ship/Helpers',
-            ...glob($basePath . '/app/Containers/*/*/Helpers', GLOB_ONLYDIR | GLOB_NOSORT),
+            shared_path('Helpers'),
+            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Helpers')),
         )->withMigrations(
-            $basePath . '/app/Ship/Data/Migrations',
-            ...glob($basePath . '/app/Containers/*/*/Data/Migrations', GLOB_ONLYDIR | GLOB_NOSORT),
-        )->withSeeders(static function (Seeding $seeding) use ($basePath) {
+            shared_path('Data/Migrations'),
+            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Data/Migrations')),
+        )->withSeeders(function (Seeding $seeding) use ($basePath) {
             $seeding->loadFrom(
-                ...glob($basePath . '/app/Containers/*/*/Data/Seeders', GLOB_ONLYDIR | GLOB_NOSORT),
+                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Data/Seeders')),
             );
-        })->withTranslations(static function (Localization $localization) use ($basePath) {
+        })->withTranslations(function (Localization $localization) use ($basePath) {
             $localization->loadFrom(
-                $basePath . '/app/Ship/Languages',
-                ...glob($basePath . '/app/Containers/*/*/Languages', GLOB_ONLYDIR | GLOB_NOSORT),
+                shared_path('Languages'),
+                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Languages')),
             );
-        })->withViews(static function (View $view) use ($basePath) {
+        })->withViews(function (View $view) use ($basePath) {
             $view->loadFrom(
-                $basePath . '/app/Ship/Views',
-                $basePath . '/app/Ship/Mails',
-                ...glob($basePath . '/app/Containers/*/*/Views', GLOB_ONLYDIR | GLOB_NOSORT),
-                ...glob($basePath . '/app/Containers/*/*/Mails', GLOB_ONLYDIR | GLOB_NOSORT),
+                shared_path('Views'),
+                shared_path('Mails'),
+                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Views')),
+                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Mails')),
             );
-        })->withRouting(static function (Routing $routing) use ($basePath) {
+        })->withRouting(function (Routing $routing) use ($basePath) {
             $routing->loadApiRoutesFrom(
-                ...glob($basePath . '/app/Containers/*/*/UI/API/Routes', GLOB_ONLYDIR | GLOB_NOSORT),
+                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/UI/API/Routes')),
             )->loadWebRoutesFrom(
-                ...glob($basePath . '/app/Containers/*/*/UI/WEB/Routes', GLOB_ONLYDIR | GLOB_NOSORT),
+                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/UI/WEB/Routes')),
             );
         })->withFactories();
-    }
-
-    /**
-     * Set the shared directory path.
-     */
-    public function useSharedPath(string $path): self
-    {
-        $this->apiato->useSharedPath($path);
-
-        return $this;
     }
 
     public function withFactories(callable|null $callback = null): self
@@ -144,6 +136,26 @@ final readonly class ApplicationBuilder
         $this->apiato->withProviders(...$path);
 
         return $this;
+    }
+
+    /**
+     * Set the shared directory path.
+     */
+    public function useSharedPath(string $path): self
+    {
+        $this->apiato->useSharedPath($path);
+
+        return $this;
+    }
+
+    private function joinPaths($basePath, $path = ''): string
+    {
+        return join_paths($basePath, $path);
+    }
+
+    private function getDirs($path): array
+    {
+        return glob($path, GLOB_ONLYDIR | GLOB_NOSORT);
     }
 
     public function create(): Apiato
