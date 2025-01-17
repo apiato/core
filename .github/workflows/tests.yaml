@@ -11,13 +11,27 @@ permissions:
   contents: read
 
 jobs:
-  tests:
+  matrix_prep:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v4
+      - id: set-matrix
+        run: |
+          branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')
+          matrix=$(jq --arg branchName "$branchName" 'map(
+              . | select((.runOn==$branchName) or (.runOn=="always"))
+          )' matrix_includes.json)
+          echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
+  tests:
+    needs: matrix_prep
+    runs-on: ${{ matrix.runs_on }}
     strategy:
       fail-fast: true
-      matrix:
-        php: [ 8.1, 8.2 ]
-    name: PHP ${{ matrix.php }}
+      matrix: ${{fromJson(needs.matrix_prep.outputs.matrix)}}
+    name: PHP ${{ matrix.php_version }}
     timeout-minutes: 10
     steps:
       - name: Checkout code
@@ -26,10 +40,10 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: ${{ matrix.php_version }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
           coverage: xdebug
-          tools: phpunit:10.*
+          tools: ${{ matrix.php_unit_version }}
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
