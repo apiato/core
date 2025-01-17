@@ -14,9 +14,12 @@ use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Composer\Autoload\ClassLoader;
 use Composer\ClassMapGenerator\ClassMapGenerator;
 
+use function Illuminate\Filesystem\join_paths;
+
 class Apiato
 {
     private static self $instance;
+    private string $sharedPath;
     private array $providerPaths = [];
     private array $configPaths = [];
     private array $listenerPaths = [];
@@ -73,6 +76,24 @@ class Apiato
     public function basePath(): string
     {
         return $this->basePath;
+    }
+
+    /**
+     * Get the path to the application's shared directory.
+     */
+    public function sharedPath(string $path = ''): string
+    {
+        return join_paths($this->sharedPath ?: app_path('Ship'), $path);
+    }
+
+    /**
+     * Set the shared directory path.
+     */
+    public function useSharedPath(string $path): self
+    {
+        $this->sharedPath = $path;
+
+        return $this;
     }
 
     public function withRouting(callable|null $callback = null): self
