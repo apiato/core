@@ -12,16 +12,16 @@ use Tests\Support\Doubles\Fakes\Laravel\app\Ship\Providers\ShipServiceProvider;
 
 describe(class_basename(ApplicationBuilder::class), function (): void {
     it('provides default paths', function (): void {
-        $builder = Apiato::configure(__DIR__);
-        expect($builder->providerPaths())->toBe([
-            __DIR__ . '/app/Ship/Providers',
-            __DIR__ . '/app/Containers/*/*/Providers',
-        ])->and($builder->configPaths())->toBe([
-            __DIR__ . '/app/Ship/Configs',
-            __DIR__ . '/app/Containers/*/*/Configs',
-        ])->and($builder->eventPaths())->toBe([
-            __DIR__ . '/app/Ship/Listeners',
-            __DIR__ . '/app/Containers/*/*/Listeners',
+        $config = Apiato::configure(__DIR__)->create();
+        expect($config->providers())->toBe([
+            shared_path('Providers'),
+            app_path('Containers/*/*/Providers'),
+        ])->and($config->configPaths())->toBe([
+            shared_path('Configs'),
+            app_path('Containers/*/*/Configs'),
+        ])->and($config->events())->toBe([
+            shared_path('Listeners'),
+            app_path('Containers/*/*/Listeners'),
         ]);
     })->todo();
 
