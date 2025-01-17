@@ -195,9 +195,16 @@ class Apiato
         return array_keys($classMapper->getClassMap()->getMap());
     }
 
-    public function configPaths(): array
+    /*
+     * Get the configuration files to be loaded.
+     *
+     * @return string[]
+     */
+    public function configs(): array
     {
-        return $this->configPaths;
+        return collect($this->configPaths)->flatMap(
+            static fn (string $path) => glob($path . '/*.php')
+        )->toArray();
     }
 
     public function helperPaths(): array
