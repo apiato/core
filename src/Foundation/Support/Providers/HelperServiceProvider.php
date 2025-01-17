@@ -4,7 +4,6 @@ namespace Apiato\Foundation\Support\Providers;
 
 use Apiato\Abstract\Providers\ServiceProvider;
 use Apiato\Foundation\Apiato;
-use Illuminate\Support\Facades\File;
 
 final class HelperServiceProvider extends ServiceProvider
 {
