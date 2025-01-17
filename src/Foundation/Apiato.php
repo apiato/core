@@ -22,7 +22,7 @@ class Apiato
     private string $sharedPath;
     private array $providerPaths = [];
     private array $configPaths = [];
-    private array $listenerPaths = [];
+    private array $eventDiscoveryPaths = [];
     private array $commandPaths = [];
     private array $migrationPaths = [];
     private array $helperPaths = [];
@@ -170,7 +170,7 @@ class Apiato
 
     public function withEvents(string ...$path): void
     {
-        $this->listenerPaths = $path;
+        $this->eventDiscoveryPaths = $path;
     }
 
     public function withConfigs(string ...$path): void
@@ -237,7 +237,7 @@ class Apiato
 
     public function events(): array
     {
-        return $this->listenerPaths;
+        return $this->eventDiscoveryPaths;
     }
 
     public function apiMiddlewares(): array
