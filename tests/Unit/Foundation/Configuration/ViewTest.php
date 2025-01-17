@@ -1,18 +1,18 @@
 <?php
 
 use Apiato\Foundation\Configuration\View;
-use Apiato\Foundation\Support\PathHelper;
+use Illuminate\Support\Str;
 
 describe(class_basename(View::class), function (): void {
     it('creates different namespaces for shared directory and container paths', function (): void {
         $configuration = new View();
 
         expect(
-            $configuration->buildNamespaceFor(PathHelper::getSharedDirectoryPath() . '/Views'),
-        )->toBe('ship')
+            $configuration->buildNamespaceFor(shared_path('Views')),
+        )->toBe(Str::of(shared_path())->afterLast(DIRECTORY_SEPARATOR)->camel()->value())
             ->and(
                 $configuration->buildNamespaceFor(
-                    __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Containers/MySection/Book/Views',
+                    app_path('Containers/MySection/Book/Views'),
                 ),
             )->toBe('mySection@book');
     });
@@ -21,17 +21,17 @@ describe(class_basename(View::class), function (): void {
         $configuration = new View();
 
         $configuration->loadFrom(
-            __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Ship/Views',
-            __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Ship/Mails',
-            __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Containers/MySection/Book/Views',
-            __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Containers/MySection/Book/Mails',
+            shared_path('Views'),
+            shared_path('Mails'),
+            app_path('Containers/MySection/Book/Views'),
+            app_path('Containers/MySection/Book/Mails'),
         );
 
         expect($configuration->paths())->toBe([
-            __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Ship/Views',
-            __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Ship/Mails',
-            __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Containers/MySection/Book/Views',
-            __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Containers/MySection/Book/Mails',
+            shared_path('Views'),
+            shared_path('Mails'),
+            app_path('Containers/MySection/Book/Views'),
+            app_path('Containers/MySection/Book/Mails'),
         ]);
     });
 })->covers(View::class);

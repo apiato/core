@@ -3,53 +3,46 @@
 namespace Apiato\Commands;
 
 use Apiato\Abstract\Commands\Command;
-use Apiato\Foundation\Support\PathHelper;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Output\ConsoleOutput;
 
-// TODO: update to use Laravel Prompts
 class ListTasks extends Command
 {
     protected $signature = 'apiato:list:tasks {--withfilename}';
     protected $description = 'List all Tasks';
 
-    public function __construct(ConsoleOutput $console)
-    {
-        parent::__construct();
-
-        $this->console = $console;
-    }
-
     public function handle(): void
     {
-        foreach (PathHelper::getSectionNames() as $sectionName) {
-            foreach (PathHelper::getSectionContainerNames($sectionName) as $containerName) {
-                $this->console->writeln("<fg=yellow> [$containerName]</fg=yellow>");
-
-                $directory = base_path('app/Containers/' . $sectionName . '/' . $containerName . '/Tasks');
-
-                if (File::isDirectory($directory)) {
-                    $files = File::allFiles($directory);
-
-                    foreach ($files as $file) {
-                        $originalFileName = $file->getFilename();
-                        $fileName = $originalFileName;
-                        $fileName = Str::of($fileName)
-                            ->replace('Task.php', '')
-                            ->replace('.php', '')
-                            ->replace('_', ' ')
-                            ->headline();
-
-                        $includeFileName = '';
-                        if ($this->option('withfilename')) {
-                            $includeFileName = "<fg=red>($originalFileName)</fg=red>";
-                        }
-
-                        $this->console->writeln("<fg=green>  - $fileName</fg=green>  $includeFileName");
-                    }
+        collect(File::allFiles(app_path()))
+            ->filter(static function (\SplFileInfo $file) {
+                if (Str::contains($file->getRealPath(), shared_path())) {
+                    return false;
                 }
-            }
-        }
+
+                return Str::contains($file->getFilename(), 'Task.php');
+            })->groupBy(static function (\SplFileInfo $file) {
+                return Str::of($file->getPath())
+                    ->beforeLast(DIRECTORY_SEPARATOR)
+                    ->afterLast(DIRECTORY_SEPARATOR)
+                    ->value();
+            })->each(function ($files, $group) {
+                $this->comment("[{$group}]");
+
+                foreach ($files as $file) {
+                    $originalFileName = $file->getFilename();
+                    $fileName = Str::of($originalFileName)
+                        ->replace('Task.php', '')
+                        ->replace('.php', '')
+                        ->replace('_', ' ')
+                        ->headline();
+
+                    $includeFileName = '';
+                    if ($this->option('withfilename')) {
+                        $includeFileName = "<fg=red>({$originalFileName})</fg=red>";
+                    }
+
+                    $this->info("  - {$fileName}  {$includeFileName}");
+                }
+            });
     }
 }

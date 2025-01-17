@@ -2,7 +2,6 @@
 
 namespace Apiato\Foundation\Configuration;
 
-use Apiato\Foundation\Support\PathHelper;
 use Illuminate\Support\Str;
 
 final class View
@@ -13,12 +12,15 @@ final class View
     public function __construct()
     {
         $this->buildNamespaceUsing(function ($path): string {
-            if (Str::contains($path, PathHelper::getSharedDirectoryPath())) {
-                return Str::camel(PathHelper::getSharedDirectoryName());
+            if (Str::contains($path, shared_path())) {
+                return Str::of(shared_path())
+                    ->afterLast(DIRECTORY_SEPARATOR)
+                    ->camel()
+                    ->value();
             }
 
             return Str::of($path)
-                ->after(PathHelper::getContainersDirectoryName() . DIRECTORY_SEPARATOR)
+                ->after(app_path('Containers') . DIRECTORY_SEPARATOR)
                 ->explode(DIRECTORY_SEPARATOR)
                 ->take(2)
                 ->map(static fn ($part) => Str::camel($part))

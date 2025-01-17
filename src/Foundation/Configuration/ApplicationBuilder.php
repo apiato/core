@@ -14,7 +14,9 @@ final readonly class ApplicationBuilder
 
     private function withDefaults(string $basePath): void
     {
-        $this->withProviders(
+        $this->useSharedPath(
+            $basePath . '/app/Ship',
+        )->withProviders(
             $basePath . '/app/Ship/Providers',
             ...glob($basePath . '/app/Containers/*/*/Providers', GLOB_ONLYDIR | GLOB_NOSORT),
         )->withConfigs(
@@ -55,6 +57,16 @@ final readonly class ApplicationBuilder
                 ...glob($basePath . '/app/Containers/*/*/UI/WEB/Routes', GLOB_ONLYDIR | GLOB_NOSORT),
             );
         })->withFactories();
+    }
+
+    /**
+     * Set the shared directory path.
+     */
+    public function useSharedPath(string $path): self
+    {
+        $this->apiato->useSharedPath($path);
+
+        return $this;
     }
 
     public function withFactories(callable|null $callback = null): self
