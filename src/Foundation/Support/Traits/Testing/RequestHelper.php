@@ -2,11 +2,11 @@
 
 namespace Apiato\Foundation\Support\Traits\Testing;
 
+use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Exceptions\MissingTestEndpoint;
 use Apiato\Foundation\Exceptions\UndefinedMethod;
 use Apiato\Foundation\Exceptions\WrongEndpointFormat;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -138,11 +138,7 @@ trait RequestHelper
 
     private function buildUrlForUri($uri): string
     {
-        $uri = config('apiato.api.prefix') . $uri;
-
-        if (!Str::startsWith($uri, '/')) {
-            $uri = '/' . $uri;
-        }
+        $uri = Apiato::instance()->routing()->getApiPrefix() . $uri;
 
         return $this->getUrl() . $uri;
     }

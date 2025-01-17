@@ -85,7 +85,7 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
     it('load api routes from configured path', function (): void {
         $endpoints = [
             '/v3/authors',
-            '/v1/books',
+            '/v4/books',
         ];
 
         expect($endpoints)

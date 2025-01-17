@@ -2,15 +2,38 @@
 
 namespace Apiato\Foundation\Configuration;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Route as LaravelRoute;
-use Symfony\Component\Finder\SplFileInfo;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Webmozart\Assert\Assert;
 
 final class Routing
 {
+    protected static \Closure $apiVersionResolver;
+    /** @var string[] */
     private array $apiRouteDirs = [];
+    /** @var string[] */
     private array $webRouteDirs = [];
+    private string $apiPrefix = '/';
+    private bool $apiVersionAutoPrefix = true;
+
+    public function __construct()
+    {
+        $this->resolveApiVersionUsing(
+            static function (string $file): string {
+                return Str::of($file)
+                    ->before('.php')
+                    ->betweenFirst('.', '.')
+                    ->value();
+            },
+        );
+    }
+
+    public function resolveApiVersionUsing(callable $callback): self
+    {
+        self::$apiVersionResolver = $callback;
+
+        return $this;
+    }
 
     public function loadApiRoutesFrom(string ...$path): self
     {
@@ -29,42 +52,18 @@ final class Routing
     public function registerApiRoutes(): void
     {
         collect($this->apiRouteDirs)
-            ->map(fn ($path) => $this->getFilesSortedByName($path))
-            ->flatten()
-            ->each(fn (SplFileInfo $file) => $this->loadApiRoute($file));
+            ->flatMap(static fn ($path) => glob($path . '/*.php'))
+            ->each(
+                function (string $file) {
+                    return Route::middleware($this->getApiMiddlewares())
+                        ->domain(config('apiato.api.url'))
+                        ->prefix($this->buildApiPrefixFor($file))
+                        ->group($file);
+                },
+            );
     }
 
-    /**
-     * @return SplFileInfo[]
-     */
-    private function getFilesSortedByName(string $apiRoutesPath): array
-    {
-        $files = File::allFiles($apiRoutesPath);
-
-        return Arr::sort($files, static fn ($file) => $file->getFilename());
-    }
-
-    private function loadApiRoute(SplFileInfo $file): void
-    {
-        $routeGroupArray = $this->getApiRouteGroup($file);
-
-        LaravelRoute::group($routeGroupArray, static function () use ($file): void {
-            require $file->getPathname();
-        });
-    }
-
-    private function getApiRouteGroup(SplFileInfo|string $endpointFileOrPrefixString): array
-    {
-        return [
-            'middleware' => $this->getMiddlewares(),
-            'domain' => config('apiato.api.url'),
-            // If $endpointFileOrPrefixString is a string, use that string as prefix
-            // else, if it is a file then get the version name from the file name, and use it as prefix
-            'prefix' => is_string($endpointFileOrPrefixString) ? $endpointFileOrPrefixString : $this->getApiVersionPrefix($endpointFileOrPrefixString),
-        ];
-    }
-
-    private function getMiddlewares(): array
+    private function getApiMiddlewares(): array
     {
         $middlewares = ['api'];
         if (config('apiato.api.rate-limiter.enabled')) {
@@ -74,31 +73,45 @@ final class Routing
         return $middlewares;
     }
 
-    private function getApiVersionPrefix(SplFileInfo $file): string
+    private function buildApiPrefixFor(string $file): string
     {
-        return config('apiato.api.prefix') . (config('apiato.api.enable_version_prefix') ? $this->getRouteFileVersionFromFileName($file) : '');
+        if ($this->apiVersionAutoPrefix) {
+            return $this->apiPrefix . $this->resolveApiVersionFor($file);
+        }
+
+        return $this->apiPrefix;
     }
 
-    private function getRouteFileVersionFromFileName(SplFileInfo $file): string|bool
+    private function resolveApiVersionFor(string $file): string
     {
-        $fileNameWithoutExtension = pathinfo($file->getFilename(), PATHINFO_FILENAME);
-        $fileNameWithoutExtensionExploded = explode('.', $fileNameWithoutExtension);
+        return app()->call(self::$apiVersionResolver, compact('file'));
+    }
 
-        end($fileNameWithoutExtensionExploded);
+    public function getApiPrefix(): string
+    {
+        return $this->apiPrefix;
+    }
 
-        return prev($fileNameWithoutExtensionExploded);
+    public function disableApiVersionAutoPrefix(): self
+    {
+        $this->apiVersionAutoPrefix = false;
+
+        return $this;
+    }
+
+    public function prefixApiUrlsWith(string $prefix = '/'): self
+    {
+        Assert::nullOrRegex($prefix, '/^.*\/$/', 'The API prefix must end with a slash.');
+
+        $this->apiPrefix = $prefix;
+
+        return $this;
     }
 
     public function webRoutes(): array
     {
-        $files = [];
-        foreach ($this->webRouteDirs as $path) {
-            foreach (glob($path . '/*.php') as $file) {
-                $files[] = $file;
-            }
-        }
-        usort($files, 'strcmp');
-
-        return $files;
+        return collect($this->webRouteDirs)
+            ->flatMap(static fn ($path) => glob($path . '/*.php'))
+            ->toArray();
     }
 }

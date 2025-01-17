@@ -77,7 +77,6 @@ class Apiato
 
     public function withRouting(callable|null $callback = null): self
     {
-        // TODO: maybe make the configuration parametrized like web: api:, like the way Laravel does it?
         $this->routing ??= new Routing();
 
         if (!is_null($callback)) {
@@ -193,6 +192,11 @@ class Apiato
     public function seeding(): Seeding
     {
         return $this->seeding;
+    }
+
+    public function routing(): Routing
+    {
+        return $this->routing;
     }
 
     public function factoryDiscovery(): FactoryDiscovery
