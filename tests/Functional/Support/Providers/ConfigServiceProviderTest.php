@@ -14,7 +14,7 @@ describe(class_basename(ConfigServiceProvider::class), function (): void {
     it('publishes the config file', function (): void {
         File::partialMock()
             ->expects('copy')
-            ->with(realpath('config/apiato.php'), app_path('Ship/Configs/apiato.php'))
+            ->with(realpath('config/apiato.php'), shared_path('Configs/apiato.php'))
             ->andReturnTrue();
 
         $this->artisan('vendor:publish', ['--tag' => 'apiato-config']);

@@ -25,7 +25,7 @@ final class ConfigServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            realpath('config/apiato.php') => app_path('Ship/Configs/apiato.php'),
+            realpath('config/apiato.php') => shared_path('Configs/apiato.php'),
         ], 'apiato-config');
     }
 }
