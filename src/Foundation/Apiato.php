@@ -207,9 +207,16 @@ class Apiato
         )->toArray();
     }
 
-    public function helperPaths(): array
+    /*
+     * Get the helper files to be loaded.
+     *
+     * @return string[]
+     */
+    public function helpers(): array
     {
-        return $this->helperPaths;
+        return collect($this->helperPaths)->flatMap(
+            static fn (string $path) => glob($path . '/*.php')
+        )->toArray();
     }
 
     public function migrationPaths(): array

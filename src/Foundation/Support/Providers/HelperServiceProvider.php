@@ -10,12 +10,8 @@ final class HelperServiceProvider extends ServiceProvider
 {
     public function boot(Apiato $apiato): void
     {
-        foreach ($apiato->helperPaths() as $path) {
-            $files = File::files($path);
-
-            foreach ($files as $file) {
-                require_once $file;
-            }
+        foreach ($apiato->helpers() as $path) {
+            require_once $path;
         }
     }
 }
