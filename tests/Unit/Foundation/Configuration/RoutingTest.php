@@ -18,19 +18,6 @@ describe(class_basename(Routing::class), function (): void {
         ]);
     });
 
-    it('can collect api routes from paths', function (): void {
-        $configuration = new Routing();
-        $configuration->loadApiRoutesFrom(
-            app_path('Containers/*/*/UI/API/Routes'),
-        );
-
-        expect($configuration->apiRoutes())->toBe([
-            app_path('Containers/MySection/Author/UI/API/Routes/ListAuthors.v3.public.php'),
-            app_path('Containers/MySection/Book/UI/API/Routes/CreateBook.v1.private.php'),
-            app_path('Containers/MySection/Book/UI/API/Routes/ListBooks.v1.private.php'),
-        ]);
-    })->todo();
-
     it('can set api prefix', function (): void {
         $configuration = new Routing();
         $configuration->prefixApiUrlsWith('api/');
