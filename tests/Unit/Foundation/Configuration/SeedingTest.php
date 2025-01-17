@@ -11,8 +11,8 @@ describe(class_basename(Seeding::class), function (): void {
         $configuration = new Seeding();
 
         $configuration->loadFrom(
-            __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Containers/MySection/Book/Data/Seeders',
-            __DIR__ . '/../../../Support/Doubles/Fakes/Laravel/app/Containers/MySection/Author/Data/Seeders',
+            app_path('Containers/MySection/Book/Data/Seeders'),
+            app_path('Containers/MySection/Author/Data/Seeders'),
         );
 
         expect($configuration->seeders())->toBe([
