@@ -1,6 +1,7 @@
 <?php
 
 use Apiato\Foundation\Support\Providers\ConfigServiceProvider;
+use Illuminate\Support\Facades\File;
 
 describe(class_basename(ConfigServiceProvider::class), function (): void {
     it('merges configs from configured path', function (): void {
@@ -14,7 +15,7 @@ describe(class_basename(ConfigServiceProvider::class), function (): void {
     it('publishes the config file', function (): void {
         File::partialMock()
             ->expects('copy')
-            ->with(realpath('config/apiato.php'), shared_path('Configs/apiato.php'))
+            ->with(\Safe\realpath('config/apiato.php'), shared_path('Configs/apiato.php'))
             ->andReturnTrue();
 
         $this->artisan('vendor:publish', ['--tag' => 'apiato-config']);
