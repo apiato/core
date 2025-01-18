@@ -36,9 +36,9 @@ describe(class_basename(Routing::class), function (): void {
         )->toArray();
 
         expect($webRoutes)->toBe([
-            'books/create',
-            'books',
             'authors',
+            'books',
+            'books/create',
         ]);
     });
 
@@ -66,14 +66,14 @@ describe(class_basename(Routing::class), function (): void {
             ],
             'localhost',
             ['GET', 'HEAD'],
-            'v4/books',
+            'v3/authors',
             [
                 'api',
                 'throttle:api',
             ],
             'localhost',
             ['GET', 'HEAD'],
-            'v3/authors',
+            'v4/books',
             [
                 'api',
                 'throttle:api',
@@ -93,6 +93,8 @@ describe(class_basename(Routing::class), function (): void {
             ->filter(
                 static fn (Route $route) => collect($route->gatherMiddleware())
                     ->contains($middleware),
-            );
+            )->sortBy(
+                static fn (Route $route) => $route->uri(),
+            )->values();
     }
 })->covers(Routing::class);
