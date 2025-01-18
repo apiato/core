@@ -13,6 +13,7 @@ $finder = Symfony\Component\Finder\Finder::create()
     ]);
 
 return (new PhpCsFixer\Config())
+    ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
     ->setRules([
         '@Symfony' => true,
         'concat_space' => ['spacing' => 'one'],
