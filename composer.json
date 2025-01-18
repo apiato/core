@@ -51,6 +51,7 @@
         "pestphp/pest-plugin-faker": "^3.0",
         "phpmd/phpmd": "@stable",
         "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-phpunit": "^2.0",
         "phpstan/phpstan-strict-rules": "^2.0",
         "rector/rector": "^2.0",
         "roave/security-advisories": "dev-latest",
