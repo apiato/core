@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('ship_test_table', static function ($table) {
+        Schema::create('ship_test_table', static function ($table): void {
             $table->id();
         });
     }

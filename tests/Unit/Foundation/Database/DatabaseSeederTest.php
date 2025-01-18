@@ -9,7 +9,7 @@ use Workbench\App\Containers\MySection\Book\Data\Seeders\Wondered_3;
 describe(class_basename(DatabaseSeeder::class), function (): void {
     it('can call seeders', function (): void {
         $seeder = new DatabaseSeeder();
-        $apiato = Mockery::mock(Apiato::class, static function (MockInterface $mock) {
+        $apiato = Mockery::mock(Apiato::class, static function (MockInterface $mock): void {
             $mock->expects('seeding->seeders')->andReturn([
                 Wondered_3::class,
             ]);

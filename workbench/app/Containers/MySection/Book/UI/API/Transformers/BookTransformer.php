@@ -4,8 +4,8 @@ namespace Workbench\App\Containers\MySection\Book\UI\API\Transformers;
 
 use Apiato\Abstract\Transformers\Transformer;
 use League\Fractal\Resource\Item;
+use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
 use Workbench\App\Containers\MySection\Book\Models\Book;
-use Tests\Support\UserTransformer;
 
 class BookTransformer extends Transformer
 {

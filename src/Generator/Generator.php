@@ -20,6 +20,9 @@ abstract class Generator extends Command
     use PrinterTrait;
     use FileSystemTrait;
     use FormatterTrait;
+    protected string $fileType;
+    protected string $stubName;
+    protected array $inputs;
 
     /**
      * Root directory of all sections.
@@ -96,14 +99,14 @@ abstract class Generator extends Command
     {
         $this->validateGenerator($this);
 
-        $this->sectionName = ucfirst($this->checkParameterOrAsk('section', 'Enter the name of the Section', self::DEFAULT_SECTION_NAME));
-        $this->containerName = ucfirst($this->checkParameterOrAsk('container', 'Enter the name of the Container'));
+        $this->sectionName = ucfirst((string) $this->checkParameterOrAsk('section', 'Enter the name of the Section', self::DEFAULT_SECTION_NAME));
+        $this->containerName = ucfirst((string) $this->checkParameterOrAsk('container', 'Enter the name of the Container'));
         $this->fileName = $this->checkParameterOrAsk('file', 'Enter the name of the ' . $this->fileType . ' file', $this->getDefaultFileName());
 
         // Now fix the section, container and file name
         $this->sectionName = $this->removeSpecialChars($this->sectionName);
         $this->containerName = $this->removeSpecialChars($this->containerName);
-        if (!('Configuration' === $this->fileType)) {
+        if ('Configuration' !== $this->fileType) {
             $this->fileName = $this->removeSpecialChars($this->fileName);
         }
 
@@ -115,7 +118,7 @@ abstract class Generator extends Command
 
         if (null === $this->userData) {
             // The user skipped this step
-            return;
+            return null;
         }
         $this->userData = $this->sanitizeUserData($this->userData);
 
@@ -140,7 +143,7 @@ abstract class Generator extends Command
     /**
      * @throws GeneratorError
      */
-    private function validateGenerator($generator): void
+    private function validateGenerator(self $generator): void
     {
         if (!$generator instanceof ComponentsGenerator) {
             throw new GeneratorError('Your component maker command should implement ComponentsGenerator interface.');
@@ -183,7 +186,7 @@ abstract class Generator extends Command
      * Checks, if the data from the generator contains path, stub and file-parameters.
      * Adds empty arrays, if they are missing.
      */
-    private function sanitizeUserData($data): mixed
+    private function sanitizeUserData(array $data): mixed
     {
         if (!array_key_exists('path-parameters', $data)) {
             $data['path-parameters'] = [];
@@ -257,7 +260,7 @@ abstract class Generator extends Command
     /**
      * Checks if the param is set (via CLI), otherwise proposes choices to the user.
      */
-    protected function checkParameterOrChoice($param, $question, $choices, mixed $default = null): bool|array|string|null
+    protected function checkParameterOrChoice($param, $question, array $choices, mixed $default = null): bool|array|string|null
     {
         // Check if we already have a param set
         $value = $this->option($param);

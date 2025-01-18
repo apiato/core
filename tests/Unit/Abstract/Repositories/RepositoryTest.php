@@ -66,7 +66,7 @@ final class RepositoryTest extends UnitTestCase
         array $booksMustLoadRelations,
         array $mustNotLoadRelations,
     ): void {
-        request()->merge(compact('include'));
+        request()->merge(['include' => $include]);
         UserFactory::new()
             ->has(
                 UserFactory::new()
@@ -83,12 +83,12 @@ final class RepositoryTest extends UnitTestCase
 
         $result = $repository->all();
 
-        $result->each(function (User $user) use ($userMustLoadRelations, $booksMustLoadRelations, $mustNotLoadRelations) {
+        $result->each(function (User $user) use ($userMustLoadRelations, $booksMustLoadRelations, $mustNotLoadRelations): void {
             foreach ($userMustLoadRelations as $relation) {
                 $this->assertTrue($user->relationLoaded($relation));
             }
             foreach ($booksMustLoadRelations as $relation) {
-                $user->books->each(function (Book $book) use ($relation) {
+                $user->books->each(function (Book $book) use ($relation): void {
                     $this->assertTrue($book->relationLoaded($relation));
                 });
             }
@@ -117,7 +117,7 @@ final class RepositoryTest extends UnitTestCase
         /** @var Collection<int, User> $result */
         $result = $repository->with('books')->with('children.books')->all();
 
-        $result->each(function (User $user) {
+        $result->each(function (User $user): void {
             $this->assertTrue($user->relationLoaded('books'));
             $this->assertTrue($user->relationLoaded('children'));
             foreach ($user->children as $child) {

@@ -27,7 +27,7 @@ class ProcessETag extends Middleware
         if ($request->hasHeader('if-none-match')) {
             // check, if the request method is GET or HEAD
             $method = $request->method();
-            if (!('GET' === $method || 'HEAD' === $method)) {
+            if ('GET' !== $method && 'HEAD' !== $method) {
                 throw new PreconditionFailedHttpException('HTTP Header IF-None-Match is only allowed for GET and HEAD Requests.');
             }
         }
@@ -38,15 +38,13 @@ class ProcessETag extends Middleware
         // now we have processed the request and have a response that is sent back to the client.
         // calculate the etag of the content!
         $content = $response->getContent();
-        $etag = md5($content);
+        $etag = md5((string) $content);
         $response->headers->set('Etag', $etag);
 
         // now, lets check, if the request contains a "if-none-match" http header field
-        if ($request->hasHeader('if-none-match')) {
-            // now check, if the if-none-match etag is the same as the calculated etag!
-            if ($request->header('if-none-match') === $etag) {
-                $response->setStatusCode(304);
-            }
+        // now check, if the if-none-match etag is the same as the calculated etag!
+        if ($request->hasHeader('if-none-match') && $request->header('if-none-match') === $etag) {
+            $response->setStatusCode(304);
         }
 
         return $response;

@@ -20,29 +20,27 @@ class ListTasks extends Command
                 }
 
                 return Str::contains($file->getFilename(), 'Task.php');
-            })->groupBy(static function (\SplFileInfo $file) {
-                return Str::of($file->getPath())
-                    ->beforeLast(DIRECTORY_SEPARATOR)
-                    ->afterLast(DIRECTORY_SEPARATOR)
-                    ->value();
-            })->each(function ($files, $group) {
-                $this->comment("[{$group}]");
+            })->groupBy(static fn (\SplFileInfo $file) => Str::of($file->getPath())
+                ->beforeLast(DIRECTORY_SEPARATOR)
+                ->afterLast(DIRECTORY_SEPARATOR)
+                ->value())->each(function ($files, $group): void {
+                    $this->comment("[{$group}]");
 
-                foreach ($files as $file) {
-                    $originalFileName = $file->getFilename();
-                    $fileName = Str::of($originalFileName)
-                        ->replace('Task.php', '')
-                        ->replace('.php', '')
-                        ->replace('_', ' ')
-                        ->headline();
+                    foreach ($files as $file) {
+                        $originalFileName = $file->getFilename();
+                        $fileName = Str::of($originalFileName)
+                            ->replace('Task.php', '')
+                            ->replace('.php', '')
+                            ->replace('_', ' ')
+                            ->headline();
 
-                    $includeFileName = '';
-                    if ($this->option('withfilename')) {
-                        $includeFileName = "<fg=red>({$originalFileName})</fg=red>";
+                        $includeFileName = '';
+                        if ($this->option('withfilename')) {
+                            $includeFileName = "<fg=red>({$originalFileName})</fg=red>";
+                        }
+
+                        $this->info("  - {$fileName}  {$includeFileName}");
                     }
-
-                    $this->info("  - {$fileName}  {$includeFileName}");
-                }
-            });
+                });
     }
 }

@@ -215,9 +215,9 @@ class ResponseTest extends UnitTestCase
     }
 
     #[DataProvider('csvIncludeDataProvider')]
-    public function testSingleResourceCanHandleCSVInclude($include, $expected): void
+    public function testSingleResourceCanHandleCSVInclude(string $include, array $expected): void
     {
-        request()->merge(compact('include'));
+        request()->merge(['include' => $include]);
         $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
@@ -229,9 +229,9 @@ class ResponseTest extends UnitTestCase
     }
 
     #[DataProvider('arrayIncludeDataProvider')]
-    public function testSingleResourceCanHandleArrayInclude($include, $expected): void
+    public function testSingleResourceCanHandleArrayInclude(array $include, array $expected): void
     {
-        request()->merge(compact('include'));
+        request()->merge(['include' => $include]);
         $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
@@ -243,20 +243,20 @@ class ResponseTest extends UnitTestCase
     }
 
     #[DataProvider('paginatedIncludeMetaDataDataProvider')]
-    public function testPaginatedResourceMetaDataAndInclude($include): void
+    public function testPaginatedResourceMetaDataAndInclude(string|array $include): void
     {
-        request()->merge(compact('include'));
+        request()->merge(['include' => $include]);
         UserFactory::new()->count(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
         $response = Response::create($users)->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
 
-        $result->has('meta.include', fn (AssertableJson $json) => $json->whereAll(['parent', 'children', 'books']));
+        $result->has('meta.include', fn (AssertableJson $json): AssertableJson => $json->whereAll(['parent', 'children', 'books']));
     }
 
     #[DataProvider('fieldsetDataProvider')]
-    public function testCanFilterResponse($fields, $expected, $missing): void
+    public function testCanFilterResponse(array $fields, array $expected, array $missing): void
     {
         request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => $fields]);
         $response = Response::create($this->user);
@@ -266,7 +266,7 @@ class ResponseTest extends UnitTestCase
 
         foreach ($expected as $expectation) {
             $result->has($expectation);
-            $result->has('meta.include', fn (AssertableJson $json) => $json->whereAll(['parent', 'children', 'books']));
+            $result->has('meta.include', fn (AssertableJson $json): AssertableJson => $json->whereAll(['parent', 'children', 'books']));
         }
         foreach ($missing as $expectation) {
             $result->missing($expectation);
@@ -274,9 +274,9 @@ class ResponseTest extends UnitTestCase
     }
 
     #[DataProvider('csvExcludeDataProvider')]
-    public function testSingleResourceCanHandleCSVExclude($exclude, $expected): void
+    public function testSingleResourceCanHandleCSVExclude(string $exclude, array $expected): void
     {
-        request()->merge(compact('exclude'));
+        request()->merge(['exclude' => $exclude]);
         $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
@@ -288,9 +288,9 @@ class ResponseTest extends UnitTestCase
     }
 
     #[DataProvider('arrayExcludeDataProvider')]
-    public function testSingleResourceCanHandleArrayExclude($exclude, $expected): void
+    public function testSingleResourceCanHandleArrayExclude(array $exclude, array $expected): void
     {
-        request()->merge(compact('exclude'));
+        request()->merge(['exclude' => $exclude]);
         $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
@@ -302,20 +302,20 @@ class ResponseTest extends UnitTestCase
     }
 
     #[DataProvider('paginatedExcludeMetaDataDataProvider')]
-    public function testPaginatedResourceMetaDataAndExclude($exclude): void
+    public function testPaginatedResourceMetaDataAndExclude(string|array $exclude): void
     {
-        request()->merge(compact('exclude'));
+        request()->merge(['exclude' => $exclude]);
         UserFactory::new()->count(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
         $response = Response::create($users)->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
         $result = AssertableJson::fromArray($response->toArray());
 
-        $result->has('meta.include', fn (AssertableJson $json) => $json->whereAll(['parent', 'children', 'books']));
+        $result->has('meta.include', fn (AssertableJson $json): AssertableJson => $json->whereAll(['parent', 'children', 'books']));
     }
 
     #[DataProvider('validResourceNameProvider')]
-    public function testCanOverrideMainResourceName($resourceName): void
+    public function testCanOverrideMainResourceName(string $resourceName): void
     {
         request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => [$resourceName => 'id', 'Book' => 'author,title']]);
         $response = Response::create($this->user);
@@ -328,7 +328,7 @@ class ResponseTest extends UnitTestCase
     }
 
     #[DataProvider('invalidResourceNameProvider')]
-    public function testGivenInvalidNameProvidedRevertToDefaultMainResourceName($resourceName): void
+    public function testGivenInvalidNameProvidedRevertToDefaultMainResourceName(bool|null $resourceName): void
     {
         request()->merge(['include' => 'books,children.books', self::FIELDSET_KEY => [$resourceName => 'id', 'Book' => 'author,title']]);
         $response = Response::create($this->user);

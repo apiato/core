@@ -13,7 +13,7 @@ use Tests\UnitTestCase;
 #[CoversClass(HashId::class)]
 class HashIdTraitTest extends UnitTestCase
 {
-    private $trait;
+    private object $trait;
     private LegacyMockInterface|MockInterface $mockTrait;
 
     public static function hashedIdsProvider(): array
@@ -106,7 +106,7 @@ class HashIdTraitTest extends UnitTestCase
         $this->trait = new class {
             use HashId;
 
-            public function publicDecodeHashedIdsBeforeValidation(array $requestData)
+            public function publicDecodeHashedIdsBeforeValidation(array $requestData): array
             {
                 return $this->decodeHashedIdsBeforeValidation($requestData);
             }

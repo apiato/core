@@ -19,16 +19,14 @@ class UserFactory extends TestbenchUserFactory
 
     public function withParent(): static
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'parent_id' => static::new()->createOne()->id,
-            ];
-        });
+        return $this->state(fn(array $attributes): array => [
+            'parent_id' => static::new()->createOne()->id,
+        ]);
     }
 
     public function withChildren(int $count = 1): static
     {
-        return $this->afterCreating(function (User $user) use ($count) {
+        return $this->afterCreating(function (User $user) use ($count): void {
             static::new()->count($count)->create([
                 'parent_id' => $user->id,
             ]);

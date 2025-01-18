@@ -14,12 +14,10 @@ final class RateLimitingServiceProvider extends ServiceProvider
         if (config('apiato.api.rate-limiter.enabled')) {
             RateLimiter::for(
                 config('apiato.api.rate-limiter.name'),
-                static function (Request $request) {
-                    return Limit::perMinutes(
-                        config('apiato.api.rate-limiter.expires'),
-                        config('apiato.api.rate-limiter.attempts'),
-                    )->by($request->user()?->id ?: $request->ip());
-                },
+                static fn (Request $request) => Limit::perMinutes(
+                    config('apiato.api.rate-limiter.expires'),
+                    config('apiato.api.rate-limiter.attempts'),
+                )->by($request->user()?->id ?: $request->ip()),
             );
         }
     }

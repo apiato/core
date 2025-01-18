@@ -76,7 +76,7 @@ class UnitTestGenerator extends Generator implements ComponentsGenerator
             }
         }
 
-        $model = $model ?? $this->containerName;
+        $model ??= $this->containerName;
         $models = Str::plural($model);
 
         return [

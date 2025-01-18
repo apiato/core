@@ -124,7 +124,7 @@ trait HashId
     private function locateAndDecodeIds($requestData, $key): mixed
     {
         // split the key based on the "."
-        $fields = explode('.', $key);
+        $fields = explode('.', (string) $key);
 
         // loop through all elements of the key.
         return $this->processField($requestData, $fields, $key);
@@ -136,7 +136,7 @@ trait HashId
      * @throws IncorrectId
      * @throws \Throwable
      */
-    private function processField($data, $keysTodo, $currentFieldName): mixed
+    private function processField($data, $keysTodo, string $currentFieldName): mixed
     {
         // is the current field a null?! we can give it back and chill out
         if (is_null($data)) {

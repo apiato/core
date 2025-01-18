@@ -46,7 +46,7 @@ trait EagerLoad
     // Returning null causes multiple if() guard clauses as you can see
     private function filterInvalidRelations(Builder|Model $model, array $relationParts): string|null
     {
-        if (empty($relationParts)) {
+        if ([] === $relationParts) {
             return null;
         }
 
@@ -58,7 +58,7 @@ trait EagerLoad
 
         $nextModel = $model->$relation()->getRelated();
 
-        if (empty($relationParts)) {
+        if ([] === $relationParts) {
             return $relation;
         }
 

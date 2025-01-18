@@ -75,8 +75,8 @@ trait HasRequestCriteria
 
     private function parserSearchValue($search)
     {
-        if (strpos($search, ';') || strpos($search, ':')) {
-            $values = explode(';', $search);
+        if (strpos((string) $search, ';') || strpos((string) $search, ':')) {
+            $values = explode(';', (string) $search);
             foreach ($values as $value) {
                 $s = explode(':', $value);
                 if (1 === count($s)) {
@@ -110,14 +110,14 @@ trait HasRequestCriteria
     {
         $searchData = [];
 
-        if (strpos($search, ':')) {
-            $fields = explode(';', $search);
+        if (strpos((string) $search, ':')) {
+            $fields = explode(';', (string) $search);
 
             foreach ($fields as $row) {
                 try {
                     [$field, $value] = explode(':', $row);
                     $searchData[$field] = $value;
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     // Surround offset error
                 }
             }

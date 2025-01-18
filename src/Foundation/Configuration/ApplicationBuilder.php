@@ -9,18 +9,12 @@ use function Illuminate\Filesystem\join_paths;
 
 final readonly class ApplicationBuilder
 {
-    /**
-     * @throws FilesystemException
-     */
     public function __construct(
         private Apiato $apiato,
     ) {
         $this->withDefaults($this->apiato->basePath());
     }
 
-    /**
-     * @throws FilesystemException
-     */
     private function withDefaults(string $basePath): void
     {
         $this->useSharedPath(
@@ -43,23 +37,23 @@ final readonly class ApplicationBuilder
         )->withMigrations(
             shared_path('Data/Migrations'),
             ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Data/Migrations')),
-        )->withSeeders(function (Seeding $seeding) use ($basePath) {
+        )->withSeeders(function (Seeding $seeding) use ($basePath): void {
             $seeding->loadFrom(
                 ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Data/Seeders')),
             );
-        })->withTranslations(function (Localization $localization) use ($basePath) {
+        })->withTranslations(function (Localization $localization) use ($basePath): void {
             $localization->loadFrom(
                 shared_path('Languages'),
                 ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Languages')),
             );
-        })->withViews(function (View $view) use ($basePath) {
+        })->withViews(function (View $view) use ($basePath): void {
             $view->loadFrom(
                 shared_path('Views'),
                 shared_path('Mails'),
                 ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Views')),
                 ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Mails')),
             );
-        })->withRouting(function (Routing $routing) use ($basePath) {
+        })->withRouting(function (Routing $routing) use ($basePath): void {
             $routing->loadApiRoutesFrom(
                 ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/UI/API/Routes')),
             )->loadWebRoutesFrom(
@@ -167,7 +161,10 @@ final readonly class ApplicationBuilder
      */
     private function getDirs(string $pattern): array
     {
-        return \Safe\glob($pattern, GLOB_ONLYDIR | GLOB_NOSORT);
+        /** @var string[] $dirs */
+        $dirs = \Safe\glob($pattern, GLOB_ONLYDIR | GLOB_NOSORT);
+
+        return $dirs;
     }
 
     public function create(): Apiato

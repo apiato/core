@@ -15,7 +15,7 @@ class BookServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        app()->afterResolving(Kernel::class, function (Kernel $kernel) {
+        app()->afterResolving(Kernel::class, function (Kernel $kernel): void {
             $kernel->pushMiddleware(BeforeMiddleware::class);
         });
     }

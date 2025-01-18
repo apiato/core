@@ -12,7 +12,7 @@ use League\Fractal\TransformerAbstract as FractalTransformer;
 
 abstract class Transformer extends FractalTransformer
 {
-    public function nullableItem($data, $transformer, $resourceKey = null): Primitive|Item
+    public function nullableItem($data, $transformer, string|null $resourceKey = null): Primitive|Item
     {
         if (is_null($data)) {
             return $this->primitive(null);
@@ -21,7 +21,7 @@ abstract class Transformer extends FractalTransformer
         return $this->item($data, $transformer, $resourceKey);
     }
 
-    public function item($data, $transformer, $resourceKey = null): Item
+    public function item($data, $transformer, string|null $resourceKey = null): Item
     {
         // set a default resource key if none is set
         if (!$resourceKey && $data) {
@@ -31,7 +31,7 @@ abstract class Transformer extends FractalTransformer
         return parent::item($data, $transformer, $resourceKey);
     }
 
-    public function collection($data, $transformer, $resourceKey = null): Collection
+    public function collection($data, $transformer, string|null $resourceKey = null): Collection
     {
         // set a default resource key if none is set
         if (!$resourceKey && $data->isNotEmpty()) {
@@ -41,7 +41,7 @@ abstract class Transformer extends FractalTransformer
         return parent::collection($data, $transformer, $resourceKey);
     }
 
-    protected function callIncludeMethod(Scope $scope, $includeName, $data)
+    protected function callIncludeMethod(Scope $scope, string $includeName, $data)
     {
         try {
             return parent::callIncludeMethod($scope, $includeName, $data);
@@ -52,12 +52,12 @@ abstract class Transformer extends FractalTransformer
         } catch (\Exception $exception) {
             throw new InternalError($exception->getMessage());
         }
+
+        return null;
     }
 
     public static function empty(): callable
     {
-        return static function (): array {
-            return [];
-        };
+        return static fn (): array => [];
     }
 }

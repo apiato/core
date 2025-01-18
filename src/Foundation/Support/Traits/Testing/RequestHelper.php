@@ -151,7 +151,7 @@ trait RequestHelper
 
     private function dataArrayToQueryParam(array $data, string $url): string
     {
-        if (empty($data)) {
+        if ([] === $data) {
             return $url;
         }
 
@@ -217,7 +217,7 @@ trait RequestHelper
     }
 
     // TODO: @next - add return type
-    public function setResponseContent(TestResponse $httpResponse)
+    public function setResponseContent(TestResponse $httpResponse): string|false
     {
         return $this->responseContent = $httpResponse->getContent();
     }

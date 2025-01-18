@@ -10,9 +10,7 @@ abstract class Action
 
     public function transactionalRun(...$arguments)
     {
-        return DB::transaction(function () use ($arguments) {
-            return static::run(...$arguments);
-        });
+        return DB::transaction(fn () => static::run(...$arguments));
     }
 
     public function getUI(): string

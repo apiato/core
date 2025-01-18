@@ -11,6 +11,8 @@ use Vinkla\Hashids\Facades\Hashids;
 
 final class MacroServiceProvider extends ServiceProvider
 {
+    public $items;
+
     public function boot(): void
     {
         if (!Collection::hasMacro('containsDecodedHash')) {
@@ -19,10 +21,9 @@ final class MacroServiceProvider extends ServiceProvider
                 /**
                  * Decodes a hashed value and checks if the decoded value exists in the collection under the specified key.
                  */
-                function (string $hashedValue, string $key = 'id'): bool {
+                fn (string $hashedValue, string $key = 'id'): bool =>
                     /* @var Collection $this */
-                    return $this->contains($key, Hashids::decode($hashedValue)[0]);
-                },
+                    $this->contains($key, Hashids::decode($hashedValue)[0]),
             );
         }
 

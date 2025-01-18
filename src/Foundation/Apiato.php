@@ -21,11 +21,17 @@ class Apiato
 {
     private static self $instance;
     private string $sharedPath;
+    /** @var string[] */
     private array $providerPaths = [];
+    /** @var string[] */
     private array $configPaths = [];
+    /** @var string[] */
     private array $eventDiscoveryPaths = [];
+    /** @var string[] */
     private array $commandPaths = [];
+    /** @var string[] */
     private array $migrationPaths = [];
+    /** @var string[] */
     private array $helperPaths = [];
     private Routing $routing;
     private Localization $localization;
@@ -38,9 +44,6 @@ class Apiato
     ) {
     }
 
-    /**
-     * @throws FilesystemException
-     */
     public static function configure(string|null $basePath = null): ApplicationBuilder
     {
         if (isset(self::$instance)) {
@@ -212,7 +215,7 @@ class Apiato
     public function configs(): array
     {
         return collect($this->configPaths)->flatMap(
-            static fn (string $path) => \Safe\glob($path . '/*.php'),
+            static fn (string $path): array => \Safe\glob($path . '/*.php'),
         )->toArray();
     }
 
@@ -224,7 +227,7 @@ class Apiato
     public function helpers(): array
     {
         return collect($this->helperPaths)->flatMap(
-            static fn (string $path) => \Safe\glob($path . '/*.php'),
+            static fn (string $path): array => \Safe\glob($path . '/*.php'),
         )->toArray();
     }
 

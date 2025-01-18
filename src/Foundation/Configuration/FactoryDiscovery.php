@@ -33,7 +33,7 @@ final class FactoryDiscovery
      */
     public function resolveFactoryName(string $modelName): string|null
     {
-        $factoryName = app()->call(self::$factoryNameResolver, compact('modelName'));
+        $factoryName = app()->call(self::$factoryNameResolver, ['modelName' => $modelName]);
 
         if (!class_exists($factoryName)) {
             return null;

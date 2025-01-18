@@ -19,12 +19,10 @@ final class Routing
     public function __construct()
     {
         $this->resolveApiVersionUsing(
-            static function (string $file): string {
-                return Str::of($file)
-                    ->before('.php')
-                    ->betweenFirst('.', '.')
-                    ->value();
-            },
+            static fn (string $file): string => Str::of($file)
+                ->before('.php')
+                ->betweenFirst('.', '.')
+                ->value(),
         );
     }
 
@@ -52,14 +50,12 @@ final class Routing
     public function registerApiRoutes(): void
     {
         collect($this->apiRouteDirs)
-            ->flatMap(static fn ($path) => \Safe\glob($path . '/*.php'))
+            ->flatMap(static fn ($path): array => \Safe\glob($path . '/*.php'))
             ->each(
-                function (string $file) {
-                    return Route::middleware($this->getApiMiddlewares())
-                        ->domain(config('apiato.api.url'))
-                        ->prefix($this->buildApiPrefixFor($file))
-                        ->group($file);
-                },
+                fn (string $file) => Route::middleware($this->getApiMiddlewares())
+                    ->domain(config('apiato.api.url'))
+                    ->prefix($this->buildApiPrefixFor($file))
+                    ->group($file),
             );
     }
 
@@ -87,7 +83,7 @@ final class Routing
 
     private function resolveApiVersionFor(string $file): string
     {
-        return app()->call(self::$apiVersionResolver, compact('file'));
+        return app()->call(self::$apiVersionResolver, ['file' => $file]);
     }
 
     public function getApiPrefix(): string
@@ -117,7 +113,7 @@ final class Routing
     public function webRoutes(): array
     {
         return collect($this->webRouteDirs)
-            ->flatMap(static fn ($path) => \Safe\glob($path . '/*.php'))
+            ->flatMap(static fn ($path): array => \Safe\glob($path . '/*.php'))
             ->toArray();
     }
 }

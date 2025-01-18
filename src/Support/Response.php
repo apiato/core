@@ -53,15 +53,15 @@ class Response extends Fractal
 
         $this->manager->setRecursionLimit($this->recursionLimit);
 
-        if (!empty($this->includes)) {
+        if ([] !== $this->includes) {
             $this->manager->parseIncludes($this->includes);
         }
 
-        if (!empty($this->excludes)) {
+        if ([] !== $this->excludes) {
             $this->manager->parseExcludes($this->excludes);
         }
 
-        if (!empty($this->fieldsets)) {
+        if ([] !== $this->fieldsets) {
             $this->manager->parseFieldsets($this->fieldsets);
         }
 

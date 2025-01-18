@@ -65,7 +65,7 @@ class FunctionalTestGenerator extends Generator implements ComponentsGenerator
 
         $this->stubName = $stub ? 'tests/functional/' . Str::lower($stub) . '.stub' : 'tests/functional/' . $ui . '.stub';
 
-        $model = $model ?? $this->containerName;
+        $model ??= $this->containerName;
         $models = Str::plural($model);
 
         return [

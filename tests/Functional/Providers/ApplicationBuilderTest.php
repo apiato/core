@@ -2,6 +2,7 @@
 
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\ApplicationBuilder;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
 use Pest\Expectation;
 use Workbench\App\Containers\MySection\Book\Events\BookCreated;
@@ -64,7 +65,7 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
         $registeredCommands = collect(Artisan::all());
 
         expect($mustLoad)
-            ->each(function (Expectation $command) use ($registeredCommands) {
+            ->each(function (Expectation $command) use ($registeredCommands): void {
                 expect($registeredCommands->has($command->value))->toBeTrue();
             });
     });
@@ -76,7 +77,7 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
         ];
 
         expect($endpoints)
-            ->each(function (Expectation $endpoint) {
+            ->each(function (Expectation $endpoint): void {
                 $response = $this->get($endpoint->value);
                 $response->assertOk();
             });
@@ -89,7 +90,7 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
         ];
 
         expect($endpoints)
-            ->each(function (Expectation $endpoint) {
+            ->each(function (Expectation $endpoint): void {
                 $response = $this->get($endpoint->value);
                 $response->assertOk();
             });

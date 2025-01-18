@@ -49,6 +49,6 @@ final class Localization
 
     public function buildNamespaceFor(string $path): string
     {
-        return app()->call(self::$namespaceBuilder, compact('path'));
+        return app()->call(self::$namespaceBuilder, ['path' => $path]);
     }
 }

@@ -57,7 +57,7 @@ abstract class Request extends LaravelRequest
     public static function injectData(array $parameters = [], User|null $user = null, array $cookies = [], array $files = [], array $server = []): static
     {
         // if user is passed, will be returned when asking for the authenticated user using `\Auth::user()`
-        if ($user) {
+        if ($user instanceof User) {
             $app = App::getInstance();
             $app['auth']->guard($driver = 'api')->setUser($user);
             $app['auth']->shouldUse($driver);
@@ -66,9 +66,7 @@ abstract class Request extends LaravelRequest
         // For now doesn't matter which URI or Method is used.
         $request = parent::create('/', 'GET', $parameters, $cookies, $files, $server);
 
-        $request->setUserResolver(static function () use ($user) {
-            return $user;
-        });
+        $request->setUserResolver(static fn (): \Apiato\Abstract\Models\UserModel|null => $user);
 
         return $request;
     }
@@ -133,7 +131,7 @@ abstract class Request extends LaravelRequest
         );
 
         // allow access if user has access to any of the defined roles or permissions.
-        return empty($hasAccess) || in_array(true, $hasAccess, true);
+        return [] === $hasAccess || in_array(true, $hasAccess, true);
     }
 
     protected function hasAnyPermissionAccess($user): array
@@ -145,9 +143,7 @@ abstract class Request extends LaravelRequest
         $permissions = is_array($this->access['permissions']) ? $this->access['permissions'] :
             explode('|', $this->access['permissions']);
 
-        return array_map(static function ($permission) use ($user) {
-            return $user->hasPermissionTo($permission);
-        }, $permissions);
+        return array_map(static fn ($permission) => $user->hasPermissionTo($permission), $permissions);
     }
 
     protected function hasAnyRoleAccess($user): array
@@ -159,9 +155,7 @@ abstract class Request extends LaravelRequest
         $roles = is_array($this->access['roles']) ? $this->access['roles'] :
             explode('|', $this->access['roles']);
 
-        return array_map(static function ($role) use ($user) {
-            return $user->hasRole($role);
-        }, $roles);
+        return array_map(static fn ($role) => $user->hasRole($role), $roles);
     }
 
     /**
@@ -197,8 +191,6 @@ abstract class Request extends LaravelRequest
      * Overriding this function to modify the any user input before
      * applying the validation rules.
      *
-     * @param null $keys
-     *
      * @throws IncorrectId
      * @throws \Throwable
      */
@@ -208,9 +200,7 @@ abstract class Request extends LaravelRequest
 
         $requestData = $this->mergeUrlParametersWithRequestData($requestData);
 
-        $requestData = $this->decodeHashedIdsBeforeValidation($requestData);
-
-        return $requestData;
+        return $this->decodeHashedIdsBeforeValidation($requestData);
     }
 
     /**
@@ -221,10 +211,8 @@ abstract class Request extends LaravelRequest
      */
     protected function mergeUrlParametersWithRequestData(array $requestData): array
     {
-        if (!empty($this->urlParameters)) {
-            foreach ($this->urlParameters as $param) {
-                $requestData[$param] = $this->route($param);
-            }
+        foreach ($this->urlParameters as $param) {
+            $requestData[$param] = $this->route($param);
         }
 
         return $requestData;
@@ -254,7 +242,7 @@ abstract class Request extends LaravelRequest
         // iterate all functions in the array
         foreach ($functions as $function) {
             // in case the value doesn't contain a separator (single function per key)
-            if (!strpos($function, $orIndicator)) {
+            if (!strpos((string) $function, $orIndicator)) {
                 // simply call the single function and store the response.
                 $returns[] = $this->{$function}();
             } else {
@@ -262,7 +250,7 @@ abstract class Request extends LaravelRequest
                 $orReturns = [];
 
                 // iterate over each function in the key
-                foreach (explode($orIndicator, $function) as $orFunction) {
+                foreach (explode($orIndicator, (string) $function) as $orFunction) {
                     // dynamically call each function
                     $orReturns[] = $this->{$orFunction}();
                 }

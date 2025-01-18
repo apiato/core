@@ -75,7 +75,7 @@ class TransformerGenerator extends Generator implements ComponentsGenerator
         ];
     }
 
-    private function getListOfAllAttributes($full, $model): string
+    private function getListOfAllAttributes(string|bool|array|null $full, string $model): string
     {
         $indent = str_repeat(' ', 12);
         $_model = Str::lower($model);

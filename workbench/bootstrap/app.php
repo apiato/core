@@ -15,7 +15,7 @@ return Application::configure(basePath: $basePath)
         web: $apiato->webRoutes(),
         then: static fn () => $apiato->registerApiRoutes(),
     )
-    ->withMiddleware(function (Middleware $middleware) use ($apiato) {
+    ->withMiddleware(function (Middleware $middleware) use ($apiato): void {
         $middleware->api($apiato->apiMiddlewares());
     })
     ->withCommands($apiato->commands())

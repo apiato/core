@@ -14,7 +14,7 @@ use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
 #[CoversClass(Response::class)]
 class ResponseTraitTest extends UnitTestCase
 {
-    private $trait;
+    private object $trait;
     private User $user;
     private Transformer $transformer;
     private array $customMetadata;
@@ -106,7 +106,7 @@ class ResponseTraitTest extends UnitTestCase
     }
 
     #[DataProvider('resourceKeyProvider')]
-    public function testCanOverrideResourceKey($resourceKey, $expected): void
+    public function testCanOverrideResourceKey(bool|string|array|null $resourceKey, string $expected): void
     {
         $result = $this->trait
             ->withMeta($this->metadata)

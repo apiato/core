@@ -1,6 +1,7 @@
 <?php
 
 use Apiato\Foundation\Providers\CommandServiceProvider;
+use Illuminate\Support\Facades\Artisan;
 use Pest\Expectation;
 
 describe(class_basename(CommandServiceProvider::class), function (): void {
@@ -12,7 +13,7 @@ describe(class_basename(CommandServiceProvider::class), function (): void {
         ];
 
         expect($commands)
-            ->each(function (Expectation $command) use ($actual) {
+            ->each(function (Expectation $command) use ($actual): void {
                 expect($actual->has($command->value))->toBeTrue();
             });
     });

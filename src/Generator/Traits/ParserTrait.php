@@ -10,9 +10,8 @@ trait ParserTrait
     public function parsePathStructure($path, $data): string|array
     {
         $path = str_replace(array_map([$this, 'maskPathVariables'], array_keys($data)), array_values($data), $path);
-        $path = str_replace('*', $this->parsedFileName, $path);
 
-        return $path;
+        return str_replace('*', $this->parsedFileName, $path);
     }
 
     /**
@@ -20,9 +19,7 @@ trait ParserTrait
      */
     public function parseFileStructure($filename, $data): string|array
     {
-        $filename = str_replace(array_map([$this, 'maskFileVariables'], array_keys($data)), array_values($data), $filename);
-
-        return $filename;
+        return str_replace(array_map([$this, 'maskFileVariables'], array_keys($data)), array_values($data), $filename);
     }
 
     /**
@@ -30,22 +27,20 @@ trait ParserTrait
      */
     public function parseStubContent($stub, $data): string|array
     {
-        $stub = str_replace(array_map([$this, 'maskStubVariables'], array_keys($data)), array_values($data), $stub);
-
-        return $stub;
+        return str_replace(array_map([$this, 'maskStubVariables'], array_keys($data)), array_values($data), $stub);
     }
 
-    private function maskPathVariables($key)
+    private function maskPathVariables(string $key): string
     {
         return '{' . $key . '}';
     }
 
-    private function maskFileVariables($key)
+    private function maskFileVariables(string $key): string
     {
         return '{' . $key . '}';
     }
 
-    private function maskStubVariables($key)
+    private function maskStubVariables(string $key): string
     {
         return '{{' . $key . '}}';
     }

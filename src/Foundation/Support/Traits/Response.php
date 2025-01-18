@@ -78,7 +78,7 @@ trait Response
 
         // apply request filters if available in the request
         if ($requestFilters = request()?->input(config('apiato.requests.params.filter', 'filter'))) {
-            $result = $this->filterResponse($fractal->toArray(), explode(';', $requestFilters));
+            $result = $this->filterResponse($fractal->toArray(), explode(';', (string) $requestFilters));
         } else {
             $result = $fractal->toArray();
         }
@@ -108,11 +108,9 @@ trait Response
                 } else {
                     $responseArray[$k] = $v;
                 }
-            } else {
+            } elseif (!in_array($k, $filters)) {
                 // check if the array is not in our filter-list
-                if (!in_array($k, $filters)) {
-                    unset($responseArray[$k]);
-                }
+                unset($responseArray[$k]);
             }
         }
 
@@ -138,7 +136,7 @@ trait Response
 
     public function deleted(Model|null $deletedModel = null): JsonResponse
     {
-        if (!$deletedModel) {
+        if (!$deletedModel instanceof Model) {
             return $this->accepted();
         }
 

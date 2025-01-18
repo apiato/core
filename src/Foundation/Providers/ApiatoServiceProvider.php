@@ -31,11 +31,11 @@ final class ApiatoServiceProvider extends ServiceProvider
 
         AliasLoader::getInstance()->alias('DatabaseSeeder', DatabaseSeeder::class);
 
-        $this->app->singletonIf(Apiato::class, static fn () => Apiato::instance());
+        $this->app->singletonIf(Apiato::class, static fn (): Apiato => Apiato::instance());
     }
 
     public function boot(): void
     {
-        AboutCommand::add('Apiato', static fn () => ['Version' => '13.0.0']);
+        AboutCommand::add('Apiato', static fn (): array => ['Version' => '13.0.0']);
     }
 }

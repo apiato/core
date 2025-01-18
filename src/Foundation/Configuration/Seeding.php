@@ -20,12 +20,10 @@ class Seeding
                 ->flatMap(
                     static fn (array $directoryClassMap): Collection => collect($directoryClassMap)
                         ->sortBy(
-                            static function ($path, $class) {
-                                return substr(
-                                    $class,
-                                    strpos($class, '_') + 1,
-                                );
-                            },
+                            static fn ($path, $class): string => substr(
+                                (string) $class,
+                                strpos((string) $class, '_') + 1,
+                            ),
                         ),
                 )->keys()
                 ->toArray(),
@@ -59,7 +57,7 @@ class Seeding
      */
     private function getSortedFiles(array $classMapGroupedByDirectory): array
     {
-        return app()->call(self::$seederSorter, compact('classMapGroupedByDirectory'));
+        return app()->call(self::$seederSorter, ['classMapGroupedByDirectory' => $classMapGroupedByDirectory]);
     }
 
     public function loadFrom(string ...$paths): self

@@ -39,8 +39,6 @@ trait TestingUser
      * Same as `getTestingUser()` but always overrides the User Access
      * (roles and permissions) with null. So the user can be used to test
      * if unauthorized user tried to access your protected endpoint.
-     *
-     * @param null $userDetails
      */
     public function getTestingUserWithoutAccess($userDetails = null, bool $createUserAsAdmin = false): UserModel
     {
@@ -138,9 +136,8 @@ trait TestingUser
         $access = $access ?: $this->getAccess();
 
         $user = $this->setupTestingUserPermissions($user, $access);
-        $user = $this->setupTestingUserRoles($user, $access);
 
-        return $user;
+        return $this->setupTestingUserRoles($user, $access);
     }
 
     private function getAccess(): array|null

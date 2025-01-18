@@ -49,7 +49,7 @@ describe(class_basename(Routing::class), function (): void {
         );
 
         $apiRoutes = getRoutesByMiddleware('api')->flatMap(
-            static fn (Route $route) => [
+            static fn (Route $route): array => [
                 $route->methods(),
                 $route->uri(),
                 $route->gatherMiddleware(),
