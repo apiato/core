@@ -13,7 +13,6 @@ use Apiato\Foundation\Middleware\Profiler;
 use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Composer\Autoload\ClassLoader;
 use Composer\ClassMapGenerator\ClassMapGenerator;
-use Safe\Exceptions\FilesystemException;
 
 use function Illuminate\Filesystem\join_paths;
 

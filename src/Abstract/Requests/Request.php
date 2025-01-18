@@ -66,7 +66,7 @@ abstract class Request extends LaravelRequest
         // For now doesn't matter which URI or Method is used.
         $request = parent::create('/', 'GET', $parameters, $cookies, $files, $server);
 
-        $request->setUserResolver(static fn (): \Apiato\Abstract\Models\UserModel|null => $user);
+        $request->setUserResolver(static fn (): User|null => $user);
 
         return $request;
     }
