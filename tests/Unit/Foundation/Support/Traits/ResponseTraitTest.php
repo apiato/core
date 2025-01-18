@@ -6,10 +6,10 @@ use Apiato\Abstract\Transformers\Transformer;
 use Apiato\Foundation\Support\Traits\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\UnitTestCase;
 use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
-use Tests\UnitTestCase;
 
 #[CoversClass(Response::class)]
 class ResponseTraitTest extends UnitTestCase

@@ -5,7 +5,6 @@ namespace Tests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Vinkla\Hashids\Facades\Hashids;
-use function Orchestra\Testbench\package_path;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {

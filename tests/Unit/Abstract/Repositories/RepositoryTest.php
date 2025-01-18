@@ -7,12 +7,12 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\UnitTestCase;
 use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
 use Workbench\App\Containers\MySection\Book\Models\Book;
-use Tests\UnitTestCase;
 
 #[CoversClass(Repository::class)]
 final class RepositoryTest extends UnitTestCase
