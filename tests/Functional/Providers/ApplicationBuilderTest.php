@@ -16,7 +16,7 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
         expect($config->providers())->toBe([
             shared_path('Providers'),
             app_path('Containers/*/*/Providers'),
-        ])->and($config->configPaths())->toBe([
+        ])->and($config->configs())->toBe([
             shared_path('Configs'),
             app_path('Containers/*/*/Configs'),
         ])->and($config->events())->toBe([
