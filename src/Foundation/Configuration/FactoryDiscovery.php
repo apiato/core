@@ -21,7 +21,7 @@ final class FactoryDiscovery
         });
     }
 
-    public function resolveFactoryNameUsing(callable $callback): self
+    public function resolveFactoryNameUsing(\Closure $callback): self
     {
         self::$factoryNameResolver = $callback;
 

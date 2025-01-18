@@ -28,7 +28,7 @@ final class Localization
         });
     }
 
-    public function buildNamespaceUsing(callable $callback): self
+    public function buildNamespaceUsing(\Closure $callback): self
     {
         self::$namespaceBuilder = $callback;
 

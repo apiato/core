@@ -32,7 +32,7 @@ class Seeding
         );
     }
 
-    public function sortUsing(callable $callback): self
+    public function sortUsing(\Closure $callback): self
     {
         self::$seederSorter = $callback;
 

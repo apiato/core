@@ -28,7 +28,7 @@ final class Routing
         );
     }
 
-    public function resolveApiVersionUsing(callable $callback): self
+    public function resolveApiVersionUsing(\Closure $callback): self
     {
         self::$apiVersionResolver = $callback;
 
@@ -63,6 +63,9 @@ final class Routing
             );
     }
 
+    /**
+     * @return string[]
+     */
     private function getApiMiddlewares(): array
     {
         $middlewares = ['api'];
@@ -108,6 +111,9 @@ final class Routing
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function webRoutes(): array
     {
         return collect($this->webRouteDirs)
