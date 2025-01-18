@@ -185,6 +185,11 @@ class Apiato
         return $this;
     }
 
+    /*
+     * Get the service providers to be loaded.
+     *
+     * @return string[]
+     */
     public function providers(): array
     {
         $classMapper = new ClassMapGenerator();
@@ -203,7 +208,7 @@ class Apiato
     public function configs(): array
     {
         return collect($this->configPaths)->flatMap(
-            static fn (string $path) => glob($path . '/*.php'),
+            static fn (string $path) => \Safe\glob($path . '/*.php'),
         )->toArray();
     }
 
@@ -215,7 +220,7 @@ class Apiato
     public function helpers(): array
     {
         return collect($this->helperPaths)->flatMap(
-            static fn (string $path) => glob($path . '/*.php'),
+            static fn (string $path) => \Safe\glob($path . '/*.php'),
         )->toArray();
     }
 

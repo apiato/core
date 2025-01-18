@@ -208,7 +208,7 @@ trait RequestHelper
             return $this->responseContentArray;
         }
 
-        return $this->responseContentArray = json_decode($this->getResponseContent(), true, 512, JSON_THROW_ON_ERROR);
+        return $this->responseContentArray = \Safe\json_decode($this->getResponseContent(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function getResponseContent(): string
@@ -231,7 +231,7 @@ trait RequestHelper
             return $this->responseContentObject;
         }
 
-        return $this->responseContentObject = json_decode($this->getResponseContent(), false, 512, JSON_THROW_ON_ERROR);
+        return $this->responseContentObject = \Safe\json_decode($this->getResponseContent(), false, 512, JSON_THROW_ON_ERROR);
     }
 
     /**

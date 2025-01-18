@@ -17,7 +17,7 @@ final class ConfigServiceProvider extends ServiceProvider
         }
 
         $this->mergeConfigFrom(
-            realpath('config/apiato.php'),
+            \Safe\realpath('config/apiato.php'),
             'apiato',
         );
     }
@@ -25,7 +25,7 @@ final class ConfigServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            realpath('config/apiato.php') => shared_path('Configs/apiato.php'),
+            \Safe\realpath('config/apiato.php') => shared_path('Configs/apiato.php'),
         ], 'apiato-config');
     }
 }

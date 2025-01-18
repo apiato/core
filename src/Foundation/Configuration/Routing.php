@@ -52,7 +52,7 @@ final class Routing
     public function registerApiRoutes(): void
     {
         collect($this->apiRouteDirs)
-            ->flatMap(static fn ($path) => glob($path . '/*.php'))
+            ->flatMap(static fn ($path) => \Safe\glob($path . '/*.php'))
             ->each(
                 function (string $file) {
                     return Route::middleware($this->getApiMiddlewares())
@@ -111,7 +111,7 @@ final class Routing
     public function webRoutes(): array
     {
         return collect($this->webRouteDirs)
-            ->flatMap(static fn ($path) => glob($path . '/*.php'))
+            ->flatMap(static fn ($path) => \Safe\glob($path . '/*.php'))
             ->toArray();
     }
 }

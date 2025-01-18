@@ -155,7 +155,7 @@ final readonly class ApplicationBuilder
 
     private function getDirs($path): array
     {
-        return glob($path, GLOB_ONLYDIR | GLOB_NOSORT);
+        return \Safe\glob($path, GLOB_ONLYDIR | GLOB_NOSORT);
     }
 
     public function create(): Apiato

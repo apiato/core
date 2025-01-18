@@ -68,7 +68,7 @@ class RouteGenerator extends Generator implements ComponentsGenerator
         }
         $controllerName = $this->checkParameterOrAsk('controller', 'Enter the controller name', 'Controller');
 
-        $docUrl = preg_replace('~{(.+?)}~', ':$1', $url);
+        $docUrl = \Safe\preg_replace('~{(.+?)}~', ':$1', $url);
 
         $routeName = Str::lower($ui . '_' . $this->containerName . '_' . Str::snake($operation));
 
