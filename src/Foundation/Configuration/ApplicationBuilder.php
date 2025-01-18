@@ -3,17 +3,24 @@
 namespace Apiato\Foundation\Configuration;
 
 use Apiato\Foundation\Apiato;
+use Safe\Exceptions\FilesystemException;
 
 use function Illuminate\Filesystem\join_paths;
 
 final readonly class ApplicationBuilder
 {
+    /**
+     * @throws FilesystemException
+     */
     public function __construct(
         private Apiato $apiato,
     ) {
         $this->withDefaults($this->apiato->basePath());
     }
 
+    /**
+     * @throws FilesystemException
+     */
     private function withDefaults(string $basePath): void
     {
         $this->useSharedPath(
@@ -148,14 +155,19 @@ final readonly class ApplicationBuilder
         return $this;
     }
 
-    private function joinPaths($basePath, $path = ''): string
+    private function joinPaths(string $basePath, string $path = ''): string
     {
         return join_paths($basePath, $path);
     }
 
-    private function getDirs($path): array
+    /**
+     * @return string[]
+     *
+     * @throws FilesystemException
+     */
+    private function getDirs(string $pattern): array
     {
-        return \Safe\glob($path, GLOB_ONLYDIR | GLOB_NOSORT);
+        return \Safe\glob($pattern, GLOB_ONLYDIR | GLOB_NOSORT);
     }
 
     public function create(): Apiato
