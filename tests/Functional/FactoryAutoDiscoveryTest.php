@@ -1,8 +1,8 @@
 <?php
 
 use Apiato\Foundation\Support\Traits\Model\FactoryDiscovery;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Data\Factories\BookFactory;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Models\Book;
+use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
+use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(FactoryDiscovery::class), function (): void {
     it('can locate the factory of a model using different call styles', function (): void {

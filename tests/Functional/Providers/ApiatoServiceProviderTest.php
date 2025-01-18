@@ -14,7 +14,7 @@ use Apiato\Generator\GeneratorsServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\DB;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Middlewares\BeforeMiddleware;
+use Workbench\App\Containers\MySection\Book\Middlewares\BeforeMiddleware;
 
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('registers expected providers', function (): void {

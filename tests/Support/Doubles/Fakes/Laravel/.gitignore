@@ -1,9 +1,0 @@
-.env
-.env.*
-!.env.example
-
-testbench.yaml
-testbench.yaml.backup
-storage
-bootstrap/cache/*
-!.gitkeep

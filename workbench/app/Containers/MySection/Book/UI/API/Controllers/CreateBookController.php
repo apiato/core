@@ -1,0 +1,19 @@
+<?php
+
+namespace Workbench\App\Containers\MySection\Book\UI\API\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use Workbench\App\Containers\MySection\Book\Actions\CreateBookAction;
+use Workbench\App\Containers\MySection\Book\UI\API\Requests\CreateBookRequest;
+use Workbench\App\Containers\MySection\Book\UI\API\Transformers\BookTransformer;
+use Workbench\App\Ship\Parents\Controllers\ApiController;
+
+class CreateBookController extends ApiController
+{
+    public function __invoke(CreateBookRequest $request, CreateBookAction $action): JsonResponse
+    {
+        $book = $action->run($request);
+
+        return $this->created($this->transform($book, BookTransformer::class));
+    }
+}

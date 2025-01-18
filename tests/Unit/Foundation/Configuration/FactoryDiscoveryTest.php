@@ -1,8 +1,8 @@
 <?php
 
 use Apiato\Foundation\Configuration\FactoryDiscovery;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Data\Factories\BookFactory;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Models\Book;
+use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
+use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(FactoryDiscovery::class), function (): void {
     it('can discover using default factory name resolver', function (): void {

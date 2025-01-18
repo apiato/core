@@ -1,6 +1,6 @@
 workbench:
   - install: true
-laravel: tests/Support/Doubles/Fakes/Laravel
+laravel: ./workbench
 providers:
   - Apiato\Foundation\Providers\ApiatoServiceProvider
   - Illuminate\Foundation\Support\Providers\EventServiceProvider

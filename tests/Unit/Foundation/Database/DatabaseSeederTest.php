@@ -4,7 +4,7 @@ use Apiato\Abstract\Seeders\Seeder;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Mockery\MockInterface;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Data\Seeders\Wondered_3;
+use Workbench\App\Containers\MySection\Book\Data\Seeders\Wondered_3;
 
 describe(class_basename(DatabaseSeeder::class), function (): void {
     it('can call seeders', function (): void {

@@ -7,11 +7,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Data\Factories\UserFactory;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Data\Repositories\UserRepository;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\Identity\User\Models\User;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Data\Factories\BookFactory;
-use Tests\Support\Doubles\Fakes\Laravel\app\Containers\MySection\Book\Models\Book;
+use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
+use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
+use Workbench\App\Containers\Identity\User\Models\User;
+use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
+use Workbench\App\Containers\MySection\Book\Models\Book;
 use Tests\UnitTestCase;
 
 #[CoversClass(Repository::class)]
