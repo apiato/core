@@ -13,6 +13,7 @@ use Apiato\Foundation\Middleware\Profiler;
 use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Composer\Autoload\ClassLoader;
 use Composer\ClassMapGenerator\ClassMapGenerator;
+use Safe\Exceptions\FilesystemException;
 
 use function Illuminate\Filesystem\join_paths;
 
@@ -37,6 +38,9 @@ class Apiato
     ) {
     }
 
+    /**
+     * @throws FilesystemException
+     */
     public static function configure(string|null $basePath = null): ApplicationBuilder
     {
         if (isset(self::$instance)) {
