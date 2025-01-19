@@ -222,8 +222,7 @@ trait RequestHelper
      * Make sure to call it before injectId(),
      * or else injectId() will not replace the ID in the overridden endpoint.
      */
-    // TODO: @next - add $endpoint parameter type
-    public function endpoint($endpoint): static
+    public function endpoint(string $endpoint): static
     {
         $this->overrideEndpoint = $endpoint;
 
