@@ -3,6 +3,7 @@
 namespace Apiato\Foundation\Configuration;
 
 use Apiato\Abstract\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 final class FactoryDiscovery
@@ -29,16 +30,21 @@ final class FactoryDiscovery
     }
 
     /**
-     * @return class-string<Factory>|null
+     * @template TModel of Model
+     * @template TFactory of Factory
+     *
+     * @param class-string<TModel> $modelName
+     * @return class-string<TFactory>|null
      */
     public function resolveFactoryName(string $modelName): string|null
     {
         $factoryName = app()->call(self::$factoryNameResolver, ['modelName' => $modelName]);
 
-        if (!class_exists($factoryName)) {
-            return null;
+        if (is_string($factoryName) && class_exists($factoryName) && is_subclass_of($factoryName, Factory::class)) {
+            /** @var class-string<TFactory> $factoryName */
+            return $factoryName;
         }
 
-        return $factoryName;
+        return null;
     }
 }
