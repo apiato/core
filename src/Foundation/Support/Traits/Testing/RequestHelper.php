@@ -2,7 +2,6 @@
 
 namespace Apiato\Foundation\Support\Traits\Testing;
 
-use Apiato\Foundation\Apiato;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use Vinkla\Hashids\Facades\Hashids;
@@ -92,7 +91,7 @@ trait RequestHelper
 
     private function buildUrlForUri($uri): string
     {
-        $uri = Apiato::instance()->routing()->getApiPrefix() . $uri;
+        $uri = apiato()->routing()->getApiPrefix() . $uri;
 
         return $this->getUrl() . $uri;
     }
