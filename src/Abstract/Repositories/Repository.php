@@ -17,7 +17,6 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         CacheableRepository::paginate as cacheablePaginate;
     }
 
-    // TODO: BC: set return type to void
     /**
      * Define the maximum number of entries per page that is returned.
      * Set to 0 to "disable" this feature.
@@ -40,7 +39,6 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      */
     public function shouldEagerLoadIncludes(): bool
     {
-        // TODO: BC: disable it by default for v8 and enable by default for v13
         return false;
     }
 
