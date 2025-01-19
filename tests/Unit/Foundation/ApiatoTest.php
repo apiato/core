@@ -17,31 +17,31 @@ use Workbench\App\Ship\Providers\ShipServiceProvider;
 describe(class_basename(Apiato::class), function (): void {
     it('can be created with default configuration', function (): void {
         $config = Apiato::configure(__DIR__)->create();
-        expect($config->providers())->toBe([
+        expect($config->providers())->toEqualCanonicalizing([
             ShipServiceProvider::class,
             BookServiceProvider::class,
             EventServiceProvider::class,
-        ])->and($config->configs())->toBe([
+        ])->and($config->configs())->toEqualCanonicalizing([
             shared_path('Configs/boat.php'),
             app_path('Containers/MySection/Book/Configs/mySection-book.php'),
-        ])->and($config->events())->toBe([
+        ])->and($config->events())->toEqualCanonicalizing([
             shared_path('Listeners'),
             app_path('Containers/MySection/Book/Listeners'),
             app_path('Containers/MySection/Author/Listeners'),
-        ])->and($config->commands())->toBe([
+        ])->and($config->commands())->toEqualCanonicalizing([
             shared_path('Commands'),
             app_path('Containers/MySection/Book/UI/Console'),
-        ])->and($config->helpers())->toBe([
+        ])->and($config->helpers())->toEqualCanonicalizing([
             shared_path('Helpers/ExplosiveClass.php'),
             shared_path('Helpers/functions.php'),
             shared_path('Helpers/helpers.php'),
             app_path('Containers/MySection/Book/Helpers/functions.php'),
             app_path('Containers/MySection/Author/Helpers/helpers.php'),
-        ])->and($config->migrations())->toBe([
+        ])->and($config->migrations())->toEqualCanonicalizing([
             shared_path('Data/Migrations'),
             app_path('Containers/MySection/Book/Data/Migrations'),
             app_path('Containers/Identity/User/Data/Migrations'),
-        ])->and($config->seeding()->seeders())->toBe([
+        ])->and($config->seeding()->seeders())->toEqualCanonicalizing([
             Workbench\App\Containers\MySection\Book\Data\Seeders\Ordered_1::class,
             Workbench\App\Containers\MySection\Book\Data\Seeders\Murdered_2::class,
             Workbench\App\Containers\MySection\Book\Data\Seeders\Wondered_3::class,
@@ -50,15 +50,15 @@ describe(class_basename(Apiato::class), function (): void {
             Murdered_2::class,
             Wondered_3::class,
             Unordered::class,
-        ])->and($config->localization()->paths())->toBe([
+        ])->and($config->localization()->paths())->toEqualCanonicalizing([
             shared_path('Languages'),
             app_path('Containers/MySection/Book/Languages'),
-        ])->and($config->view()->paths())->toBe([
+        ])->and($config->view()->paths())->toEqualCanonicalizing([
             shared_path('Views'),
             shared_path('Mails'),
             app_path('Containers/MySection/Book/Views'),
             app_path('Containers/MySection/Author/Mails'),
-        ])->and($config->routing()->webRoutes())->toBe([
+        ])->and($config->routing()->webRoutes())->toEqualCanonicalizing([
             app_path('Containers/MySection/Book/UI/WEB/Routes/CreateBook.v1.public.php'),
             app_path('Containers/MySection/Book/UI/WEB/Routes/ListBooks.php'),
             app_path('Containers/MySection/Author/UI/WEB/Routes/ListAuthors.php'),
