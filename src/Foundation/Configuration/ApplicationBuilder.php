@@ -30,7 +30,7 @@ final readonly class ApplicationBuilder
             ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Listeners')),
         )->withCommands(
             shared_path('Commands'),
-            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/UI/Console')),
+            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/UI/CLI')),
         )->withHelpers(
             shared_path('Helpers'),
             ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Helpers')),
