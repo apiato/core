@@ -10,7 +10,7 @@ use Apiato\Foundation\Support\Traits\Testing\TestingUser;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
 beforeEach(function (): void {
-    $this->sut = new class ('Anonym') extends TestCase {};
+    $this->sut = new class('Anonym') extends TestCase {};
 });
 describe(class_basename(TestCase::class), function (): void {
     it('uses expected traits', function (): void {
@@ -28,7 +28,6 @@ describe(class_basename(TestCase::class), function (): void {
     it('can detect invalid endpoint format', function (string $endpoint): void {
         expect(fn () => $this->sut->endpoint($endpoint)->parseEndpoint())
             ->toThrow(\RuntimeException::class);
-
     })->with([
         '',
         'post',

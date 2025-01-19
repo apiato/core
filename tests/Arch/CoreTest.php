@@ -2,12 +2,12 @@
 
 arch()->preset()->php();
 
-//pest()->presets()->custom('apiato', function () {
+// pest()->presets()->custom('apiato', function () {
 //    return [
 //        expect('Infrastructure')->toOnlyBeUsedIn('Application'),
 //        expect('Domain')->toOnlyBeUsedIn('Application'),
 //    ];
-//});
+// });
 
 arch('src')
     ->expect('Apiato')
@@ -28,7 +28,6 @@ arch('src/abstract')
     ->expect('Apiato\Abstract')
     ->classes()->toBeAbstract();
 
-//arch('Src - Foundation')
+// arch('Src - Foundation')
 //    ->expect('Apiato\Foundation')
 //    ->classes()->toExtend('Illuminate\Foundation\Application');
-
