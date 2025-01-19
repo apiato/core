@@ -15,7 +15,6 @@ trait Response
     protected array $metaData = [];
 
     /**
-     * @param mixed $data
      * @param class-string<Transformer>|Transformer $transformerName
      * @param string[] $includes
      * @param string $resourceKey
