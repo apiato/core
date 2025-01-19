@@ -2,20 +2,29 @@
 
 namespace Workbench\App\Containers\Identity\User\Data\Factories;
 
-use Orchestra\Testbench\Factories\UserFactory as TestbenchUserFactory;
 use Workbench\App\Containers\Identity\User\Models\User;
+use Workbench\App\Ship\Parents\Factories\Factory as ParentFactory;
 
 /**
  * @template TModel of User
  *
- * @extends TestbenchUserFactory<TModel>
+ * @extends ParentFactory<TModel>
  */
-class UserFactory extends TestbenchUserFactory
+class UserFactory extends ParentFactory
 {
     /**
      * @var class-string<TModel>
      */
     protected $model = User::class;
+
+    public function definition(): array
+    {
+        return [
+            'name' => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => $this->faker->password,
+        ];
+    }
 
     public function withParent(): static
     {
