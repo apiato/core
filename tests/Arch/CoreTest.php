@@ -28,6 +28,10 @@ arch('src/abstract')
     ->expect('Apiato\Abstract')
     ->classes()->toBeAbstract();
 
+arch('tests')
+    ->expect('Workbench\App')
+    ->toOnlyBeUsedIn('Tests');
+
 //arch('Src - Foundation')
 //    ->expect('Apiato\Foundation')
 //    ->classes()->toExtend('Illuminate\Foundation\Application');
