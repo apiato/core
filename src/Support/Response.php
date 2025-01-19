@@ -37,6 +37,7 @@ final class Response extends Fractal
 
         // TODO: enable this and remove everything below
         //  After the Fractalistic PR's are accepted
+        // https://github.com/spatie/fractalistic/pull/82
         // return parent::createData();
 
         if (is_null($this->transformer)) {
@@ -79,8 +80,10 @@ final class Response extends Fractal
         }
 
         if (!empty($this->data) && 'collection' === $this->determineDataType($this->data)) {
-            // TODO: there was a problem $this->data->first() but I cant remember. It had to do with the data being an array
-            // also check AbstractTransformer where we also do this check and use the first item. we also have the same problem there
+            // TODO: there was a problem with $this->data->first() but I cant remember.
+            // It had something to do with the data being an array I think.
+            // Also check the AbstractTransformer where we also do this check and use the first item.
+            // We also have the same problem there.
             $firstItem = $this->data->first();
             if ($firstItem instanceof HasResourceKey) {
                 return $firstItem->getResourceKey();
