@@ -2,13 +2,6 @@
 
 arch()->preset()->php();
 
-// pest()->presets()->custom('apiato', function () {
-//    return [
-//        expect('Infrastructure')->toOnlyBeUsedIn('Application'),
-//        expect('Domain')->toOnlyBeUsedIn('Application'),
-//    ];
-// });
-
 arch('src')
     ->expect('Apiato')
     ->toUseStrictEquality()
