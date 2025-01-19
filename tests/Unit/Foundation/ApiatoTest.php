@@ -38,7 +38,7 @@ describe(class_basename(Apiato::class), function (): void {
             app_path('Containers/MySection/Book/Helpers/functions.php'),
             app_path('Containers/MySection/Author/Helpers/helpers.php'),
         ])->and($config->migrations())->toEqualCanonicalizing([
-            shared_path('Data/Migrations'),
+            shared_path('Migrations'),
             app_path('Containers/MySection/Book/Data/Migrations'),
             app_path('Containers/Identity/User/Data/Migrations'),
         ])->and($config->seeding()->seeders())->toEqualCanonicalizing([
@@ -55,9 +55,9 @@ describe(class_basename(Apiato::class), function (): void {
             app_path('Containers/MySection/Book/Languages'),
         ])->and($config->view()->paths())->toEqualCanonicalizing([
             shared_path('Views'),
-            shared_path('Mails'),
-            app_path('Containers/MySection/Book/Views'),
-            app_path('Containers/MySection/Author/Mails'),
+            shared_path('Mails/Templates'),
+            app_path('Containers/MySection/Book/UI/WEB/Views'),
+            app_path('Containers/MySection/Author/Mails/Templates'),
         ])->and($config->routing()->webRoutes())->toEqualCanonicalizing([
             app_path('Containers/MySection/Book/UI/WEB/Routes/CreateBook.v1.public.php'),
             app_path('Containers/MySection/Book/UI/WEB/Routes/ListBooks.php'),

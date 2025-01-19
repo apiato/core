@@ -1,6 +1,6 @@
 <?php
 
-namespace Workbench\App\Ship\Data\Migrations;
+namespace Workbench\App\Ship\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;

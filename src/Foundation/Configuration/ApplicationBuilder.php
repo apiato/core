@@ -35,7 +35,7 @@ final readonly class ApplicationBuilder
             shared_path('Helpers'),
             ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Helpers')),
         )->withMigrations(
-            shared_path('Data/Migrations'),
+            shared_path('Migrations'),
             ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Data/Migrations')),
         )->withSeeders(function (Seeding $seeding) use ($basePath): void {
             $seeding->loadFrom(
@@ -49,9 +49,9 @@ final readonly class ApplicationBuilder
         })->withViews(function (View $view) use ($basePath): void {
             $view->loadFrom(
                 shared_path('Views'),
-                shared_path('Mails'),
-                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Views')),
-                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Mails')),
+                shared_path('Mails/Templates'),
+                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/UI/WEB/Views')),
+                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Mails/Templates')),
             );
         })->withRouting(function (Routing $routing) use ($basePath): void {
             $routing->loadApiRoutesFrom(
