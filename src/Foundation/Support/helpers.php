@@ -2,6 +2,16 @@
 
 use Apiato\Foundation\Apiato;
 
+if (!function_exists('apiato')) {
+    /**
+     * Get the Apiato instance.
+     */
+    function apiato(): Apiato
+    {
+        return app(Apiato::class);
+    }
+}
+
 if (!function_exists('shared_path')) {
     /**
      * Get the path to the application's shared directory.
