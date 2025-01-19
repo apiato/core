@@ -75,12 +75,12 @@ final class ContainerWebGenerator extends Generator implements ComponentsGenerat
             '--file' => Str::camel($this->sectionName) . '-' . Str::camel($this->containerName),
         ]);
 
-        $this->printInfoMessage('Generating MainServiceProvider');
+        $this->printInfoMessage('Generating ServiceProvider');
         $this->call('apiato:make:provider', [
             '--section' => $sectionName,
             '--container' => $containerName,
-            '--file' => 'MainServiceProvider',
-            '--stub' => 'main-service-provider',
+            '--file' => Str::title($this->containerName) . 'ServiceProvider',
+            '--stub' => 'service-provider',
         ]);
 
         $this->printInfoMessage('Generating Model and Repository');

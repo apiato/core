@@ -21,7 +21,6 @@ final class ContainerApiGenerator extends Generator implements ComponentsGenerat
         ['controllertype', null, InputOption::VALUE_OPTIONAL, 'The controller type (SAC, MAC)'],
         ['events', null, InputOption::VALUE_OPTIONAL, 'Generate Events for this Container?'],
         ['listeners', null, InputOption::VALUE_OPTIONAL, 'Generate Event Listeners for Events of this Container?'],
-        ['register-listeners', null, InputOption::VALUE_OPTIONAL, 'Register the Event Listeners in the EventServiceProvider?'],
         ['tests', null, InputOption::VALUE_OPTIONAL, 'Generate Tests for this Container?'],
         ['maincalled', false, InputOption::VALUE_NONE],
     ];
@@ -126,12 +125,8 @@ final class ContainerApiGenerator extends Generator implements ComponentsGenerat
 
         $generateEvents = $this->checkParameterOrConfirm('events', 'Do you want to generate the corresponding CRUD Events for this Container?', false);
         $generateListeners = false;
-        $registerListeners = false;
         if ($generateEvents) {
             $generateListeners = $this->checkParameterOrConfirm('listeners', 'Do you want to generate the corresponding Event Listeners for this Events?', false);
-            if ($generateListeners) {
-                $registerListeners = $this->checkParameterOrConfirm('register-listeners', 'Do you want the Event Listeners to be registered in the EventServiceProvider?', true);
-            }
         }
         $generateTests = $this->checkParameterOrConfirm('tests', 'Do you want to generate the corresponding Tests for this Container?', true);
 
@@ -381,12 +376,10 @@ final class ContainerApiGenerator extends Generator implements ComponentsGenerat
         }
 
         if ($generateEvents) {
-            $listeners = [];
             if ($generateListeners) {
                 $this->printInfoMessage('Generating Event Listeners');
                 foreach ($events as $event) {
                     $listener = $event . 'Listener';
-                    $listeners[$listener] = [$event];
                     $this->call('apiato:make:listener', [
                         '--section' => $this->sectionName,
                         '--container' => $this->containerName,
@@ -395,38 +388,15 @@ final class ContainerApiGenerator extends Generator implements ComponentsGenerat
                     ]);
                 }
             }
-
-            $stub = 'generic-event-service-provider';
-            if ($generateListeners && $registerListeners) {
-                $stub = 'event-service-provider-with-listener';
-            }
-
-            $this->printInfoMessage('Generating EventServiceProvider');
-            $this->call('apiato:make:provider', [
-                '--section' => $sectionName,
-                '--container' => $containerName,
-                '--file' => 'EventServiceProvider',
-                '--stub' => $stub,
-                '--event-listeners' => $listeners,
-            ]);
-
-            $this->printInfoMessage('Generating MainServiceProvider');
-            $this->call('apiato:make:provider', [
-                '--section' => $sectionName,
-                '--container' => $containerName,
-                '--file' => 'MainServiceProvider',
-                '--stub' => 'main-service-provider-with-event-provider',
-                '--event-service-provider' => 'EventServiceProvider',
-            ]);
-        } else {
-            $this->printInfoMessage('Generating MainServiceProvider');
-            $this->call('apiato:make:provider', [
-                '--section' => $sectionName,
-                '--container' => $containerName,
-                '--file' => 'MainServiceProvider',
-                '--stub' => 'main-service-provider',
-            ]);
         }
+
+        $this->printInfoMessage('Generating ServiceProvider');
+        $this->call('apiato:make:provider', [
+            '--section' => $sectionName,
+            '--container' => $containerName,
+            '--file' => Str::title($this->containerName) . 'ServiceProvider',
+            '--stub' => 'service-provider',
+        ]);
 
         $generateComposerFile = [
             'path-parameters' => [

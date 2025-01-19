@@ -17,7 +17,6 @@ final class ContainerGenerator extends Generator implements ComponentsGenerator
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
         ['events', null, InputOption::VALUE_OPTIONAL, 'Generate Events for this Container?'],
         ['listeners', null, InputOption::VALUE_OPTIONAL, 'Generate Event Listeners for Events of this Container?'],
-        ['register-listeners', null, InputOption::VALUE_OPTIONAL, 'Register the Event Listeners in the EventServiceProvider?'],
         ['tests', null, InputOption::VALUE_OPTIONAL, 'Generate Tests for this Container?'],
     ];
     /**
@@ -54,12 +53,8 @@ final class ContainerGenerator extends Generator implements ComponentsGenerator
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for this container', ['API', 'WEB', 'BOTH'], 0));
         $generateEvents = $this->checkParameterOrConfirm('events', 'Do you want to generate the corresponding CRUD Events for this Container?', false);
         $generateListeners = false;
-        $registerListeners = false;
         if ($generateEvents) {
             $generateListeners = $this->checkParameterOrConfirm('listeners', 'Do you want to generate the corresponding Event Listeners for this Events?', false);
-            if ($generateListeners) {
-                $registerListeners = $this->checkParameterOrConfirm('register-listeners', 'Do you want the Event Listeners to be registered in the EventServiceProvider?', true);
-            }
         }
         $generateTests = $this->checkParameterOrConfirm('tests', 'Do you want to generate the corresponding Tests for this Container?', true);
         if ($generateTests) {
@@ -119,7 +114,6 @@ final class ContainerGenerator extends Generator implements ComponentsGenerator
                 '--file' => 'composer',
                 '--events' => $generateEvents,
                 '--listeners' => $generateListeners,
-                '--register-listeners' => $registerListeners,
                 '--tests' => $generateTests,
                 '--maincalled' => true,
             ]);
