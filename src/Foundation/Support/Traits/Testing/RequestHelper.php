@@ -170,7 +170,6 @@ trait RequestHelper
         return $this->responseContent;
     }
 
-    // TODO: @next - add return type
     public function setResponseContent(TestResponse $httpResponse): string|false
     {
         return $this->responseContent = $httpResponse->getContent();
