@@ -229,7 +229,7 @@ final class Apiato
         )->toArray();
     }
 
-    public function migrationPaths(): array
+    public function migrations(): array
     {
         return $this->migrationPaths;
     }

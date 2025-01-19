@@ -9,6 +9,6 @@ final class MigrationServiceProvider extends ServiceProvider
 {
     public function boot(Apiato $apiato): void
     {
-        $this->loadMigrationsFrom($apiato->migrationPaths());
+        $this->loadMigrationsFrom($apiato->migrations());
     }
 }
