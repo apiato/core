@@ -15,7 +15,7 @@ trait Response
     protected array $metaData = [];
 
     /**
-     * @param AbstractPaginator|array $data
+     * @param mixed $data
      * @param class-string<Transformer>|Transformer $transformerName
      * @param string[] $includes
      * @param string $resourceKey
