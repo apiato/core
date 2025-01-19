@@ -3,12 +3,10 @@
 namespace Apiato\Foundation\Support\Traits\Testing;
 
 use Apiato\Foundation\Apiato;
-use Apiato\Foundation\Exceptions\MissingTestEndpoint;
-use Apiato\Foundation\Exceptions\UndefinedMethod;
-use Apiato\Foundation\Exceptions\WrongEndpointFormat;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use Vinkla\Hashids\Facades\Hashids;
+use Webmozart\Assert\Assert;
 
 trait RequestHelper
 {
@@ -42,11 +40,6 @@ trait RequestHelper
 
     private string|null $url;
 
-    /**
-     * @throws WrongEndpointFormat
-     * @throws MissingTestEndpoint
-     * @throws UndefinedMethod
-     */
     public function makeCall(array $data = [], array $headers = []): TestResponse
     {
         // Get or create a testing user. It will get your existing user if you already called this function from your
@@ -58,18 +51,10 @@ trait RequestHelper
         $verb = $endpoint['verb'];
         $url = $endpoint['url'];
 
-        // validating user http verb input + converting `get` data to query parameter
-        switch ($verb) {
-            case 'get':
-                $url = $this->dataArrayToQueryParam($data, $url);
-                break;
-            case 'post':
-            case 'put':
-            case 'patch':
-            case 'delete':
-                break;
-            default:
-                throw new UndefinedMethod('Unsupported HTTP Verb (' . $verb . ')!');
+        Assert::oneOf($verb, ['get', 'post', 'put', 'patch', 'delete'], 'Unsupported HTTP Verb (' . $verb . ')!');
+
+        if ('get' === $verb) {
+            $url = $this->dataArrayToQueryParam($data, $url);
         }
 
         $httpResponse = $this->json($verb, $url, $data, $this->injectAccessToken($headers));
@@ -81,59 +66,28 @@ trait RequestHelper
      * read `$this->endpoint` property from the test class (`verb@uri`) and convert it to usable data.
      *
      * @return array<string, string>
-     *
-     * @throws WrongEndpointFormat
-     * @throws MissingTestEndpoint
      */
-    private function parseEndpoint(): array
+    public function parseEndpoint(): array
     {
-        $this->validateEndpointExist();
+        $endpoint = $this->overrideEndpoint ?? $this->endpoint;
 
-        $separator = '@';
+        if (empty($endpoint)) {
+            throw new \RuntimeException('No endpoint provided. Please set the `$endpoint` property in your test class.');
+        }
 
-        $this->validateEndpointFormat($separator);
+        $parts = explode('@', $endpoint);
 
-        $asArray = explode($separator, $this->getEndpoint(), 2);
+        if (2 !== count($parts) || in_array('', $parts, true)) {
+            throw new \RuntimeException('Endpoint (' . $endpoint . ') is in the wrong format. Use (`verb@uri`).');
+        }
 
-        // get the verb and uri values from the array
-        extract(array_combine(['verb', 'uri'], $asArray));
+        [$verb, $uri] = $parts;
 
-        /* @var string $verb */
-        /* @var string $uri */
         return [
             'verb' => $verb,
             'uri' => $uri,
             'url' => $this->buildUrlForUri($uri),
         ];
-    }
-
-    /**
-     * @throws MissingTestEndpoint
-     */
-    private function validateEndpointExist(): void
-    {
-        if (!$this->getEndpoint()) {
-            throw new MissingTestEndpoint();
-        }
-    }
-
-    public function getEndpoint(): string
-    {
-        if (!is_null($this->overrideEndpoint)) {
-            return $this->overrideEndpoint;
-        }
-
-        return $this->endpoint;
-    }
-
-    /**
-     * @throws WrongEndpointFormat
-     */
-    private function validateEndpointFormat(string $separator): void
-    {
-        if (!strpos($this->getEndpoint(), $separator)) {
-            throw new WrongEndpointFormat();
-        }
     }
 
     private function buildUrlForUri($uri): string

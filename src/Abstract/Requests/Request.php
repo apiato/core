@@ -3,7 +3,6 @@
 namespace Apiato\Abstract\Requests;
 
 use Apiato\Abstract\Models\UserModel as User;
-use Apiato\Foundation\Exceptions\IncorrectId;
 use Apiato\Foundation\Support\Traits\HashId;
 use Apiato\Foundation\Support\Traits\Sanitizer;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
@@ -164,9 +163,6 @@ abstract class Request extends LaravelRequest
      * For example, ['data.attributes.name' => 'firstname'] would map the field [data][attributes][name] to [firstname].
      * Note that the old value (data.attributes.name) is removed the original request - this method manipulates the request!
      * Be sure you know what you do!
-     *
-     * @throws IncorrectId
-     * @throws \Throwable
      */
     public function mapInput(array $fields): void
     {
@@ -190,9 +186,6 @@ abstract class Request extends LaravelRequest
     /**
      * Overriding this function to modify the any user input before
      * applying the validation rules.
-     *
-     * @throws IncorrectId
-     * @throws \Throwable
      */
     public function all($keys = null): array
     {
@@ -220,9 +213,6 @@ abstract class Request extends LaravelRequest
 
     /**
      * This method mimics the $request->input() method but works on the "decoded" values.
-     *
-     * @throws IncorrectId
-     * @throws \Throwable
      */
     public function getInputByKey($key = null, $default = null): mixed
     {

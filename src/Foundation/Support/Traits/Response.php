@@ -4,7 +4,6 @@ namespace Apiato\Foundation\Support\Traits;
 
 use Apiato\Abstract\Models\Model;
 use Apiato\Abstract\Transformers\Transformer;
-use Apiato\Foundation\Exceptions\InvalidTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
@@ -16,7 +15,12 @@ trait Response
     protected array $metaData = [];
 
     /**
-     * @throws InvalidTransformer
+     * @param AbstractPaginator|array $data
+     * @param class-string<Transformer>|Transformer $transformerName
+     * @param string[] $includes
+     * @param string $resourceKey
+     *
+     * @return array|null
      */
     public function transform(
         $data,
@@ -25,18 +29,13 @@ trait Response
         array $meta = [],
         $resourceKey = null,
     ) {
-        // first, we need to create the transformer
-        if ($transformerName instanceof Transformer) {
-            // check, if we have provided a respective TRANSFORMER class
-            $transformer = $transformerName;
-        } else {
-            // of if we just passed the classname
-            $transformer = new $transformerName();
-        }
+        $transformer = match (true) {
+            $transformerName instanceof Transformer => $transformerName,
+            default => new $transformerName(),
+        };
 
-        // now, finally check, if the class is really a TRANSFORMER
-        if (!($transformer instanceof Transformer)) {
-            throw new InvalidTransformer();
+        if (!$transformer instanceof Transformer) {
+            throw new \RuntimeException('Invalid transformer.');
         }
 
         // add specific meta information to the response message

@@ -2,7 +2,6 @@
 
 namespace Apiato\Foundation\Support\Traits\Model;
 
-use Apiato\Foundation\Exceptions\IncorrectId;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
@@ -14,15 +13,13 @@ trait HashedRouteBinding
      *
      * @param Model|Relation $query
      * @param string|null $field
-     *
-     * @throws IncorrectId
      */
     public function resolveRouteBindingQuery($query, $value, $field = null)
     {
         if (config('apiato.hash-id')) {
             $decodingResult = $this->decode($value);
             if (is_null($decodingResult)) {
-                throw new IncorrectId();
+                throw new \RuntimeException('Invalid ID');
             }
             $value = $decodingResult;
         }

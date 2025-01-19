@@ -2,7 +2,6 @@
 
 namespace Apiato\Generator;
 
-use Apiato\Foundation\Exceptions\GeneratorError;
 use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Apiato\Generator\Traits\FileSystemTrait;
 use Apiato\Generator\Traits\FormatterTrait;
@@ -13,6 +12,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
+use Webmozart\Assert\Assert;
 
 abstract class Generator extends Command
 {
@@ -93,11 +93,11 @@ abstract class Generator extends Command
     /**
      * @void
      *
-     * @throws GeneratorError|FileNotFoundException
+     * @throws FileNotFoundException
      */
-    public function handle()
+    public function handle(): int|null
     {
-        $this->validateGenerator($this);
+        Assert::isInstanceOf($this, ComponentsGenerator::class);
 
         $this->sectionName = ucfirst((string) $this->checkParameterOrAsk('section', 'Enter the name of the Section', self::DEFAULT_SECTION_NAME));
         $this->containerName = ucfirst((string) $this->checkParameterOrAsk('container', 'Enter the name of the Container'));
@@ -138,16 +138,6 @@ abstract class Generator extends Command
 
         // Exit the command successfully
         return 0;
-    }
-
-    /**
-     * @throws GeneratorError
-     */
-    private function validateGenerator(self $generator): void
-    {
-        if (!$generator instanceof ComponentsGenerator) {
-            throw new GeneratorError('Your component maker command should implement ComponentsGenerator interface.');
-        }
     }
 
     /**

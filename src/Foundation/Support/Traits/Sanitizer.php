@@ -2,7 +2,6 @@
 
 namespace Apiato\Foundation\Support\Traits;
 
-use Apiato\Foundation\Exceptions\IncorrectId;
 use Illuminate\Support\Arr;
 
 trait Sanitizer
@@ -14,9 +13,6 @@ trait Sanitizer
      * @param array $fields a list of fields to be checked in the Dot-Notation (e.g., ['data.name', 'data.description'])
      *
      * @return array an array containing the values if the field was present in the request and the intersection array
-     *
-     * @throws IncorrectId
-     * @throws \Throwable
      */
     public function sanitizeInput(array $fields): array
     {

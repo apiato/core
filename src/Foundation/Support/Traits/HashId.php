@@ -2,8 +2,6 @@
 
 namespace Apiato\Foundation\Support\Traits;
 
-use Apiato\Foundation\Exceptions\IncorrectId;
-use Apiato\Foundation\Exceptions\InternalError;
 use Vinkla\Hashids\Facades\Hashids;
 
 trait HashId
@@ -98,9 +96,6 @@ trait HashId
     /**
      * without decoding the encoded ID's you won't be able to use
      * validation features like `exists:table,id`.
-     *
-     * @throws IncorrectId
-     * @throws \Throwable
      */
     protected function decodeHashedIdsBeforeValidation(array $requestData): array
     {
@@ -117,9 +112,6 @@ trait HashId
 
     /**
      * Search the IDs to be decoded in the request data.
-     *
-     * @throws IncorrectId
-     * @throws \Throwable
      */
     private function locateAndDecodeIds($requestData, $key): mixed
     {
@@ -132,9 +124,6 @@ trait HashId
 
     /**
      * Recursive function to process (decode) the request data with a given key.
-     *
-     * @throws IncorrectId
-     * @throws \Throwable
      */
     private function processField($data, $keysTodo, string $currentFieldName): mixed
     {
@@ -152,13 +141,13 @@ trait HashId
 
             throw_if(
                 !is_string($data),
-                new InternalError('String expected, got ' . gettype($data), 422),
+                new \RuntimeException('String expected, got ' . gettype($data)),
             );
 
             $decodedField = $this->decode($data);
 
             if (is_null($decodedField)) {
-                throw new IncorrectId('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
+                throw new \RuntimeException('ID (' . $currentFieldName . ') is incorrect, consider using the hashed ID.');
             }
 
             return $decodedField;
