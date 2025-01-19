@@ -8,10 +8,6 @@ use Workbench\App\Ship\Parents\Listeners\Listener as ParentListener;
 
 class BookCreatedListener extends ParentListener implements ShouldQueue
 {
-    public function __construct()
-    {
-    }
-
     public function __invoke(BookCreated $event): void
     {
     }
