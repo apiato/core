@@ -29,6 +29,7 @@ final class ApiatoServiceProvider extends ServiceProvider
         $this->app->register(RateLimitingServiceProvider::class);
         $this->app->register(ViewServiceProvider::class);
 
+        AliasLoader::getInstance()->alias('Database\\Seeders\\DatabaseSeeder', DatabaseSeeder::class);
         AliasLoader::getInstance()->alias('DatabaseSeeder', DatabaseSeeder::class);
 
         $this->app->singletonIf(Apiato::class, static fn (): Apiato => Apiato::instance());
