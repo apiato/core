@@ -58,8 +58,6 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
         $mustLoad = [
             'ship:test-command',
             'container:test-command',
-            'apiato:seed-deploy',
-            'apiato:seed-test',
         ];
 
         $registeredCommands = collect(Artisan::all());
