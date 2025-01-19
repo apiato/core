@@ -21,5 +21,8 @@
         <include>
             <directory>src</directory>
         </include>
+        <exclude>
+            <directory>src/Generator</directory>
+        </exclude>
     </source>
 </phpunit>
