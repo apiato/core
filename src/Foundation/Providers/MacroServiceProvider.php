@@ -11,8 +11,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 final class MacroServiceProvider extends ServiceProvider
 {
-    public $items;
-
     public function boot(): void
     {
         if (!Collection::hasMacro('containsDecodedHash')) {
