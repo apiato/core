@@ -5,6 +5,8 @@ use Apiato\Foundation\Configuration\ApplicationBuilder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
 use Pest\Expectation;
+use Workbench\App\Containers\MySection\Author\Events\AuthorCreated;
+use Workbench\App\Containers\MySection\Author\Listeners\AuthorCreatedListener;
 use Workbench\App\Containers\MySection\Book\Events\BookCreated;
 use Workbench\App\Containers\MySection\Book\Listeners\BookCreatedListener;
 use Workbench\App\Containers\MySection\Book\Providers\BookServiceProvider;
@@ -38,21 +40,21 @@ describe(class_basename(ApplicationBuilder::class), function (): void {
         }
     });
 
-    it('can discover events from configured path', function (): void {
+    it('can auto discover events', function (): void {
+        Event::fake()
+            ->assertListening(
+                AuthorCreated::class,
+                AuthorCreatedListener::class,
+            );
+    });
+
+    it('registers manually registered events', function (): void {
         Event::fake()
             ->assertListening(
                 BookCreated::class,
                 BookCreatedListener::class,
             );
     });
-
-    it('can manually register events', function (): void {
-        Event::fake()
-            ->assertListening(
-                BookCreated::class,
-                BookCreatedListener::class,
-            );
-    })->todo();
 
     it('registers commands from configured path', function (): void {
         $mustLoad = [
