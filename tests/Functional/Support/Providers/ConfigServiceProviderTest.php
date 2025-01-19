@@ -15,8 +15,10 @@ describe(class_basename(ConfigServiceProvider::class), function (): void {
     it('publishes the config file', function (): void {
         File::partialMock()
             ->expects('copy')
-            ->with(\Safe\realpath('config/apiato.php'), shared_path('Configs/apiato.php'))
-            ->andReturnTrue();
+            ->withArgs(
+                static fn (string $path, string $target) => Str::of($path)->contains('config/apiato.php')
+                    && (shared_path('Configs/apiato.php') === $target),
+            )->andReturnTrue();
 
         $this->artisan('vendor:publish', ['--tag' => 'apiato-config']);
     });
