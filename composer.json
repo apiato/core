@@ -79,6 +79,9 @@
         }
     },
     "scripts": {
+        "artisan": [
+            "@php vendor/bin/testbench"
+        ],
         "fixer": "php-cs-fixer fix --config=./.php-cs-fixer.dist.php",
         "phpstan": [
             "./vendor/bin/phpstan analyse"
