@@ -84,7 +84,7 @@ describe(class_basename(Apiato::class), function (): void {
             Profiler::class,
         ];
 
-        expect($this->app->make(Apiato::class)->apiMiddlewares())
+        expect(apiato()->apiMiddlewares())
             ->toBe($middlewares);
     });
 })->covers(Apiato::class);
