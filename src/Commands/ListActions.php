@@ -6,7 +6,7 @@ use Apiato\Abstract\Commands\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class ListActions extends Command
+final class ListActions extends Command
 {
     protected $signature = 'apiato:list:actions {--withfilename}';
     protected $description = 'List all Actions';

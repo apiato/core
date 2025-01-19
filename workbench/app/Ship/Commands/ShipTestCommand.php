@@ -4,7 +4,7 @@ namespace Workbench\App\Ship\Commands;
 
 use Apiato\Abstract\Commands\Command;
 
-class ShipTestCommand extends Command
+final class ShipTestCommand extends Command
 {
     protected $signature = 'ship:test-command';
 

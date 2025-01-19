@@ -8,7 +8,7 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ContainerWebGenerator extends Generator implements ComponentsGenerator
+final class ContainerWebGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -202,7 +202,7 @@ class ContainerWebGenerator extends Generator implements ComponentsGenerator
                 '--stub' => $route['stub'],
             ]);
 
-            if (null != $route['action']) {
+            if (null !== $route['action']) {
                 $this->call('apiato:make:action', [
                     '--section' => $sectionName,
                     '--container' => $containerName,
@@ -213,7 +213,7 @@ class ContainerWebGenerator extends Generator implements ComponentsGenerator
                 ]);
             }
 
-            if (null != $route['task']) {
+            if (null !== $route['task']) {
                 $this->call('apiato:make:task', [
                     '--section' => $sectionName,
                     '--container' => $containerName,

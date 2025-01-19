@@ -8,7 +8,7 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ControllerGenerator extends Generator implements ComponentsGenerator
+final class ControllerGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * The options which can be passed to the command. All options are optional. You do not need to pass the

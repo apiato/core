@@ -6,7 +6,7 @@ use Apiato\Abstract\Commands\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class ListTasks extends Command
+final class ListTasks extends Command
 {
     protected $signature = 'apiato:list:tasks {--withfilename}';
     protected $description = 'List all Tasks';

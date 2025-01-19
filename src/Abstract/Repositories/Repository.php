@@ -118,9 +118,9 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         return $limit ?? request()?->input('limit');
     }
 
-    public function wantsToSkipPagination(mixed $limit): bool
+    public function wantsToSkipPagination(string|int|null $limit): bool
     {
-        return '0' == $limit;
+        return '0' === $limit || 0 === $limit;
     }
 
     public function canSkipPagination(): mixed

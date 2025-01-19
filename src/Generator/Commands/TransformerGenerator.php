@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class TransformerGenerator extends Generator implements ComponentsGenerator
+final class TransformerGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -115,6 +115,6 @@ class TransformerGenerator extends Generator implements ComponentsGenerator
         $keys = array_keys($fields);
         $lastKey = end($keys);
 
-        return $currentKey == $lastKey ? '' : PHP_EOL;
+        return $currentKey === $lastKey ? '' : PHP_EOL;
     }
 }

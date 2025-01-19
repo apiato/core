@@ -6,7 +6,7 @@ use Apiato\Generator\Generator;
 use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-class ConfigurationGenerator extends Generator implements ComponentsGenerator
+final class ConfigurationGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.

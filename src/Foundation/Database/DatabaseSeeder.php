@@ -5,7 +5,7 @@ namespace Apiato\Foundation\Database;
 use Apiato\Abstract\Seeders\Seeder;
 use Apiato\Foundation\Apiato;
 
-class DatabaseSeeder extends Seeder
+final class DatabaseSeeder extends Seeder
 {
     public function run(Apiato $apiato): void
     {

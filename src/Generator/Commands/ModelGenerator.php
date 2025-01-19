@@ -7,7 +7,7 @@ use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ModelGenerator extends Generator implements ComponentsGenerator
+final class ModelGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -58,7 +58,7 @@ class ModelGenerator extends Generator implements ComponentsGenerator
                 '--model' => $this->fileName,
             ]);
 
-            if (0 != $status) {
+            if (0 !== $status) {
                 $this->printErrorMessage('Could not generate the corresponding Repository!');
             }
         }

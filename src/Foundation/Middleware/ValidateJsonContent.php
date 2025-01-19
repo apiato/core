@@ -6,7 +6,7 @@ use Apiato\Abstract\Middlewares\Middleware;
 use Apiato\Foundation\Exceptions\MissingJSONHeader;
 use Illuminate\Http\Request;
 
-class ValidateJsonContent extends Middleware
+final class ValidateJsonContent extends Middleware
 {
     /**
      * @throws MissingJSONHeader

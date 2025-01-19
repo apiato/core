@@ -9,6 +9,9 @@
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
         </testsuite>
+        <testsuite name="Arch">
+            <directory>tests/Arch</directory>
+        </testsuite>
     </testsuites>
     <php>
         <env name="DB_CONNECTION" value="testing"/>

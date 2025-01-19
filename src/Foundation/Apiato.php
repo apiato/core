@@ -16,7 +16,7 @@ use Composer\ClassMapGenerator\ClassMapGenerator;
 
 use function Illuminate\Filesystem\join_paths;
 
-class Apiato
+final class Apiato
 {
     private static self $instance;
     private string $sharedPath;

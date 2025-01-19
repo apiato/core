@@ -7,7 +7,7 @@ use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 
-class ValueGenerator extends Generator implements ComponentsGenerator
+final class ValueGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.

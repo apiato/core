@@ -15,7 +15,7 @@ use Spatie\Fractalistic\Exceptions\NoTransformerSpecified;
  *
  * @see Fractal
  */
-class Response extends Fractal
+final class Response extends Fractal
 {
     /**
      * Parse the Request's include query parameter and return the requested includes as model relations.

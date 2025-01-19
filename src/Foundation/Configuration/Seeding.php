@@ -6,7 +6,7 @@ use Composer\ClassMapGenerator\ClassMapGenerator;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 
-class Seeding
+final class Seeding
 {
     protected static \Closure $seederSorter;
     protected array $paths = [];

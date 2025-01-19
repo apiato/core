@@ -8,7 +8,7 @@ use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class TaskGenerator extends Generator implements ComponentsGenerator
+final class TaskGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.

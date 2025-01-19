@@ -7,7 +7,7 @@ use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ModelFactoryGenerator extends Generator implements ComponentsGenerator
+final class ModelFactoryGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
