@@ -1,5 +1,13 @@
 <?php
 
+use Apiato\Foundation\Configuration\ApplicationBuilder;
+use Workbench\App\Containers\MySection\Author\Data\Seeders\Ordered_1;
+use Workbench\App\Containers\MySection\Author\Data\Seeders\Murdered_2;
+use Workbench\App\Containers\MySection\Author\Data\Seeders\Wondered_3;
+use Workbench\App\Containers\MySection\Author\Data\Seeders\Unordered;
+use Workbench\App\Ship\Providers\ShipServiceProvider;
+use Workbench\App\Containers\MySection\Book\Providers\BookServiceProvider;
+use Workbench\App\Containers\MySection\Book\Providers\EventServiceProvider;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Localization;
 use Apiato\Foundation\Middleware\ProcessETag;
@@ -8,6 +16,56 @@ use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 
 describe(class_basename(Apiato::class), function (): void {
+    it('can be created with default configuration', function (): void {
+        $config = Apiato::configure(__DIR__)->create();
+        expect($config->providers())->toBe([
+            ShipServiceProvider::class,
+            BookServiceProvider::class,
+            EventServiceProvider::class,
+        ])->and($config->configs())->toBe([
+            shared_path('Configs/boat.php'),
+            app_path('Containers/MySection/Book/Configs/mySection-book.php'),
+        ])->and($config->events())->toBe([
+            shared_path('Listeners'),
+            app_path('Containers/MySection/Book/Listeners'),
+            app_path('Containers/MySection/Author/Listeners'),
+        ])->and($config->commands())->toBe([
+            shared_path('Commands'),
+            app_path('Containers/MySection/Book/UI/Console'),
+        ])->and($config->helpers())->toBe([
+            shared_path('Helpers/ExplosiveClass.php'),
+            shared_path('Helpers/functions.php'),
+            shared_path('Helpers/helpers.php'),
+            app_path('Containers/MySection/Book/Helpers/functions.php'),
+            app_path('Containers/MySection/Author/Helpers/helpers.php'),
+        ])->and($config->migrations())->toBe([
+            shared_path('Data/Migrations'),
+            app_path('Containers/MySection/Book/Data/Migrations'),
+            app_path('Containers/Identity/User/Data/Migrations'),
+        ])->and($config->seeding()->seeders())->toBe([
+            \Workbench\App\Containers\MySection\Book\Data\Seeders\Ordered_1::class,
+            \Workbench\App\Containers\MySection\Book\Data\Seeders\Murdered_2::class,
+            \Workbench\App\Containers\MySection\Book\Data\Seeders\Wondered_3::class,
+            \Workbench\App\Containers\MySection\Book\Data\Seeders\Unordered::class,
+            Ordered_1::class,
+            Murdered_2::class,
+            Wondered_3::class,
+            Unordered::class,
+        ])->and($config->localization()->paths())->toBe([
+            shared_path('Languages'),
+            app_path('Containers/MySection/Book/Languages'),
+        ])->and($config->view()->paths())->toBe([
+            shared_path('Views'),
+            shared_path('Mails'),
+            app_path('Containers/MySection/Book/Views'),
+            app_path('Containers/MySection/Author/Mails'),
+        ])->and($config->routing()->webRoutes())->toBe([
+            app_path('Containers/MySection/Book/UI/WEB/Routes/CreateBook.v1.public.php'),
+            app_path('Containers/MySection/Book/UI/WEB/Routes/ListBooks.php'),
+            app_path('Containers/MySection/Author/UI/WEB/Routes/ListAuthors.php'),
+        ]);
+    });
+
     it('can be configured via a closure to customize translation namespaces', function (): void {
         Apiato::configure()
             ->withTranslations(function (Localization $localization): void {

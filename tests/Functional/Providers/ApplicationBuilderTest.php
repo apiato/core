@@ -1,6 +1,5 @@
 <?php
 
-use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\ApplicationBuilder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
@@ -14,20 +13,6 @@ use Workbench\App\Containers\MySection\Book\Providers\EventServiceProvider;
 use Workbench\App\Ship\Providers\ShipServiceProvider;
 
 describe(class_basename(ApplicationBuilder::class), function (): void {
-    it('provides default paths', function (): void {
-        $config = Apiato::configure(__DIR__)->create();
-        expect($config->providers())->toBe([
-            shared_path('Providers'),
-            app_path('Containers/*/*/Providers'),
-        ])->and($config->configs())->toBe([
-            shared_path('Configs'),
-            app_path('Containers/*/*/Configs'),
-        ])->and($config->events())->toBe([
-            shared_path('Listeners'),
-            app_path('Containers/*/*/Listeners'),
-        ]);
-    })->todo();
-
     it('registers providers from configured path', function (): void {
         $providers = [
             ShipServiceProvider::class,
