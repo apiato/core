@@ -1,19 +1,18 @@
 <?php
 
-use Apiato\Foundation\Configuration\ApplicationBuilder;
-use Workbench\App\Containers\MySection\Author\Data\Seeders\Ordered_1;
-use Workbench\App\Containers\MySection\Author\Data\Seeders\Murdered_2;
-use Workbench\App\Containers\MySection\Author\Data\Seeders\Wondered_3;
-use Workbench\App\Containers\MySection\Author\Data\Seeders\Unordered;
-use Workbench\App\Ship\Providers\ShipServiceProvider;
-use Workbench\App\Containers\MySection\Book\Providers\BookServiceProvider;
-use Workbench\App\Containers\MySection\Book\Providers\EventServiceProvider;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Localization;
 use Apiato\Foundation\Middleware\ProcessETag;
 use Apiato\Foundation\Middleware\Profiler;
 use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
+use Workbench\App\Containers\MySection\Author\Data\Seeders\Murdered_2;
+use Workbench\App\Containers\MySection\Author\Data\Seeders\Ordered_1;
+use Workbench\App\Containers\MySection\Author\Data\Seeders\Unordered;
+use Workbench\App\Containers\MySection\Author\Data\Seeders\Wondered_3;
+use Workbench\App\Containers\MySection\Book\Providers\BookServiceProvider;
+use Workbench\App\Containers\MySection\Book\Providers\EventServiceProvider;
+use Workbench\App\Ship\Providers\ShipServiceProvider;
 
 describe(class_basename(Apiato::class), function (): void {
     it('can be created with default configuration', function (): void {
@@ -43,10 +42,10 @@ describe(class_basename(Apiato::class), function (): void {
             app_path('Containers/MySection/Book/Data/Migrations'),
             app_path('Containers/Identity/User/Data/Migrations'),
         ])->and($config->seeding()->seeders())->toBe([
-            \Workbench\App\Containers\MySection\Book\Data\Seeders\Ordered_1::class,
-            \Workbench\App\Containers\MySection\Book\Data\Seeders\Murdered_2::class,
-            \Workbench\App\Containers\MySection\Book\Data\Seeders\Wondered_3::class,
-            \Workbench\App\Containers\MySection\Book\Data\Seeders\Unordered::class,
+            Workbench\App\Containers\MySection\Book\Data\Seeders\Ordered_1::class,
+            Workbench\App\Containers\MySection\Book\Data\Seeders\Murdered_2::class,
+            Workbench\App\Containers\MySection\Book\Data\Seeders\Wondered_3::class,
+            Workbench\App\Containers\MySection\Book\Data\Seeders\Unordered::class,
             Ordered_1::class,
             Murdered_2::class,
             Wondered_3::class,
