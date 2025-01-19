@@ -30,7 +30,7 @@ describe(class_basename(Apiato::class), function (): void {
             app_path('Containers/MySection/Author/Listeners'),
         ])->and($config->commands())->toEqualCanonicalizing([
             shared_path('Commands'),
-            app_path('Containers/MySection/Book/UI/Console'),
+            app_path('Containers/MySection/Book/UI/CLI'),
         ])->and($config->helpers())->toEqualCanonicalizing([
             shared_path('Helpers/ExplosiveClass.php'),
             shared_path('Helpers/functions.php'),
