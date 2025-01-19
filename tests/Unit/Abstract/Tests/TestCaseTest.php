@@ -8,15 +8,10 @@ use Apiato\Foundation\Support\Traits\Testing\Assertions;
 use Apiato\Foundation\Support\Traits\Testing\RequestHelper;
 use Apiato\Foundation\Support\Traits\Testing\TestingUser;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use Tests\UnitTestCase;
 
-#[CoversClass(TestCase::class)]
-final class TestCaseTest extends UnitTestCase
-{
-    public function testUsesTraits(): void
-    {
-        $traits = [
+describe(class_basename(TestCase::class), function () {
+    it('uses expected traits', function () {
+        $expectedTraits = [
             TestingUser::class,
             RequestHelper::class,
             Assertions::class,
@@ -24,8 +19,6 @@ final class TestCaseTest extends UnitTestCase
             LazilyRefreshDatabase::class,
         ];
 
-        foreach ($traits as $trait) {
-            $this->assertContains($trait, class_uses_recursive(TestCase::class));
-        }
-    }
-}
+        expect(TestCase::class)->toUseTraits($expectedTraits);
+    });
+})->coversClass(TestCase::class);
