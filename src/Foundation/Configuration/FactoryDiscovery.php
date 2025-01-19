@@ -34,6 +34,7 @@ final class FactoryDiscovery
      * @template TFactory of Factory
      *
      * @param class-string<TModel> $modelName
+     *
      * @return class-string<TFactory>|null
      */
     public function resolveFactoryName(string $modelName): string|null
@@ -41,7 +42,7 @@ final class FactoryDiscovery
         $factoryName = app()->call(self::$factoryNameResolver, ['modelName' => $modelName]);
 
         if (is_string($factoryName) && class_exists($factoryName) && is_subclass_of($factoryName, Factory::class)) {
-            /** @var class-string<TFactory> $factoryName */
+            /* @var class-string<TFactory> $factoryName */
             return $factoryName;
         }
 

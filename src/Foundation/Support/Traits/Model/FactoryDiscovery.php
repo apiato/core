@@ -13,7 +13,7 @@ trait FactoryDiscovery
             ->resolveFactoryName(static::class);
 
         if (is_string($factoryName)) {
-            /** @var class-string<Factory> $factoryName */
+            /* @var class-string<Factory> $factoryName */
             return $factoryName::new();
         }
 
