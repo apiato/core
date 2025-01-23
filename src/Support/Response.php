@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use League\Fractal\Scope;
 use League\Fractal\TransformerAbstract;
 use Spatie\Fractal\Fractal;
+use Webmozart\Assert\Assert;
 
 /**
  * A wrapper class for Spatie\Fractal\Fractal.
@@ -27,6 +28,8 @@ final class Response extends Fractal
     public static function getRequestedIncludes(): array
     {
         $requestedIncludes = request()?->input(config('fractal.auto_includes.request_key'), []);
+        Assert::isArray($requestedIncludes);
+        Assert::allString($requestedIncludes);
 
         return self::create()->manager->parseIncludes($requestedIncludes)->getRequestedIncludes();
     }
