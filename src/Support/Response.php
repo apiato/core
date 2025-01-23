@@ -27,11 +27,17 @@ final class Response extends Fractal
      */
     public static function getRequestedIncludes(): array
     {
-        $requestedIncludes = request()?->input(config('fractal.auto_includes.request_key'), []);
-        Assert::isArray($requestedIncludes);
-        Assert::allString($requestedIncludes);
+        $requestKey = config('fractal.auto_includes.request_key');
+        Assert::nullOrString($requestKey);
+        $includes = request()->input($requestKey, []);
 
-        return self::create()->manager->parseIncludes($requestedIncludes)->getRequestedIncludes();
+        if (is_array($includes)) {
+            Assert::allString($includes);
+        } else {
+            Assert::string($includes);
+        }
+
+        return self::create()->manager->parseIncludes($includes)->getRequestedIncludes();
     }
 
     public function createData(): Scope
@@ -39,28 +45,31 @@ final class Response extends Fractal
         $this->withResourceName($this->defaultResourceName());
         $this->setAvailableIncludesMeta();
 
-         return parent::createData();
+        return parent::createData();
     }
 
     private function defaultResourceName(): string
     {
-        if (!is_null($this->getResourceName())) {
-            return $this->getResourceName();
+        $resourceName = $this->getResourceName();
+        if (!is_null($resourceName)) {
+            return $resourceName;
         }
 
-        if ($this->data instanceof HasResourceKey) {
-            return $this->data->getResourceKey();
-        }
-
-        if (!empty($this->data) && 'collection' === $this->determineDataType($this->data)) {
-            // TODO: there was a problem with $this->data->first() but I cant remember.
-            // It had something to do with the data being an array I think.
-            // Also check the AbstractTransformer where we also do this check and use the first item.
-            // We also have the same problem there.
-            $firstItem = $this->data->first();
-            if ($firstItem instanceof HasResourceKey) {
-                return $firstItem->getResourceKey();
+        $resource = $this->data;
+        if ('collection' === $this->determineDataType($resource)) {
+            if (is_array($resource)) {
+                $resource = reset($resource);
             }
+            if ($resource instanceof \IteratorAggregate) {
+                $resource = $resource->getIterator();
+            }
+            if ($resource instanceof \Iterator) {
+                $resource = $resource->current();
+            }
+        }
+
+        if ($resource instanceof HasResourceKey) {
+            return $resource->getResourceKey();
         }
 
         return '';
@@ -73,17 +82,32 @@ final class Response extends Fractal
         ]);
     }
 
+    /**
+     * Returns the available includes of the transformer.
+     *
+     * @return string[]
+     */
     private function getTransformerAvailableIncludes(): array
     {
         if (is_null($this->transformer) || is_callable($this->transformer)) {
             return [];
         }
 
+        $includes = null;
+
         if (is_string($this->transformer)) {
-            return (new $this->transformer())->getAvailableIncludes();
+            Assert::subclassOf($this->transformer, TransformerAbstract::class);
+
+            $includes = (new $this->transformer())->getAvailableIncludes();
         }
 
-        return $this->transformer->getAvailableIncludes();
+        if ($this->transformer instanceof TransformerAbstract) {
+            $includes = $this->transformer->getAvailableIncludes();
+        }
+
+        Assert::allString($includes);
+
+        return $includes;
     }
 
     /**
@@ -96,11 +120,6 @@ final class Response extends Fractal
         }
 
         return $this->respond(202);
-    }
-
-    public function getTransformer(): string|callable|TransformerAbstract|null
-    {
-        return $this->transformer;
     }
 
     /**
