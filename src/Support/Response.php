@@ -21,6 +21,8 @@ final class Response extends Fractal
      *
      * For example, if the include query parameter is "books,children.books", this method will return:
      * ['books', 'children', 'children.books']
+     *
+     * @return string[]
      */
     public static function getRequestedIncludes(): array
     {
