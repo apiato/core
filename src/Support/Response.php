@@ -41,7 +41,7 @@ final class Response extends Fractal
 
     private function defaultResourceName(): string
     {
-        if (is_string($this->getResourceName())) {
+        if (!is_null($this->getResourceName())) {
             return $this->getResourceName();
         }
 
