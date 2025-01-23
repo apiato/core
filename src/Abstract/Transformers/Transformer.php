@@ -2,15 +2,15 @@
 
 namespace Apiato\Abstract\Transformers;
 
-use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\Item;
+use Apiato\Support\Resources\Collection;
+use Apiato\Support\Resources\Item;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\Scope;
 use League\Fractal\TransformerAbstract as FractalTransformer;
 
 abstract class Transformer extends FractalTransformer
 {
-    public function nullableItem($data, $transformer, string|null $resourceKey = null): Primitive|Item
+    public function nullableItem(mixed $data, callable|self $transformer, string|null $resourceKey = null): Primitive|Item
     {
         if (is_null($data)) {
             return $this->primitive(null);
@@ -21,22 +21,12 @@ abstract class Transformer extends FractalTransformer
 
     public function item($data, $transformer, string|null $resourceKey = null): Item
     {
-        // set a default resource key if none is set
-        if (!$resourceKey && $data) {
-            $resourceKey = $data->getResourceKey();
-        }
-
-        return parent::item($data, $transformer, $resourceKey);
+        return new Item($data, $transformer, $resourceKey);
     }
 
     public function collection($data, $transformer, string|null $resourceKey = null): Collection
     {
-        // set a default resource key if none is set
-        if (!$resourceKey && $data->isNotEmpty()) {
-            $resourceKey = $data->first()->getResourceKey();
-        }
-
-        return parent::collection($data, $transformer, $resourceKey);
+        return new Collection($data, $transformer, $resourceKey);
     }
 
     protected function callIncludeMethod(Scope $scope, string $includeName, $data)
