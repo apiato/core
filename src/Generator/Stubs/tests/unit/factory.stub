@@ -2,7 +2,6 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit\Factories;
 
-use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -12,7 +11,7 @@ class {{class-name}} extends UnitTestCase
 {
     public function testCreate{{model}}(): void
     {
-        ${{_model}} = {{model}}Factory::new()->make();
+        ${{_model}} = {{model}}::factory()->make();
 
         $this->assertInstanceOf({{model}}::class, ${{_model}});
     }

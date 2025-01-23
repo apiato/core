@@ -2,7 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\API;
 
-use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
+use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
@@ -20,7 +20,7 @@ class {{class-name}} extends ApiTestCase
     // TODO TEST
     public function testUpdateExisting{{model}}(): void
     {
-        ${{_model}} = {{model}}Factory::new()->create([
+        ${{_model}} = {{model}}::factory()->create([
             // 'some_field' => 'new_field_value',
         ]);
         $data = [
@@ -52,7 +52,7 @@ class {{class-name}} extends ApiTestCase
     // TODO TEST
     // public function testUpdateExisting{{model}}WithEmptyValues(): void
     // {
-    //     ${{_model}} = {{model}}Factory::new()->createOne();
+    //     ${{_model}} = {{model}}::factory()->createOne();
     //     $data = [
     //         // add some fillable fields here
     //         // 'first_field' => '',
