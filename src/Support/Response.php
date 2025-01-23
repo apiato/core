@@ -3,7 +3,8 @@
 namespace Apiato\Support;
 
 use Apiato\Abstract\Transformers\Transformer;
-use Apiato\Contracts\HasResourceKey;
+use Apiato\Support\Resources\Collection;
+use Apiato\Support\Resources\Item;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Scope;
 use League\Fractal\TransformerAbstract;
@@ -48,6 +49,19 @@ final class Response extends Fractal
         return parent::createData();
     }
 
+    public function getResourceClass(): string
+    {
+        if ('item' === $this->dataType) {
+            return Item::class;
+        }
+
+        if ('collection' === $this->dataType) {
+            return Collection::class;
+        }
+
+        return parent::getResourceClass();
+    }
+
     private function defaultResourceName(): string
     {
         $resourceName = $this->getResourceName();
@@ -55,24 +69,7 @@ final class Response extends Fractal
             return $resourceName;
         }
 
-        $resource = $this->data;
-        if ('collection' === $this->determineDataType($resource)) {
-            if (is_array($resource)) {
-                $resource = reset($resource);
-            }
-            if ($resource instanceof \IteratorAggregate) {
-                $resource = $resource->getIterator();
-            }
-            if ($resource instanceof \Iterator) {
-                $resource = $resource->current();
-            }
-        }
-
-        if ($resource instanceof HasResourceKey) {
-            return $resource->getResourceKey();
-        }
-
-        return '';
+        return $this->getResource()->getResourceKey();
     }
 
     private function setAvailableIncludesMeta(): void
