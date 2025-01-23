@@ -28,7 +28,7 @@ final class Response extends Fractal
     {
         $requestedIncludes = request()?->input(config('fractal.auto_includes.request_key'), []);
 
-        return static::create()->manager->parseIncludes($requestedIncludes)->getRequestedIncludes();
+        return self::create()->manager->parseIncludes($requestedIncludes)->getRequestedIncludes();
     }
 
     public function createData(): Scope
