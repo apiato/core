@@ -8,7 +8,6 @@ use Illuminate\Http\JsonResponse;
 use League\Fractal\Scope;
 use League\Fractal\TransformerAbstract;
 use Spatie\Fractal\Fractal;
-use Spatie\Fractalistic\Exceptions\NoTransformerSpecified;
 
 /**
  * A wrapper class for Spatie\Fractal\Fractal.
@@ -35,38 +34,7 @@ final class Response extends Fractal
         $this->withResourceName($this->defaultResourceName());
         $this->setAvailableIncludesMeta();
 
-        // TODO: enable this and remove everything below
-        //  After the Fractalistic PR's are accepted
-        // https://github.com/spatie/fractalistic/pull/82
-        // return parent::createData();
-
-        if (is_null($this->transformer)) {
-            throw new NoTransformerSpecified();
-        }
-
-        if (is_string($this->serializer)) {
-            $this->serializer = new $this->serializer();
-        }
-
-        if (!is_null($this->serializer)) {
-            $this->manager->setSerializer($this->serializer);
-        }
-
-        $this->manager->setRecursionLimit($this->recursionLimit);
-
-        if ([] !== $this->includes) {
-            $this->manager->parseIncludes($this->includes);
-        }
-
-        if ([] !== $this->excludes) {
-            $this->manager->parseExcludes($this->excludes);
-        }
-
-        if ([] !== $this->fieldsets) {
-            $this->manager->parseFieldsets($this->fieldsets);
-        }
-
-        return $this->manager->createData($this->getResource());
+         return parent::createData();
     }
 
     private function defaultResourceName(): string
