@@ -7,11 +7,12 @@ use Illuminate\Support\Str;
 final class Localization
 {
     protected static \Closure $namespaceBuilder;
+    /** @var string[] */
     protected array $paths = [];
 
     public function __construct()
     {
-        $this->buildNamespaceUsing(function ($path): string {
+        $this->buildNamespaceUsing(function (string $path): string {
             if (Str::contains($path, shared_path())) {
                 return Str::of(shared_path())
                     ->afterLast(DIRECTORY_SEPARATOR)
@@ -28,6 +29,9 @@ final class Localization
         });
     }
 
+    /**
+     * @param \Closure(string): string $callback
+     */
     public function buildNamespaceUsing(\Closure $callback): self
     {
         self::$namespaceBuilder = $callback;
@@ -35,6 +39,9 @@ final class Localization
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function paths(): array
     {
         return $this->paths;

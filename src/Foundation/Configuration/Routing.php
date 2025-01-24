@@ -26,6 +26,9 @@ final class Routing
         );
     }
 
+    /**
+     * @param \Closure(string): string $callback
+     */
     public function resolveApiVersionUsing(\Closure $callback): self
     {
         self::$apiVersionResolver = $callback;
