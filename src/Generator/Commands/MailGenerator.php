@@ -1,13 +1,13 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class MailGenerator extends GeneratorCommand implements ComponentsGenerator
+final class MailGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -21,7 +21,7 @@ class MailGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:mail';
+    protected $name = 'apiato:make:mail';
     /**
      * The console command description.
      *

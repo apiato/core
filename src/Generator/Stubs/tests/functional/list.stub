@@ -1,33 +1,30 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\API;
 
-use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
-use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
-/**
- * @group {{_container-name}}
- * @group api
- */
+#[CoversNothing]
 class {{class-name}} extends ApiTestCase
 {
     protected string $endpoint = 'get@v1/{{url}}';
 
     protected array $access = [
-        'permissions' => '',
-        'roles' => '',
+        'permissions' => null,
+        'roles' => null,
     ];
 
     public function testList{{models}}ByAdmin(): void
     {
         $this->getTestingUserWithoutAccess(createUserAsAdmin: true);
-        {{model}}Factory::new()->count(2)->create();
+        {{model}}::factory()->count(2)->create();
 
         $response = $this->makeCall();
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $responseContent = $this->getResponseContentObject();
 
         $this->assertCount(2, $responseContent->data);
@@ -40,11 +37,11 @@ class {{class-name}} extends ApiTestCase
     // public function testList{{models}}ByNonAdmin(): void
     // {
     //     $this->getTestingUserWithoutAccess();
-    //     {{model}}Factory::new()->count(2)->create();
+    //     {{model}}::factory()->count(2)->create();
     //
     //     $response = $this->makeCall();
     //
-    //     $response->assertStatus(403);
+    //     $response->assertForbidden();
     //     $response->assertJson(
     //         fn (AssertableJson $json) =>
     //             $json->has('message')
@@ -56,16 +53,16 @@ class {{class-name}} extends ApiTestCase
     // TODO TEST
     // public function testSearch{{models}}ByFields(): void
     // {
-    //     {{model}}Factory::new()->count(3)->create();
+    //     {{model}}::factory()->count(3)->create();
     //     // create a model with specific field values
-    //     ${{_model}} = {{model}}Factory::new()->create([
+    //     ${{_model}} = {{model}}::factory()->create([
     //         // 'name' => 'something',
     //     ]);
     //
     //     // search by the above values
     //     $response = $this->endpoint($this->endpoint . "?search=name:" . urlencode(${{_model}}->name))->makeCall();
     //
-    //     $response->assertStatus(200);
+    //     $response->assertOk();
     //     $response->assertJson(
     //         fn (AssertableJson $json) =>
     //             $json->has('data')
@@ -74,19 +71,20 @@ class {{class-name}} extends ApiTestCase
     //     );
     // }
 
-    public function testSearch{{models}}ByHashID(): void
-    {
-        ${{_models}} = {{model}}Factory::new()->count(3)->create();
-        $second{{model}} = ${{_models}}[1];
-
-        $response = $this->endpoint($this->endpoint . '?search=id:' . $second{{model}}->getHashedKey())->makeCall();
-
-        $response->assertStatus(200);
-        $response->assertJson(
-            fn (AssertableJson $json) =>
-                $json->has('data')
-                     ->where('data.0.id', $second{{model}}->getHashedKey())
-                    ->etc()
-        );
-    }
+    // TODO TEST
+    // public function testSearch{{models}}ByHashID(): void
+    // {
+    //     ${{_models}} = {{model}}::factory()->count(3)->create();
+    //     $second{{model}} = ${{_models}}[1];
+    //
+    //     $response = $this->endpoint($this->endpoint . '?search=id:' . $second{{model}}->getHashedKey())->makeCall();
+    //
+    //     $response->assertOk();
+    //     $response->assertJson(
+    //         fn (AssertableJson $json) =>
+    //             $json->has('data')
+    //                  ->where('data.0.id', $second{{model}}->getHashedKey())
+    //                 ->etc()
+    //     );
+    // }
 }

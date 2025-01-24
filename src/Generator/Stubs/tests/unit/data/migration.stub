@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit\Data\Migrations;
+
+use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
+
+#[CoversNothing]
+class {{class-name}} extends UnitTestCase
+{
+    public function test{{_table-name_}}TableHasExpectedColumns(): void
+    {
+        $columns = [
+            'id' => 'bigint',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+
+        $this->assertDatabaseTable('{{table-name}}', $columns);
+    }
+}

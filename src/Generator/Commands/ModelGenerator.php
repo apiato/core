@@ -1,13 +1,13 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
+final class ModelGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -21,7 +21,7 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:model';
+    protected $name = 'apiato:make:model';
     /**
      * The console command description.
      *
@@ -51,13 +51,14 @@ class ModelGenerator extends GeneratorCommand implements ComponentsGenerator
         if ($repository) {
             // We need to generate a corresponding repository
             // so call the other command
-            $status = $this->call('apiato:generate:repository', [
+            $status = $this->call('apiato:make:repository', [
                 '--section' => $this->sectionName,
                 '--container' => $this->containerName,
                 '--file' => $this->fileName . 'Repository',
+                '--model' => $this->fileName,
             ]);
 
-            if (0 != $status) {
+            if (0 !== $status) {
                 $this->printErrorMessage('Could not generate the corresponding Repository!');
             }
         }

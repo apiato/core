@@ -1,12 +1,12 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-class MiddlewareGenerator extends GeneratorCommand implements ComponentsGenerator
+final class MiddlewareGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -19,7 +19,7 @@ class MiddlewareGenerator extends GeneratorCommand implements ComponentsGenerato
      *
      * @var string
      */
-    protected $name = 'apiato:generate:middleware';
+    protected $name = 'apiato:make:middleware';
     /**
      * The console command description.
      *

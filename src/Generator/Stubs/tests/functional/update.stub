@@ -1,29 +1,26 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\API;
 
-use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
-use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
-/**
- * @group {{_container-name}}
- * @group api
- */
+#[CoversNothing]
 class {{class-name}} extends ApiTestCase
 {
     protected string $endpoint = 'patch@v1/{{url}}';
 
     protected array $access = [
-        'permissions' => '',
-        'roles' => '',
+        'permissions' => null,
+        'roles' => null,
     ];
 
     // TODO TEST
     public function testUpdateExisting{{model}}(): void
     {
-        ${{_model}} = {{model}}Factory::new()->create([
+        ${{_model}} = {{model}}::factory()->create([
             // 'some_field' => 'new_field_value',
         ]);
         $data = [
@@ -32,7 +29,7 @@ class {{class-name}} extends ApiTestCase
 
         $response = $this->injectId(${{_model}}->id)->makeCall($data);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertJson(
             fn (AssertableJson $json) =>
                 $json->has('data')
@@ -49,13 +46,13 @@ class {{class-name}} extends ApiTestCase
 
         $response = $this->injectId($invalidId)->makeCall([]);
 
-        $response->assertStatus(404);
+        $response->assertNotFound();
     }
 
     // TODO TEST
     // public function testUpdateExisting{{model}}WithEmptyValues(): void
     // {
-    //     ${{_model}} = {{model}}Factory::new()->createOne();
+    //     ${{_model}} = {{model}}::factory()->createOne();
     //     $data = [
     //         // add some fillable fields here
     //         // 'first_field' => '',
@@ -64,7 +61,7 @@ class {{class-name}} extends ApiTestCase
     //
     //     $response = $this->injectId(${{_model}}->id)->makeCall($data);
     //
-    //     $response->assertStatus(422);
+    //     $response->assertUnprocessable();
     //     $response->assertJson(
     //         fn (AssertableJson $json) =>
     //         $json->has('errors')

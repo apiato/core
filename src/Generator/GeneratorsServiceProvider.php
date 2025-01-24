@@ -1,45 +1,42 @@
 <?php
 
-namespace Apiato\Core\Generator;
+namespace Apiato\Generator;
 
-use Apiato\Core\Generator\Commands\ActionGenerator;
-use Apiato\Core\Generator\Commands\ConfigurationGenerator;
-use Apiato\Core\Generator\Commands\ContainerApiGenerator;
-use Apiato\Core\Generator\Commands\ContainerGenerator;
-use Apiato\Core\Generator\Commands\ContainerWebGenerator;
-use Apiato\Core\Generator\Commands\ControllerGenerator;
-use Apiato\Core\Generator\Commands\EventGenerator;
-use Apiato\Core\Generator\Commands\EventListenerGenerator;
-use Apiato\Core\Generator\Commands\ExceptionGenerator;
-use Apiato\Core\Generator\Commands\JobGenerator;
-use Apiato\Core\Generator\Commands\MailGenerator;
-use Apiato\Core\Generator\Commands\MiddlewareGenerator;
-use Apiato\Core\Generator\Commands\MigrationGenerator;
-use Apiato\Core\Generator\Commands\ModelFactoryGenerator;
-use Apiato\Core\Generator\Commands\ModelGenerator;
-use Apiato\Core\Generator\Commands\NotificationGenerator;
-use Apiato\Core\Generator\Commands\PolicyGenerator;
-use Apiato\Core\Generator\Commands\ReadmeGenerator;
-use Apiato\Core\Generator\Commands\RepositoryGenerator;
-use Apiato\Core\Generator\Commands\RequestGenerator;
-use Apiato\Core\Generator\Commands\RouteGenerator;
-use Apiato\Core\Generator\Commands\SeederGenerator;
-use Apiato\Core\Generator\Commands\ServiceProviderGenerator;
-use Apiato\Core\Generator\Commands\SubActionGenerator;
-use Apiato\Core\Generator\Commands\TaskGenerator;
-use Apiato\Core\Generator\Commands\TestFunctionalTestGenerator;
-use Apiato\Core\Generator\Commands\TestTestCaseGenerator;
-use Apiato\Core\Generator\Commands\TestUnitTestGenerator;
-use Apiato\Core\Generator\Commands\TransformerGenerator;
-use Apiato\Core\Generator\Commands\ValueGenerator;
-use Illuminate\Support\ServiceProvider;
+use Apiato\Abstract\Providers\ServiceProvider;
+use Apiato\Generator\Commands\ActionGenerator;
+use Apiato\Generator\Commands\ConfigurationGenerator;
+use Apiato\Generator\Commands\ContainerApiGenerator;
+use Apiato\Generator\Commands\ContainerGenerator;
+use Apiato\Generator\Commands\ContainerWebGenerator;
+use Apiato\Generator\Commands\ControllerGenerator;
+use Apiato\Generator\Commands\EventGenerator;
+use Apiato\Generator\Commands\EventListenerGenerator;
+use Apiato\Generator\Commands\ExceptionGenerator;
+use Apiato\Generator\Commands\FunctionalTestGenerator;
+use Apiato\Generator\Commands\JobGenerator;
+use Apiato\Generator\Commands\MailGenerator;
+use Apiato\Generator\Commands\MiddlewareGenerator;
+use Apiato\Generator\Commands\MigrationGenerator;
+use Apiato\Generator\Commands\ModelFactoryGenerator;
+use Apiato\Generator\Commands\ModelGenerator;
+use Apiato\Generator\Commands\NotificationGenerator;
+use Apiato\Generator\Commands\PolicyGenerator;
+use Apiato\Generator\Commands\ReadmeGenerator;
+use Apiato\Generator\Commands\RepositoryGenerator;
+use Apiato\Generator\Commands\RequestGenerator;
+use Apiato\Generator\Commands\RouteGenerator;
+use Apiato\Generator\Commands\SeederGenerator;
+use Apiato\Generator\Commands\ServiceProviderGenerator;
+use Apiato\Generator\Commands\SubActionGenerator;
+use Apiato\Generator\Commands\TaskGenerator;
+use Apiato\Generator\Commands\TestCaseGenerator;
+use Apiato\Generator\Commands\TransformerGenerator;
+use Apiato\Generator\Commands\UnitTestGenerator;
+use Apiato\Generator\Commands\ValueGenerator;
 
 class GeneratorsServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->commands($this->getGeneratorCommands());
@@ -48,8 +45,7 @@ class GeneratorsServiceProvider extends ServiceProvider
 
     private function getGeneratorCommands(): array
     {
-        // add your generators here
-        return $generatorCommands = [
+        return [
             ActionGenerator::class,
             ConfigurationGenerator::class,
             ContainerGenerator::class,
@@ -74,9 +70,9 @@ class GeneratorsServiceProvider extends ServiceProvider
             SeederGenerator::class,
             ServiceProviderGenerator::class,
             SubActionGenerator::class,
-            TestFunctionalTestGenerator::class,
-            TestTestCaseGenerator::class,
-            TestUnitTestGenerator::class,
+            FunctionalTestGenerator::class,
+            TestCaseGenerator::class,
+            UnitTestGenerator::class,
             TaskGenerator::class,
             TransformerGenerator::class,
             ValueGenerator::class,

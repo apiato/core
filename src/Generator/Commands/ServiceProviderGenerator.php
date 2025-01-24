@@ -1,13 +1,13 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGenerator
+final class ServiceProviderGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -21,7 +21,7 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
      *
      * @var string
      */
-    protected $name = 'apiato:generate:provider';
+    protected $name = 'apiato:make:provider';
     /**
      * The console command description.
      *
@@ -43,21 +43,25 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
     /**
      * The name of the stub file.
      */
-    protected string $stubName = 'providers/mainserviceprovider.stub';
+    protected string $stubName = 'providers/generic.stub';
 
     public function getUserInputs(): array|null
     {
-        $stub = Str::lower(
-            $this->checkParameterOrChoice(
+        $stub = $this->option('stub');
+        if (!$stub) {
+            $stub = $this->checkParameterOrChoice(
                 'stub',
                 'Select the Stub you want to load',
-                ['Generic', 'MainServiceProvider', 'EventServiceProvider', 'MiddlewareServiceProvider'],
+                ['ServiceProvider', 'EventServiceProvider'],
                 0,
-            ),
-        );
+            );
 
-        // load a new stub-file based on the users choice
-        $this->stubName = 'providers/' . $stub . '.stub';
+            $stub = match ($stub) {
+                'EventServiceProvider' => 'event-service-provider',
+                default => 'service-provider',
+            };
+        }
+        $this->stubName = "providers/$stub.stub";
 
         return [
             'path-parameters' => [
@@ -82,6 +86,6 @@ class ServiceProviderGenerator extends GeneratorCommand implements ComponentsGen
      */
     public function getDefaultFileName(): string
     {
-        return 'MainServiceProvider';
+        return 'ServiceProvider';
     }
 }

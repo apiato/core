@@ -1,0 +1,9 @@
+<?php
+
+namespace Workbench\App\Ship\Parents\Policies;
+
+use Apiato\Abstract\Policies\Policy as AbstractPolicy;
+
+abstract class Policy extends AbstractPolicy
+{
+}

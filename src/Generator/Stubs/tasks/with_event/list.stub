@@ -2,7 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 
-use Apiato\Core\Exceptions\CoreInternalErrorException;
+use Apiato\Exceptions\CoreInternalErrorException;
 use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
 use App\Ship\Parents\Tasks\Task as ParentTask;
@@ -11,7 +11,7 @@ use Prettus\Repository\Exceptions\RepositoryException;
 class {{class-name}} extends ParentTask
 {
     public function __construct(
-        protected readonly {{model}}Repository $repository,
+        private readonly {{model}}Repository $repository,
     ) {
     }
 

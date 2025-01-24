@@ -2,7 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 
-use Apiato\Core\Exceptions\CoreInternalErrorException;
+use Apiato\Exceptions\CoreInternalErrorException;
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\List{{models}}Task;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\List{{models}}Request;
 use App\Ship\Parents\Actions\Action as ParentAction;

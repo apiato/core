@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\E2E;
 
-use App\Ship\Parents\Tests\PhpUnit\TestCase as ParentTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\E2ETestCase;
 
-class {{class-name}} extends ParentTestCase
+class {{class-name}} extends E2ETestCase
 {
 }

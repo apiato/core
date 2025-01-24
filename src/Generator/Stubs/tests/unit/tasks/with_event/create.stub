@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit\Tasks;
+
+use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
+use App\Containers\{{section-name}}\{{container-name}}\Tasks\Create{{model}}Task;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
+use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Create{{model}}Task::class)]
+class {{class-name}} extends UnitTestCase
+{
+    public function testCreate{{model}}(): void
+    {
+        Event::fake();
+        $data = [];
+
+        ${{_model}} = app(Create{{model}}Task::class)->run($data);
+
+        $this->assertModelExists(${{_model}});
+        Event::assertDispatched({{event}}::class);
+    }
+}

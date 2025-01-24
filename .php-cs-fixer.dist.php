@@ -6,9 +6,14 @@ $finder = Symfony\Component\Finder\Finder::create()
         __DIR__ . '/tests',
     ])
     ->name('*.php')
-    ->notName('*.blade.php');
+    ->notName('*.blade.php')
+    ->exclude([
+        'Support/Doubles/Fakes/Laravel/bootstrap',
+        'Support/Doubles/Fakes/Laravel/storage',
+    ]);
 
 return (new PhpCsFixer\Config())
+    ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
     ->setRules([
         '@Symfony' => true,
         'concat_space' => ['spacing' => 'one'],

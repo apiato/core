@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\API;
 
-use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
-/**
- * @group {{_container-name}}
- * @group api
- */
+#[CoversNothing]
 class {{class-name}} extends ApiTestCase
 {
     protected string $endpoint = 'post@v1/{{url}}';
 
     protected array $access = [
-        'permissions' => '',
-        'roles' => '',
+        'permissions' => null,
+        'roles' => null,
     ];
 
     // TODO TEST
@@ -27,7 +25,7 @@ class {{class-name}} extends ApiTestCase
 
         $response = $this->makeCall($data);
 
-        $response->assertStatus(201);
+        $response->assertCreated();
         $response->assertJson(
             fn (AssertableJson $json) =>
                 $json->has('data')
@@ -47,7 +45,7 @@ class {{class-name}} extends ApiTestCase
     //
     //     $response = $this->makeCall($data);
     //
-    //     $response->assertStatus(422);
+    //     $response->assertUnprocessable();
     //     // validate errors and their messages here
     //     // $response->assertJson(
     //     //     fn (AssertableJson $json) =>
@@ -67,7 +65,7 @@ class {{class-name}} extends ApiTestCase
     //
     //     $response = $this->makeCall([]);
     //
-    //     $response->assertStatus(403);
+    //     $response->assertForbidden();
     //     $response->assertJson(
     //         fn (AssertableJson $json) =>
     //             $json->has('message')

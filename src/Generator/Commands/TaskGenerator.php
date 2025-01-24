@@ -1,14 +1,14 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
+final class TaskGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -24,7 +24,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
      *
      * @var string
      */
-    protected $name = 'apiato:generate:task';
+    protected $name = 'apiato:make:task';
     /**
      * The console command description.
      *
@@ -80,6 +80,7 @@ class TaskGenerator extends GeneratorCommand implements ComponentsGenerator
                 'model' => $model,
                 'models' => $models,
                 '_model' => Str::lower($model),
+                'model_' => Str::camel($model),
                 'event' => $event,
             ],
             'file-parameters' => [

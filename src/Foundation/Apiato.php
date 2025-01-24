@@ -1,183 +1,278 @@
 <?php
 
-namespace Apiato\Core\Foundation;
+namespace Apiato\Foundation;
 
-use Illuminate\Support\Facades\File;
+use Apiato\Foundation\Configuration\ApplicationBuilder;
+use Apiato\Foundation\Configuration\FactoryDiscovery;
+use Apiato\Foundation\Configuration\Localization;
+use Apiato\Foundation\Configuration\Routing;
+use Apiato\Foundation\Configuration\Seeding;
+use Apiato\Foundation\Configuration\View;
+use Composer\Autoload\ClassLoader;
+use Composer\ClassMapGenerator\ClassMapGenerator;
 
-class Apiato
+use function Illuminate\Filesystem\join_paths;
+
+final class Apiato
 {
-    /**
-     * The Apiato version.
-     */
-    public const VERSION = '12.0.0';
+    private static self $instance;
+    private string $sharedPath;
+    /** @var string[] */
+    private array $providerPaths = [];
+    /** @var string[] */
+    private array $configPaths = [];
+    /** @var string[] */
+    private array $eventDiscoveryPaths = [];
+    /** @var string[] */
+    private array $commandPaths = [];
+    /** @var string[] */
+    private array $migrationPaths = [];
+    /** @var string[] */
+    private array $helperPaths = [];
+    private Routing $routing;
+    private Localization $localization;
+    private View $view;
+    private Seeding $seeding;
+    private FactoryDiscovery $factoryDiscovery;
 
-    private const SHIP_NAME = 'ship';
-    private const CONTAINERS_DIRECTORY_NAME = 'Containers';
+    private function __construct(
+        private readonly string $basePath,
+    ) {
+    }
 
-    public function getShipFoldersNames(): array
+    public static function configure(string|null $basePath = null): ApplicationBuilder
     {
-        $shipFoldersNames = [];
-
-        foreach ($this->getShipPath() as $shipFoldersPath) {
-            $shipFoldersNames[] = basename($shipFoldersPath);
+        if (isset(self::$instance)) {
+            return new ApplicationBuilder(self::$instance);
         }
 
-        return $shipFoldersNames;
-    }
+        $basePath = match (true) {
+            is_string($basePath) => $basePath,
+            default => self::inferBasePath(),
+        };
 
-    public function getShipPath(): array
-    {
-        return File::directories(app_path(self::SHIP_NAME));
-    }
+        self::$instance = new self($basePath);
 
-    public function getSectionContainerNames(string $sectionName): array
-    {
-        $containerNames = [];
-        foreach (File::directories($this->getSectionPath($sectionName)) as $key => $name) {
-            $containerNames[] = basename($name);
-        }
-
-        return $containerNames;
-    }
-
-    private function getSectionPath(string $sectionName): string
-    {
-        return app_path(self::CONTAINERS_DIRECTORY_NAME . DIRECTORY_SEPARATOR . $sectionName);
-    }
-
-    /**
-     * Build and return an object of a class from its file path.
-     */
-    public function getClassObjectFromFile(string $filePathName): mixed
-    {
-        $classString = $this->getClassFullNameFromFile($filePathName);
-
-        return new $classString();
+        return new ApplicationBuilder(self::$instance);
     }
 
     /**
-     * Get the full name (name \ namespace) of a class from its file path
-     * result example: (string) "I\Am\The\Namespace\Of\This\Class".
+     * Infer the application's base directory from the environment.
      */
-    public function getClassFullNameFromFile(string $filePathName): string
+    public static function inferBasePath(): string
     {
-        return "{$this->getClassNamespaceFromFile($filePathName)}\\{$this->getClassNameFromFile($filePathName)}";
+        return match (true) {
+            isset($_ENV['APP_BASE_PATH']) => $_ENV['APP_BASE_PATH'],
+            default => dirname(array_keys(ClassLoader::getRegisteredLoaders())[0]),
+        };
     }
 
     /**
-     * Get the class namespace form file path using token.
+     * Get the singleton instance of the class.
      */
-    protected function getClassNamespaceFromFile(string $filePathName): string|null
+    public static function instance(): self
     {
-        $src = file_get_contents($filePathName);
+        return self::$instance;
+    }
 
-        $tokens = token_get_all($src);
-        $count = count($tokens);
-        $i = 0;
-        $namespace = '';
-        $namespace_ok = false;
-        while ($i < $count) {
-            $token = $tokens[$i];
-            if (is_array($token) && T_NAMESPACE === $token[0]) {
-                // Found namespace declaration
-                while (++$i < $count) {
-                    if (';' === $tokens[$i]) {
-                        $namespace_ok = true;
-                        $namespace = trim($namespace);
-
-                        break;
-                    }
-                    $namespace .= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
-                }
-
-                break;
-            }
-            ++$i;
-        }
-        if (!$namespace_ok) {
-            return null;
-        }
-
-        return $namespace;
+    public function basePath(): string
+    {
+        return $this->basePath;
     }
 
     /**
-     * Get the class name from file path using token.
+     * Get the path to the application's shared directory.
      */
-    protected function getClassNameFromFile(string $filePathName): mixed
+    public function sharedPath(string $path = ''): string
     {
-        $php_code = file_get_contents($filePathName);
-
-        $classes = [];
-        $tokens = token_get_all($php_code);
-        $count = count($tokens);
-        for ($i = 2; $i < $count; ++$i) {
-            if (T_CLASS == $tokens[$i - 2][0]
-                && T_WHITESPACE == $tokens[$i - 1][0]
-                && T_STRING == $tokens[$i][0]
-            ) {
-                $class_name = $tokens[$i][1];
-                $classes[] = $class_name;
-            }
-        }
-
-        return $classes[0];
+        return join_paths($this->sharedPath ?: app_path('Ship'), $path);
     }
 
     /**
-     * Get the last part of a camel case string.
-     * Example input = helloDearWorld | returns = World.
+     * Set the shared directory path.
      */
-    public function getClassType(string $className): mixed
+    public function useSharedPath(string $path): self
     {
-        $array = preg_split('/(?=[A-Z])/', $className);
+        $this->sharedPath = $path;
 
-        return end($array);
+        return $this;
     }
 
-    public function getAllContainerNames(): array
+    public function withRouting(callable|null $callback = null): self
     {
-        $containersNames = [];
+        $this->routing ??= new Routing();
 
-        foreach ($this->getAllContainerPaths() as $containersPath) {
-            $containersNames[] = basename($containersPath);
+        if (!is_null($callback)) {
+            $callback($this->routing);
         }
 
-        return $containersNames;
+        return $this;
     }
 
-    public function getAllContainerPaths(): array
+    public function withFactories(callable|null $callback = null): self
     {
-        $sectionNames = $this->getSectionNames();
-        $containerPaths = [];
-        foreach ($sectionNames as $name) {
-            $sectionContainerPaths = $this->getSectionContainerPaths($name);
-            foreach ($sectionContainerPaths as $containerPath) {
-                $containerPaths[] = $containerPath;
-            }
+        $this->factoryDiscovery ??= new FactoryDiscovery();
+
+        if (!is_null($callback)) {
+            $callback($this->factoryDiscovery);
         }
 
-        return $containerPaths;
+        return $this;
     }
 
-    public function getSectionNames(): array
+    public function withViews(callable|null $callback = null): self
     {
-        $sectionNames = [];
+        $this->view ??= new View();
 
-        foreach ($this->getSectionPaths() as $sectionPath) {
-            $sectionNames[] = basename($sectionPath);
+        if (!is_null($callback)) {
+            $callback($this->view);
         }
 
-        return $sectionNames;
+        return $this;
     }
 
-    public function getSectionPaths(): array
+    public function withTranslations(callable|null $callback = null): self
     {
-        return File::directories(app_path(self::CONTAINERS_DIRECTORY_NAME));
+        $this->localization ??= new Localization();
+
+        if (!is_null($callback)) {
+            $callback($this->localization);
+        }
+
+        return $this;
     }
 
-    public function getSectionContainerPaths(string $sectionName): array
+    public function withSeeders(callable|null $callback = null): self
     {
-        return File::directories(app_path(self::CONTAINERS_DIRECTORY_NAME . DIRECTORY_SEPARATOR . $sectionName));
+        $this->seeding ??= new Seeding();
+
+        if (!is_null($callback)) {
+            $callback($this->seeding);
+        }
+
+        return $this;
+    }
+
+    public function withMigrations(string ...$path): self
+    {
+        $this->migrationPaths = $path;
+
+        return $this;
+    }
+
+    public function withHelpers(string ...$path): void
+    {
+        $this->helperPaths = $path;
+    }
+
+    public function withCommands(string ...$path): void
+    {
+        $this->commandPaths = $path;
+    }
+
+    public function withEvents(string ...$path): void
+    {
+        $this->eventDiscoveryPaths = $path;
+    }
+
+    public function withConfigs(string ...$path): void
+    {
+        $this->configPaths = $path;
+    }
+
+    public function withProviders(string ...$path): self
+    {
+        $this->providerPaths = $path;
+
+        return $this;
+    }
+
+    /*
+     * Get the service providers to be loaded.
+     *
+     * @return string[]
+     */
+    public function providers(): array
+    {
+        $classMapper = new ClassMapGenerator();
+        foreach ($this->providerPaths as $path) {
+            $classMapper->scanPaths($path);
+        }
+
+        return array_keys($classMapper->getClassMap()->getMap());
+    }
+
+    /*
+     * Get the configuration files to be loaded.
+     *
+     * @return string[]
+     */
+    public function configs(): array
+    {
+        return collect($this->configPaths)->flatMap(
+            static fn (string $path): array => \Safe\glob($path . '/*.php'),
+        )->toArray();
+    }
+
+    /*
+     * Get the helper files to be loaded.
+     *
+     * @return string[]
+     */
+    public function helpers(): array
+    {
+        return collect($this->helperPaths)->flatMap(
+            static fn (string $path): array => \Safe\glob($path . '/*.php'),
+        )->toArray();
+    }
+
+    public function migrations(): array
+    {
+        return $this->migrationPaths;
+    }
+
+    public function events(): array
+    {
+        return $this->eventDiscoveryPaths;
+    }
+
+    public function commands(): array
+    {
+        return $this->commandPaths;
+    }
+
+    public function registerApiRoutes(): void
+    {
+        $this->routing->registerApiRoutes();
+    }
+
+    public function webRoutes(): array
+    {
+        return $this->routing->webRoutes();
+    }
+
+    public function seeding(): Seeding
+    {
+        return $this->seeding;
+    }
+
+    public function routing(): Routing
+    {
+        return $this->routing;
+    }
+
+    public function factoryDiscovery(): FactoryDiscovery
+    {
+        return $this->factoryDiscovery;
+    }
+
+    public function localization(): Localization
+    {
+        return $this->localization;
+    }
+
+    public function view(): View
+    {
+        return $this->view;
     }
 }

@@ -1,23 +1,23 @@
 <?php
 
-namespace Apiato\Core\Generator\Traits;
+namespace Apiato\Generator\Traits;
 
 trait FormatterTrait
 {
-    public function prependOperationToName($operation, $class): string
+    public function prependOperationToName(string $operation, $class): string
     {
-        $className = ('list' == $operation) ? ngettext($class) : $class;
+        $className = ('list' === $operation) ? ngettext($class) : $class;
 
         return $operation . $this->capitalize($className);
     }
 
     public function capitalize($word): string
     {
-        return ucfirst($word);
+        return ucfirst((string) $word);
     }
 
     protected function trimString($string): string
     {
-        return trim($string);
+        return trim((string) $string);
     }
 }

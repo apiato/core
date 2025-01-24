@@ -1,25 +1,27 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Input\InputOption;
 
-class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerator
+final class RepositoryGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
      * This is a replacement of the `getArguments` function "which reads whenever it's called".
      */
     public array $inputs = [
+        ['model', null, InputOption::VALUE_OPTIONAL, 'The model to generate this Factory for'],
     ];
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'apiato:generate:repository';
+    protected $name = 'apiato:make:repository';
     /**
      * The console command description.
      *
@@ -45,6 +47,8 @@ class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerato
 
     public function getUserInputs(): array|null
     {
+        $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Repository for');
+
         return [
             'path-parameters' => [
                 'section-name' => $this->sectionName,
@@ -56,6 +60,8 @@ class RepositoryGenerator extends GeneratorCommand implements ComponentsGenerato
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'class-name' => $this->fileName,
+                'model' => $model,
+                '_model' => Str::lower($model),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

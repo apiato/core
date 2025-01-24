@@ -1,6 +1,10 @@
 name: Check & fix styling
 
 on:
+  push:
+    branches:
+      - master
+      - '*.x'
   pull_request:
     types: [ opened, synchronize, reopened ]
 
@@ -28,4 +32,4 @@ jobs:
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "style: apply automated php-cs-fixer changes"
+          commit_message: "style(automated): apply php-cs-fixer rules"

@@ -1,14 +1,14 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class TransformerGenerator extends GeneratorCommand implements ComponentsGenerator
+final class TransformerGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -23,7 +23,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
      *
      * @var string
      */
-    protected $name = 'apiato:generate:transformer';
+    protected $name = 'apiato:make:transformer';
     /**
      * The console command description.
      *
@@ -75,7 +75,7 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
         ];
     }
 
-    private function getListOfAllAttributes($full, $model): string
+    private function getListOfAllAttributes(string|bool|array|null $full, string $model): string
     {
         $indent = str_repeat(' ', 12);
         $_model = Str::lower($model);
@@ -115,6 +115,6 @@ class TransformerGenerator extends GeneratorCommand implements ComponentsGenerat
         $keys = array_keys($fields);
         $lastKey = end($keys);
 
-        return $currentKey == $lastKey ? '' : PHP_EOL;
+        return $currentKey === $lastKey ? '' : PHP_EOL;
     }
 }

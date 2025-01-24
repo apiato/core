@@ -2,9 +2,9 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use Apiato\Core\Exceptions\CoreInternalErrorException;
-use Apiato\Core\Exceptions\IncorrectIdException;
-use Apiato\Core\Exceptions\InvalidTransformerException;
+use Apiato\Exceptions\CoreInternalErrorException;
+use Apiato\Exceptions\IncorrectIdException;
+use Apiato\Exceptions\InvalidTransformerException;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Create{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Delete{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Find{{model}}ByIdAction;
@@ -26,36 +26,27 @@ use Prettus\Repository\Exceptions\RepositoryException;
 
 class {{class-name}} extends {{base-controller}}
 {
-    public function __construct(
-        private readonly Create{{model}}Action $create{{model}}Action,
-        private readonly Update{{model}}Action $update{{model}}Action,
-        private readonly Find{{model}}ByIdAction $find{{model}}ByIdAction,
-        private readonly List{{models}}Action $list{{models}}Action,
-        private readonly Delete{{model}}Action $delete{{model}}Action,
-    ) {
-    }
-
     /**
      * @throws InvalidTransformerException
      * @throws CreateResourceFailedException
      * @throws IncorrectIdException
      */
-    public function create{{model}}(Create{{model}}Request $request): JsonResponse
+    public function create(Create{{model}}Request $request, Create{{model}}Action $action): JsonResponse
     {
-        ${{entity}} = $this->create{{model}}Action->run($request);
+       ${{entity}} = $action->run($request);
 
-        return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
+       return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
     }
 
     /**
      * @throws InvalidTransformerException
      * @throws NotFoundException
      */
-    public function find{{model}}ById(Find{{model}}ByIdRequest $request): array
+    public function findById(Find{{model}}ByIdRequest $request, Find{{model}}ByIdAction $action): array
     {
-        ${{entity}} = $this->find{{model}}ByIdAction->run($request);
+     ${{entity}} = $action->run($request);
 
-        return $this->transform(${{entity}}, {{model}}Transformer::class);
+     return $this->transform(${{entity}}, {{model}}Transformer::class);
     }
 
     /**
@@ -63,34 +54,34 @@ class {{class-name}} extends {{base-controller}}
      * @throws CoreInternalErrorException
      * @throws RepositoryException
      */
-    public function list{{models}}(List{{models}}Request $request): array
+    public function list(List{{models}}Request $request, List{{models}}Action $action): array
     {
-        ${{entities}} = $this->list{{models}}Action->run($request);
+      ${{entities}} = $action->run($request);
 
-        return $this->transform(${{entities}}, {{model}}Transformer::class);
+      return $this->transform(${{entities}}, {{model}}Transformer::class);
     }
 
     /**
-     * @throws IncorrectIdException
      * @throws InvalidTransformerException
-     * @throws NotFoundException
      * @throws UpdateResourceFailedException
+     * @throws IncorrectIdException
+     * @throws NotFoundException
      */
-    public function update{{model}}(Update{{model}}Request $request): array
+    public function update(Update{{model}}Request $request, Update{{model}}Action $action): array
     {
-        ${{entity}} = $this->update{{model}}Action->run($request);
+       ${{entity}} = $action->run($request);
 
-        return $this->transform(${{entity}}, {{model}}Transformer::class);
+       return $this->transform(${{entity}}, {{model}}Transformer::class);
     }
 
     /**
      * @throws DeleteResourceFailedException
      * @throws NotFoundException
      */
-    public function delete{{model}}(Delete{{model}}Request $request): JsonResponse
+    public function delete(Delete{{model}}Request $request, Delete{{model}}Action $action): JsonResponse
     {
-        $this->delete{{model}}Action->run($request);
+       $action->run($request);
 
-        return $this->noContent();
+       return $this->noContent();
     }
 }

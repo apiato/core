@@ -1,12 +1,12 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Symfony\Component\Console\Input\InputOption;
 
-class EventListenerGenerator extends GeneratorCommand implements ComponentsGenerator
+final class EventListenerGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -20,7 +20,7 @@ class EventListenerGenerator extends GeneratorCommand implements ComponentsGener
      *
      * @var string
      */
-    protected $name = 'apiato:generate:listener';
+    protected $name = 'apiato:make:listener';
     /**
      * The console command description.
      *
@@ -47,8 +47,6 @@ class EventListenerGenerator extends GeneratorCommand implements ComponentsGener
     public function getUserInputs(): array|null
     {
         $event = $this->checkParameterOrAsk('event', 'Enter the name of the Event to generate this Listener for');
-
-        $this->printInfoMessage('!!! Do not forget to register the Event and/or Event Listener !!!');
 
         return [
             'path-parameters' => [

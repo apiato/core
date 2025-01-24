@@ -1,7 +1,8 @@
 <?php
 
-namespace Apiato\Core\Contracts;
+namespace Apiato\Contracts;
 
-interface HasResourceKey {
+interface HasResourceKey
+{
     public function getResourceKey(): string;
 }

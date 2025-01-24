@@ -2,7 +2,6 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Events;
 
-use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Ship\Parents\Events\Event as ParentEvent;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;

@@ -1,31 +1,28 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\API;
 
-use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
-use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
-/**
- * @group {{_container-name}}
- * @group api
- */
+#[CoversNothing]
 class {{class-name}} extends ApiTestCase
 {
     protected string $endpoint = 'delete@v1/{{url}}';
 
     protected array $access = [
-        'permissions' => '',
-        'roles' => '',
+        'permissions' => null,
+        'roles' => null,
     ];
 
     public function testDeleteExisting{{model}}(): void
     {
-        ${{_model}} = {{model}}Factory::new()->createOne();
+        ${{_model}} = {{model}}::factory()->createOne();
 
         $response = $this->injectId(${{_model}}->id)->makeCall();
 
-        $response->assertStatus(204);
+        $response->assertNoContent();
     }
 
     public function testDeleteNonExisting{{model}}(): void
@@ -34,7 +31,7 @@ class {{class-name}} extends ApiTestCase
 
         $response = $this->injectId($invalidId)->makeCall([]);
 
-        $response->assertStatus(404);
+        $response->assertNotFound();
     }
 
     // TODO TEST
@@ -44,10 +41,10 @@ class {{class-name}} extends ApiTestCase
     // public function testGivenHaveNoAccess_CannotDelete{{model}}(): void
     // {
     //     $this->getTestingUserWithoutAccess();
-    //     ${{_model}} = {{model}}Factory::new()->createOne();
+    //     ${{_model}} = {{model}}::factory()->createOne();
     //
     //     $response = $this->injectId(${{_model}}->id)->makeCall();
     //
-    //     $response->assertStatus(403);
+    //     $response->assertForbidden();
     // }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Str;
 
-class ConfigurationGenerator extends GeneratorCommand implements ComponentsGenerator
+final class ConfigurationGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * User required/optional inputs expected to be passed while calling the command.
@@ -19,7 +19,7 @@ class ConfigurationGenerator extends GeneratorCommand implements ComponentsGener
      *
      * @var string
      */
-    protected $name = 'apiato:generate:configuration';
+    protected $name = 'apiato:make:configuration';
     /**
      * The console command description.
      *

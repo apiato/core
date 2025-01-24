@@ -1,14 +1,14 @@
 <?php
 
-namespace Apiato\Core\Generator\Commands;
+namespace Apiato\Generator\Commands;
 
-use Apiato\Core\Generator\GeneratorCommand;
-use Apiato\Core\Generator\Interfaces\ComponentsGenerator;
+use Apiato\Generator\Generator;
+use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class ControllerGenerator extends GeneratorCommand implements ComponentsGenerator
+final class ControllerGenerator extends Generator implements ComponentsGenerator
 {
     /**
      * The options which can be passed to the command. All options are optional. You do not need to pass the
@@ -18,13 +18,14 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
     public array $inputs = [
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Controller for.'],
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
+        ['model', null, InputOption::VALUE_OPTIONAL, 'The model you want to use for this controller.'],
     ];
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'apiato:generate:controller';
+    protected $name = 'apiato:make:controller';
     /**
      * The console command description.
      *
@@ -50,6 +51,9 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
     public function getUserInputs(): array|null
     {
+        $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model that this controller uses', $this->containerName);
+        $models = Pluralizer::plural($model);
+
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
 
         $stub = Str::lower(
@@ -66,12 +70,8 @@ class ControllerGenerator extends GeneratorCommand implements ComponentsGenerato
 
         $basecontroller = Str::ucfirst($ui) . 'Controller';
 
-        // Name of the model (singular and plural)
-        $model = $this->containerName;
-        $models = Pluralizer::plural($model);
-
-        $entity = Str::lower($model);
-        $entities = Pluralizer::plural($entity);
+        $entity = Str::camel($model);
+        $entities = Str::of($entity)->pluralStudly()->camel()->toString();
 
         return [
             'path-parameters' => [

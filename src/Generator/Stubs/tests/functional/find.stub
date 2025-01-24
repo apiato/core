@@ -1,32 +1,29 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\Functional;
+namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\API;
 
-use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
-use App\Containers\{{section-name}}\{{container-name}}\UI\API\Tests\ApiTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
-/**
- * @group {{_container-name}}
- * @group api
- */
+#[CoversNothing]
 class {{class-name}} extends ApiTestCase
 {
     protected string $endpoint = 'get@v1/{{url}}';
 
     protected array $access = [
-        'permissions' => '',
-        'roles' => '',
+        'permissions' => null,
+        'roles' => null,
     ];
 
     public function testFind{{model}}(): void
     {
-        ${{_model}} = {{model}}Factory::new()->createOne();
+        ${{_model}} = {{model}}::factory()->createOne();
 
         $response = $this->injectId(${{_model}}->id)->makeCall();
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertJson(
             fn (AssertableJson $json) =>
                 $json->has('data')
@@ -41,16 +38,16 @@ class {{class-name}} extends ApiTestCase
 
         $response = $this->injectId($invalidId)->makeCall([]);
 
-        $response->assertStatus(404);
+        $response->assertNotFound();
     }
 
     public function testFindFiltered{{model}}Response(): void
     {
-        ${{_model}} = {{model}}Factory::new()->createOne();
+        ${{_model}} = {{model}}::factory()->createOne();
 
         $response = $this->injectId(${{_model}}->id)->endpoint($this->endpoint . '?filter=id')->makeCall();
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertJson(
             fn (AssertableJson $json) =>
                 $json->has('data')
@@ -66,12 +63,12 @@ class {{class-name}} extends ApiTestCase
     // test the relation
     // public function testFind{{model}}WithRelation(): void
     // {
-    //     ${{_model}} = {{model}}Factory::new()->createOne();
+    //     ${{_model}} = {{model}}::factory()->createOne();
     //     $relation = 'roles';
     //
     //     $response = $this->injectId(${{_model}}->id)->endpoint($this->endpoint . "?include=$relation")->makeCall();
     //
-    //     $response->assertStatus(200);
+    //     $response->assertOk();
     //     $response->assertJson(
     //         fn (AssertableJson $json) =>
     //           $json->has('data')

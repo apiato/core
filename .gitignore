@@ -26,4 +26,8 @@ after.sh
 aliases
 .php-cs-fixer.cache
 /psalm_cache/
+/phpstan_cache/
 .bash_aliases
+.DS_Store
+/.ddev/*
+!/.ddev/config.yaml
