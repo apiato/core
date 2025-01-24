@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Foundation\Middleware;
+namespace Apiato\Support\Middleware;
 
 use Apiato\Abstract\Middlewares\Middleware;
 use Illuminate\Http\JsonResponse;

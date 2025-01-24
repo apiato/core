@@ -2,9 +2,6 @@
 
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Localization;
-use Apiato\Foundation\Middleware\ProcessETag;
-use Apiato\Foundation\Middleware\Profiler;
-use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Murdered_2;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Ordered_1;
@@ -75,16 +72,5 @@ describe(class_basename(Apiato::class), function (): void {
 
         $this->app->setLocale('fa');
         expect(__('test::errors.forbidden'))->toBe('ممنوع');
-    });
-
-    it('can list Core middlewares', function (): void {
-        $middlewares = [
-            ValidateJsonContent::class,
-            ProcessETag::class,
-            Profiler::class,
-        ];
-
-        expect(apiato()->apiMiddlewares())
-            ->toBe($middlewares);
     });
 })->covers(Apiato::class);

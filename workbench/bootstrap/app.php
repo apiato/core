@@ -1,6 +1,9 @@
 <?php
 
 use Apiato\Foundation\Apiato;
+use Apiato\Support\Middleware\ProcessETag;
+use Apiato\Support\Middleware\Profiler;
+use Apiato\Support\Middleware\ValidateJsonContent;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -17,8 +20,12 @@ return Application::configure(basePath: $basePath)
         web: $apiato->webRoutes(),
         then: static fn () => $apiato->registerApiRoutes(),
     )
-    ->withMiddleware(function (Middleware $middleware) use ($apiato): void {
-        $middleware->api($apiato->apiMiddlewares());
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->api([
+            ValidateJsonContent::class,
+            ProcessETag::class,
+            Profiler::class,
+        ]);
     })
     ->withCommands($apiato->commands())
     ->create();

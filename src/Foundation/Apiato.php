@@ -8,9 +8,6 @@ use Apiato\Foundation\Configuration\Localization;
 use Apiato\Foundation\Configuration\Routing;
 use Apiato\Foundation\Configuration\Seeding;
 use Apiato\Foundation\Configuration\View;
-use Apiato\Foundation\Middleware\ProcessETag;
-use Apiato\Foundation\Middleware\Profiler;
-use Apiato\Foundation\Middleware\ValidateJsonContent;
 use Composer\Autoload\ClassLoader;
 use Composer\ClassMapGenerator\ClassMapGenerator;
 
@@ -237,15 +234,6 @@ final class Apiato
     public function events(): array
     {
         return $this->eventDiscoveryPaths;
-    }
-
-    public function apiMiddlewares(): array
-    {
-        return [
-            ValidateJsonContent::class,
-            ProcessETag::class,
-            Profiler::class,
-        ];
     }
 
     public function commands(): array
