@@ -63,11 +63,11 @@ final class Response extends Fractal
 
         $resource->setMeta($this->meta);
 
-        if (! is_null($this->paginator)) {
+        if (!is_null($this->paginator)) {
             $resource->setPaginator($this->paginator);
         }
 
-        if (! is_null($this->cursor)) {
+        if (!is_null($this->cursor)) {
             $resource->setCursor($this->cursor);
         }
 
