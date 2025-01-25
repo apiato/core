@@ -4,7 +4,7 @@ namespace Apiato\Support\Middleware;
 
 use Apiato\Abstract\Middlewares\Middleware;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 
 final class ProcessETag extends Middleware
@@ -18,14 +18,13 @@ final class ProcessETag extends Middleware
      * "If-None-Match" HTTP Header.
      * If the calculated ETag and submitted ETag matches, the response is manipulated accordingly:
      * - the HTTP Status Code is set to 304 (not modified)
-     * -
-     * the body content (i.e., the content that was supposed to be delivered) is removed --> the client receives an empty body
+     * - the body content (i.e., the content that was supposed to be delivered) is removed and the client receives an empty body
      *
      * @param Request $request
-     * @param  \Closure(Request $request): Response  $next
-     * @return Request|Response
+     * @param \Closure(Request): (Response) $next
+     * @return Response
      */
-    public function handle(Request $request, \Closure $next): Request|Response
+    public function handle(Request $request, \Closure $next): Response
     {
         if (!config('apiato.requests.use-etag', false)) {
             return $next($request);
