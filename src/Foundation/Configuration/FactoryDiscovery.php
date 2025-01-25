@@ -2,31 +2,32 @@
 
 namespace Apiato\Foundation\Configuration;
 
-use Apiato\Abstract\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-/**
- * @template TModel of Model
- * @template TFactory of Factory<TModel>
- */
 final class FactoryDiscovery
 {
     protected static \Closure $factoryNameResolver;
 
     public function __construct()
     {
-        $this->resolveFactoryNameUsing(static function (string $modelName): string {
-            $factoryNamespace = Str::of($modelName)->beforeLast('Models\\')
-                ->append('Data\\Factories\\');
+        $this->resolveFactoryNameUsing(
+            static function (string $modelName): string {
+                $factoryNamespace = Str::of($modelName)->beforeLast('Models\\')
+                    ->append('Data\\Factories\\');
 
-            return $factoryNamespace
-                ->append(class_basename($modelName) . 'Factory')
-                ->value();
-        });
+                return $factoryNamespace
+                    ->append(class_basename($modelName) . 'Factory')
+                    ->value();
+            },
+        );
     }
 
     /**
+     * @template TModel of Model
+     * @template TFactory of Factory
+     *
      * @param \Closure(class-string<TModel>): class-string<TFactory> $callback
      */
     public function resolveFactoryNameUsing(\Closure $callback): self
@@ -36,19 +37,19 @@ final class FactoryDiscovery
         return $this;
     }
 
-    /**
-     * @param class-string<TModel> $modelName
-     *
-     * @return class-string<TFactory>|null
-     */
     public function resolveFactoryName(string $modelName): string|null
     {
         $factoryName = app()->call(self::$factoryNameResolver, ['modelName' => $modelName]);
 
-        if (is_string($factoryName) && class_exists($factoryName) && is_subclass_of($factoryName, Factory::class)) {
+        if ($this->isValidFactory($factoryName)) {
             return $factoryName;
         }
 
         return null;
+    }
+
+    private function isValidFactory(string $factoryName): bool
+    {
+        return class_exists($factoryName) && is_a($factoryName, Factory::class, true);
     }
 }
