@@ -8,7 +8,6 @@ use League\Fractal\ParamBag;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\UnitTestCase;
-use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
@@ -246,7 +245,7 @@ class ResponseTest extends UnitTestCase
     public function testPaginatedResourceMetaDataAndInclude(string|array $include): void
     {
         request()->merge(['include' => $include]);
-        UserFactory::new()->count(3)->create();
+        User::factory()->count(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
         $response = Response::create($users)->transformWith(UserTransformer::class);
 
@@ -305,7 +304,7 @@ class ResponseTest extends UnitTestCase
     public function testPaginatedResourceMetaDataAndExclude(string|array $exclude): void
     {
         request()->merge(['exclude' => $exclude]);
-        UserFactory::new()->count(3)->create();
+        User::factory()->count(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
         $response = Response::create($users)->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
@@ -347,9 +346,9 @@ class ResponseTest extends UnitTestCase
         config()->set('fractal.auto_fieldsets.enabled', true);
         config()->set('fractal.auto_fieldsets.request_key', self::FIELDSET_KEY);
 
-        $this->user = UserFactory::new()
-            ->for(UserFactory::new()->has(BookFactory::new()), 'parent')
-            ->has(UserFactory::new()->has(BookFactory::new())->count(2), 'children')
+        $this->user = User::factory()
+            ->for(User::factory()->has(BookFactory::new()), 'parent')
+            ->has(User::factory()->has(BookFactory::new())->count(2), 'children')
             ->has(BookFactory::new()->count(2))
             ->createOne();
     }

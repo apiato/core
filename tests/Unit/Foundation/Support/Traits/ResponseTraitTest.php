@@ -7,7 +7,6 @@ use Apiato\Foundation\Support\Traits\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\UnitTestCase;
-use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
 
@@ -28,7 +27,7 @@ class ResponseTraitTest extends UnitTestCase
             use Response;
         };
 
-        $this->user = UserFactory::new()->withParent()->createOne();
+        $this->user = User::factory()->withParent()->createOne();
         $this->transformer = new UserTransformer();
         $this->customMetadata = [
             'key' => 'value',

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\UnitTestCase;
-use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
@@ -67,9 +66,9 @@ final class RepositoryTest extends UnitTestCase
         array $mustNotLoadRelations,
     ): void {
         request()->merge(['include' => $include]);
-        UserFactory::new()
+        User::factory()
             ->has(
-                UserFactory::new()
+                User::factory()
                 ->has(BookFactory::new()->count(3)),
                 'children',
             )->has(BookFactory::new()->count(3))
@@ -100,9 +99,9 @@ final class RepositoryTest extends UnitTestCase
 
     public function testMultipleEagerLoadAppliesAllEagerLoads(): void
     {
-        UserFactory::new()
+        User::factory()
             ->has(
-                UserFactory::new()
+                User::factory()
                 ->has(BookFactory::new()->count(3)),
                 'children',
             )->has(BookFactory::new()->count(3))
@@ -132,8 +131,8 @@ final class RepositoryTest extends UnitTestCase
         config()->set('repository.cache.enabled', true);
         config()->set('repository.cache.minutes', 1);
         //        config()->set('cache.default', 'database');
-        //        UserFactory::new()->create()->transformWith()->toArray();
-        $user = UserFactory::new()->createOne();
+        //        User::factory()->create()->transformWith()->toArray();
+        $user = User::factory()->createOne();
         $repository = $this->app->make(UserRepository::class);
         /** @var User $cachedUser */
         $cachedUser = $repository->find($user->id);
