@@ -4,9 +4,7 @@ namespace Apiato\Foundation\Support\Traits\Testing;
 
 use Apiato\Abstract\Models\Model;
 use Illuminate\Auth\Access\Gate;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
-use JetBrains\PhpStorm\Deprecated;
 use Mockery\MockInterface;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -47,23 +45,6 @@ trait Assertions
         $casts = [...$defaultCasts, ...$extraDefaultField];
 
         $this->assertEmpty(array_diff($model->getCasts(), $casts));
-    }
-
-    /**
-     * Check if the given id is in the given model collection by comparing hashed ids.
-     *
-     * @param Collection|array $ids either a collection of models or an array of ids
-     *
-     * @example $this->inIds($hashedId, $collectionOfModels);
-     */
-    #[Deprecated(reason: 'Wrong method location and bad design. Use the "containsHashedId" method from the EloquentCollection instead.')]
-    protected function inIds(string $hashedId, Collection|array $ids): bool
-    {
-        if ($ids instanceof Collection) {
-            return $ids->contains('id', $this->decode($hashedId));
-        }
-
-        return in_array($this->decode($hashedId), $ids, true);
     }
 
     /**
