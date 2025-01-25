@@ -34,4 +34,4 @@ describe(class_basename(TestCase::class), function (): void {
         'get@',
         '@users',
     ]);
-})->coversClass(TestCase::class);
+})->covers(TestCase::class);
