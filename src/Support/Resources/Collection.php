@@ -2,7 +2,7 @@
 
 namespace Apiato\Support\Resources;
 
-use Apiato\Contracts\HasResourceKey;
+use Apiato\Contracts\Resource;
 use League\Fractal\Resource\Collection as FractalCollection;
 
 final class Collection extends FractalCollection
@@ -25,7 +25,7 @@ final class Collection extends FractalCollection
             $resource = $resource->current();
         }
 
-        if ($resource instanceof HasResourceKey) {
+        if ($resource instanceof Resource) {
             return $resource->getResourceKey();
         }
 

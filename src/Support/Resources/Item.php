@@ -2,7 +2,7 @@
 
 namespace Apiato\Support\Resources;
 
-use Apiato\Contracts\HasResourceKey;
+use Apiato\Contracts\Resource;
 use League\Fractal\Resource\Item as FractalItem;
 
 final class Item extends FractalItem
@@ -13,7 +13,7 @@ final class Item extends FractalItem
             return $this->resourceKey;
         }
 
-        if ($this->data instanceof HasResourceKey) {
+        if ($this->data instanceof Resource) {
             return $this->data->getResourceKey();
         }
 

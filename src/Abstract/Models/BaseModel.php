@@ -2,13 +2,13 @@
 
 namespace Apiato\Abstract\Models;
 
-use Apiato\Contracts\HasResourceKey;
+use Apiato\Contracts\Resource;
 use Apiato\Foundation\Support\Traits\Model\CanOwn;
 use Apiato\Foundation\Support\Traits\Model\HashedRouteBinding;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as LaravelEloquentModel;
 
-abstract class BaseModel extends LaravelEloquentModel implements HasResourceKey
+abstract class BaseModel extends LaravelEloquentModel implements Resource
 {
     use CanOwn;
     use HashedRouteBinding;
@@ -26,9 +26,6 @@ abstract class BaseModel extends LaravelEloquentModel implements HasResourceKey
         return null;
     }
 
-    /**
-     * Get the resource key to be used for the JSON response.
-     */
     public function getResourceKey(): string
     {
         return $this->resourceKey ?? class_basename($this);
