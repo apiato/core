@@ -10,7 +10,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\UnitTestCase;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
-use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 
 #[CoversClass(Repository::class)]
@@ -69,9 +68,9 @@ final class RepositoryTest extends UnitTestCase
         User::factory()
             ->has(
                 User::factory()
-                ->has(BookFactory::new()->count(3)),
+                ->has(Book::factory()->count(3)),
                 'children',
-            )->has(BookFactory::new()->count(3))
+            )->has(Book::factory()->count(3))
             ->createOne();
         $repository = new class(app()) extends UserRepository {
             public function shouldEagerLoadIncludes(): bool
@@ -102,9 +101,9 @@ final class RepositoryTest extends UnitTestCase
         User::factory()
             ->has(
                 User::factory()
-                ->has(BookFactory::new()->count(3)),
+                ->has(Book::factory()->count(3)),
                 'children',
-            )->has(BookFactory::new()->count(3))
+            )->has(Book::factory()->count(3))
             ->createOne();
         $repository = new class(app()) extends UserRepository {
             public function shouldEagerLoadIncludes(): bool

@@ -11,7 +11,7 @@ use Tests\UnitTestCase;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
-use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
+use Workbench\App\Containers\MySection\Book\Models\Book;
 
 #[CoversClass(Response::class)]
 class ResponseTest extends UnitTestCase
@@ -347,9 +347,9 @@ class ResponseTest extends UnitTestCase
         config()->set('fractal.auto_fieldsets.request_key', self::FIELDSET_KEY);
 
         $this->user = User::factory()
-            ->for(User::factory()->has(BookFactory::new()), 'parent')
-            ->has(User::factory()->has(BookFactory::new())->count(2), 'children')
-            ->has(BookFactory::new()->count(2))
+            ->for(User::factory()->has(Book::factory()), 'parent')
+            ->has(User::factory()->has(Book::factory())->count(2), 'children')
+            ->has(Book::factory()->count(2))
             ->createOne();
     }
 

@@ -4,7 +4,7 @@ use Apiato\Abstract\Seeders\Seeder;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Seeding;
 use Apiato\Foundation\Database\DatabaseSeeder;
-use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
+use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(DatabaseSeeder::class), function (): void {
     it('can call other seeders', function (): void {
@@ -15,7 +15,7 @@ describe(class_basename(DatabaseSeeder::class), function (): void {
                     (new class extends Seeder {
                         public function run(): void
                         {
-                            BookFactory::new()->createOne([
+                            Book::factory()->createOne([
                                 'title' => 'ephemeral class',
                             ]);
                         }
