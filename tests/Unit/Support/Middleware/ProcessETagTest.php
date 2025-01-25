@@ -71,4 +71,4 @@ describe(class_basename(ProcessETag::class), function (): void {
 
         expect($response->getStatusCode())->not->toBe(304);
     });
-})->coversClass(ProcessETag::class);
+})->covers(ProcessETag::class);
