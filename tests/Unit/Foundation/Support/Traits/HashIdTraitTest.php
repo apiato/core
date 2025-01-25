@@ -162,49 +162,6 @@ class HashIdTraitTest extends UnitTestCase
         $this->assertFalse($result);
     }
 
-    public function testCanGetHashedKeyWithDefaultField(): void
-    {
-        $this->markTestSkipped('this method should be moved to the model');
-        $this->mockTrait->expects()
-            ->method('getKeyName')
-            ->andReturn('id');
-
-        $this->mockTrait->expects()
-            ->method('getAttribute')
-            ->with('id')
-            ->andReturn(123);
-
-        $result = $this->trait->getHashedKey();
-
-        $this->assertIsString($result);
-    }
-
-    public function testCanGetHashedKeyWithSpecificField(): void
-    {
-        $this->markTestSkipped('this method should be moved to the model');
-        $this->mockTrait->expects()
-            ->method('getAttribute')
-            ->with('custom_field')
-            ->andReturn(456);
-
-        $result = $this->trait->getHashedKey('custom_field');
-
-        $this->assertIsString($result);
-    }
-
-    public function testGetHashedKeyReturnsNullForNullValue(): void
-    {
-        $this->markTestSkipped('this method should be moved to the model');
-        $this->mockTrait->expects()
-            ->method('getAttribute')
-            ->with('id')
-            ->andReturn(null);
-
-        $result = $this->trait->getHashedKey();
-
-        $this->assertNull($result);
-    }
-
     public function testSkipsDecodingIfDisabled(): void
     {
         $requestData = ['id' => $this->trait->encode(123)];

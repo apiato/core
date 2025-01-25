@@ -2,7 +2,6 @@
 
 namespace Workbench\App\Containers\Identity\User\Models;
 
-use Apiato\Foundation\Support\Traits\Model\ModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +10,6 @@ use Workbench\App\Ship\Parents\Models\UserModel as ParentUserModel;
 
 class User extends ParentUserModel
 {
-    use ModelTrait;
     use Notifiable;
 
     protected $fillable = [

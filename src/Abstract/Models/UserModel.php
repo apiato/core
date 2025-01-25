@@ -2,11 +2,6 @@
 
 namespace Apiato\Abstract\Models;
 
-use Apiato\Contracts\HasResourceKey;
-use Apiato\Foundation\Support\Traits\Model\ModelTrait;
-use Illuminate\Foundation\Auth\User as LaravelAuthenticatableUser;
-
-abstract class UserModel extends LaravelAuthenticatableUser implements HasResourceKey
+abstract class UserModel extends BaseModel
 {
-    use ModelTrait;
 }
