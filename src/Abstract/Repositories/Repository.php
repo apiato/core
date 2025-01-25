@@ -2,8 +2,11 @@
 
 namespace Apiato\Abstract\Repositories;
 
-use Apiato\Foundation\Support\Traits\EagerLoad;
 use Apiato\Foundation\Support\Traits\HasRequestCriteria;
+use Apiato\Support\Response;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -12,7 +15,6 @@ use Prettus\Repository\Traits\CacheableRepository;
 abstract class Repository extends BaseRepository implements CacheableInterface
 {
     use HasRequestCriteria;
-    use EagerLoad;
     use CacheableRepository {
         CacheableRepository::paginate as cacheablePaginate;
     }
@@ -152,5 +154,73 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         $this->popCriteria(RequestCriteria::class);
 
         return $this;
+    }
+
+    /**
+     * Eager load relations if requested by the client via "include" query parameter.
+     * This is a workaround for incompatible third-party packages. (Fractal, L5Repo).
+     *
+     * @see https://apiato.atlassian.net/browse/API-905
+     */
+    public function eagerLoadRequestedIncludes(): void
+    {
+        $this->scopeQuery(function (Builder|Model $model) {
+            if (request()?->has(config('fractal.auto_includes.request_key'))) {
+                $validIncludes = [];
+                // TODO: Do we need to do the same for the excludes?
+                // TODO: Or default includes! Are they eager loaded by default?
+                // TODO: What if the include has parameters? e.g. include=books:limit(5|3)
+                foreach (Response::getRequestedIncludes() as $includeName) {
+                    $relationParts = explode('.', $includeName);
+                    $camelCasedIncludeName = $this->filterInvalidRelations($this->model, $relationParts);
+                    if ($camelCasedIncludeName) {
+                        $validIncludes[] = $camelCasedIncludeName;
+                    }
+                }
+
+                return $model->with($validIncludes);
+            }
+
+            return $model;
+        });
+    }
+
+    // TODO: rename this method or maybe keep the name but dont return null.
+    // Returning null causes multiple if() guard clauses as you can see
+    public function filterInvalidRelations(Builder|Model $model, array $relationParts): string|null
+    {
+        if ([] === $relationParts) {
+            return null;
+        }
+
+        $relation = $this->figureOutRelationName(array_shift($relationParts));
+
+        if (!method_exists($model, $relation)) {
+            return null;
+        }
+
+        $nextModel = $model->$relation()->getRelated();
+
+        if ([] === $relationParts) {
+            return $relation;
+        }
+
+        $nextRelation = $this->filterInvalidRelations($nextModel, $relationParts);
+
+        if (is_null($nextRelation)) {
+            return null;
+        }
+
+        return $relation . '.' . $nextRelation;
+    }
+
+    public function figureOutRelationName(string $includeName): string
+    {
+        return Str::of($includeName)
+            ->replace('-', ' ')
+            ->replace('_', ' ')
+            ->title()
+            ->replace(' ', '')
+            ->camel();
     }
 }

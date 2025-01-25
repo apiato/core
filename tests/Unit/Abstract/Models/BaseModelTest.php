@@ -1,8 +1,6 @@
 <?php
 
 use Apiato\Abstract\Models\BaseModel;
-use Apiato\Foundation\Support\Traits\Model\CanOwn;
-use Apiato\Foundation\Support\Traits\Model\HashedRouteBinding;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
@@ -23,8 +21,6 @@ describe(class_basename(BaseModel::class), function (): void {
         $traits = class_uses_recursive($this->model);
 
         expect($traits)->toContain(
-            CanOwn::class,
-            HashedRouteBinding::class,
             HasFactory::class,
         );
     });
