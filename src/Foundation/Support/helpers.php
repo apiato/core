@@ -1,6 +1,8 @@
 <?php
 
 use Apiato\Foundation\Apiato;
+use Vinkla\Hashids\Facades\Hashids;
+use Vinkla\Hashids\HashidsManager;
 
 if (!function_exists('apiato')) {
     /**
@@ -19,5 +21,15 @@ if (!function_exists('shared_path')) {
     function shared_path(string $path = ''): string
     {
         return Apiato::instance()->sharedPath($path);
+    }
+}
+
+if (!function_exists('hashids')) {
+    /**
+     * Get the Hashids instance.
+     */
+    function hashids(): HashidsManager
+    {
+        return app('hashids');
     }
 }
