@@ -40,7 +40,7 @@ describe(class_basename(BaseModel::class), function (): void {
             ->and($this->model->getResourceKey())->toBe('custom-resource-key');
     });
 
-    describe('::getHashedKey', function (): void {
+    describe('getHashedKey()', function (): void {
         beforeEach(function (): void {
             config(['apiato.hash-id' => true]);
         });
