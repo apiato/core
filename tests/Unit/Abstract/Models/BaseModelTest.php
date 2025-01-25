@@ -13,7 +13,7 @@ describe(class_basename(BaseModel::class), function (): void {
         };
     });
 
-    it('should be a Laravel Eloquent Model', function (): void {
+    it('should extend the Laravel Eloquent Model', function (): void {
         expect(BaseModel::class)->toExtend(Model::class);
     });
 
