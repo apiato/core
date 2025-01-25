@@ -104,12 +104,12 @@ abstract class BaseModel extends LaravelEloquentModel implements Resource
         throw new \InvalidArgumentException('No relationship found. Please pass the relationship name as the second parameter.');
     }
 
-    protected function guessSingularRelationshipName(Model $ownable): string
+    public function guessSingularRelationshipName(Model $ownable): string
     {
         return Str::camel(class_basename($ownable));
     }
 
-    protected function guessPluralRelationshipName(Model $ownable): string
+    public function guessPluralRelationshipName(Model $ownable): string
     {
         return Str::plural(Str::camel(class_basename($ownable)));
     }
