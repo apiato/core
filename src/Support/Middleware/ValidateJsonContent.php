@@ -9,9 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class ValidateJsonContent extends Middleware
 {
     /**
-     * @param Request $request
      * @param \Closure(Request): (Response) $next
-     * @return Response
      */
     public function handle(Request $request, \Closure $next): Response
     {

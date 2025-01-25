@@ -20,9 +20,7 @@ final class ProcessETag extends Middleware
      * - the HTTP Status Code is set to 304 (not modified)
      * - the body content (i.e., the content that was supposed to be delivered) is removed and the client receives an empty body
      *
-     * @param Request $request
      * @param \Closure(Request): (Response) $next
-     * @return Response
      */
     public function handle(Request $request, \Closure $next): Response
     {

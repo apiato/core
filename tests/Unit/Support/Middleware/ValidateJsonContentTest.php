@@ -1,8 +1,8 @@
 <?php
 
 use Apiato\Support\Middleware\ValidateJsonContent;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 describe(class_basename(ValidateJsonContent::class), function (): void {
     beforeEach(function (): void {
