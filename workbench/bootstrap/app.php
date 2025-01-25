@@ -2,7 +2,6 @@
 
 use Apiato\Foundation\Apiato;
 use Apiato\Support\Middleware\ProcessETag;
-use Apiato\Support\Middleware\Profiler;
 use Apiato\Support\Middleware\ValidateJsonContent;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -24,7 +23,6 @@ return Application::configure(basePath: $basePath)
         $middleware->api([
             ValidateJsonContent::class,
             ProcessETag::class,
-            Profiler::class,
         ]);
     })
     ->withCommands($apiato->commands())
