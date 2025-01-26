@@ -1,12 +1,15 @@
 <?php
 
 use Apiato\Foundation\Apiato;
-use Apiato\Foundation\Configuration\Localization;
-use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
+use Apiato\Foundation\Configuration\Factory;
+use Apiato\Foundation\Configuration\Repository;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Murdered_2;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Ordered_1;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Unordered;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Wondered_3;
+use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
+use Workbench\App\Containers\MySection\Book\Data\Repositories\BookRepository;
+use Workbench\App\Containers\MySection\Book\Models\Book;
 use Workbench\App\Containers\MySection\Book\Providers\BookServiceProvider;
 use Workbench\App\Containers\MySection\Book\Providers\EventServiceProvider;
 use Workbench\App\Ship\Providers\ShipServiceProvider;
@@ -61,18 +64,25 @@ describe(class_basename(Apiato::class), function (): void {
             app_path('Containers/MySection/Book/UI/WEB/Routes/CreateBook.v1.public.php'),
             app_path('Containers/MySection/Book/UI/WEB/Routes/ListBooks.php'),
             app_path('Containers/MySection/Author/UI/WEB/Routes/ListAuthors.php'),
-        ]);
+        ])->and($config->factory()->resolveFactoryName(Book::class))->toBe(BookFactory::class)
+            ->and($config->repository()->resolveModelName(BookRepository::class))->toBe(Book::class);
     });
 
-    it('can be configured via a closure to customize translation namespaces', function (): void {
-        Apiato::configure()
-            ->withTranslations(function (Localization $localization): void {
-                $localization->buildNamespaceUsing(static fn (string $path): string => 'test');
+    it('accepts factory config override', function (): void {
+        $apiato = Apiato::configure(__DIR__)
+            ->withFactories(function (Factory $factory): void {
+                $factory->resolveFactoryNameUsing(static fn (string $modelName): string => 'test');
             })->create();
 
-        app()->register(LocalizationServiceProvider::class, true);
+        expect($apiato->factory()->resolveFactoryName('anything'))->toBe('test');
+    });
 
-        $this->app->setLocale('fa');
-        expect(__('test::errors.forbidden'))->toBe('ممنوع');
+    it('accepts repository config override', function (): void {
+        $apiato = Apiato::configure(__DIR__)
+            ->withRepositories(function (Repository $repository): void {
+                $repository->resolveModelNameUsing(static fn (string $repositoryName): string => 'test');
+            })->create();
+
+        expect($apiato->repository()->resolveModelName('anything'))->toBe('test');
     });
 })->covers(Apiato::class);
