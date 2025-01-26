@@ -13,6 +13,7 @@ describe(class_basename(Repository::class), function (): void {
     beforeEach(function (): void {
         config()->set('fractal.auto_includes.request_key', 'include');
     });
+    
     it('can eager load single relation include', function (
         string $include,
         array $userMustLoadRelations,
