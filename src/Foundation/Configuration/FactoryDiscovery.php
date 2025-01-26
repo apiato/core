@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 final class FactoryDiscovery
 {
-    protected static \Closure $factoryNameResolver;
+    protected static \Closure $nameResolver;
 
     public function __construct()
     {
@@ -32,14 +32,14 @@ final class FactoryDiscovery
      */
     public function resolveFactoryNameUsing(\Closure $callback): self
     {
-        self::$factoryNameResolver = $callback;
+        self::$nameResolver = $callback;
 
         return $this;
     }
 
     public function resolveFactoryName(string $modelName): string|null
     {
-        $factoryName = app()->call(self::$factoryNameResolver, ['modelName' => $modelName]);
+        $factoryName = app()->call(self::$nameResolver, ['modelName' => $modelName]);
 
         if ($this->isValidFactory($factoryName)) {
             return $factoryName;
