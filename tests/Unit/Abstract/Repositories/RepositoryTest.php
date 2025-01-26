@@ -5,6 +5,7 @@ namespace Tests\Unit\Abstract\Repositories;
 use Apiato\Abstract\Repositories\Repository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Pest\Expectation;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\MySection\Book\Models\Book;
@@ -37,19 +38,20 @@ describe(class_basename(Repository::class), function (): void {
 
         $result = $repository->all();
 
-        $result->each(function (User $user) use ($userMustLoadRelations, $booksMustLoadRelations, $mustNotLoadRelations): void {
-            foreach ($userMustLoadRelations as $relation) {
-                $this->assertTrue($user->relationLoaded($relation));
-            }
-            foreach ($booksMustLoadRelations as $relation) {
-                $user->books->each(function (Book $book) use ($relation): void {
-                    $this->assertTrue($book->relationLoaded($relation));
-                });
-            }
-            foreach ($mustNotLoadRelations as $relation) {
-                $this->assertFalse($user->relationLoaded($relation));
-            }
-        });
+        expect($result)->toBeInstanceOf(Collection::class)
+            ->each(function (Expectation $expectation) use ($userMustLoadRelations, $booksMustLoadRelations, $mustNotLoadRelations): void {
+                foreach ($userMustLoadRelations as $relation) {
+                    $expectation->relationLoaded($relation)->toBeTrue();
+                }
+                foreach ($booksMustLoadRelations as $relation) {
+                    $expectation->books->each(function (Expectation $expectation) use ($relation): void {
+                        $expectation->relationLoaded($relation)->toBeTrue();
+                    });
+                }
+                foreach ($mustNotLoadRelations as $relation) {
+                    $expectation->relationLoaded($relation)->toBeFalse();
+                }
+            });
     })->with([
         'single relation' => [
             'books',
@@ -107,13 +109,14 @@ describe(class_basename(Repository::class), function (): void {
         /** @var Collection<int, User> $result */
         $result = $repository->with('books')->with('children.books')->all();
 
-        $result->each(function (User $user): void {
-            $this->assertTrue($user->relationLoaded('books'));
-            $this->assertTrue($user->relationLoaded('children'));
-            foreach ($user->children as $child) {
-                $this->assertTrue($child->relationLoaded('books'));
-            }
-        });
+        expect($result)->toBeInstanceOf(Collection::class)
+            ->each(function (Expectation $expectation): void {
+                $expectation->relationLoaded('books')->toBeTrue();
+                $expectation->relationLoaded('children')->toBeTrue();
+                $expectation->children->each(function (Expectation $expectation): void {
+                    $expectation->relationLoaded('books')->toBeTrue();
+                });
+            });
     });
 
     it('can cache', function (): void {

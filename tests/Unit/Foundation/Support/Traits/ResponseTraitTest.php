@@ -2,43 +2,29 @@
 
 namespace Tests\Unit\Foundation\Support\Traits;
 
-use Apiato\Abstract\Transformers\Transformer;
+use Apiato\Abstract\Repositories\Repository;
 use Apiato\Foundation\Support\Traits\Response;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\UnitTestCase;
-use Workbench\App\Containers\Identity\User\Models\User;
+use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
 use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
 
-#[CoversClass(Response::class)]
-class ResponseTraitTest extends UnitTestCase
-{
-    private object $trait;
-    private User $user;
-    private Transformer $transformer;
-    private array $customMetadata;
-    private array $metadata;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->trait = new class {
-            use Response;
-        };
-
-        $this->user = User::factory()->withParent()->createOne();
-        $this->transformer = new UserTransformer();
+describe(class_basename(Repository::class), function (): void {
+    beforeEach(function (): void {
         $this->customMetadata = [
             'key' => 'value',
         ];
         $this->metadata = [
             'something' => $this->customMetadata,
         ];
-    }
 
-    public function testTransform(): void
-    {
+        $this->trait = new class {
+            use Response;
+        };
+
+        $this->user = UserFactory::new()->withParent()->createOne();
+        $this->transformer = new UserTransformer();
+    });
+
+    it('can transform data', function (): void {
         $result = $this->trait
             ->withMeta($this->metadata)
             ->transform(
@@ -47,16 +33,15 @@ class ResponseTraitTest extends UnitTestCase
                 meta: $this->customMetadata,
             );
 
-        $this->assertIsArray($result);
-        $this->assertArrayHasKey('data', $result);
-        $this->assertArrayHasKey('object', $result['data']);
-        $this->assertEquals($this->user->getResourceKey(), $result['data']['object']);
-        $this->assertArrayNotHasKey('parent', $result['data']);
-        $this->assertMetadata($result);
-    }
+        expect($result)->toBeArray()
+            ->and($result)->toHaveKey('data')
+            ->and($result['data'])->toHaveKey('object')
+            ->and($result['data']['object'])->toBe($this->user->getResourceKey())
+            ->and($result['data'])->not->toHaveKey('parent');
+        assertMetadata($result);
+    });
 
-    public function testCanInclude(): void
-    {
+    it('can include requested includes', function (): void {
         $include = 'parent';
 
         $result = $this->trait
@@ -70,43 +55,11 @@ class ResponseTraitTest extends UnitTestCase
 
         $this->assertArrayHasKey('parent', $result['data']);
         $this->assertNotNull($result['data']['parent']);
-        $this->assertMetadata($result);
+        assertMetadata($result);
         $this->assertContains($include, $result['meta']['include']);
-    }
+    });
 
-    public static function resourceKeyProvider(): array
-    {
-        return [
-            'null' => [
-                'resourceKey' => null,
-                'expected' => 'User',
-            ],
-            'false' => [
-                'resourceKey' => false,
-                'expected' => 'User',
-            ],
-            'empty string' => [
-                'resourceKey' => '',
-                'expected' => 'User',
-            ],
-            'empty array' => [
-                'resourceKey' => [],
-                'expected' => 'User',
-            ],
-            //            'empty object' => [
-            //                'resourceKey' => new \stdClass(),
-            //                'expected' => 'User',
-            //            ],
-            //            'override resource key' => [
-            //                'resource key' => 'override-key',
-            //                'expected' => 'override-key',
-            //            ],
-        ];
-    }
-
-    #[DataProvider('resourceKeyProvider')]
-    public function testCanOverrideResourceKey(bool|string|array|null $resourceKey, string $expected): void
-    {
+    it('can override resource key', function (bool|string|array|null $resourceKey, string $expected): void {
         $result = $this->trait
             ->withMeta($this->metadata)
             ->transform(
@@ -117,20 +70,31 @@ class ResponseTraitTest extends UnitTestCase
             );
 
         $this->assertEquals($expected, $result['data']['object']);
-    }
+    })->with([
+        'null' => [
+            'resourceKey' => null,
+            'expected' => 'User',
+        ],
+        'false' => [
+            'resourceKey' => false,
+            'expected' => 'User',
+        ],
+        'empty string' => [
+            'resourceKey' => '',
+            'expected' => 'User',
+        ],
+        'empty array' => [
+            'resourceKey' => [],
+            'expected' => 'User',
+        ],
+    ]);
 
-    private function assertMetadata(array $result): void
+    function assertMetadata(array $result): void
     {
-        $this->assertArrayHasKey('meta', $result);
-        foreach ($this->metadata as $key => $value) {
-            $this->assertArrayHasKey($key, $result['meta']);
-            $this->assertEquals($value, $result['meta'][$key]);
-        }
-        $this->assertArrayHasKey('include', $result['meta']);
-        $this->assertArrayHasKey('custom', $result['meta']);
-        foreach ($this->customMetadata as $key => $value) {
-            $this->assertArrayHasKey($key, $result['meta']['custom']);
-            $this->assertEquals($value, $result['meta']['custom'][$key]);
-        }
+        expect($result)->toHaveKey('meta')
+            ->and($result['meta'])->toContainEqual(test()->metadata['something'])
+            ->and($result['meta'])->toHaveKey('include')
+            ->and($result['meta'])->toHaveKey('custom')
+            ->and($result['meta']['custom'])->toBe(test()->customMetadata);
     }
-}
+})->covers(Repository::class);

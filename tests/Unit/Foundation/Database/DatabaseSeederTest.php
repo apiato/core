@@ -4,7 +4,7 @@ use Apiato\Abstract\Seeders\Seeder;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Seeding;
 use Apiato\Foundation\Database\DatabaseSeeder;
-use Workbench\App\Containers\MySection\Book\Models\Book;
+use Orchestra\Testbench\Factories\UserFactory;
 
 describe(class_basename(DatabaseSeeder::class), function (): void {
     it('can call other seeders', function (): void {
@@ -15,8 +15,8 @@ describe(class_basename(DatabaseSeeder::class), function (): void {
                     (new class extends Seeder {
                         public function run(): void
                         {
-                            Book::factory()->createOne([
-                                'title' => 'ephemeral class',
+                            UserFactory::new()->createOne([
+                                'name' => 'ephemeral class',
                             ]);
                         }
                     })::class,
@@ -26,10 +26,10 @@ describe(class_basename(DatabaseSeeder::class), function (): void {
 
         $seeder->run($apiato);
 
-        $this->assertDatabaseHas('books', [
-            'title' => 'ephemeral class',
+        $this->assertDatabaseHas('users', [
+            'name' => 'ephemeral class',
         ]);
-        $this->assertDatabaseCount('books', 1);
+        $this->assertDatabaseCount('users', 1);
         expect(DatabaseSeeder::class)->toExtend(Seeder::class);
     });
 })->covers(DatabaseSeeder::class);
