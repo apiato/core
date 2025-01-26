@@ -44,45 +44,9 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         return false;
     }
 
-    /**
-     * This function relies on strict conventions:
-     *    - Repository name should be same as it's model name (model: Foo -> repository: FooRepository).
-     *    - If the container contains Models with names different from the container name, the repository class must
-     *      implement model() method and return the FQCN e.g., Role::class
-     */
     public function model(): string
     {
-        $className = $this->getClassName(); // e.g. UserRepository
-        $modelName = $this->getModelName($className); // e.g. User
-
-        return $this->getModelNamespace($modelName);
-    }
-
-    public function getClassName(): string
-    {
-        $fullName = static::class;
-
-        return substr($fullName, strrpos($fullName, '\\') + 1);
-    }
-
-    public function getModelName(string $className): string|array
-    {
-        return str_replace('Repository', '', $className);
-    }
-
-    public function getModelNamespace(array|string $modelName): string
-    {
-        return 'App\\Containers\\' . $this->getCurrentSection() . '\\' . $this->getCurrentContainer() . '\\Models\\' . $modelName;
-    }
-
-    public function getCurrentSection(): string
-    {
-        return explode('\\', static::class)[2];
-    }
-
-    public function getCurrentContainer(): string
-    {
-        return explode('\\', static::class)[3];
+        return apiato()->repository()->resolveModelName(static::class);
     }
 
     /**
