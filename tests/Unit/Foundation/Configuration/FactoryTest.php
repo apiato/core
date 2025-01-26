@@ -12,7 +12,6 @@ describe(class_basename(Factory::class), function (): void {
             ->toBe(BookFactory::class)
             ->and($configuration->resolveFactoryName('test'))
             ->toBeNull();
-
     });
 
     it('can set custom factory name resolver', function (): void {

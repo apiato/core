@@ -11,8 +11,7 @@ describe(class_basename(Repository::class), function (): void {
         expect($configuration->resolveModelName(BookRepository::class))
             ->toBe(Book::class)
             ->and(static fn () => $configuration->resolveModelName('test'))
-            ->toThrow(\RuntimeException::class);
-
+            ->toThrow(RuntimeException::class);
     });
 
     it('can set custom model name resolver', function (): void {
