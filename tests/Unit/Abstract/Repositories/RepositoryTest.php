@@ -5,60 +5,15 @@ namespace Tests\Unit\Abstract\Repositories;
 use Apiato\Abstract\Repositories\Repository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\UnitTestCase;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 
-#[CoversClass(Repository::class)]
-final class RepositoryTest extends UnitTestCase
-{
-    public static function includeDataProvider(): array
-    {
-        return [
-            'single relation' => [
-                'books',
-                ['books'],
-                [],
-                ['children', 'parent'],
-            ],
-            'works with duplicate include' => [
-                'books,books',
-                ['books'],
-                [],
-                ['children', 'parent'],
-            ],
-            'multiple relations' => [
-                'books,children',
-                ['books', 'children'],
-                [],
-                ['parent'],
-            ],
-            'single nested relation' => [
-                'books.author',
-                ['books'],
-                ['author'],
-                ['children', 'parent'],
-            ],
-            'multiple nested relations' => [
-                'books.author.children,children.parent',
-                ['books', 'children'],
-                ['author'],
-                ['parent'],
-            ],
-            'multiple and single nested relations' => [
-                'parent,books.author',
-                ['parent', 'books'],
-                ['author'],
-                ['children'],
-            ],
-        ];
-    }
-
-    #[DataProvider('includeDataProvider')]
-    public function testEagerLoadSingleRelationRequestedViaRequest(
+describe(class_basename(Repository::class), function (): void {
+    beforeEach(function (): void {
+        config()->set('fractal.auto_includes.request_key', 'include');
+    });
+    it('can eager load single relation include', function (
         string $include,
         array $userMustLoadRelations,
         array $booksMustLoadRelations,
@@ -68,7 +23,7 @@ final class RepositoryTest extends UnitTestCase
         User::factory()
             ->has(
                 User::factory()
-                ->has(Book::factory()->count(3)),
+                    ->has(Book::factory()->count(3)),
                 'children',
             )->has(Book::factory()->count(3))
             ->createOne();
@@ -94,14 +49,50 @@ final class RepositoryTest extends UnitTestCase
                 $this->assertFalse($user->relationLoaded($relation));
             }
         });
-    }
-
-    public function testMultipleEagerLoadAppliesAllEagerLoads(): void
-    {
+    })->with([
+        'single relation' => [
+            'books',
+            ['books'],
+            [],
+            ['children', 'parent'],
+        ],
+        'works with duplicate include' => [
+            'books,books',
+            ['books'],
+            [],
+            ['children', 'parent'],
+        ],
+        'multiple relations' => [
+            'books,children',
+            ['books', 'children'],
+            [],
+            ['parent'],
+        ],
+        'single nested relation' => [
+            'books.author',
+            ['books'],
+            ['author'],
+            ['children', 'parent'],
+        ],
+        'multiple nested relations' => [
+            'books.author.children,children.parent',
+            ['books', 'children'],
+            ['author'],
+            ['parent'],
+        ],
+        'multiple and single nested relations' => [
+            'parent,books.author',
+            ['parent', 'books'],
+            ['author'],
+            ['children'],
+        ],
+    ]);
+    // testMultipleEagerLoadAppliesAllEagerLoads
+    it('can eager load multiple includes', function (): void {
         User::factory()
             ->has(
                 User::factory()
-                ->has(Book::factory()->count(3)),
+                    ->has(Book::factory()->count(3)),
                 'children',
             )->has(Book::factory()->count(3))
             ->createOne();
@@ -122,11 +113,9 @@ final class RepositoryTest extends UnitTestCase
                 $this->assertTrue($child->relationLoaded('books'));
             }
         });
-    }
+    });
 
-    public function testCanCache(): void
-    {
-        $this->markTestIncomplete('This test has not been fully implemented yet.');
+    it('can cache', function (): void {
         config()->set('repository.cache.enabled', true);
         config()->set('repository.cache.minutes', 1);
         //        config()->set('cache.default', 'database');
@@ -141,11 +130,5 @@ final class RepositoryTest extends UnitTestCase
         $this->assertEquals($cachedUser->name, $repository->find($user->id)->name);
         $cachedUser->update(['name' => 'new name']);
         $this->assertEquals($cachedUser->name, $repository->find($user->id)->name);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        config()->set('fractal.auto_includes.request_key', 'include');
-    }
-}
+    })->todo();
+})->covers(Repository::class);
