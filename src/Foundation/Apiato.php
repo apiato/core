@@ -3,8 +3,9 @@
 namespace Apiato\Foundation;
 
 use Apiato\Foundation\Configuration\ApplicationBuilder;
-use Apiato\Foundation\Configuration\FactoryDiscovery;
+use Apiato\Foundation\Configuration\Factory;
 use Apiato\Foundation\Configuration\Localization;
+use Apiato\Foundation\Configuration\Repository;
 use Apiato\Foundation\Configuration\Routing;
 use Apiato\Foundation\Configuration\Seeding;
 use Apiato\Foundation\Configuration\View;
@@ -33,7 +34,8 @@ final class Apiato
     private Localization $localization;
     private View $view;
     private Seeding $seeding;
-    private FactoryDiscovery $factoryDiscovery;
+    private Factory $factory;
+    private Repository $repository;
 
     private function __construct(
         private readonly string $basePath,
@@ -111,10 +113,21 @@ final class Apiato
 
     public function withFactories(callable|null $callback = null): self
     {
-        $this->factoryDiscovery ??= new FactoryDiscovery();
+        $this->factory ??= new Factory();
 
         if (!is_null($callback)) {
-            $callback($this->factoryDiscovery);
+            $callback($this->factory);
+        }
+
+        return $this;
+    }
+
+    public function withRepositories(callable|null $callback = null): self
+    {
+        $this->repository ??= new Repository();
+
+        if (!is_null($callback)) {
+            $callback($this->repository);
         }
 
         return $this;
@@ -203,7 +216,7 @@ final class Apiato
     }
 
     /*
-     * Get the configuration files to be loaded.
+     * Get the config files.
      *
      * @return string[]
      */
@@ -215,7 +228,7 @@ final class Apiato
     }
 
     /*
-     * Get the helper files to be loaded.
+     * Get the helper files.
      *
      * @return string[]
      */
@@ -226,51 +239,89 @@ final class Apiato
         )->toArray();
     }
 
+    /**
+     * Get the migration paths.
+     */
     public function migrations(): array
     {
         return $this->migrationPaths;
     }
 
+    /**
+     * Get the event paths.
+     */
     public function events(): array
     {
         return $this->eventDiscoveryPaths;
     }
 
+    /**
+     * Get the command paths.
+     */
     public function commands(): array
     {
         return $this->commandPaths;
     }
 
+    /**
+     * Register the API routes.
+     */
     public function registerApiRoutes(): void
     {
         $this->routing->registerApiRoutes();
     }
 
+    /**
+     * Get Web routes.
+     */
     public function webRoutes(): array
     {
         return $this->routing->webRoutes();
     }
 
+    /**
+     * Get the seeding configuration.
+     */
     public function seeding(): Seeding
     {
         return $this->seeding;
     }
 
+    /**
+     * Get the routing configuration.
+     */
     public function routing(): Routing
     {
         return $this->routing;
     }
 
-    public function factoryDiscovery(): FactoryDiscovery
+    /**
+     * Get the factory configuration.
+     */
+    public function factory(): Factory
     {
-        return $this->factoryDiscovery;
+        return $this->factory;
     }
 
+    /**
+     * Get the repository configuration.
+     */
+    public function repository(): Repository
+    {
+        return $this->repository;
+    }
+
+    /**
+     * Get the localization configuration.
+     */
     public function localization(): Localization
     {
         return $this->localization;
     }
 
+    /**
+     * Get the view configuration.
+     */
     public function view(): View
     {
         return $this->view;

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Pest\Expectation;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
+use Workbench\App\Containers\MySection\Book\Data\Repositories\BookRepository;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(Repository::class), function (): void {
@@ -117,6 +118,12 @@ describe(class_basename(Repository::class), function (): void {
                     $expectation->relationLoaded('books')->toBeTrue();
                 });
             });
+    });
+
+    it('discover its model', function (): void {
+        $repository = new BookRepository(app());
+
+        expect($repository->model())->toBe(Book::class);
     });
 
     it('can cache', function (): void {

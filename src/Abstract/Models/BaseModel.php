@@ -15,7 +15,7 @@ abstract class BaseModel extends LaravelEloquentModel implements Resource
 
     protected static function newFactory()
     {
-        $factoryName = apiato()->factoryDiscovery()
+        $factoryName = apiato()->factory()
             ->resolveFactoryName(static::class);
 
         if (is_string($factoryName)) {

@@ -59,7 +59,15 @@ final readonly class ApplicationBuilder
             )->loadWebRoutesFrom(
                 ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/UI/WEB/Routes')),
             );
-        })->withFactories();
+        })->withFactories()
+        ->withRepositories();
+    }
+
+    public function withRepositories(callable|null $callback = null): self
+    {
+        $this->apiato->withRepositories($callback);
+
+        return $this;
     }
 
     public function withFactories(callable|null $callback = null): self
