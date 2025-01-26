@@ -38,6 +38,8 @@ describe(class_basename(Apiato::class), function (): void {
             shared_path('Migrations'),
             app_path('Containers/MySection/Book/Data/Migrations'),
             app_path('Containers/Identity/User/Data/Migrations'),
+            app_path('Containers/SocialInteraction/Comment/Data/Migrations'),
+            app_path('Containers/SocialInteraction/Like/Data/Migrations'),
         ])->and($config->seeding()->seeders())->toEqualCanonicalizing([
             Workbench\App\Containers\MySection\Book\Data\Seeders\Ordered_1::class,
             Workbench\App\Containers\MySection\Book\Data\Seeders\Murdered_2::class,
