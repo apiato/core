@@ -1,5 +1,5 @@
 workbench:
-  - install: true
+  install: true
 laravel: ./workbench
 providers:
   - Apiato\Foundation\Providers\ApiatoServiceProvider
