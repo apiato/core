@@ -3,7 +3,6 @@
 use Apiato\Abstract\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(BaseModel::class), function (): void {
@@ -27,7 +26,7 @@ describe(class_basename(BaseModel::class), function (): void {
 
     it('can locate the factory of the model using different call styles', function (): void {
         $usingModel = Book::factory()->makeOne();
-        $usingFactory = BookFactory::new()->makeOne();
+        $usingFactory = Book::factory()->makeOne();
 
         expect($usingModel)->toBeInstanceOf(Book::class)
             ->and($usingFactory)->toBeInstanceOf(Book::class);
