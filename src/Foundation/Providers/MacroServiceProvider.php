@@ -7,7 +7,6 @@ use Illuminate\Config\Repository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Vinkla\Hashids\Facades\Hashids;
 
 final class MacroServiceProvider extends ServiceProvider
 {
@@ -21,7 +20,7 @@ final class MacroServiceProvider extends ServiceProvider
                  */
                 fn (string $hashedValue, string $key = 'id'): bool =>
                     /* @var Collection $this */
-                    $this->contains($key, Hashids::decode($hashedValue)[0]),
+                    $this->contains($key, hashids()->decode($hashedValue)[0]),
             );
         }
 
