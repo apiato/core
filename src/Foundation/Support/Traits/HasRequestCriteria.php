@@ -4,7 +4,6 @@ namespace Apiato\Foundation\Support\Traits;
 
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
-use Vinkla\Hashids\Facades\Hashids;
 
 trait HasRequestCriteria
 {
@@ -64,7 +63,7 @@ trait HasRequestCriteria
         $searchValue = $this->parserSearchValue($searchQuery);
 
         if ($searchValue) {
-            $decodedId = Hashids::decode($searchValue);
+            $decodedId = hashids()->decode($searchValue);
             if ($decodedId) {
                 return $decodedId[0];
             }
@@ -96,10 +95,10 @@ trait HasRequestCriteria
 
         foreach ($fieldsToDecode as $field) {
             if (array_key_exists($field, $searchArray)) {
-                if (empty(Hashids::decode($searchArray[$field]))) {
+                if (empty(hashids()->decode($searchArray[$field]))) {
                     throw new \InvalidArgumentException("Only hash ids are allowed. {$field}:$searchArray[$field]");
                 }
-                $searchArray[$field] = Hashids::decode($searchArray[$field])[0];
+                $searchArray[$field] = hashids()->decode($searchArray[$field])[0];
             }
         }
 
