@@ -1,7 +1,6 @@
 <?php
 
 use Apiato\Foundation\Apiato;
-use Vinkla\Hashids\Facades\Hashids;
 use Vinkla\Hashids\HashidsManager;
 
 if (!function_exists('apiato')) {
