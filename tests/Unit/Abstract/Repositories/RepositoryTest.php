@@ -13,7 +13,7 @@ describe(class_basename(Repository::class), function (): void {
     beforeEach(function (): void {
         config()->set('fractal.auto_includes.request_key', 'include');
     });
-    
+
     it('can eager load single relation include', function (
         string $include,
         array $userMustLoadRelations,
@@ -88,7 +88,7 @@ describe(class_basename(Repository::class), function (): void {
             ['children'],
         ],
     ]);
-    // testMultipleEagerLoadAppliesAllEagerLoads
+
     it('can eager load multiple includes', function (): void {
         User::factory()
             ->has(
