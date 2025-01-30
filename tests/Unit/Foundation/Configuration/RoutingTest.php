@@ -58,6 +58,13 @@ describe(class_basename(Routing::class), function (): void {
         )->toArray();
 
         expect($apiRoutes)->toBe([
+            ['GET', 'HEAD'],
+            'v1/authors/{author}/children/{children}/books/{book}',
+            [
+                'api',
+                'throttle:api',
+            ],
+            'localhost',
             ['POST'],
             'v1/books',
             [
