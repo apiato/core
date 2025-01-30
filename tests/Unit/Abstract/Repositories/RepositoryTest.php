@@ -4,7 +4,7 @@ namespace Tests\Unit\Abstract\Repositories;
 
 use Apiato\Abstract\Repositories\Repository;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Pest\Expectation;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
@@ -13,7 +13,7 @@ use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(Repository::class), function (): void {
     beforeEach(function (): void {
-        config()->set('fractal.auto_includes.request_key', 'include');
+        config(['fractal.auto_includes.request_key' => 'include']);
     });
 
     it('can eager load single relation include', function (
@@ -127,19 +127,17 @@ describe(class_basename(Repository::class), function (): void {
     });
 
     it('can cache', function (): void {
-        config()->set('repository.cache.enabled', true);
-        config()->set('repository.cache.minutes', 1);
-        //        config()->set('cache.default', 'database');
-        //        User::factory()->create()->transformWith()->toArray();
+        config(['repository.cache.enabled' => true]);
+        /** @var User $cachedUser */
         $user = User::factory()->createOne();
         $repository = $this->app->make(UserRepository::class);
-        /** @var User $cachedUser */
-        $cachedUser = $repository->find($user->id);
-        DB::table('cache')->get()->dump();
+        $cacheKey = $repository->getCacheKey('find', [$user->id]);
 
-        $this->assertEquals($cachedUser->name, $repository->find($user->id)->name);
-        $this->assertEquals($cachedUser->name, $repository->find($user->id)->name);
-        $cachedUser->update(['name' => 'new name']);
-        $this->assertEquals($cachedUser->name, $repository->find($user->id)->name);
-    })->todo();
+        expect(Cache::missing($cacheKey))->toBeTrue();
+
+        // hit the cache
+        $repository->find($user->id);
+
+        expect(Cache::has($cacheKey))->toBeTrue();
+    });
 })->covers(Repository::class);
