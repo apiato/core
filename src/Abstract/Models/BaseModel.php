@@ -4,9 +4,7 @@ namespace Apiato\Abstract\Models;
 
 use Apiato\Contracts\Resource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Model as LaravelEloquentModel;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
 
 abstract class BaseModel extends LaravelEloquentModel implements Resource
@@ -60,12 +58,6 @@ abstract class BaseModel extends LaravelEloquentModel implements Resource
         return $this->getAttribute($field);
     }
 
-    /**
-     * Retrieve the model for a bound value.
-     *
-     * @param Model|Relation $query
-     * @param string|null $field
-     */
     public function resolveRouteBindingQuery($query, $value, $field = null)
     {
         if (config('apiato.hash-id')) {
