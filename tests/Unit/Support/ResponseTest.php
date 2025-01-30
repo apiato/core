@@ -12,8 +12,8 @@ use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
 
 describe(class_basename(Response::class), function (): void {
     beforeEach(function (): void {
-        config()->set('fractal.auto_fieldsets.enabled', true);
-        config()->set('fractal.auto_fieldsets.request_key', 'fields');
+        config(['fractal.auto_fieldsets.enabled' => true]);
+        config(['fractal.auto_fieldsets.request_key' => 'fields']);
 
         $this->user = UserFactory::new()
             ->for(UserFactory::new()->has(BookFactory::new()), 'parent')
