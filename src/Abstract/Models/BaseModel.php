@@ -64,15 +64,16 @@ abstract class BaseModel extends LaravelEloquentModel implements Resource
 
     public function resolveRouteBindingQuery($query, $value, $field = null)
     {
-        if (config('apiato.hash-id')) {
-            $decodingResult = $this->decode($value);
-            if (is_null($decodingResult)) {
-                throw new \RuntimeException('Invalid ID');
-            }
-            $value = $decodingResult;
+        if ($this->shouldResolveRouteBindingAsHashedId($value)) {
+            $value = hashids()->decode($value)[0];
         }
 
         return $query->where($field ?? $this->getRouteKeyName(), $value);
+    }
+
+    public function shouldResolveRouteBindingAsHashedId(mixed $value): bool
+    {
+        return config('apiato.hash-id') && is_string($value) && [] !== hashids()->decode($value);
     }
 
     protected function childRouteBindingRelationshipName($childType): string
