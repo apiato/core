@@ -91,10 +91,9 @@ describe(class_basename(BaseModel::class), function (): void {
             $target = Book::factory()->createOne();
 
             expect(
-                Book::newModelInstance()->resolveRouteBindingQuery(
-                    Book::query(),
+                Book::newModelInstance()->resolveRouteBinding(
                     hashids()->encode($target->getKey()),
-                )->first()->is($target),
+                )->is($target),
             )->toBeTrue();
         });
 
@@ -106,7 +105,7 @@ describe(class_basename(BaseModel::class), function (): void {
                 expect(
                     Book::newModelInstance()
                     ->setIncrementing($incrementing)
-                    ->shouldResolveRouteBindingAsHashedId(!$isHashedId ?: hashids()->encode(1)),
+                    ->shouldProcessHashIdRouteBinding(!$isHashedId ?: hashids()->encode(1)),
                 )->toBe($expectation, "Enabled: {$enabled}, Incrementing: {$incrementing}");
             },
         )->with([
@@ -137,11 +136,10 @@ describe(class_basename(BaseModel::class), function (): void {
                 config(['apiato.hash-id' => true]);
 
                 expect(
-                    Book::newModelInstance()->resolveRouteBindingQuery(
-                        Book::query(),
+                    Book::newModelInstance()->resolveRouteBinding(
                         $value,
                         $field,
-                    )->first()->is($target),
+                    )->is($target),
                 )->toBeTrue();
             },
         )->with([
@@ -170,17 +168,15 @@ describe(class_basename(BaseModel::class), function (): void {
             ]);
 
             expect(
-                Book::newModelInstance()->resolveRouteBindingQuery(
-                    Book::query(),
+                Book::newModelInstance()->resolveRouteBinding(
                     $target->getKey(),
-                )->first()->is($target),
+                )->is($target),
             )->toBeTrue()
                 ->and(
-                    Book::newModelInstance()->resolveRouteBindingQuery(
-                        Book::query(),
+                    Book::newModelInstance()->resolveRouteBinding(
                         $target->title,
                         'title',
-                    )->first()->is($target),
+                    )->is($target),
                 )->toBeTrue();
         });
     });
