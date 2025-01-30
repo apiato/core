@@ -83,4 +83,105 @@ describe(class_basename(BaseModel::class), function (): void {
                 ->toThrow(new RuntimeException('Failed to encode the given value.'));
         });
     });
+
+    describe('hashed id route model binding', function (): void {
+        it('can handle hashed ids', function (): void {
+            config(['apiato.hash-id' => true]);
+            Book::factory()->count(3)->create();
+            $target = Book::factory()->createOne();
+
+            expect(
+                Book::newModelInstance()->resolveRouteBindingQuery(
+                    Book::query(),
+                    hashids()->encode($target->getKey()),
+                )->first()->is($target),
+            )->toBeTrue();
+        });
+
+        it(
+            'can detect when it should resolve hashed ids and when it should not',
+            function (bool $enabled, bool $incrementing, bool $isHashedId, bool $expectation): void {
+                config(['apiato.hash-id' => $enabled]);
+
+                expect(
+                    Book::newModelInstance()
+                    ->setIncrementing($incrementing)
+                    ->shouldResolveRouteBindingAsHashedId(!$isHashedId ?: hashids()->encode(1)),
+                )->toBe($expectation, "Enabled: {$enabled}, Incrementing: {$incrementing}");
+            },
+        )->with([
+            [true, true, true, true],
+            [true, false, true, true],
+            [false, true, true, false],
+            [false, false, true, false],
+
+            [true, true, true, true],
+            [true, false, true, true],
+            [false, true, true, false],
+            [false, false, true, false],
+
+            [true, true, true, true],
+            [true, false, true, true],
+            [false, true, true, false],
+            [false, false, true, false],
+
+            [true, true, false, false],
+            [true, false, false, false],
+            [false, true, false, false],
+            [false, false, false, false],
+        ]);
+
+        it(
+            'can detect when it should resolve hashed ids and when it should not 2',
+            function (string $value, string|null $field, Book $target): void {
+                config(['apiato.hash-id' => true]);
+
+                expect(
+                    Book::newModelInstance()->resolveRouteBindingQuery(
+                        Book::query(),
+                        $value,
+                        $field,
+                    )->first()->is($target),
+                )->toBeTrue();
+            },
+        )->with([
+            function () {
+                $target = Book::factory()->createOne();
+
+                return [hashids()->encode($target->id), null, $target];
+            },
+            function () {
+                $target = Book::factory()->createOne();
+
+                return [hashids()->encode($target->id), 'id', $target];
+            },
+            function () {
+                $target = Book::factory()->createOne();
+
+                return [$target->title, 'title', $target];
+            },
+        ])->skip();
+
+        it('can handle unhashed ids', function (): void {
+            config(['apiato.hash-id' => false]);
+            Book::factory()->count(3)->create();
+            $target = Book::factory()->createOne([
+                'title' => 'Target',
+            ]);
+
+            expect(
+                Book::newModelInstance()->resolveRouteBindingQuery(
+                    Book::query(),
+                    $target->getKey(),
+                )->first()->is($target),
+            )->toBeTrue()
+                ->and(
+                    Book::newModelInstance()->resolveRouteBindingQuery(
+                        Book::query(),
+                        $target->title,
+                        'title',
+                    )->first()->is($target),
+                )->toBeTrue();
+        });
+    });
 })->covers(BaseModel::class);
