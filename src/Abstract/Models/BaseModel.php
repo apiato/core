@@ -25,7 +25,11 @@ abstract class BaseModel extends LaravelEloquentModel implements Resource
 
     public function getResourceKey(): string
     {
-        return $this->resourceKey ?? class_basename($this);
+        if (property_exists($this, 'resourceKey') && is_string($this->resourceKey)) {
+            return $this->resourceKey;
+        }
+
+        return class_basename($this);
     }
 
     /**
