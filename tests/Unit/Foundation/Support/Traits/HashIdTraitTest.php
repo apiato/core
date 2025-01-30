@@ -100,7 +100,7 @@ class HashIdTraitTest extends UnitTestCase
     {
         parent::setUp();
 
-        config()->set('apiato.hash-id', true);
+        config(['apiato.hash-id' => true]);
 
         $this->trait = new class {
             use HashId;
