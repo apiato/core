@@ -1,15 +1,15 @@
 <?php
 
-namespace Apiato\Console;
+namespace Apiato\Console\Commands;
 
 use Apiato\Abstract\Commands\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-final class ListTasks extends Command
+final class ListActions extends Command
 {
-    protected $signature = 'apiato:list:tasks {--with-file-name}';
-    protected $description = 'List all Tasks';
+    protected $signature = 'apiato:list:actions {--with-file-name}';
+    protected $description = 'List all Actions';
 
     public function handle(): void
     {
@@ -19,7 +19,7 @@ final class ListTasks extends Command
                     return false;
                 }
 
-                return Str::contains($file->getFilename(), 'Task.php');
+                return Str::contains($file->getFilename(), 'Action.php');
             })->groupBy(static fn (\SplFileInfo $file) => Str::of($file->getPath())
                 ->beforeLast(DIRECTORY_SEPARATOR)
                 ->afterLast(DIRECTORY_SEPARATOR)
@@ -29,7 +29,7 @@ final class ListTasks extends Command
                     foreach ($files as $file) {
                         $originalFileName = $file->getFilename();
                         $fileName = Str::of($originalFileName)
-                            ->replace('Task.php', '')
+                            ->replace('Action.php', '')
                             ->replace('.php', '')
                             ->replace('_', ' ')
                             ->headline();

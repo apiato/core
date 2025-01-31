@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Foundation\Providers;
+namespace Apiato\Macro;
 
 use Apiato\Abstract\Providers\ServiceProvider;
 use Illuminate\Config\Repository;
