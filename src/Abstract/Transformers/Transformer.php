@@ -5,7 +5,6 @@ namespace Apiato\Abstract\Transformers;
 use Apiato\Support\Resources\Collection;
 use Apiato\Support\Resources\Item;
 use League\Fractal\Resource\Primitive;
-use League\Fractal\Scope;
 use League\Fractal\TransformerAbstract as FractalTransformer;
 
 abstract class Transformer extends FractalTransformer
@@ -27,19 +26,6 @@ abstract class Transformer extends FractalTransformer
     public function collection($data, $transformer, string|null $resourceKey = null): Collection
     {
         return new Collection($data, $transformer, $resourceKey);
-    }
-
-    protected function callIncludeMethod(Scope $scope, string $includeName, $data)
-    {
-        try {
-            return parent::callIncludeMethod($scope, $includeName, $data);
-        } catch (\TypeError) {
-            if (config('apiato.requests.force-valid-includes', true)) {
-                throw new \TypeError('Invalid Include: ' . $includeName);
-            }
-        }
-
-        return null;
     }
 
     public static function empty(): callable
