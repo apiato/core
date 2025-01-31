@@ -3,10 +3,9 @@
 namespace Tests\Unit\Abstract\Tests;
 
 use Apiato\Abstract\Tests\TestCase;
-use Apiato\Foundation\Support\Traits\HashId;
-use Apiato\Foundation\Support\Traits\Testing\Assertions;
-use Apiato\Foundation\Support\Traits\Testing\RequestHelper;
-use Apiato\Foundation\Support\Traits\Testing\TestingUser;
+use Apiato\Support\Testing\Traits\Assertions;
+use Apiato\Support\Testing\Traits\RequestHelper;
+use Apiato\Support\Testing\Traits\TestingUser;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
 beforeEach(function (): void {
@@ -14,15 +13,16 @@ beforeEach(function (): void {
 });
 describe(class_basename(TestCase::class), function (): void {
     it('uses expected traits', function (): void {
-        $expectedTraits = [
+        $traits = [
             TestingUser::class,
             RequestHelper::class,
             Assertions::class,
-            HashId::class,
             LazilyRefreshDatabase::class,
         ];
 
-        expect(TestCase::class)->toUseTraits($expectedTraits);
+        foreach ($traits as $trait) {
+            expect(class_uses_recursive($this->sut))->toContain($trait);
+        }
     });
 
     it('can detect invalid endpoint format', function (string $endpoint): void {

@@ -1,13 +1,11 @@
 <?php
 
-namespace Apiato\Support;
+namespace Apiato\Http;
 
 use Apiato\Abstract\Transformers\Transformer;
-use Apiato\Support\Resources\Collection;
-use Apiato\Support\Resources\Item;
+use Apiato\Http\Resources\Collection;
+use Apiato\Http\Resources\Item;
 use Illuminate\Http\JsonResponse;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item as FractalItem;
 use League\Fractal\Scope;
 use League\Fractal\TransformerAbstract;
 use Spatie\Fractal\Fractal;
@@ -51,34 +49,8 @@ final class Response extends Fractal
         return parent::createData();
     }
 
-    public function getResource()
-    {
-        $resource = parent::getResource();
-        if ($resource instanceof FractalCollection) {
-            $resource = new Collection($resource->getData(), $resource->getTransformer(), $this->getResourceName());
-        }
-        if ($resource instanceof FractalItem) {
-            $resource = new Item($resource->getData(), $resource->getTransformer(), $this->getResourceName());
-        }
-
-        $resource->setMeta($this->meta);
-
-        if (!is_null($this->paginator)) {
-            $resource->setPaginator($this->paginator);
-        }
-
-        if (!is_null($this->cursor)) {
-            $resource->setCursor($this->cursor);
-        }
-
-        return $resource;
-    }
-
     public function getResourceClass(): string
     {
-        // TODO: Remove getResource method override and use the following logic
-        //  After this PR is merged:
-        //  https://github.com/spatie/fractalistic/pull/84
         if ('item' === $this->dataType) {
             return Item::class;
         }

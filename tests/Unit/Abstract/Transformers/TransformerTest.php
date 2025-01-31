@@ -1,8 +1,8 @@
 <?php
 
 use Apiato\Abstract\Transformers\Transformer;
-use Apiato\Support\Resources\Collection;
-use Apiato\Support\Resources\Item;
+use Apiato\Http\Resources\Collection;
+use Apiato\Http\Resources\Item;
 use League\Fractal\Resource\Primitive;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 use Workbench\App\Containers\MySection\Book\UI\API\Transformers\BookTransformer;

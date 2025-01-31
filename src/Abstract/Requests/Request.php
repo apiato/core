@@ -3,17 +3,12 @@
 namespace Apiato\Abstract\Requests;
 
 use Apiato\Abstract\Models\UserModel as User;
-use Apiato\Foundation\Support\Traits\HashId;
-use Apiato\Foundation\Support\Traits\Sanitizer;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 
 abstract class Request extends LaravelRequest
 {
-    use HashId;
-    use Sanitizer;
-
     /**
      * Roles and/or Permissions that has access to this request.
      *
@@ -169,31 +164,24 @@ abstract class Request extends LaravelRequest
         $data = $this->all();
 
         foreach ($fields as $oldKey => $newKey) {
-            // the key to be mapped does not exist - skip it
             if (!Arr::has($data, $oldKey)) {
                 continue;
             }
 
-            // set the new field and remove the old one
             Arr::set($data, $newKey, Arr::get($data, $oldKey));
             Arr::forget($data, $oldKey);
         }
 
-        // overwrite the initial request
         $this->replace($data);
     }
 
-    /**
-     * Overriding this function to modify the any user input before
-     * applying the validation rules.
-     */
     public function all($keys = null): array
     {
-        $requestData = parent::all($keys);
+        $data = parent::all($keys);
 
-        $requestData = $this->mergeUrlParametersWithRequestData($requestData);
+        $data = $this->mergeUrlParametersWithRequestData($data);
 
-        return $this->decodeHashedIdsBeforeValidation($requestData);
+        return $this->decodeHashedIds($data);
     }
 
     /**
@@ -212,11 +200,160 @@ abstract class Request extends LaravelRequest
     }
 
     /**
+     * without decoding the encoded id's you won't be able to use
+     * validation features like `exists:table,id`.
+     */
+    protected function decodeHashedIds(array $data): array
+    {
+        if ([] !== $this->decode && config('apiato.hash-id')) {
+            foreach ($this->decode as $key) {
+                $data = $this->decodeRecursive($data, explode('.', $key), $key);
+            }
+        }
+
+        return $data;
+    }
+
+    private function decodeRecursive($data, $keys, string $currentField): mixed
+    {
+        if (is_null($data)) {
+            return $data;
+        }
+
+        if (empty($keys)) {
+            if ($this->skipHashIdDecode($data)) {
+                return $data;
+            }
+
+            if (!is_string($data)) {
+                throw new \RuntimeException('String expected, got ' . gettype($data));
+            }
+
+            $decodedField = $this->decode($data);
+
+            if (is_null($decodedField)) {
+                throw new \RuntimeException('ID (' . $currentField . ') is incorrect, consider using the hashed ID.');
+            }
+
+            return $decodedField;
+        }
+
+        // take the first element from the field
+        $field = array_shift($keys);
+
+        if ('*' === $field) {
+            // process each field of the array (and go down one level!)
+            $fields = Arr::wrap($data);
+            foreach ($fields as $key => $value) {
+                $data[$key] = $this->decodeRecursive($value, $keys, $currentField . '[' . $key . ']');
+            }
+
+            return $data;
+        }
+
+        if (!array_key_exists($field, $data)) {
+            return $data;
+        }
+
+        $data[$field] = $this->decodeRecursive($data[$field], $keys, $field);
+
+        return $data;
+    }
+
+    public function skipHashIdDecode($field): bool
+    {
+        return empty($field);
+    }
+
+    public function decode(string|null $id): int|null
+    {
+        if (is_null($id) || 'null' === strtolower($id)) {
+            return $id;
+        }
+
+        $decoded = hashids()->decode($id);
+        if ([] !== $decoded) {
+            return $decoded[0];
+        }
+
+        return null;
+    }
+
+    /**
      * This method mimics the $request->input() method but works on the "decoded" values.
      */
     public function getInputByKey($key = null, $default = null): mixed
     {
         return data_get($this->all(), $key, $default);
+    }
+
+    /**
+     * Sanitizes the data of a request. This is a superior version of php built-in array_filter() as it preserves
+     * FALSE and NULL values as well.
+     *
+     * @param array $fields a list of fields to be checked in the Dot-Notation (e.g., ['data.name', 'data.description'])
+     *
+     * @return array an array containing the values if the field was present in the request and the intersection array
+     */
+    public function sanitizeInput(array $fields): array
+    {
+        $data = $this->all();
+
+        $inputAsArray = [];
+        $fieldsWithDefaultValue = [];
+
+        // create a multidimensional array based on $fields
+        // which was submitted as DOT notation (e.g., data.name)
+        foreach ($fields as $key => $value) {
+            if (is_string($key)) {
+                // save fields with default values
+                $fieldsWithDefaultValue[$key] = $value;
+                Arr::set($inputAsArray, $key, $value);
+            } else {
+                Arr::set($inputAsArray, $value, true);
+            }
+        }
+
+        // check, if the keys exist in both arrays
+        $data = $this->recursiveArrayIntersectKey($data, $inputAsArray);
+
+        // set default values if key doesn't exist
+        foreach ($fieldsWithDefaultValue as $key => $value) {
+            $data = Arr::add($data, $key, $value);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Recursively intersects 2 arrays based on their keys.
+     *
+     * @param array $a first array (that keeps the values)
+     * @param array $b second array to be compared with
+     *
+     * @return array an array containing all keys that are present in $a and $b. Only values from $a are returned
+     */
+    private function recursiveArrayIntersectKey(array $a, array $b): array
+    {
+        $a = array_intersect_key($a, $b);
+
+        foreach ($a as $key => &$value) {
+            if (is_array($value) && is_array($b[$key])) {
+                $value = $this->recursiveArrayIntersectKey($value, $b[$key]);
+            }
+        }
+
+        return $a;
+    }
+
+    public function decodeArray(array $ids): array
+    {
+        $result = [];
+        foreach ($ids as $id) {
+            $result[] = $this->decode($id);
+        }
+
+        return $result;
     }
 
     /**

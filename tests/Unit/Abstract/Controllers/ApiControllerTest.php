@@ -2,12 +2,11 @@
 
 namespace Tests\Unit\Foundation\Support\Traits;
 
-use Apiato\Abstract\Repositories\Repository;
-use Apiato\Foundation\Support\Traits\Response;
+use Apiato\Abstract\Controllers\ApiController;
 use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
 use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
 
-describe(class_basename(Repository::class), function (): void {
+describe(class_basename(ApiController::class), function (): void {
     beforeEach(function (): void {
         $this->customMetadata = [
             'key' => 'value',
@@ -16,16 +15,14 @@ describe(class_basename(Repository::class), function (): void {
             'something' => $this->customMetadata,
         ];
 
-        $this->trait = new class {
-            use Response;
-        };
+        $this->sut = new class extends ApiController {};
 
         $this->user = UserFactory::new()->withParent()->createOne();
         $this->transformer = new UserTransformer();
     });
 
     it('can transform data', function (): void {
-        $result = $this->trait
+        $result = $this->sut
             ->withMeta($this->metadata)
             ->transform(
                 data: $this->user,
@@ -44,7 +41,7 @@ describe(class_basename(Repository::class), function (): void {
     it('can include requested includes', function (): void {
         $include = 'parent';
 
-        $result = $this->trait
+        $result = $this->sut
             ->withMeta($this->metadata)
             ->transform(
                 data: $this->user,
@@ -60,7 +57,7 @@ describe(class_basename(Repository::class), function (): void {
     });
 
     it('can override resource key', function (bool|string|array|null $resourceKey, string $expected): void {
-        $result = $this->trait
+        $result = $this->sut
             ->withMeta($this->metadata)
             ->transform(
                 data: $this->user,
@@ -97,4 +94,4 @@ describe(class_basename(Repository::class), function (): void {
             ->and($result['meta'])->toHaveKey('custom')
             ->and($result['meta']['custom'])->toBe(test()->customMetadata);
     }
-})->covers(Repository::class);
+})->covers(ApiController::class);

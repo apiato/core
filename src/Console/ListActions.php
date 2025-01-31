@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Commands;
+namespace Apiato\Console;
 
 use Apiato\Abstract\Commands\Command;
 use Illuminate\Support\Facades\File;

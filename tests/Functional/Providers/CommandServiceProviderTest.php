@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Foundation\Providers\CommandServiceProvider;
+use Apiato\Console\CommandServiceProvider;
 use Illuminate\Support\Facades\Artisan;
 use Pest\Expectation;
 

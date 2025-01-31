@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Commands\ListTasks;
+use Apiato\Console\ListTasks;
 
 describe(class_basename(ListTasks::class), function (): void {
     it('can list all actions', function (): void {

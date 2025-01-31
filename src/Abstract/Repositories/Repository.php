@@ -2,19 +2,18 @@
 
 namespace Apiato\Abstract\Repositories;
 
-use Apiato\Foundation\Support\Traits\HasRequestCriteria;
-use Apiato\Support\Response;
+use Apiato\Http\Response;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Repository\Traits\CacheableRepository;
 
 abstract class Repository extends BaseRepository implements CacheableInterface
 {
-    use HasRequestCriteria;
     use CacheableRepository {
         CacheableRepository::paginate as cacheablePaginate;
     }
@@ -42,6 +41,72 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     public function shouldEagerLoadIncludes(): bool
     {
         return false;
+    }
+
+    /**
+     * Eager load relations if requested by the client via "include" query parameter.
+     * This is a workaround for incompatible third-party packages. (Fractal, L5Repo).
+     *
+     * @see https://apiato.atlassian.net/browse/API-905
+     */
+    public function eagerLoadRequestedIncludes(): void
+    {
+        $this->scopeQuery(function (Builder|Model $model) {
+            if (request()?->has(config('fractal.auto_includes.request_key'))) {
+                $validIncludes = [];
+                // TODO: Do we need to do the same for the excludes?
+                // TODO: Or default includes! Are they eager loaded by default?
+                // TODO: What if the include has parameters? e.g. include=books:limit(5|3)
+                foreach (Response::getRequestedIncludes() as $includeName) {
+                    $relationParts = explode('.', $includeName);
+                    $camelCasedIncludeName = $this->filterInvalidRelations($this->model, $relationParts);
+                    if ($camelCasedIncludeName) {
+                        $validIncludes[] = $camelCasedIncludeName;
+                    }
+                }
+
+                return $model->with($validIncludes);
+            }
+
+            return $model;
+        });
+    }
+
+    public function filterInvalidRelations(Builder|Model $model, array $relationParts): string|null
+    {
+        if ([] === $relationParts) {
+            return null;
+        }
+
+        $relation = $this->figureOutRelationName(array_shift($relationParts));
+
+        if (!method_exists($model, $relation)) {
+            return null;
+        }
+
+        $nextModel = $model->$relation()->getRelated();
+
+        if ([] === $relationParts) {
+            return $relation;
+        }
+
+        $nextRelation = $this->filterInvalidRelations($nextModel, $relationParts);
+
+        if (is_null($nextRelation)) {
+            return null;
+        }
+
+        return $relation . '.' . $nextRelation;
+    }
+
+    public function figureOutRelationName(string $includeName): string
+    {
+        return Str::of($includeName)
+            ->replace('-', ' ')
+            ->replace('_', ' ')
+            ->title()
+            ->replace(' ', '')
+            ->camel();
     }
 
     public function model(): string
@@ -98,11 +163,17 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         return config('repository.pagination.skip');
     }
 
+    // TODO: rename this method or maybe keep the name but dont return null.
+    // Returning null causes multiple if() guard clauses as you can see
+
     public function exceedsMaxPaginationLimit(mixed $limit): bool
     {
         return $this->maxPaginationLimit > 0 && $limit > $this->maxPaginationLimit;
     }
 
+    /**
+     * @throws RepositoryException
+     */
     public function addRequestCriteria(array $fieldsToDecode = ['id']): static
     {
         $this->pushCriteria(app(RequestCriteria::class));
@@ -113,6 +184,123 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         return $this;
     }
 
+    private function shouldDecodeSearch(): bool
+    {
+        return config('apiato.hash-id') && $this->isSearching(request()->query());
+    }
+
+    private function isSearching(array $query): bool
+    {
+        return array_key_exists('search', $query) && $query['search'];
+    }
+
+    public function decodeSearchQueryString(array $fieldsToDecode): void
+    {
+        $query = request()->query();
+        $searchQuery = $query['search'];
+
+        $decodedValue = $this->decodeValue($searchQuery);
+        $decodedData = $this->decodeData($fieldsToDecode, $searchQuery);
+
+        $decodedQuery = $this->arrayToSearchQuery($decodedData);
+
+        if ($decodedValue) {
+            if (empty($decodedQuery)) {
+                $decodedQuery .= $decodedValue;
+            } else {
+                $decodedQuery .= (';' . $decodedValue);
+            }
+        }
+
+        $query['search'] = $decodedQuery;
+
+        request()->query->replace($query);
+    }
+
+    private function decodeValue(string $searchQuery): string|null
+    {
+        $searchValue = $this->parserSearchValue($searchQuery);
+
+        if ($searchValue) {
+            $decodedId = hashids()->decode($searchValue);
+            if ($decodedId) {
+                return $decodedId[0];
+            }
+        }
+
+        return $searchValue;
+    }
+
+    private function parserSearchValue($search)
+    {
+        if (strpos((string) $search, ';') || strpos((string) $search, ':')) {
+            $values = explode(';', (string) $search);
+            foreach ($values as $value) {
+                $s = explode(':', $value);
+                if (1 === count($s)) {
+                    return $s[0];
+                }
+            }
+
+            return null;
+        }
+
+        return $search;
+    }
+
+    private function decodeData(array $fieldsToDecode, string $searchQuery): array
+    {
+        $searchArray = $this->parserSearchData($searchQuery);
+
+        foreach ($fieldsToDecode as $field) {
+            if (array_key_exists($field, $searchArray)) {
+                if (empty(hashids()->decode($searchArray[$field]))) {
+                    throw new \InvalidArgumentException("Only hash ids are allowed. {$field}:$searchArray[$field]");
+                }
+                $searchArray[$field] = hashids()->decode($searchArray[$field])[0];
+            }
+        }
+
+        return $searchArray;
+    }
+
+    private function parserSearchData($search): array
+    {
+        $searchData = [];
+
+        if (strpos((string) $search, ':')) {
+            $fields = explode(';', (string) $search);
+
+            foreach ($fields as $row) {
+                try {
+                    [$field, $value] = explode(':', $row);
+                    $searchData[$field] = $value;
+                } catch (\Exception) {
+                    // Surround offset error
+                }
+            }
+        }
+
+        return $searchData;
+    }
+
+    private function arrayToSearchQuery(array $decodedSearchArray): string
+    {
+        $decodedSearchQuery = '';
+
+        $fields = array_keys($decodedSearchArray);
+        $length = count($fields);
+        for ($i = 0; $i < $length; ++$i) {
+            $field = $fields[$i];
+            $decodedSearchQuery .= "{$field}:$decodedSearchArray[$field]";
+            if (1 !== $length && $i < $length - 1) {
+                $decodedSearchQuery .= ';';
+            }
+        }
+
+        return $decodedSearchQuery;
+    }
+
     public function removeRequestCriteria(): static
     {
         $this->popCriteria(RequestCriteria::class);
@@ -120,71 +308,8 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         return $this;
     }
 
-    /**
-     * Eager load relations if requested by the client via "include" query parameter.
-     * This is a workaround for incompatible third-party packages. (Fractal, L5Repo).
-     *
-     * @see https://apiato.atlassian.net/browse/API-905
-     */
-    public function eagerLoadRequestedIncludes(): void
+    private function hashIdEnabled(): bool
     {
-        $this->scopeQuery(function (Builder|Model $model) {
-            if (request()?->has(config('fractal.auto_includes.request_key'))) {
-                $validIncludes = [];
-                // TODO: Do we need to do the same for the excludes?
-                // TODO: Or default includes! Are they eager loaded by default?
-                // TODO: What if the include has parameters? e.g. include=books:limit(5|3)
-                foreach (Response::getRequestedIncludes() as $includeName) {
-                    $relationParts = explode('.', $includeName);
-                    $camelCasedIncludeName = $this->filterInvalidRelations($this->model, $relationParts);
-                    if ($camelCasedIncludeName) {
-                        $validIncludes[] = $camelCasedIncludeName;
-                    }
-                }
-
-                return $model->with($validIncludes);
-            }
-
-            return $model;
-        });
-    }
-
-    // TODO: rename this method or maybe keep the name but dont return null.
-    // Returning null causes multiple if() guard clauses as you can see
-    public function filterInvalidRelations(Builder|Model $model, array $relationParts): string|null
-    {
-        if ([] === $relationParts) {
-            return null;
-        }
-
-        $relation = $this->figureOutRelationName(array_shift($relationParts));
-
-        if (!method_exists($model, $relation)) {
-            return null;
-        }
-
-        $nextModel = $model->$relation()->getRelated();
-
-        if ([] === $relationParts) {
-            return $relation;
-        }
-
-        $nextRelation = $this->filterInvalidRelations($nextModel, $relationParts);
-
-        if (is_null($nextRelation)) {
-            return null;
-        }
-
-        return $relation . '.' . $nextRelation;
-    }
-
-    public function figureOutRelationName(string $includeName): string
-    {
-        return Str::of($includeName)
-            ->replace('-', ' ')
-            ->replace('_', ' ')
-            ->title()
-            ->replace(' ', '')
-            ->camel();
+        return config('apiato.hash-id');
     }
 }

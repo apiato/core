@@ -1,10 +1,10 @@
 <?php
 
-namespace Apiato\Foundation\Providers;
+namespace Apiato\Console;
 
 use Apiato\Abstract\Providers\ServiceProvider;
-use Apiato\Commands\ListActions;
-use Apiato\Commands\ListTasks;
+use Apiato\Console\ListActions;
+use Apiato\Console\ListTasks;
 
 final class CommandServiceProvider extends ServiceProvider
 {

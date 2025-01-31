@@ -2,8 +2,8 @@
 
 namespace Apiato\Abstract\Transformers;
 
-use Apiato\Support\Resources\Collection;
-use Apiato\Support\Resources\Item;
+use Apiato\Http\Resources\Collection;
+use Apiato\Http\Resources\Item;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\TransformerAbstract as FractalTransformer;
 

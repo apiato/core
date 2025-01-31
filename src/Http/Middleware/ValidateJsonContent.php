@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Support\Middleware;
+namespace Apiato\Http\Middleware;
 
 use Apiato\Abstract\Middlewares\Middleware;
 use Illuminate\Http\Request;

@@ -3,6 +3,7 @@
 namespace Apiato\Foundation\Providers;
 
 use Apiato\Abstract\Providers\ServiceProvider;
+use Apiato\Console\CommandServiceProvider;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Support\Providers\ConfigServiceProvider;
@@ -12,6 +13,7 @@ use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
 use Apiato\Foundation\Support\Providers\RateLimitingServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
+use Apiato\Foundation\Providers\MacroServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Console\AboutCommand;
 

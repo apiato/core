@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Support\Resources;
+namespace Apiato\Http\Resources;
 
 use Apiato\Contracts\Resource;
 use League\Fractal\Resource\Collection as FractalCollection;

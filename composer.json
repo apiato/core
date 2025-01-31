@@ -62,7 +62,7 @@
             "Apiato\\": "src/"
         },
         "files": [
-            "src/Support/helpers.php"
+          "src/Foundation/helpers.php"
         ]
     },
     "autoload-dev": {

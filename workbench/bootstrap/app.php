@@ -1,8 +1,8 @@
 <?php
 
 use Apiato\Foundation\Apiato;
-use Apiato\Support\Middleware\ProcessETag;
-use Apiato\Support\Middleware\ValidateJsonContent;
+use Apiato\Http\Middleware\ProcessETag;
+use Apiato\Http\Middleware\ValidateJsonContent;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Middleware;
 

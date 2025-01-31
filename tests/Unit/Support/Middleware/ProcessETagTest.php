@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Support\Middleware\ProcessETag;
+use Apiato\Http\Middleware\ProcessETag;
 use Illuminate\Support\Facades\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;

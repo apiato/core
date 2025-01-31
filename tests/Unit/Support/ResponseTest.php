@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Support;
 
-use Apiato\Support\Response;
+use Apiato\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
 use League\Fractal\ParamBag;
 use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
