@@ -3,8 +3,6 @@
 namespace Apiato\Console;
 
 use Apiato\Abstract\Providers\ServiceProvider;
-use Apiato\Console\ListActions;
-use Apiato\Console\ListTasks;
 
 final class CommandServiceProvider extends ServiceProvider
 {
