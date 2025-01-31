@@ -30,4 +30,4 @@ describe(class_basename(Apiato::class), function (): void {
         $this->app->setLocale('fa');
         expect(__('test::errors.forbidden'))->toBe('ممنوع');
     });
-});
+})->covers(Apiato::class);
