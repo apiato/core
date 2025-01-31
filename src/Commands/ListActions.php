@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 final class ListActions extends Command
 {
-    protected $signature = 'apiato:list:actions {--withfilename}';
+    protected $signature = 'apiato:list:actions {--with-file-name}';
     protected $description = 'List all Actions';
 
     public function handle(): void
@@ -34,12 +34,12 @@ final class ListActions extends Command
                             ->replace('_', ' ')
                             ->headline();
 
-                        $includeFileName = '';
-                        if ($this->option('withfilename')) {
+                        if ($this->option('with-file-name')) {
                             $includeFileName = "<fg=red>({$originalFileName})</fg=red>";
+                            $this->info(" - {$fileName} {$includeFileName}");
+                        } else {
+                            $this->info(" - {$fileName}");
                         }
-
-                        $this->info("  - {$fileName}  {$includeFileName}");
                     }
                 });
     }
