@@ -5,12 +5,12 @@ namespace Apiato\Foundation;
 use Apiato\Foundation\Configuration\ApplicationBuilder;
 use Apiato\Foundation\Configuration\Factory;
 use Apiato\Foundation\Configuration\Localization;
+use Apiato\Foundation\Configuration\Provider;
 use Apiato\Foundation\Configuration\Repository;
 use Apiato\Foundation\Configuration\Routing;
 use Apiato\Foundation\Configuration\Seeding;
 use Apiato\Foundation\Configuration\View;
 use Composer\Autoload\ClassLoader;
-use Composer\ClassMapGenerator\ClassMapGenerator;
 
 use function Illuminate\Filesystem\join_paths;
 
@@ -18,8 +18,6 @@ final class Apiato
 {
     private static self $instance;
     private string $sharedPath;
-    /** @var string[] */
-    private array $providerPaths = [];
     /** @var string[] */
     private array $configPaths = [];
     /** @var string[] */
@@ -36,6 +34,7 @@ final class Apiato
     private Seeding $seeding;
     private Factory $factory;
     private Repository $repository;
+    private Provider $provider;
 
     private function __construct(
         private readonly string $basePath,
@@ -166,6 +165,17 @@ final class Apiato
         return $this;
     }
 
+    public function withProviders(callable|null $callback = null): self
+    {
+        $this->provider ??= new Provider();
+
+        if (!is_null($callback)) {
+            $callback($this->provider);
+        }
+
+        return $this;
+    }
+
     public function withMigrations(string ...$path): self
     {
         $this->migrationPaths = $path;
@@ -191,28 +201,6 @@ final class Apiato
     public function withConfigs(string ...$path): void
     {
         $this->configPaths = $path;
-    }
-
-    public function withProviders(string ...$path): self
-    {
-        $this->providerPaths = $path;
-
-        return $this;
-    }
-
-    /*
-     * Get the service providers to be loaded.
-     *
-     * @return string[]
-     */
-    public function providers(): array
-    {
-        $classMapper = new ClassMapGenerator();
-        foreach ($this->providerPaths as $path) {
-            $classMapper->scanPaths($path);
-        }
-
-        return array_keys($classMapper->getClassMap()->getMap());
     }
 
     /*
@@ -279,6 +267,11 @@ final class Apiato
         return $this->routing->webRoutes();
     }
 
+    public function providers(): array
+    {
+        return $this->provider->toArray();
+    }
+
     /**
      * Get the seeding configuration.
      */
@@ -309,6 +302,14 @@ final class Apiato
     public function repository(): Repository
     {
         return $this->repository;
+    }
+
+    /**
+     * Get the provider configuration.
+     */
+    public function provider(): Provider
+    {
+        return $this->provider;
     }
 
     /**

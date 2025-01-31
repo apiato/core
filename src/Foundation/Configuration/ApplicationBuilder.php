@@ -19,9 +19,6 @@ final readonly class ApplicationBuilder
     {
         $this->useSharedPath(
             $this->joinPaths($basePath, 'app/Ship'),
-        )->withProviders(
-            shared_path('Providers'),
-            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Providers')),
         )->withConfigs(
             shared_path('Configs'),
             ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Configs')),
@@ -37,7 +34,12 @@ final readonly class ApplicationBuilder
         )->withMigrations(
             shared_path('Migrations'),
             ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Data/Migrations')),
-        )->withSeeders(function (Seeding $seeding) use ($basePath): void {
+        )->withProviders(function (Provider $provider) use ($basePath): void {
+            $provider->loadFrom(
+                shared_path('Providers'),
+                ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Providers')),
+            );
+        })->withSeeders(function (Seeding $seeding) use ($basePath): void {
             $seeding->loadFrom(
                 ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Data/Seeders')),
             );
@@ -105,6 +107,13 @@ final readonly class ApplicationBuilder
         return $this;
     }
 
+    public function withProviders(callable|null $callback = null): self
+    {
+        $this->apiato->withProviders($callback);
+
+        return $this;
+    }
+
     public function withMigrations(string ...$path): self
     {
         $this->apiato->withMigrations(...$path);
@@ -136,13 +145,6 @@ final readonly class ApplicationBuilder
     public function withConfigs(string ...$path): self
     {
         $this->apiato->withConfigs(...$path);
-
-        return $this;
-    }
-
-    public function withProviders(string ...$path): self
-    {
-        $this->apiato->withProviders(...$path);
 
         return $this;
     }
