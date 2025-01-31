@@ -1,9 +1,8 @@
 <?php
 
+use Apiato\Console\CommandServiceProvider;
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
-use Apiato\Console\CommandServiceProvider;
-use Apiato\Macro\MacroServiceProvider;
 use Apiato\Foundation\Support\Providers\ConfigServiceProvider;
 use Apiato\Foundation\Support\Providers\HelperServiceProvider;
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
@@ -11,6 +10,7 @@ use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
 use Apiato\Foundation\Support\Providers\RateLimitingServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
+use Apiato\Macro\MacroServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\DB;
