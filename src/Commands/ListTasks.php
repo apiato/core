@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 final class ListTasks extends Command
 {
-    protected $signature = 'apiato:list:tasks {--withfilename}';
+    protected $signature = 'apiato:list:tasks {--with-file-name}';
     protected $description = 'List all Tasks';
 
     public function handle(): void
@@ -34,12 +34,12 @@ final class ListTasks extends Command
                             ->replace('_', ' ')
                             ->headline();
 
-                        $includeFileName = '';
-                        if ($this->option('withfilename')) {
+                        if ($this->option('with-file-name')) {
                             $includeFileName = "<fg=red>({$originalFileName})</fg=red>";
+                            $this->info(" - {$fileName} {$includeFileName}");
+                        } else {
+                            $this->info(" - {$fileName}");
                         }
-
-                        $this->info("  - {$fileName}  {$includeFileName}");
                     }
                 });
     }
