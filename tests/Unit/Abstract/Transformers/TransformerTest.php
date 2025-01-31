@@ -62,4 +62,11 @@ describe(class_basename(Transformer::class), function (): void {
             ->parseIncludes(['invalid'])->toArray())
             ->toThrow(TypeError::class);
     });
+
+    it('can return empty transformer', function (): void {
+        $transformer = new BookTransformer();
+
+        $emptyTransformer = $transformer::empty();
+        expect($emptyTransformer)->toBeInstanceOf(Closure::class);
+    });
 });
