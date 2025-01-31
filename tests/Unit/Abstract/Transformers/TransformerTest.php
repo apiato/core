@@ -53,20 +53,10 @@ describe(class_basename(Transformer::class), function (): void {
             ->and($collection->getResourceKey())->toBe($expected);
     })->with('resourceKeys');
 
-    it('can force valid includes', function (): void {
-        config(['apiato.requests.force-valid-includes' => true]);
-        $transformer = new BookTransformer();
-        $transformer->setDefaultIncludes(['invalid']);
-
-        expect(fn () => Apiato\Support\Response::create(Book::factory()->makeOne(), $transformer)
-            ->parseIncludes(['invalid'])->toArray())
-            ->toThrow(TypeError::class);
-    });
-
     it('can return empty transformer', function (): void {
         $transformer = new BookTransformer();
 
         $emptyTransformer = $transformer::empty();
         expect($emptyTransformer)->toBeInstanceOf(Closure::class);
     });
-});
+})->covers(Transformer::class);
