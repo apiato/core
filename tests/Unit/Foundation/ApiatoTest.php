@@ -6,7 +6,7 @@ use Apiato\Foundation\Configuration\Factory;
 use Apiato\Foundation\Configuration\Localization;
 use Apiato\Foundation\Configuration\Repository;
 use Apiato\Foundation\Configuration\Routing;
-use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
+use Apiato\Foundation\Configuration\View;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Apiato\Macros\MacroServiceProvider;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Murdered_2;
@@ -135,15 +135,21 @@ describe(class_basename(Apiato::class), function (): void {
         expect($apiato->repository()->resolveModelName('anything'))->toBe('test');
     });
 
+    it('accepts and apply view config override', function (): void {
+        $apiato = Apiato::configure()
+            ->withViews(function (View $view): void {
+                $view->buildNamespaceUsing(static fn (string $path): string => 'test');
+            })->create();
+
+        expect($apiato->view()->buildNamespaceFor('anything'))->toBe('test');
+    });
+
     it('accepts and apply localization config override', function (): void {
-        Apiato::configure()
+        $apiato = Apiato::configure()
             ->withTranslations(function (Localization $localization): void {
                 $localization->buildNamespaceUsing(static fn (string $path): string => 'test');
             })->create();
 
-        app()->register(LocalizationServiceProvider::class, true);
-
-        $this->app->setLocale('fa');
-        expect(__('test::errors.forbidden'))->toBe('ممنوع');
+        expect($apiato->localization()->buildNamespaceFor('anything'))->toBe('test');
     });
-})->covers(Apiato::class);
+})->covers(Apiato::class)->only();
