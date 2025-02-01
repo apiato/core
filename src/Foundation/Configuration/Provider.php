@@ -2,21 +2,20 @@
 
 namespace Apiato\Foundation\Configuration;
 
-use Apiato\Console\CommandServiceProvider;
-use Apiato\Generator\GeneratorsServiceProvider;
-use Apiato\Macro\MacroServiceProvider;
+use Apiato\Support\DefaultProviders;
 use Composer\ClassMapGenerator\ClassMapGenerator;
-use Illuminate\Support\DefaultProviders;
+use Illuminate\Support\DefaultProviders as LaravelDefaultProviders;
 
-final class Provider extends DefaultProviders
+final class Provider extends LaravelDefaultProviders
 {
     public function __construct(array|null $providers = null)
     {
-        parent::__construct($providers ?: [
-            GeneratorsServiceProvider::class,
-            MacroServiceProvider::class,
-            CommandServiceProvider::class,
-        ]);
+        parent::__construct($providers ?: DefaultProviders::providers());
+    }
+
+    public function toArray(): array
+    {
+        return array_unique(parent::toArray());
     }
 
     public function loadFrom(string ...$paths): self
@@ -29,10 +28,5 @@ final class Provider extends DefaultProviders
         $this->merge(array_keys($classMapper->getClassMap()->getMap()));
 
         return $this;
-    }
-
-    public function toArray(): array
-    {
-        return array_unique(parent::toArray());
     }
 }
