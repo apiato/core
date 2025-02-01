@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class() extends Migration {
     public function up(): void
     {
-        Schema::create('likes', static function (Blueprint $table) {
+        Schema::create('likes', static function (Blueprint $table): void {
             $table->id();
             $table->timestamps();
         });
