@@ -10,7 +10,7 @@ describe(class_basename(Repository::class), function (): void {
 
         expect($configuration->resolveModelName(BookRepository::class))
             ->toBe(Book::class)
-            ->and(static fn () => $configuration->resolveModelName('test'))
+            ->and(static fn (): string => $configuration->resolveModelName('test'))
             ->toThrow(RuntimeException::class);
     });
 
