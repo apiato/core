@@ -100,7 +100,7 @@ describe(class_basename(Apiato::class), function (): void {
         expect(Apiato::inferBasePath())->toBe($basePath);
     });
 
-    it('accepts routing config override', function (): void {
+    it('accepts and apply  routing config override', function (): void {
         $defaultPrefix = Apiato::instance()->routing()->getApiPrefix();
         $apiato = Apiato::configure()
             ->withRouting(function (Routing $routing): void {
@@ -117,7 +117,7 @@ describe(class_basename(Apiato::class), function (): void {
             })->create();
     });
 
-    it('accepts factory config override', function (): void {
+    it('accepts and apply  factory config override', function (): void {
         $apiato = Apiato::configure()
             ->withFactories(function (Factory $factory): void {
                 $factory->resolveFactoryNameUsing(static fn (string $modelName): string => 'test');
@@ -126,7 +126,7 @@ describe(class_basename(Apiato::class), function (): void {
         expect($apiato->factory()->resolveFactoryName('anything'))->toBe('test');
     });
 
-    it('accepts repository config override', function (): void {
+    it('accepts and apply  repository config override', function (): void {
         $apiato = Apiato::configure()
             ->withRepositories(function (Repository $repository): void {
                 $repository->resolveModelNameUsing(static fn (string $repositoryName): string => 'test');
@@ -135,7 +135,7 @@ describe(class_basename(Apiato::class), function (): void {
         expect($apiato->repository()->resolveModelName('anything'))->toBe('test');
     });
 
-    it('accepts localization config override', function (): void {
+    it('accepts and apply localization config override', function (): void {
         Apiato::configure()
             ->withTranslations(function (Localization $localization): void {
                 $localization->buildNamespaceUsing(static fn (string $path): string => 'test');
