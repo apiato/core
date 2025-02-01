@@ -5,7 +5,7 @@ use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Factory;
 use Apiato\Foundation\Configuration\Repository;
 use Apiato\Generator\GeneratorsServiceProvider;
-use Apiato\Macro\MacroServiceProvider;
+use Apiato\Macros\MacroServiceProvider;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Murdered_2;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Ordered_1;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Unordered;

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Foundation\Support\Providers;
 
-use Apiato\Macro\MacroServiceProvider;
+use Apiato\Macros\MacroServiceProvider;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 

@@ -4,7 +4,7 @@ namespace Apiato\Support;
 
 use Apiato\Console\CommandServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
-use Apiato\Macro\MacroServiceProvider;
+use Apiato\Macros\MacroServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
 final readonly class DefaultProviders
