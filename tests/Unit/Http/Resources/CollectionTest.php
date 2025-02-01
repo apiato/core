@@ -20,13 +20,13 @@ describe(class_basename(Collection::class), function (): void {
         },
     )->with([
         [[], ''],
-        fn () => [[User::factory()->makeOne()], 'User'],
+        fn (): array => [[User::factory()->makeOne()], 'User'],
         [fn () => User::factory(2)->make(), 'User'],
         [fn () => User::factory(2)->make()->getIterator(), 'User'],
         [[new class {}], ''],
         [fn () => collect([new class {}]), ''],
         [fn () => collect([new class {}])->getIterator(), ''],
         [fn () => User::factory()->makeOne(), 'User'],
-        [fn () => new stdClass(), ''],
+        [fn (): stdClass => new stdClass(), ''],
     ]);
 })->covers(Collection::class);
