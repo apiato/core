@@ -128,7 +128,6 @@ describe(class_basename(Repository::class), function (): void {
 
     it('can cache', function (): void {
         config(['repository.cache.enabled' => true]);
-        /** @var User $cachedUser */
         $user = User::factory()->createOne();
         $repository = $this->app->make(UserRepository::class);
         $cacheKey = $repository->getCacheKey('find', [$user->id]);
