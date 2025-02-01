@@ -10,8 +10,8 @@ describe(class_basename(DatabaseSeeder::class), function (): void {
     it('can call other seeders', function (): void {
         $seeder = new DatabaseSeeder();
         $apiato = Apiato::configure()->withSeeders(
-            static fn (Seeding $seeding) => $seeding->sortUsing(
-                static fn () => [
+            static fn (Seeding $seeding): Seeding => $seeding->sortUsing(
+                static fn (): array => [
                     (new class extends Seeder {
                         public function run(): void
                         {
