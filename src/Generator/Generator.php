@@ -75,19 +75,15 @@ abstract class Generator extends Command
 
     protected $renderedStubContent;
 
-    private IlluminateFilesystem $fileSystem;
-
     private array $defaultInputs = [
         ['section', null, InputOption::VALUE_OPTIONAL, 'The name of the section'],
         ['container', null, InputOption::VALUE_OPTIONAL, 'The name of the container'],
         ['file', null, InputOption::VALUE_OPTIONAL, 'The name of the file'],
     ];
 
-    public function __construct(IlluminateFilesystem $fileSystem)
+    public function __construct(private IlluminateFilesystem $fileSystem)
     {
         parent::__construct();
-
-        $this->fileSystem = $fileSystem;
     }
 
     /**
