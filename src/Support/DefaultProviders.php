@@ -5,9 +5,15 @@ namespace Apiato\Support;
 use Apiato\Console\CommandServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Apiato\Macro\MacroServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
 final readonly class DefaultProviders
 {
+    /**
+     * Get the default providers for the application.
+     *
+     * @return class-string<ServiceProvider>[]
+     */
     public static function providers(): array
     {
         return [
