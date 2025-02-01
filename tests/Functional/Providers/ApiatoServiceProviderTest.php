@@ -1,6 +1,5 @@
 <?php
 
-use Apiato\Console\CommandServiceProvider;
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
 use Apiato\Foundation\Support\Providers\ConfigServiceProvider;
@@ -9,8 +8,6 @@ use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
 use Apiato\Foundation\Support\Providers\RateLimitingServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
-use Apiato\Generator\GeneratorsServiceProvider;
-use Apiato\Macros\MacroServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\DB;
@@ -19,9 +16,6 @@ use Workbench\App\Containers\MySection\Book\Middlewares\BeforeMiddleware;
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
     it('registers expected providers', function (): void {
         $providers = [
-            GeneratorsServiceProvider::class,
-            MacroServiceProvider::class,
-            CommandServiceProvider::class,
             ConfigServiceProvider::class,
             HelperServiceProvider::class,
             LocalizationServiceProvider::class,
