@@ -8,9 +8,7 @@ use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 describe(class_basename(ProcessETag::class), function (): void {
     beforeEach(function (): void {
         config(['apiato.requests.use-etag' => true]);
-        $this->next = function (Illuminate\Http\Request $request): Response {
-            return response('content');
-        };
+        $this->next = (fn (Illuminate\Http\Request $request): Response => response('content'));
     });
 
     it('should add the ETag header to the response', function (string $method): void {
