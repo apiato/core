@@ -3,7 +3,10 @@
 use Apiato\Console\CommandServiceProvider;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Factory;
+use Apiato\Foundation\Configuration\Localization;
 use Apiato\Foundation\Configuration\Repository;
+use Apiato\Foundation\Configuration\Routing;
+use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Apiato\Macros\MacroServiceProvider;
 use Workbench\App\Containers\MySection\Author\Data\Seeders\Murdered_2;
@@ -83,6 +86,37 @@ describe(class_basename(Apiato::class), function (): void {
             ->and($apiato->repository()->resolveModelName(BookRepository::class))->toBe(Book::class);
     });
 
+    it('can be instantiated without a path', function (): void {
+        $basePath = Safe\realpath(__DIR__ . '/../../../workbench');
+
+        $apiato = Apiato::configure()->create();
+
+        expect($apiato->basePath())->toBe($basePath);
+    });
+
+    it('can infer base path', function (): void {
+        $basePath = Safe\realpath(__DIR__ . '/../../..');
+
+        expect(Apiato::inferBasePath())->toBe($basePath);
+    });
+
+    it('accepts routing config override', function (): void {
+        $defaultPrefix = Apiato::instance()->routing()->getApiPrefix();
+        $apiato = Apiato::configure()
+            ->withRouting(function (Routing $routing): void {
+                $routing->prefixApiUrlsWith('test/prefix/');
+            })->create();
+
+        expect($apiato->routing()->getApiPrefix())->toBe('test/prefix/');
+
+        // since the prefix value is static, when we override it in this test, it affects the rest of the
+        // test runs, so we need to reset it to the default value, or it will affect other tests
+        Apiato::configure()
+            ->withRouting(function (Routing $routing) use ($defaultPrefix): void {
+                $routing->prefixApiUrlsWith($defaultPrefix);
+            })->create();
+    });
+
     it('accepts factory config override', function (): void {
         $apiato = Apiato::configure()
             ->withFactories(function (Factory $factory): void {
@@ -100,4 +134,16 @@ describe(class_basename(Apiato::class), function (): void {
 
         expect($apiato->repository()->resolveModelName('anything'))->toBe('test');
     });
-})->covers(Apiato::class)->only();
+
+    it('accepts localization config override', function (): void {
+        Apiato::configure()
+            ->withTranslations(function (Localization $localization): void {
+                $localization->buildNamespaceUsing(static fn (string $path): string => 'test');
+            })->create();
+
+        app()->register(LocalizationServiceProvider::class, true);
+
+        $this->app->setLocale('fa');
+        expect(__('test::errors.forbidden'))->toBe('ممنوع');
+    });
+})->covers(Apiato::class);
