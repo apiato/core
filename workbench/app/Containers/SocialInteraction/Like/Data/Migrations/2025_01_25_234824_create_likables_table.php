@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class() extends Migration {
     public function up(): void
     {
-        Schema::create('likables', static function (Blueprint $table) {
+        Schema::create('likables', static function (Blueprint $table): void {
             $table->id();
             $table->unsignedBigInteger('like_id');
             $table->unsignedBigInteger('likable_id');
