@@ -6,7 +6,7 @@ use Workbench\App\Containers\Identity\User\Models\User;
 describe(class_basename(Action::class), function (): void {
     it('can run a transactional action', function (): void {
         $action = new class extends Action {
-            public static function run(string $name, string $email): void
+            public static function run(string $name, string $email): never
             {
                 User::factory()->createOne([
                     'name' => $name,
