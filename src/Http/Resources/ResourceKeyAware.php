@@ -1,8 +1,8 @@
 <?php
 
-namespace Apiato\Contracts;
+namespace Apiato\Http\Resources;
 
-interface Resource
+interface ResourceKeyAware
 {
     /**
      * Get the resource key to be used for the response serialization.

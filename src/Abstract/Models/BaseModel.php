@@ -2,12 +2,12 @@
 
 namespace Apiato\Abstract\Models;
 
-use Apiato\Contracts\Resource;
+use Apiato\Http\Resources\ResourceKeyAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as LaravelEloquentModel;
 use Illuminate\Support\Str;
 
-abstract class BaseModel extends LaravelEloquentModel implements Resource
+abstract class BaseModel extends LaravelEloquentModel implements ResourceKeyAware
 {
     use HasFactory;
 

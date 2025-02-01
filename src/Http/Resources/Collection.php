@@ -2,10 +2,9 @@
 
 namespace Apiato\Http\Resources;
 
-use Apiato\Contracts\Resource;
 use League\Fractal\Resource\Collection as FractalCollection;
 
-final class Collection extends FractalCollection
+final class Collection extends FractalCollection implements ResourceKeyAware
 {
     public function getResourceKey(): string
     {
@@ -25,7 +24,7 @@ final class Collection extends FractalCollection
             $resource = $resource->current();
         }
 
-        if ($resource instanceof Resource) {
+        if ($resource instanceof ResourceKeyAware) {
             return $resource->getResourceKey();
         }
 

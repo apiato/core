@@ -43,7 +43,7 @@ final class Response extends Fractal
 
     public function createData(): Scope
     {
-        $this->withResourceName($this->defaultResourceName());
+        $this->withResourceName($this->resourceKeyOrDefault());
         $this->setAvailableIncludesMeta();
 
         return parent::createData();
@@ -62,14 +62,14 @@ final class Response extends Fractal
         return parent::getResourceClass();
     }
 
-    private function defaultResourceName(): string
+    private function resourceKeyOrDefault(): string
     {
         $resourceName = $this->getResourceName();
-        if (!is_null($resourceName)) {
-            return $resourceName;
+        if (is_null($resourceName)) {
+            return $this->getResource()->getResourceKey();
         }
 
-        return $this->getResource()->getResourceKey();
+        return $resourceName;
     }
 
     private function setAvailableIncludesMeta(): void
