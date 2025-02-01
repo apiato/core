@@ -315,13 +315,20 @@ describe(class_basename(Response::class), function (): void {
         expect($result->getStatusCode())->toBe(204);
     });
 
-    it('can parse requested includes', function (): void {
-        request()->merge(['include' => 'books,children.books']);
+    it('can parse requested includes', function (string|array $include): void {
+        request()->merge(['include' => $include]);
 
         $result = Response::getRequestedIncludes();
 
         expect($result)->toBe(['books', 'children', 'children.books']);
-    });
+    })->with([
+        'array' => [
+            'include' => ['books', 'children.books'],
+        ],
+        'csv string' => [
+            'include' => 'books,children.books',
+        ],
+    ]);
 
     it('can parse include params with resource name', function (): void {
         $include = 'books';
