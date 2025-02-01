@@ -7,9 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 describe(class_basename(ValidateJsonContent::class), function (): void {
     beforeEach(function (): void {
         config(['apiato.requests.use-etag' => true]);
-        $this->next = function (Illuminate\Http\Request $request): Response {
-            return response('content');
-        };
+        $this->next = (fn (Illuminate\Http\Request $request): Response => response('content'));
     });
 
     it('should throw an exception if the request does not expect JSON and feature is enabled', function (): void {
