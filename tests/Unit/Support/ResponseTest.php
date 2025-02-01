@@ -279,7 +279,7 @@ describe(class_basename(Response::class), function (): void {
         ],
     ]);
 
-    it('testCanGenerate200OKResponse', function (): void {
+    it('can generate 200/OK response', function (): void {
         $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
@@ -288,7 +288,7 @@ describe(class_basename(Response::class), function (): void {
         expect($result->getStatusCode())->toBe(200);
     });
 
-    it('testCanGenerate202OAcceptedResponse', function (): void {
+    it('can generate 202/OAccepted response', function (): void {
         $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
@@ -297,7 +297,7 @@ describe(class_basename(Response::class), function (): void {
         expect($result->getStatusCode())->toBe(202);
     });
 
-    it('testCanGenerate201CreatedResponse', function (): void {
+    it('can generate 201/Created response', function (): void {
         $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
@@ -306,7 +306,7 @@ describe(class_basename(Response::class), function (): void {
         expect($result->getStatusCode())->toBe(201);
     });
 
-    it('testCanGenerate204NoContentResponse', function (): void {
+    it('can generate 204/NoContent response', function (): void {
         $response = Response::create($this->user);
         $response->transformWith(UserTransformer::class);
 
@@ -315,7 +315,7 @@ describe(class_basename(Response::class), function (): void {
         expect($result->getStatusCode())->toBe(204);
     });
 
-    it('testCanGetRequestedIncludes', function (): void {
+    it('can parse requested includes', function (): void {
         request()->merge(['include' => 'books,children.books']);
 
         $result = Response::getRequestedIncludes();
@@ -323,7 +323,7 @@ describe(class_basename(Response::class), function (): void {
         expect($result)->toBe(['books', 'children', 'children.books']);
     });
 
-    it('testCanProcessIncludeParamsWithResourceName', function (): void {
+    it('can parse include params with resource name', function (): void {
         $include = 'books';
         $includeWithParams = "$include:test(2|value)";
         request()->merge(['include' => $includeWithParams]);
