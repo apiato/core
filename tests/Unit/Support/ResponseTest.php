@@ -285,7 +285,7 @@ describe(class_basename(Response::class), function (): void {
 
         $result = $response->ok();
 
-        $this->assertEquals(200, $result->getStatusCode());
+        expect($result->getStatusCode())->toBe(200);
     });
 
     it('testCanGenerate202OAcceptedResponse', function (): void {
@@ -294,7 +294,7 @@ describe(class_basename(Response::class), function (): void {
 
         $result = $response->accepted();
 
-        $this->assertEquals(202, $result->getStatusCode());
+        expect($result->getStatusCode())->toBe(202);
     });
 
     it('testCanGenerate201CreatedResponse', function (): void {
@@ -303,7 +303,7 @@ describe(class_basename(Response::class), function (): void {
 
         $result = $response->created();
 
-        $this->assertEquals(201, $result->getStatusCode());
+        expect($result->getStatusCode())->toBe(201);
     });
 
     it('testCanGenerate204NoContentResponse', function (): void {
@@ -312,7 +312,7 @@ describe(class_basename(Response::class), function (): void {
 
         $result = $response->noContent();
 
-        $this->assertEquals(204, $result->getStatusCode());
+        expect($result->getStatusCode())->toBe(204);
     });
 
     it('testCanGetRequestedIncludes', function (): void {
@@ -320,7 +320,7 @@ describe(class_basename(Response::class), function (): void {
 
         $result = Response::getRequestedIncludes();
 
-        $this->assertEquals(['books', 'children', 'children.books'], $result);
+        expect($result)->toBe(['books', 'children', 'children.books']);
     });
 
     it('testCanProcessIncludeParamsWithResourceName', function (): void {
@@ -339,6 +339,6 @@ describe(class_basename(Response::class), function (): void {
         $expectedParams = new ParamBag([
             'test' => ['2', 'value'],
         ]);
-        $this->assertEquals($expectedParams, $actualParams);
+        expect($expectedParams)->toEqual($actualParams);
     });
 })->covers(Response::class);
