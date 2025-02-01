@@ -20,13 +20,13 @@ describe(class_basename(Item::class), function (): void {
         },
     )->with([
         [[], ''],
-        fn () => [[User::factory()->makeOne()], ''],
-        fn () => [User::factory(2)->make(), ''],
-        fn () => [User::factory(2)->make()->getIterator(), ''],
+        fn (): array => [[User::factory()->makeOne()], ''],
+        fn (): array => [User::factory(2)->make(), ''],
+        fn (): array => [User::factory(2)->make()->getIterator(), ''],
         [[new class {}], ''],
-        fn () => [collect([new class {}]), ''],
-        fn () => [collect([new class {}])->getIterator(), ''],
-        fn () => [User::factory()->makeOne(), 'User'],
-        fn () => [new stdClass(), ''],
+        fn (): array => [collect([new class {}]), ''],
+        fn (): array => [collect([new class {}])->getIterator(), ''],
+        fn (): array => [User::factory()->makeOne(), 'User'],
+        fn (): array => [new stdClass(), ''],
     ]);
 })->covers(Item::class);
