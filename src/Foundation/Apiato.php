@@ -76,6 +76,16 @@ final class Apiato
         return self::$instance;
     }
 
+    /**
+     * Reset the configured instance to its default state.
+     */
+    public static function reset(): self
+    {
+        self::$instance = new self(self::$instance->basePath);
+
+        return (new ApplicationBuilder(self::$instance))->create();
+    }
+
     public function basePath(): string
     {
         return $this->basePath;
