@@ -4,8 +4,10 @@ use Apiato\Console\CommandServiceProvider;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Factory;
 use Apiato\Foundation\Configuration\Localization;
+use Apiato\Foundation\Configuration\Provider;
 use Apiato\Foundation\Configuration\Repository;
 use Apiato\Foundation\Configuration\Routing;
+use Apiato\Foundation\Configuration\Seeding;
 use Apiato\Foundation\Configuration\View;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Apiato\Macros\MacroServiceProvider;
@@ -19,6 +21,7 @@ use Workbench\App\Containers\MySection\Book\Models\Book;
 use Workbench\App\Containers\MySection\Book\Providers\BookServiceProvider;
 use Workbench\App\Containers\MySection\Book\Providers\EventServiceProvider;
 use Workbench\App\Ship\Providers\ShipServiceProvider;
+use Workbench\App\StrayServiceProvider;
 
 describe(class_basename(Apiato::class), function (): void {
     it('can be created with default configuration', function (): void {
@@ -152,4 +155,30 @@ describe(class_basename(Apiato::class), function (): void {
 
         expect($apiato->localization()->buildNamespaceFor('anything'))->toBe('test');
     });
-})->covers(Apiato::class)->only();
+
+    it('accepts and apply seeding config override', function (): void {
+        $apiato = Apiato::configure()
+            ->withSeeders(function (Seeding $seeding): void {
+                $seeding->sortUsing(static fn (array $classMapGroupedByDirectory): array => ['test']);
+            })->create();
+
+        expect($apiato->seeding()->seeders())
+            ->toHaveLength(1)->toContain('test');
+    });
+
+    it('accepts and apply provider config override', function (): void {
+        $apiato = Apiato::configure()
+            ->withProviders(function (Provider $provider): void {
+                $provider->loadFrom(app_path('Containers'));
+            })->create();
+
+        expect($apiato->providers())->not()->toContain(StrayServiceProvider::class);
+
+        $apiato = Apiato::configure()
+            ->withProviders(function (Provider $provider): void {
+                $provider->loadFrom(app_path());
+            })->create();
+
+        expect($apiato->providers())->toContain(StrayServiceProvider::class);
+    });
+})->covers(Apiato::class);
