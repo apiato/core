@@ -2,11 +2,15 @@
 
 namespace Tests\Unit\Support;
 
+use Apiato\Http\Resources\Item;
 use Apiato\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
 use League\Fractal\ParamBag;
+use League\Fractal\Resource\NullResource;
 use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
+use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
 use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
 
@@ -281,29 +285,26 @@ describe(class_basename(Response::class), function (): void {
 
     it('can generate 200/OK response', function (): void {
         $response = Response::create($this->user);
-        $response->transformWith(UserTransformer::class);
 
         $result = $response->ok();
 
-        expect($result->getStatusCode())->toBe(200);
+        expect($result)->getStatusCode()->toBe(200)->getData()->toHaveKey('data', []);
     });
 
-    it('can generate 202/OAccepted response', function (): void {
+    it('can generate 202/Accepted response', function (): void {
         $response = Response::create($this->user);
-        $response->transformWith(UserTransformer::class);
 
         $result = $response->accepted();
 
-        expect($result->getStatusCode())->toBe(202);
+        expect($result)->getStatusCode()->toBe(202)->getData()->toHaveKey('data', []);
     });
 
     it('can generate 201/Created response', function (): void {
         $response = Response::create($this->user);
-        $response->transformWith(UserTransformer::class);
 
         $result = $response->created();
 
-        expect($result->getStatusCode())->toBe(201);
+        expect($result)->getStatusCode()->toBe(201)->getData()->toHaveKey('data', []);
     });
 
     it('can generate 204/NoContent response', function (): void {
@@ -348,4 +349,17 @@ describe(class_basename(Response::class), function (): void {
         ]);
         expect($expectedParams)->toEqual($actualParams);
     });
+
+    it('returns the custom resource class', function (Collection|User|array|null $data, string $expectation): void {
+        $response = Response::create($data);
+
+        $result = $response->getResourceClass();
+
+        expect($result)->toBe($expectation);
+    })->with([
+        [fn () => UserFactory::new()->makeOne(), Item::class],
+        [Collection::empty(), \Apiato\Http\Resources\Collection::class],
+        [[], \Apiato\Http\Resources\Collection::class],
+        [null, NullResource::class],
+    ]);
 })->covers(Response::class);
