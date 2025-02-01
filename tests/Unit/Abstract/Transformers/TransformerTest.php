@@ -44,7 +44,7 @@ describe(class_basename(Transformer::class), function (): void {
         $transformer->setDefaultIncludes(['author']);
 
         $collection = $transformer->collection(
-            Book::factory()->count(3)->make(),
+            Book::factory(3)->make(),
             new BookTransformer(),
             $resourceKey,
         );

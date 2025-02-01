@@ -3,7 +3,7 @@
 namespace Tests\Unit\Foundation\Support\Traits;
 
 use Apiato\Abstract\Controllers\ApiController;
-use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
+use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
 
 describe(class_basename(ApiController::class), function (): void {
@@ -17,15 +17,15 @@ describe(class_basename(ApiController::class), function (): void {
 
         $this->sut = new class extends ApiController {};
 
-        $this->user = UserFactory::new()->withParent()->createOne();
         $this->transformer = new UserTransformer();
     });
 
     it('can transform data', function (): void {
+        $user = User::factory()->withParent()->makeOne();
         $result = $this->sut
             ->withMeta($this->metadata)
             ->transform(
-                data: $this->user,
+                data: $user,
                 transformerName: $this->transformer,
                 meta: $this->customMetadata,
             );
@@ -33,7 +33,7 @@ describe(class_basename(ApiController::class), function (): void {
         expect($result)->toBeArray()
             ->and($result)->toHaveKey('data')
             ->and($result['data'])->toHaveKey('object')
-            ->and($result['data']['object'])->toBe($this->user->getResourceKey())
+            ->and($result['data']['object'])->toBe($user->getResourceKey())
             ->and($result['data'])->not->toHaveKey('parent');
         assertMetadata($result);
     });
@@ -44,7 +44,7 @@ describe(class_basename(ApiController::class), function (): void {
         $result = $this->sut
             ->withMeta($this->metadata)
             ->transform(
-                data: $this->user,
+                data: User::factory()->withParent()->makeOne(),
                 transformerName: $this->transformer,
                 includes: [$include],
                 meta: $this->customMetadata,
@@ -60,7 +60,7 @@ describe(class_basename(ApiController::class), function (): void {
         $result = $this->sut
             ->withMeta($this->metadata)
             ->transform(
-                data: $this->user,
+                data: User::factory()->withParent()->makeOne(),
                 transformerName: $this->transformer,
                 meta: $this->customMetadata,
                 resourceKey: $resourceKey,

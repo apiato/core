@@ -26,9 +26,9 @@ describe(class_basename(Repository::class), function (): void {
         User::factory()
             ->has(
                 User::factory()
-                    ->has(Book::factory()->count(3)),
+                    ->has(Book::factory(3)),
                 'children',
-            )->has(Book::factory()->count(3))
+            )->has(Book::factory(3))
             ->createOne();
         $repository = new class(app()) extends UserRepository {
             public function shouldEagerLoadIncludes(): bool
@@ -96,9 +96,9 @@ describe(class_basename(Repository::class), function (): void {
         User::factory()
             ->has(
                 User::factory()
-                    ->has(Book::factory()->count(3)),
+                    ->has(Book::factory(3)),
                 'children',
-            )->has(Book::factory()->count(3))
+            )->has(Book::factory(3))
             ->createOne();
         $repository = new class(app()) extends UserRepository {
             public function shouldEagerLoadIncludes(): bool

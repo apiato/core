@@ -110,8 +110,6 @@ describe(class_basename(Apiato::class), function (): void {
             })->create();
 
         expect($apiato->routing()->getApiPrefix())->toBe('test/prefix/');
-
-        Apiato::reset();
     });
 
     it('accepts and apply  factory config override', function (): void {

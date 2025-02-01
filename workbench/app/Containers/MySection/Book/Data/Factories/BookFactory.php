@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Containers\MySection\Book\Data\Factories;
 
-use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
+use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 use Workbench\App\Ship\Parents\Factories\Factory as ParentFactory;
 
@@ -22,7 +22,7 @@ class BookFactory extends ParentFactory
     {
         return [
             'title' => fake()->sentence,
-            'author_id' => UserFactory::new(),
+            'author_id' => User::factory(),
         ];
     }
 }

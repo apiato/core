@@ -8,27 +8,29 @@ use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
 use League\Fractal\ParamBag;
 use League\Fractal\Resource\NullResource;
-use Workbench\App\Containers\Identity\User\Data\Factories\UserFactory;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\Identity\User\UI\API\Transformers\UserTransformer;
-use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
+use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(Response::class), function (): void {
     beforeEach(function (): void {
         config(['fractal.auto_fieldsets.enabled' => true]);
         config(['fractal.auto_fieldsets.request_key' => 'fields']);
-
-        $this->user = UserFactory::new()
-            ->for(UserFactory::new()->has(BookFactory::new()), 'parent')
-            ->has(UserFactory::new()->has(BookFactory::new())->count(2), 'children')
-            ->has(BookFactory::new()->count(2))
-            ->createOne();
     });
+
+    function getUser(): User
+    {
+        return User::factory()
+            ->for(User::factory()->has(Book::factory()), 'parent')
+            ->has(User::factory(2)->has(Book::factory()), 'children')
+            ->has(Book::factory(2))
+            ->createOne();
+    }
 
     it('can handle CSV includes for single resource', function (string $include, array $expected): void {
         request()->merge(['include' => $include]);
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -57,7 +59,7 @@ describe(class_basename(Response::class), function (): void {
 
     it('can handle array includes for single resource', function (array $include, array $expected): void {
         request()->merge(['include' => $include]);
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -82,7 +84,7 @@ describe(class_basename(Response::class), function (): void {
 
     it('can handle CSV includes for paginated resource', function (string|array $include): void {
         request()->merge(['include' => $include]);
-        UserFactory::new()->count(3)->create();
+        User::factory(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
         $response = Response::create($users)->transformWith(UserTransformer::class);
 
@@ -115,7 +117,7 @@ describe(class_basename(Response::class), function (): void {
 
     it('can filter response', function (array $fields, array $expected, array $missing): void {
         request()->merge(['include' => 'books,children.books', 'fields' => $fields]);
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -162,7 +164,7 @@ describe(class_basename(Response::class), function (): void {
 
     it('can handle CSV exclude for single resource', function (string $exclude, array $expected): void {
         request()->merge(['exclude' => $exclude]);
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -191,7 +193,7 @@ describe(class_basename(Response::class), function (): void {
 
     it('can handle array exclude for single resource', function (array $exclude, array $expected): void {
         request()->merge(['exclude' => $exclude]);
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
         $result = AssertableJson::fromArray($response->toArray());
@@ -216,7 +218,7 @@ describe(class_basename(Response::class), function (): void {
 
     it('can handle CSV exclude for paginated resource', function (string|array $exclude): void {
         request()->merge(['exclude' => $exclude]);
-        UserFactory::new()->count(3)->create();
+        User::factory(3)->create();
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
         $response = Response::create($users)->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
@@ -249,7 +251,7 @@ describe(class_basename(Response::class), function (): void {
 
     it('can override resource name', function (string $resourceName): void {
         request()->merge(['include' => 'books,children.books', 'fields' => [$resourceName => 'id', 'Book' => 'author,title']]);
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
         $response->withResourceName($resourceName);
 
@@ -267,7 +269,7 @@ describe(class_basename(Response::class), function (): void {
 
     it('can use fallback default resource name', function (bool|null $resourceName): void {
         request()->merge(['include' => 'books,children.books', 'fields' => [$resourceName => 'id', 'Book' => 'author,title']]);
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
         $response->withResourceName($resourceName);
 
@@ -284,7 +286,7 @@ describe(class_basename(Response::class), function (): void {
     ]);
 
     it('can generate 200/OK response', function (): void {
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
 
         $result = $response->ok();
 
@@ -292,7 +294,7 @@ describe(class_basename(Response::class), function (): void {
     });
 
     it('can generate 202/Accepted response', function (): void {
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
 
         $result = $response->accepted();
 
@@ -300,7 +302,7 @@ describe(class_basename(Response::class), function (): void {
     });
 
     it('can generate 201/Created response', function (): void {
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
 
         $result = $response->created();
 
@@ -308,7 +310,7 @@ describe(class_basename(Response::class), function (): void {
     });
 
     it('can generate 204/NoContent response', function (): void {
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
 
         $result = $response->noContent();
@@ -335,7 +337,7 @@ describe(class_basename(Response::class), function (): void {
         $include = 'books';
         $includeWithParams = "$include:test(2|value)";
         request()->merge(['include' => $includeWithParams]);
-        $response = Response::create($this->user);
+        $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
         $response->withResourceName('User');
 
@@ -357,7 +359,7 @@ describe(class_basename(Response::class), function (): void {
 
         expect($result)->toBe($expectation);
     })->with([
-        [fn () => UserFactory::new()->makeOne(), Item::class],
+        [fn () => User::factory()->makeOne(), Item::class],
         [Collection::empty(), \Apiato\Http\Resources\Collection::class],
         [[], \Apiato\Http\Resources\Collection::class],
         [null, NullResource::class],
