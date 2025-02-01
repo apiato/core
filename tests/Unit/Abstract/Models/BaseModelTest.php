@@ -143,17 +143,17 @@ describe(class_basename(BaseModel::class), function (): void {
                 )->toBeTrue();
             },
         )->with([
-            function () {
+            function (): array {
                 $target = Book::factory()->createOne();
 
                 return [hashids()->encode($target->id), null, $target];
             },
-            function () {
+            function (): array {
                 $target = Book::factory()->createOne();
 
                 return [hashids()->encode($target->id), 'id', $target];
             },
-            function () {
+            function (): array {
                 $target = Book::factory()->createOne();
 
                 return [$target->title, 'title', $target];
