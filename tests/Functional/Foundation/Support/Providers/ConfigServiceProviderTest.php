@@ -16,7 +16,7 @@ describe(class_basename(ConfigServiceProvider::class), function (): void {
         File::partialMock()
             ->expects('copy')
             ->withArgs(
-                static fn (string $path, string $target) => Str::of($path)->contains('config/apiato.php')
+                static fn (string $path, string $target): bool => Str::of($path)->contains('config/apiato.php')
                     && (shared_path('Configs/apiato.php') === $target),
             )->andReturnTrue();
 
