@@ -375,18 +375,16 @@ final class ContainerApiGenerator extends Generator implements ComponentsGenerat
             ]);
         }
 
-        if ($generateEvents) {
-            if ($generateListeners) {
-                $this->printInfoMessage('Generating Event Listeners');
-                foreach ($events as $event) {
-                    $listener = $event . 'Listener';
-                    $this->call('apiato:make:listener', [
-                        '--section' => $this->sectionName,
-                        '--container' => $this->containerName,
-                        '--file' => $listener,
-                        '--event' => $event,
-                    ]);
-                }
+        if ($generateEvents && $generateListeners) {
+            $this->printInfoMessage('Generating Event Listeners');
+            foreach ($events as $event) {
+                $listener = $event . 'Listener';
+                $this->call('apiato:make:listener', [
+                    '--section' => $this->sectionName,
+                    '--container' => $this->containerName,
+                    '--file' => $listener,
+                    '--event' => $event,
+                ]);
             }
         }
 
