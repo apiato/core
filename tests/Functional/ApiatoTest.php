@@ -6,7 +6,7 @@ use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 
 describe(class_basename(Apiato::class), function (): void {
     it('can be instantiated without a path', function (): void {
-        $basePath = realpath(__DIR__ . '/../../workbench');
+        $basePath = Safe\realpath(__DIR__ . '/../../workbench');
 
         $apiato = Apiato::configure()->create();
 
@@ -14,7 +14,7 @@ describe(class_basename(Apiato::class), function (): void {
     });
 
     it('can infer base path', function (): void {
-        $basePath = realpath(__DIR__ . '/../../');
+        $basePath = Safe\realpath(__DIR__ . '/../../');
 
         expect(Apiato::inferBasePath())->toBe($basePath);
     });
