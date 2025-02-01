@@ -99,7 +99,7 @@ abstract class ApiController extends Controller
             if (is_array($v)) {
                 // it is an array - so go one step deeper
                 $v = $this->filterResponse($v, $filters);
-                if (empty($v)) {
+                if ([] === $v) {
                     // it is an empty array - delete the key as well
                     unset($responseArray[$k]);
                 } else {
