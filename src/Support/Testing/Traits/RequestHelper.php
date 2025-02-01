@@ -74,7 +74,7 @@ trait RequestHelper
             throw new \RuntimeException('No endpoint provided. Please set the `$endpoint` property in your test class.');
         }
 
-        $parts = explode('@', $endpoint);
+        $parts = explode('@', (string) $endpoint);
 
         if (2 !== count($parts) || in_array('', $parts, true)) {
             throw new \RuntimeException('Endpoint (' . $endpoint . ') is in the wrong format. Use (`verb@uri`).');
