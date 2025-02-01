@@ -104,7 +104,6 @@ describe(class_basename(Apiato::class), function (): void {
     });
 
     it('accepts and apply  routing config override', function (): void {
-        $defaultPrefix = Apiato::instance()->routing()->getApiPrefix();
         $apiato = Apiato::configure()
             ->withRouting(function (Routing $routing): void {
                 $routing->prefixApiUrlsWith('test/prefix/');
@@ -112,12 +111,7 @@ describe(class_basename(Apiato::class), function (): void {
 
         expect($apiato->routing()->getApiPrefix())->toBe('test/prefix/');
 
-        // since the prefix value is static, when we override it in this test, it affects the rest of the
-        // test runs, so we need to reset it to the default value, or it will affect other tests
-        Apiato::configure()
-            ->withRouting(function (Routing $routing) use ($defaultPrefix): void {
-                $routing->prefixApiUrlsWith($defaultPrefix);
-            })->create();
+        Apiato::reset();
     });
 
     it('accepts and apply  factory config override', function (): void {
@@ -169,16 +163,20 @@ describe(class_basename(Apiato::class), function (): void {
     it('accepts and apply provider config override', function (): void {
         $apiato = Apiato::configure()
             ->withProviders(function (Provider $provider): void {
+                $provider->loadFrom(app_path());
+            })->create();
+
+        expect($apiato->providers())->toContain(StrayServiceProvider::class);
+
+        Apiato::reset();
+
+        $apiato = Apiato::configure()
+            ->withProviders(function (Provider $provider): void {
                 $provider->loadFrom(app_path('Containers'));
             })->create();
 
         expect($apiato->providers())->not()->toContain(StrayServiceProvider::class);
 
-        $apiato = Apiato::configure()
-            ->withProviders(function (Provider $provider): void {
-                $provider->loadFrom(app_path());
-            })->create();
-
-        expect($apiato->providers())->toContain(StrayServiceProvider::class);
+        Apiato::reset();
     });
 })->covers(Apiato::class);
