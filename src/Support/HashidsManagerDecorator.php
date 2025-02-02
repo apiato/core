@@ -80,7 +80,6 @@ final class HashidsManagerDecorator
         return $result;
     }
 
-
     /**
      * Dynamically pass method calls to the underlying resource.
      *
