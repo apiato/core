@@ -28,8 +28,8 @@ final class ListTasks extends Command
                 ->value())->each(function (Collection $files, string $group): void {
                     $this->comment("[{$group}]");
 
-                /** @var SplFileInfo $file */
-                foreach ($files as $file) {
+                    /** @var SplFileInfo $file */
+                    foreach ($files as $file) {
                         $originalFileName = $file->getFilename();
                         $fileName = Str::of($originalFileName)
                             ->replace('Task.php', '')
