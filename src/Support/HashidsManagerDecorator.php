@@ -2,7 +2,6 @@
 
 namespace Apiato\Support;
 
-
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 use Vinkla\Hashids\HashidsManager;
@@ -54,9 +53,8 @@ final class HashidsManagerDecorator
     /**
      * Dynamically pass method calls to the underlying resource.
      *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
+     * @param string $method
+     * @param array $parameters
      */
     public function __call($method, $parameters)
     {

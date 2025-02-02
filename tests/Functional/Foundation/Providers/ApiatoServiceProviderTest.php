@@ -11,7 +11,6 @@ use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\DB;
-use Vinkla\Hashids\HashidsManager;
 use Workbench\App\Containers\MySection\Book\Middlewares\BeforeMiddleware;
 
 describe(class_basename(ApiatoServiceProvider::class), function (): void {
