@@ -49,6 +49,7 @@
         "orchestra/testbench": "^9.0",
         "pestphp/pest": "^3.7",
         "pestphp/pest-plugin-faker": "^3.0",
+        "pestphp/pest-plugin-type-coverage": "^3.2",
         "phpmd/phpmd": "@stable",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-phpunit": "^2.0",
