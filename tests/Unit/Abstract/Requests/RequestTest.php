@@ -25,7 +25,7 @@ describe(class_basename(Request::class), function (): void {
     }
 
     it('can decode ids', function (): void {
-        $encoded = hashids()->encode(123);
+        $encoded = hashids()->tryEncode(123);
 
         $result = getSut()->decode($encoded);
 
@@ -46,9 +46,9 @@ describe(class_basename(Request::class), function (): void {
 
     it('can decode array of hash ids', function (): void {
         $encodedArray = [
-            hashids()->encode(1),
-            hashids()->encode(2),
-            hashids()->encode(3),
+            hashids()->tryEncode(1),
+            hashids()->tryEncode(2),
+            hashids()->tryEncode(3),
         ];
 
         $result = getSut()->decodeArray($encodedArray);
@@ -70,7 +70,7 @@ describe(class_basename(Request::class), function (): void {
 
     it('skips decoding if disabled', function (): void {
         config(['apiato.hash-id' => false]);
-        $data = ['id' => hashids()->encode(123)];
+        $data = ['id' => hashids()->tryEncode(123)];
 
         $result = getSut()->publicDecodeHashedIds($data);
 
@@ -145,7 +145,7 @@ describe(class_basename(Request::class), function (): void {
                 return recursiveEncode($value);
             }
             if (is_int($value)) {
-                return hashids()->encode($value);
+                return hashids()->tryEncode($value);
             }
 
             return $value;
@@ -153,7 +153,7 @@ describe(class_basename(Request::class), function (): void {
     }
 
     it('can decode nested associative arrays', function (): void {
-        $data = ['nested' => ['ids' => [['first' => 1, 'second' => hashids()->encode(2)]]]];
+        $data = ['nested' => ['ids' => [['first' => 1, 'second' => hashids()->tryEncode(2)]]]];
         $sut = getSut();
         $sut->setDecodeArray(['nested.ids.*.second']);
 

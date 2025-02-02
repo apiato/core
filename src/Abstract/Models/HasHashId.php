@@ -22,13 +22,7 @@ trait HasHashId
         }
 
         if (config('apiato.hash-id')) {
-            $value = hashids()->encode($attribute);
-
-            if ('' === $value) {
-                throw new \RuntimeException('Failed to encode the given value.');
-            }
-
-            return $value;
+            return hashids()->encode($attribute);
         }
 
         return $this->getAttribute($field);

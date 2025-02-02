@@ -35,7 +35,7 @@ final class HashidsManagerDecorator
     }
 
     /**
-     * Decode a hash id.
+     * Decode a hash id or throw an exception.
      *
      * @throws \InvalidArgumentException
      */
@@ -49,6 +49,37 @@ final class HashidsManagerDecorator
 
         return $result;
     }
+
+    /**
+     * Encode a number.
+     */
+    public function tryEncode(mixed ...$numbers): string|null
+    {
+        $result = $this->manager->encode(...$numbers);
+
+        if ('' === $result) {
+            return null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Encode a number or throw an exception.
+     *
+     * @throws \RuntimeException
+     */
+    public function encode(mixed ...$numbers): string
+    {
+        $result = $this->tryEncode(...$numbers);
+
+        if (is_null($result)) {
+            throw new \RuntimeException('Encoding failed.');
+        }
+
+        return $result;
+    }
+
 
     /**
      * Dynamically pass method calls to the underlying resource.
