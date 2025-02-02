@@ -20,7 +20,7 @@ final class MacroServiceProvider extends ServiceProvider
                  */
                 fn (string $hashedValue, string $key = 'id'): bool =>
                     /* @var Collection $this */
-                    $this->contains($key, hashids()->decode($hashedValue)[0]),
+                    $this->contains($key, hashids()->decode($hashedValue)),
             );
         }
 

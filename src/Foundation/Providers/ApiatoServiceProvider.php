@@ -11,8 +11,10 @@ use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 use Apiato\Foundation\Support\Providers\MigrationServiceProvider;
 use Apiato\Foundation\Support\Providers\RateLimitingServiceProvider;
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
+use Apiato\Support\HashidsManagerDecorator;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Console\AboutCommand;
+use Vinkla\Hashids\HashidsManager;
 
 final class ApiatoServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,10 @@ final class ApiatoServiceProvider extends ServiceProvider
         AliasLoader::getInstance()->alias('DatabaseSeeder', DatabaseSeeder::class);
 
         $this->app->singletonIf(Apiato::class, static fn (): Apiato => Apiato::instance());
+
+        $this->app->extend('hashids', static function (HashidsManager $manager) {
+            return new HashidsManagerDecorator($manager);
+        });
     }
 
     public function boot(): void

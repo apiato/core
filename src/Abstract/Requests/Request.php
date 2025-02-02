@@ -267,13 +267,8 @@ abstract class Request extends LaravelRequest
 
     public function decode(string|null $id): int|null
     {
-        if (is_null($id) || 'null' === strtolower($id)) {
-            return $id;
-        }
-
-        $decoded = hashids()->decode($id);
-        if ([] !== $decoded) {
-            return $decoded[0];
+        if (is_string($id)) {
+            return hashids()->tryDecode($id);
         }
 
         return null;

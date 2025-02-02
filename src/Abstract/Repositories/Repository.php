@@ -217,18 +217,15 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         request()->query->replace($query);
     }
 
-    private function decodeValue(string $searchQuery): string|null
+    private function decodeValue(string $searchQuery): string|int|null
     {
         $searchValue = $this->parserSearchValue($searchQuery);
 
-        if ($searchValue) {
-            $decodedId = hashids()->decode($searchValue);
-            if ($decodedId) {
-                return $decodedId[0];
-            }
+        if (is_string($searchValue)) {
+            return hashids()->tryDecode($searchValue) ?? $searchValue;
         }
 
-        return $searchValue;
+        return null;
     }
 
     private function parserSearchValue($search)
@@ -254,10 +251,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
 
         foreach ($fieldsToDecode as $field) {
             if (array_key_exists($field, $searchArray)) {
-                if (empty(hashids()->decode($searchArray[$field]))) {
-                    throw new \InvalidArgumentException("Only hash ids are allowed. {$field}:$searchArray[$field]");
-                }
-                $searchArray[$field] = hashids()->decode($searchArray[$field])[0];
+                $searchArray[$field] = hashids()->decode($searchArray[$field]);
             }
         }
 

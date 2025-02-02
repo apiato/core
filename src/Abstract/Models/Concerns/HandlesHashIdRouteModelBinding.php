@@ -14,7 +14,7 @@ trait HandlesHashIdRouteModelBinding
     public function processHashId(mixed $value): mixed
     {
         if ($this->shouldProcessHashIdRouteBinding($value)) {
-            $value = hashids()->decode($value)[0];
+            return hashids()->tryDecode($value) ?? $value;
         }
 
         return $value;
@@ -22,7 +22,7 @@ trait HandlesHashIdRouteModelBinding
 
     public function shouldProcessHashIdRouteBinding(mixed $value): bool
     {
-        return config('apiato.hash-id') && is_string($value) && [] !== hashids()->decode($value);
+        return config('apiato.hash-id') && is_string($value);
     }
 
     public function resolveChildRouteBinding($childType, $value, $field)

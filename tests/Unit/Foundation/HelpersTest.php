@@ -1,7 +1,7 @@
 <?php
 
 use Apiato\Foundation\Apiato;
-use Vinkla\Hashids\HashidsManager;
+use Apiato\Support\HashidsManagerDecorator;
 
 describe('helpers', function (): void {
     it('can get the Apiato instance', function (): void {
@@ -13,6 +13,6 @@ describe('helpers', function (): void {
     })->coversFunction('shared_path');
 
     it('can get the Hashids instance', function (): void {
-        expect(hashids())->toBeInstanceOf(HashidsManager::class);
+        expect(hashids())->toBeInstanceOf(HashidsManagerDecorator::class);
     })->coversFunction('hashids');
 });

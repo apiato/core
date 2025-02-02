@@ -1,7 +1,7 @@
 <?php
 
 use Apiato\Foundation\Apiato;
-use Vinkla\Hashids\HashidsManager;
+use Apiato\Support\HashidsManagerDecorator;
 
 if (!function_exists('apiato')) {
     /**
@@ -27,7 +27,7 @@ if (!function_exists('hashids')) {
     /**
      * Get the Hashids instance.
      */
-    function hashids(): HashidsManager
+    function hashids(): HashidsManagerDecorator
     {
         return app('hashids');
     }
