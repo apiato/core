@@ -109,7 +109,7 @@ class MigrationGenerator extends Generator implements ComponentsGenerator
     /**
      * Removes "special characters" from a string.
      */
-    protected function removeSpecialChars($str): string
+    protected function removeSpecialChars(string $str): string
     {
         return $str;
     }
