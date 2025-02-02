@@ -53,7 +53,7 @@ final class Routing
     public function registerApiRoutes(): void
     {
         collect($this->apiRouteDirs)
-            ->flatMap(static fn ($path): array => \Safe\glob($path . '/*.php'))
+            ->flatMap(static fn (string $path): array => \Safe\glob($path . '/*.php'))
             ->each(
                 fn (string $file) => Route::middleware($this->getApiMiddlewares())
                     ->domain(config('apiato.api.url'))
@@ -116,7 +116,7 @@ final class Routing
     public function webRoutes(): array
     {
         return collect($this->webRouteDirs)
-            ->flatMap(static fn ($path): array => \Safe\glob($path . '/*.php'))
+            ->flatMap(static fn (string $path): array => \Safe\glob($path . '/*.php'))
             ->toArray();
     }
 }
