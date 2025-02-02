@@ -24,7 +24,7 @@ final class Localization
                 ->after(app_path('Containers') . DIRECTORY_SEPARATOR)
                 ->explode(DIRECTORY_SEPARATOR)
                 ->take(2)
-                ->map(static fn ($part) => Str::camel($part))
+                ->map(static fn (string $part) => Str::camel($part))
                 ->implode('@');
         });
     }
