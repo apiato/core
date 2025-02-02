@@ -162,7 +162,7 @@ abstract class Generator extends Command
     /**
      * Removes "special characters" from a string.
      */
-    protected function removeSpecialChars($str): string
+    protected function removeSpecialChars(string $str): string
     {
         // remove everything that is NOT a character or digit
         return \Safe\preg_replace('/[^A-Za-z0-9]/', '', $str);
