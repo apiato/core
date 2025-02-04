@@ -229,7 +229,7 @@ abstract class Request extends LaravelRequest
                 throw new \RuntimeException('String expected, got ' . gettype($data));
             }
 
-            $decodedField = $this->decode($data);
+            $decodedField = hashids()->tryDecode($data);
 
             if (is_null($decodedField)) {
                 throw new \RuntimeException('ID (' . $currentField . ') is incorrect, consider using the hashed ID.');
@@ -339,16 +339,6 @@ abstract class Request extends LaravelRequest
         }
 
         return $a;
-    }
-
-    public function decodeArray(array $ids): array
-    {
-        $result = [];
-        foreach ($ids as $id) {
-            $result[] = $this->decode($id);
-        }
-
-        return $result;
     }
 
     /**

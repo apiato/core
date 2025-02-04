@@ -78,6 +78,20 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         [[], null],
     ]);
 
+    it('can decode array of hash ids', function (): void {
+        $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
+
+        $encodedArray = [
+            $sut->encode(1),
+            $sut->encode(2),
+            $sut->encode(3),
+        ];
+
+        $result = $sut->decodeArray($encodedArray);
+
+        expect($result)->toBe([1, 2, 3]);
+    });
+
     it('delegates method calls', function (): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 

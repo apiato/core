@@ -5,6 +5,7 @@ namespace Apiato\Support;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 use Vinkla\Hashids\HashidsManager;
+use Webmozart\Assert\Assert;
 
 /**
  * @mixin HashidsManager
@@ -20,9 +21,6 @@ final class HashidsManagerDecorator
     ) {
     }
 
-    /**
-     * Decode a hash id.
-     */
     public function tryDecode(string $hash): int|null
     {
         $result = $this->manager->decode($hash);
@@ -35,12 +33,12 @@ final class HashidsManagerDecorator
     }
 
     /**
-     * Decode a hash id or throw an exception.
-     *
      * @throws \InvalidArgumentException
      */
     public function decode(string $hash): int
     {
+        Assert::stringNotEmpty($hash);
+
         $result = $this->tryDecode($hash);
 
         if (is_null($result)) {
@@ -50,9 +48,6 @@ final class HashidsManagerDecorator
         return $result;
     }
 
-    /**
-     * Encode a number.
-     */
     public function tryEncode(mixed ...$numbers): string|null
     {
         $result = $this->manager->encode(...$numbers);
@@ -65,8 +60,6 @@ final class HashidsManagerDecorator
     }
 
     /**
-     * Encode a number or throw an exception.
-     *
      * @throws \InvalidArgumentException
      */
     public function encode(mixed ...$numbers): string
@@ -78,6 +71,20 @@ final class HashidsManagerDecorator
         }
 
         return $result;
+    }
+
+    /**
+     * @param string[] $hash
+     *
+     * @return int[]
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function decodeArray(array $hash): array
+    {
+        Assert::allStringNotEmpty($hash);
+
+        return array_map(fn ($id) => $this->decode($id), $hash);
     }
 
     /**

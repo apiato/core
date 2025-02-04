@@ -44,18 +44,6 @@ describe(class_basename(Request::class), function (): void {
         expect($result)->toBeNull();
     });
 
-    it('can decode array of hash ids', function (): void {
-        $encodedArray = [
-            hashids()->tryEncode(1),
-            hashids()->tryEncode(2),
-            hashids()->tryEncode(3),
-        ];
-
-        $result = getSut()->decodeArray($encodedArray);
-
-        expect($result)->toBe([1, 2, 3]);
-    });
-
     it('returns true for empty values', function (): void {
         $result = getSut()->skipHashIdDecode('');
 
