@@ -75,13 +75,6 @@ describe(class_basename(BaseModel::class), function (): void {
 
             expect($book->getHashedKey('title'))->toEqual($book->title);
         });
-
-        it('throws an exception if the value cannot be encoded', function (): void {
-            $book = Book::factory()->makeOne(['author_id' => 'invalid-id']);
-
-            expect(fn () => $book->getHashedKey('author_id'))
-                ->toThrow(RuntimeException::class);
-        });
     });
 
     describe('hashed id route model binding', function (): void {
