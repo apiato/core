@@ -2,7 +2,6 @@
 
 use Apiato\Support\HashidsManagerDecorator;
 use Hashids\Hashids;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 use Pest\Expectation;
