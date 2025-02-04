@@ -1,8 +1,12 @@
 <?php
 
 use Tests\FunctionalTestCase;
+use Tests\TestCase;
 use Tests\UnitTestCase;
 
+pest()->afterEach(function () {
+    $this->freezeTime();
+});
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -14,6 +18,7 @@ use Tests\UnitTestCase;
 |
 */
 
+pest()->extends(TestCase::class)->in('Arch');
 pest()->extends(FunctionalTestCase::class)->in('Functional');
 pest()->extends(UnitTestCase::class)->in('Unit');
 /*
