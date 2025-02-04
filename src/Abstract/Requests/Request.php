@@ -16,7 +16,7 @@ abstract class Request extends LaravelRequest
      * @example ['permissions' => null, 'roles' => 'admin']
      * @example ['permissions' => ['create-users'], 'roles' => null]
      *
-     * @var array<string, string|array<string>|null>
+     * @var array<string, string|null>
      */
     protected array $access = [
         'permissions' => null,
@@ -71,9 +71,11 @@ abstract class Request extends LaravelRequest
      * For example, in the unit tests, we can add the url parameters to the request which is not part of the request body.
      * It is best used with the `injectData` method.
      *
+     * @param array<string, mixed> $properties
+     *
      * @return $this
      */
-    public function withUrlParameters(array $properties): self
+    public function withUrlParameters(array $properties): static
     {
         foreach ($properties as $key => $value) {
             $this->{$key} = $value;
@@ -82,16 +84,31 @@ abstract class Request extends LaravelRequest
         return $this;
     }
 
+    /**
+     * Get the access array.
+     *
+     * @return array<string, string|null>
+     */
     public function getAccessArray(): array
     {
         return $this->access;
     }
 
+    /**
+     * Get the decode array.
+     *
+     * @return string[]
+     */
     public function getDecodeArray(): array
     {
         return $this->decode;
     }
 
+    /**
+     * Get the URL parameters array.
+     *
+     * @return string[]
+     */
     public function getUrlParametersArray(): array
     {
         return $this->urlParameters;
@@ -263,15 +280,6 @@ abstract class Request extends LaravelRequest
     public function skipHashIdDecode($field): bool
     {
         return empty($field);
-    }
-
-    public function decode(string|null $id): int|null
-    {
-        if (is_string($id)) {
-            return hashids()->tryDecode($id);
-        }
-
-        return null;
     }
 
     /**

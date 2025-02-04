@@ -24,26 +24,6 @@ describe(class_basename(Request::class), function (): void {
         };
     }
 
-    it('can decode ids', function (): void {
-        $encoded = hashids()->tryEncode(123);
-
-        $result = getSut()->decode($encoded);
-
-        expect($result)->toBe(123);
-    });
-
-    it('returns null for invalid ids', function (): void {
-        $result = getSut()->decode('invalid');
-
-        expect($result)->toBeNull();
-    });
-
-    it('returns null for null ids', function (): void {
-        $result = getSut()->decode(null);
-
-        expect($result)->toBeNull();
-    });
-
     it('returns true for empty values', function (): void {
         $result = getSut()->skipHashIdDecode('');
 
@@ -148,12 +128,6 @@ describe(class_basename(Request::class), function (): void {
         $result = $sut->publicDecodeHashedIds($data);
 
         expect($result)->toBe(['nested' => ['ids' => [['first' => 1, 'second' => 2]]]]);
-    });
-
-    it('returns null for non hash strings', function (): void {
-        $result = getSut()->decode('non_hash_string');
-
-        expect($result)->toBeNull();
     });
 
     it('thorws in case of invalid hash id', function (array $data, array $decode): void {
