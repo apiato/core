@@ -67,14 +67,14 @@ final class HashidsManagerDecorator
     /**
      * Encode a number or throw an exception.
      *
-     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
      */
     public function encode(mixed ...$numbers): string
     {
         $result = $this->tryEncode(...$numbers);
 
         if (is_null($result)) {
-            throw new \RuntimeException('Encoding failed.');
+            throw new \InvalidArgumentException('Encoding failed.');
         }
 
         return $result;
