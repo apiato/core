@@ -1,0 +1,95 @@
+<?php
+
+use Apiato\Support\HashidsManagerDecorator;
+use Hashids\Hashids;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Traits\ForwardsCalls;
+use Illuminate\Support\Traits\Macroable;
+use Pest\Expectation;
+use Vinkla\Hashids\HashidsManager;
+
+describe(class_basename(HashidsManagerDecorator::class), function (): void {
+    it('should not extend anything', function (): void {
+        expect(class_parents(HashidsManagerDecorator::class))->toBe([]);
+    });
+
+    it('should use the ForwardsCalls trait', function (): void {
+        expect(in_array(ForwardsCalls::class, class_uses(HashidsManagerDecorator::class)))->toBeTrue();
+    });
+
+    it('should use the Macroable trait', function (): void {
+        expect(in_array(Macroable::class, class_uses(HashidsManagerDecorator::class)))->toBeTrue();
+    });
+
+    it('can decode or null', function (string $hashId, int|null $expectation): void {
+        $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
+
+        $result = $sut->tryDecode($hashId);
+
+        expect($result)->toBe($expectation);
+    })->with([
+        [fn () => hashids()->encode(10), 10],
+        ['invalid', null],
+    ]);
+
+    it('can decode or throw an exception', function (string $hashId, int|null $expectation): void {
+        $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
+
+        expect(static function () use ($sut, $hashId) {
+            $sut->decode($hashId);
+        })->when(
+            is_null($expectation),
+            fn (Expectation $ex) => $ex
+                    ->toThrow(InvalidArgumentException::class),
+        )->unless(is_null($expectation), fn (Expectation $ex) => $ex
+            ->toBe($ex->value));
+    })->with([
+        [fn () => hashids()->encode(10), 10],
+        ['invalid', null],
+    ]);
+
+    it('can encode or null', function (array $numbers, string|null $expectation): void {
+        $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
+
+        $result = $sut->tryEncode(...$numbers);
+
+        expect($result)->toBe($expectation);
+    })->with([
+        [[10], fn () => hashids()->encode(10)],
+        [[10, 12], fn () => hashids()->encode(10, 12)],
+        [[], null],
+    ]);
+
+    it('can encode or throw', function (array $numbers, string|null $expectation): void {
+        $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
+
+        expect(static function () use ($sut, $numbers) {
+            $sut->encode(...$numbers);
+        })->when(
+            is_null($expectation),
+            fn (Expectation $ex) => $ex
+                ->toThrow(InvalidArgumentException::class),
+        )->when(
+            !is_null($expectation),
+            fn (Expectation $ex) => $ex
+                ->toBe($ex->value),
+        );
+    })->with([
+        [[10], fn () => hashids()->encode(10)],
+        [[], null],
+    ]);
+
+    it('delegates method calls', function (): void {
+        $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
+
+        expect($sut->connection())->toBeInstanceOf(Hashids::class);
+    });
+
+    it('prioritize macro methods if it exists when delegating method calls', function (): void {
+        $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
+
+        HashidsManagerDecorator::macro('getDefaultConnection', fn () => 'something');
+
+        expect($sut->getDefaultConnection())->toBe('something');
+    });
+})->covers(HashidsManagerDecorator::class);
