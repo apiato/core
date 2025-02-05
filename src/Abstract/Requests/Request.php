@@ -60,8 +60,6 @@ abstract class Request extends LaravelRequest
      * It is best used with the `injectData` method.
      *
      * @param array<string, mixed> $properties
-     *
-     * @return static
      */
     public function withUrlParameters(array $properties): static
     {

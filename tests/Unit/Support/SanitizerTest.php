@@ -4,7 +4,6 @@ use Apiato\Abstract\Requests\Request;
 use Apiato\Support\Sanitizer;
 
 describe(class_basename(Sanitizer::class), function (): void {
-
     it('can sanitize', function (array $requestData, array $sanitizeData, mixed $expectation): void {
         $request = new class extends Request {};
         $request->merge([

@@ -105,15 +105,17 @@ final class HashidsManagerDecorator
                     }
 
                     if (!is_string($value)) {
-                        throw new \RuntimeException("String expected, got " . gettype($value));
+                        throw new \RuntimeException('String expected, got ' . gettype($value));
                     }
 
                     $decoded = hashids()->tryDecode($value);
                     if (is_null($decoded)) {
                         throw new \RuntimeException("ID ({$dotKey}) is incorrect, consider using the hashed ID.");
                     }
+
                     return [$dotKey => $decoded];
                 }
+
                 return [$dotKey => $value];
             })->all();
         }
