@@ -130,7 +130,7 @@ describe(class_basename(Request::class), function (): void {
         expect($result)->toBe(['nested' => ['ids' => [['first' => 1, 'second' => 2]]]]);
     });
 
-    it('thorws in case of invalid hash id', function (array $data, array $decode): void {
+    it('throws in case of invalid hash id', function (array $data, array $decode): void {
         $sut = getSut();
         $sut->setDecodeArray($decode);
 
@@ -154,4 +154,17 @@ describe(class_basename(Request::class), function (): void {
             ['nested.ids.*'],
         ],
     ]);
-})->covers(Request::class);
+
+    it('has the sanitize method', function (): void {
+        $sut = new class extends Request {
+        };
+        $sut->merge([
+            'name' => 'Gandalf',
+            'age' => 100,
+        ]);
+
+        $result = $sut->sanitize(['age']);
+
+        expect($result)->toBe(['age' => 100]);
+    });
+});

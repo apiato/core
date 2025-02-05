@@ -3,7 +3,9 @@
 namespace Apiato\Macros;
 
 use Apiato\Abstract\Providers\ServiceProvider;
+use Apiato\Support\Sanitizer;
 use Illuminate\Config\Repository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -32,6 +34,14 @@ final class MacroServiceProvider extends ServiceProvider
                     Arr::forget($this->items, $key);
                 },
             );
+        }
+
+        if (!Request::hasMacro('sanitize')) {
+            Request::macro('sanitize',
+                function (array $fields): array {
+                /** @var Request $this */
+                return Sanitizer::sanitize($this->all(), $fields);
+            });
         }
     }
 }
