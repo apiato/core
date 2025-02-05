@@ -17,7 +17,6 @@ describe(class_basename(Request::class), function (): void {
             ],
         ]);
 
-
         expect($result->json())
             ->toBe([
                 'all' => [

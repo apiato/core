@@ -4,7 +4,6 @@ namespace Apiato\Abstract\Requests;
 
 use Apiato\Abstract\Models\UserModel as User;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Fluent;
 
