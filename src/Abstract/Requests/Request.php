@@ -145,29 +145,6 @@ abstract class Request extends LaravelRequest
         return array_map(static fn ($role) => $user->hasRole($role), $roles);
     }
 
-    /**
-     * Maps Keys in the Request.
-     *
-     * For example, ['data.attributes.name' => 'firstname'] would map the field [data][attributes][name] to [firstname].
-     * Note that the old value (data.attributes.name) is removed the original request - this method manipulates the request!
-     * Be sure you know what you do!
-     */
-    public function mapInput(array $fields): void
-    {
-        $data = $this->all();
-
-        foreach ($fields as $oldKey => $newKey) {
-            if (!Arr::has($data, $oldKey)) {
-                continue;
-            }
-
-            Arr::set($data, $newKey, Arr::get($data, $oldKey));
-            Arr::forget($data, $oldKey);
-        }
-
-        $this->replace($data);
-    }
-
     public function all($keys = null): array
     {
         if ([] === $this->decode || !config('apiato.hash-id')) {
