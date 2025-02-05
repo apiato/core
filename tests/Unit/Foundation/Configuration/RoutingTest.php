@@ -72,6 +72,13 @@ describe(class_basename(Routing::class), function (): void {
                 'throttle:api',
             ],
             'localhost',
+            ['PATCH'],
+            'v1/books/{id}',
+            [
+                'api',
+                'throttle:api',
+            ],
+            'localhost',
             ['GET', 'HEAD'],
             'v3/authors',
             [

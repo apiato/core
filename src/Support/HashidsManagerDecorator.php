@@ -2,6 +2,8 @@
 
 namespace Apiato\Support;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 use Vinkla\Hashids\HashidsManager;
@@ -85,6 +87,38 @@ final class HashidsManagerDecorator
         Assert::allStringNotEmpty($hash);
 
         return array_map(fn ($id) => $this->decode($id), $hash);
+    }
+
+    /**
+     * without decoding the encoded id's you won't be able to use
+     * validation features like `exists:table,id`.
+     */
+    public function decodeFields(array $source, array $keys): array
+    {
+        $flattened = Arr::dot($source);
+
+        foreach ($keys as $pattern) {
+            $flattened = collect($flattened)->mapWithKeys(function ($value, $dotKey) use ($pattern) {
+                if (Str::is($pattern, $dotKey)) {
+                    if (empty($value)) {
+                        return [$dotKey => $value];
+                    }
+
+                    if (!is_string($value)) {
+                        throw new \RuntimeException("String expected, got " . gettype($value));
+                    }
+
+                    $decoded = hashids()->tryDecode($value);
+                    if (is_null($decoded)) {
+                        throw new \RuntimeException("ID ({$dotKey}) is incorrect, consider using the hashed ID.");
+                    }
+                    return [$dotKey => $decoded];
+                }
+                return [$dotKey => $value];
+            })->all();
+        }
+
+        return Arr::undot($flattened);
     }
 
     /**

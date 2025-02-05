@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests;
+namespace Workbench\App\Containers\MySection\Book\UI\API\Requests;
 
-use App\Ship\Parents\Requests\Request as ParentRequest;
+use Workbench\App\Ship\Parents\Requests\Request as ParentRequest;
 
-class {{class-name}} extends ParentRequest
+class UpdateBookRequest extends ParentRequest
 {
     protected array $access = [
         'permissions' => null,
@@ -13,12 +13,14 @@ class {{class-name}} extends ParentRequest
 
     protected array $decode = [
         'id',
+        'author_id',
+        'nested.id',
     ];
 
     public function rules(): array
     {
         return [
-            // 'id' => 'required',
+             'id' => 'required',
         ];
     }
 

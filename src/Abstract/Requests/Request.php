@@ -33,19 +33,6 @@ abstract class Request extends LaravelRequest
     protected array $decode = [];
 
     /**
-     * Defining the URL parameters (`/stores/{slug}/items`) allows applying
-     * validation rules on them and allows accessing them like request data.
-     *
-     * For example, you can use the `exists` validation rule on the `slug` parameter.
-     * And you can access the `slug` parameter using `$request->slug`.
-     *
-     * @example ['slug']
-     *
-     * @var string[]
-     */
-    protected array $urlParameters = [];
-
-    /**
      * To be used mainly from unit tests.
      */
     public static function injectData(array $parameters = [], User|null $user = null, array $cookies = [], array $files = [], array $server = []): static
@@ -73,7 +60,7 @@ abstract class Request extends LaravelRequest
      *
      * @param array<string, mixed> $properties
      *
-     * @return $this
+     * @return static
      */
     public function withUrlParameters(array $properties): static
     {
@@ -102,16 +89,6 @@ abstract class Request extends LaravelRequest
     public function getDecodeArray(): array
     {
         return $this->decode;
-    }
-
-    /**
-     * Get the URL parameters array.
-     *
-     * @return string[]
-     */
-    public function getUrlParametersArray(): array
-    {
-        return $this->urlParameters;
     }
 
     /**
@@ -194,92 +171,16 @@ abstract class Request extends LaravelRequest
 
     public function all($keys = null): array
     {
-        $data = parent::all($keys);
-
-        $data = $this->mergeUrlParameters($data);
-
-        return $this->decodeHashedIds($data);
-    }
-
-    /**
-     * apply validation rules to the ID's in the URL, since Laravel
-     * doesn't validate them by default!
-     *
-     * Now you can use validation rules like this: `'id' => 'required|integer|exists:items,id'`
-     */
-    protected function mergeUrlParameters(array $requestData): array
-    {
-        foreach ($this->urlParameters as $param) {
-            $requestData[$param] = $this->route($param);
+        if ([] === $this->decode || !config('apiato.hash-id')) {
+            return parent::all($keys);
         }
 
-        return $requestData;
-    }
+        $routeParams = is_null($this->route()) ? [] : $this->route()->parameters();
 
-    /**
-     * without decoding the encoded id's you won't be able to use
-     * validation features like `exists:table,id`.
-     */
-    protected function decodeHashedIds(array $data): array
-    {
-        if ([] !== $this->decode && config('apiato.hash-id')) {
-            foreach ($this->decode as $key) {
-                $data = $this->decodeRecursive($data, explode('.', $key), $key);
-            }
-        }
-
-        return $data;
-    }
-
-    private function decodeRecursive($data, $keys, string $currentField): mixed
-    {
-        if (is_null($data)) {
-            return $data;
-        }
-
-        if (empty($keys)) {
-            if ($this->skipHashIdDecode($data)) {
-                return $data;
-            }
-
-            if (!is_string($data)) {
-                throw new \RuntimeException('String expected, got ' . gettype($data));
-            }
-
-            $decodedField = hashids()->tryDecode($data);
-
-            if (is_null($decodedField)) {
-                throw new \RuntimeException('ID (' . $currentField . ') is incorrect, consider using the hashed ID.');
-            }
-
-            return $decodedField;
-        }
-
-        // take the first element from the field
-        $field = array_shift($keys);
-
-        if ('*' === $field) {
-            // process each field of the array (and go down one level!)
-            $fields = Arr::wrap($data);
-            foreach ($fields as $key => $value) {
-                $data[$key] = $this->decodeRecursive($value, $keys, $currentField . '[' . $key . ']');
-            }
-
-            return $data;
-        }
-
-        if (!array_key_exists($field, $data)) {
-            return $data;
-        }
-
-        $data[$field] = $this->decodeRecursive($data[$field], $keys, $field);
-
-        return $data;
-    }
-
-    public function skipHashIdDecode($field): bool
-    {
-        return empty($field);
+        return hashids()->decodeFields([
+            ...parent::all($keys),
+            ...$routeParams,
+        ], $this->decode);
     }
 
     /**

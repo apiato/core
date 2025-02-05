@@ -15,10 +15,6 @@ class CreateBookRequest extends ParentRequest
         // 'id',
     ];
 
-    protected array $urlParameters = [
-        // 'id',
-    ];
-
     public function rules(): array
     {
         return [
