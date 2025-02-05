@@ -6,6 +6,7 @@ use Apiato\Abstract\Models\UserModel as User;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Fluent;
 
 abstract class Request extends LaravelRequest
 {
@@ -177,10 +178,16 @@ abstract class Request extends LaravelRequest
 
         $routeParams = is_null($this->route()) ? [] : $this->route()->parameters();
 
-        return hashids()->decodeFields([
+        $result = hashids()->decodeFields([
             ...parent::all($keys),
             ...$routeParams,
         ], $this->decode);
+
+        if (!is_null($keys)) {
+            return (new Fluent($result))->only($keys);
+        }
+
+        return $result;
     }
 
     /**

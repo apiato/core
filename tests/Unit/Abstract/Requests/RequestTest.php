@@ -9,7 +9,10 @@ describe(class_basename(Request::class), function (): void {
     it('skips decoding if disabled', function (bool $enabled): void {
         config(['apiato.hash-id' => $enabled]);
         $hashId = hashids()->tryEncode(123);
-        $data = ['id' => $hashId];
+        $data = [
+            'id' => $hashId,
+            'name' => 'Gandalf',
+        ];
         $sut = (new class extends Request {
             public function setDecodeArray(array $decode): void
             {
@@ -18,11 +21,19 @@ describe(class_basename(Request::class), function (): void {
         })->merge($data);
         $sut->setDecodeArray(['id']);
 
-        $result = $sut->all();
-
-        expect($result)
+        expect($sut->all())
+            ->when(
+                $enabled,
+                fn (Expectation $ex) => $ex->toBe(
+                    [
+                        'id' => 123,
+                        'name' => 'Gandalf',
+                    ],
+                ),
+            )->when(!$enabled, fn (Expectation $ex) => $ex->toBe($data))
+            ->and($sut->all(['id']))
             ->when($enabled, fn (Expectation $ex) => $ex->toBe(['id' => 123]))
-            ->when(!$enabled, fn (Expectation $ex) => $ex->toBe($data));
+            ->when(!$enabled, fn (Expectation $ex) => $ex->toBe(['id' => $hashId]));
     })->with([
         [true],
         [false],

@@ -17,6 +17,21 @@ describe(class_basename(Request::class), function (): void {
             ],
         ]);
 
-        $result->assertCreated();
+
+        expect($result->json())
+            ->toBe([
+                'all' => [
+                    'title' => 'New Title',
+                    'author_id' => 10,
+                    'nested' => [
+                        'id' => 15,
+                    ],
+                    'id' => 5,
+                ],
+                'id' => 5,
+                'validated' => [
+                    'id' => 5,
+                ],
+            ]);
     });
 })->covers(Request::class);
