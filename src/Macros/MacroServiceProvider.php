@@ -37,11 +37,13 @@ final class MacroServiceProvider extends ServiceProvider
         }
 
         if (!Request::hasMacro('sanitize')) {
-            Request::macro('sanitize',
+            Request::macro(
+                'sanitize',
                 function (array $fields): array {
-                /** @var Request $this */
-                return Sanitizer::sanitize($this->all(), $fields);
-            });
+                    /* @var Request $this */
+                    return Sanitizer::sanitize($this->all(), $fields);
+                },
+            );
         }
     }
 }

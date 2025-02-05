@@ -178,7 +178,7 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
         expect(fn () => $sut->decodeFields($data, $decode))
-            ->toThrow(\RuntimeException::class);
+            ->toThrow(RuntimeException::class);
     })->with([
         'top level value' => [
             ['id' => 'invalid'],
