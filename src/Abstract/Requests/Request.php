@@ -196,7 +196,7 @@ abstract class Request extends LaravelRequest
     {
         $data = parent::all($keys);
 
-        $data = $this->mergeUrlParametersWithRequestData($data);
+        $data = $this->mergeUrlParameters($data);
 
         return $this->decodeHashedIds($data);
     }
@@ -207,7 +207,7 @@ abstract class Request extends LaravelRequest
      *
      * Now you can use validation rules like this: `'id' => 'required|integer|exists:items,id'`
      */
-    protected function mergeUrlParametersWithRequestData(array $requestData): array
+    protected function mergeUrlParameters(array $requestData): array
     {
         foreach ($this->urlParameters as $param) {
             $requestData[$param] = $this->route($param);
