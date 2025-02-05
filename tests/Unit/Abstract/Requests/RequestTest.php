@@ -12,11 +12,6 @@ describe(class_basename(Request::class), function (): void {
     function getSut(): Request
     {
         return new class extends Request {
-            public function publicDecodeHashedIds(array $requestData): array
-            {
-                return $this->decodeHashedIds($requestData);
-            }
-
             public function setDecodeArray(array $decode): void
             {
                 $this->decode = $decode;
@@ -39,18 +34,20 @@ describe(class_basename(Request::class), function (): void {
     it('skips decoding if disabled', function (): void {
         config(['apiato.hash-id' => false]);
         $data = ['id' => hashids()->tryEncode(123)];
+        $sut = getSut()->merge($data);
+        $sut->setDecodeArray(['id']);
 
-        $result = getSut()->publicDecodeHashedIds($data);
+        $result = $sut->all();
 
         expect($result)->toBe($data);
     });
 
     it('can decode hash ids', function (array $data, array $decode, array $expected): void {
         $data = recursiveEncode($data);
-        $sut = getSut();
+        $sut = getSut()->merge($data);
         $sut->setDecodeArray($decode);
 
-        $result = $sut->publicDecodeHashedIds($data);
+        $result = $sut->all();
 
         expect($result)->toBe($expected);
     })->with([
@@ -122,19 +119,19 @@ describe(class_basename(Request::class), function (): void {
 
     it('can decode nested associative arrays', function (): void {
         $data = ['nested' => ['ids' => [['first' => 1, 'second' => hashids()->tryEncode(2)]]]];
-        $sut = getSut();
+        $sut = getSut()->merge($data);
         $sut->setDecodeArray(['nested.ids.*.second']);
 
-        $result = $sut->publicDecodeHashedIds($data);
+        $result = $sut->all();
 
         expect($result)->toBe(['nested' => ['ids' => [['first' => 1, 'second' => 2]]]]);
     });
 
     it('throws in case of invalid hash id', function (array $data, array $decode): void {
-        $sut = getSut();
+        $sut = getSut()->merge($data);
         $sut->setDecodeArray($decode);
 
-        expect(fn () => $sut->publicDecodeHashedIds($data))
+        expect(fn () => $sut->all())
             ->toThrow(\RuntimeException::class);
     })->with([
         'top level value' => [
@@ -167,4 +164,4 @@ describe(class_basename(Request::class), function (): void {
 
         expect($result)->toBe(['age' => 100]);
     });
-});
+})->only();
