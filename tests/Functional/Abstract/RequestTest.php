@@ -3,40 +3,48 @@
 use Apiato\Abstract\Requests\Request;
 
 describe(class_basename(Request::class), function (): void {
-    beforeEach(function (): void {
-        config(['apiato.hash-id' => true]);
-    });
-
-    it('can decode specified ids', function (): void {
-        $bookId = hashids()->encode(5);
-        $result = $this->patchJson("v1/books/{$bookId}", [
+    it('can decode specified ids', function (bool $enabled): void {
+        config(['apiato.hash-id' => $enabled]);
+        $bookId = 5;
+        $bookIdHashed = hashids()->encode($bookId);
+        $authorId = 10;
+        $authorIdHashed = hashids()->encode($authorId);
+        $nestedId = 15;
+        $nestedIdHashed = hashids()->encode($nestedId);
+        $result = $this->patchJson("v1/books/{$bookIdHashed}", [
             'title' => 'New Title',
-            'author_id' => hashids()->encode(10),
+            'author_id' => $authorIdHashed,
+            'just_a_number' => 123,
             'nested' => [
-                'id' => hashids()->encode(15),
+                'id' => $nestedIdHashed,
             ],
         ]);
+        $expectedBookId = $enabled ? $bookId : $bookIdHashed;
+        $expectedAuthorId = $enabled ? $authorId : $authorIdHashed;
+        $expectedNestedId = $enabled ? $nestedId : $nestedIdHashed;
 
         expect($result->json())
             ->toBe([
                 'input' => [
                     'title' => 'New Title',
-                    'author_id' => 10,
+                    'author_id' => $expectedAuthorId,
+                    'just_a_number' => 123,
                     'nested' => [
-                        'id' => 15,
+                        'id' => $expectedNestedId,
                     ],
                 ],
                 'input.id' => null,
                 'input.title' => 'New Title',
-                'input.nested.id' => 15,
-                'input.author_id' => 10,
+                'input.nested.id' => $expectedNestedId,
+                'input.author_id' => $expectedAuthorId,
                 'input.none_existing' => null,
                 'input.optional_id' => null,
                 'all' => [
                     'title' => 'New Title',
-                    'author_id' => 10,
+                    'author_id' => $expectedAuthorId,
+                    'just_a_number' => 123,
                     'nested' => [
-                        'id' => 15,
+                        'id' => $expectedNestedId,
                     ],
                 ],
                 'all.id' => [
@@ -47,11 +55,11 @@ describe(class_basename(Request::class), function (): void {
                 ],
                 'all.nested.id' => [
                     'nested' => [
-                        'id' => 15,
+                        'id' => $expectedNestedId,
                     ],
                 ],
                 'all.author_id' => [
-                    'author_id' => 10,
+                    'author_id' => $expectedAuthorId,
                 ],
                 'all.none_existing' => [
                     'none_existing' => null,
@@ -60,16 +68,19 @@ describe(class_basename(Request::class), function (): void {
                     'optional_id' => null,
                 ],
                 'route' => Illuminate\Routing\Route::class,
-                'route.id' => 5,
+                'route.id' => $expectedBookId,
                 'route.none_existing' => null,
-                'request.id' => 5,
+                'request.id' => $expectedBookId,
                 'request.title' => 'New Title',
                 'request.none_existing' => null,
                 'request.optional_id' => null,
                 'validated' => [
                     'title' => 'New Title',
-                    'author_id' => 10,
+                    'author_id' => $expectedAuthorId,
                 ],
             ]);
-    });
+    })->with([
+        [true],
+        [false],
+    ]);
 })->covers(Request::class);
