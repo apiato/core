@@ -89,10 +89,6 @@ final class HashidsManagerDecorator
         return array_map(fn ($id) => $this->decode($id), $hash);
     }
 
-    /**
-     * without decoding the encoded id's you won't be able to use
-     * validation features like `exists:table,id`.
-     */
     public function decodeFields(array $source, array $keys): array
     {
         $flattened = Arr::dot($source);
@@ -105,7 +101,7 @@ final class HashidsManagerDecorator
                     }
 
                     if (!is_string($value)) {
-                        throw new \RuntimeException('String expected, got ' . gettype($value));
+                        throw new \RuntimeException('String expected, got [' . gettype($value) . ']');
                     }
 
                     $decoded = hashids()->tryDecode($value);
