@@ -182,15 +182,6 @@ abstract class Request extends LaravelRequest
     }
 
     /**
-     * TODO: do something about this
-     * This method mimics the $request->input() method but works on the "decoded" values.
-     */
-    public function getInputByKey($key = null, $default = null): mixed
-    {
-        return data_get($this->all(), $key, $default);
-    }
-
-    /**
      * Used from the `authorize` function if the Request class.
      * To call functions and compare their bool responses to determine
      * if the user can proceed with the request or not.
