@@ -15,12 +15,14 @@ class UpdateBookRequest extends ParentRequest
         'id',
         'author_id',
         'nested.id',
+        'optional_id',
     ];
 
     public function rules(): array
     {
         return [
-             'id' => 'required',
+            'title' => 'required',
+            'author_id' => 'required',
         ];
     }
 

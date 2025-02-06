@@ -19,17 +19,56 @@ describe(class_basename(Request::class), function (): void {
 
         expect($result->json())
             ->toBe([
+                'input' => [
+                    'title' => 'New Title',
+                    'author_id' => 10,
+                    'nested' => [
+                        'id' => 15,
+                    ],
+                ],
+                'input.id' => null,
+                'input.title' => 'New Title',
+                'input.nested.id' => 15,
+                'input.author_id' => 10,
+                'input.none_existing' => null,
+                'input.optional_id' => null,
                 'all' => [
                     'title' => 'New Title',
                     'author_id' => 10,
                     'nested' => [
                         'id' => 15,
                     ],
-                    'id' => 5,
                 ],
-                'id' => 5,
+                'all.id' => [
+                    'id' => null,
+                ],
+                'all.title' => [
+                    'title' => 'New Title',
+                ],
+                'all.nested.id' => [
+                    'nested' => [
+                        'id' => 15,
+                    ],
+                ],
+                'all.author_id' => [
+                    'author_id' => 10,
+                ],
+                'all.none_existing' => [
+                    'none_existing' => null,
+                ],
+                'all.optional_id' => [
+                    'optional_id' => null,
+                ],
+                'route' => Illuminate\Routing\Route::class,
+                'route.id' => 5,
+                'route.none_existing' => null,
+                'request.id' => 5,
+                'request.title' => 'New Title',
+                'request.none_existing' => null,
+                'request.optional_id' => null,
                 'validated' => [
-                    'id' => 5,
+                    'title' => 'New Title',
+                    'author_id' => 10,
                 ],
             ]);
     });

@@ -5,7 +5,6 @@ namespace Apiato\Abstract\Requests;
 use Apiato\Abstract\Models\UserModel as User;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Fluent;
 
 abstract class Request extends LaravelRequest
 {
@@ -144,27 +143,46 @@ abstract class Request extends LaravelRequest
         return array_map(static fn ($role) => $user->hasRole($role), $roles);
     }
 
-    public function all($keys = null): array
+    public function route($param = null, $default = null)
     {
-        if ([] === $this->decode || !config('apiato.hash-id')) {
-            return parent::all($keys);
+        if (in_array($param, $this->decode, true) && config('apiato.hash-id')) {
+            $value = parent::route($param);
+
+            if (is_null($value)) {
+                return $default;
+            }
+
+            return hashids()->decode($value);
         }
 
-        $routeParams = is_null($this->route()) ? [] : $this->route()->parameters();
+        return parent::route($param, $default);
+    }
 
-        $result = hashids()->decodeFields([
-            ...parent::all($keys),
-            ...$routeParams,
-        ], $this->decode);
+    public function input($key = null, $default = null)
+    {
+        if (config('apiato.hash-id')) {
+            if (in_array($key, $this->decode, true)) {
+                $value = parent::input($key);
 
-        if (!is_null($keys)) {
-            return (new Fluent($result))->only($keys);
+                if (is_null($value)) {
+                    return $default;
+                }
+
+                return hashids()->decode($value);
+            }
+
+            if (is_null($key)) {
+                $input = parent::input();
+
+                return hashids()->decodeFields(is_array($input) ? $input : [], $this->decode);
+            }
         }
 
-        return $result;
+        return parent::input($key, $default);
     }
 
     /**
+     * TODO: do something about this
      * This method mimics the $request->input() method but works on the "decoded" values.
      */
     public function getInputByKey($key = null, $default = null): mixed
