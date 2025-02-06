@@ -25,7 +25,7 @@ abstract class Request extends LaravelRequest
     /**
      * Id's that needs decoding before applying the validation rules.
      *
-     * @example ['id']
+     * @example ['id', 'author_ids.*', 'nested.id', 'nested.ids.*']
      *
      * @var string[]
      */
