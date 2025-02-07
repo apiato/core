@@ -162,46 +162,24 @@ abstract class Request extends LaravelRequest
 
     public function input($key = null, $default = null)
     {
-        // If hashid decoding is disabled, simply delegate to the parent method.
         if (!config('apiato.hash-id')) {
             return parent::input($key, $default);
         }
 
-        // Retrieve the full input data from the parent.
-        $data = parent::input(null, $default);
+        $data = parent::input();
 
-        // If the data isn’t an array (e.g. a scalar), handle it as a simple value.
-        if (!is_array($data)) {
-            if (!is_null($key)) {
-                foreach ($this->decode as $pattern) {
-                    if (Str::is($pattern, $key)) {
-                        return $this->decodeValue($data);
-                    }
-                }
-            }
-
-            return $data;
-        }
-
-        // Flatten the array so that nested keys are expressed in dot notation.
         $flattened = Arr::dot($data);
+
         foreach ($flattened as $dotKey => $value) {
-            // For each flattened key, check if it matches any of the decode patterns.
             foreach ($this->decode as $pattern) {
                 if (Str::is($pattern, $dotKey)) {
                     Arr::set($data, $dotKey, $this->decodeValue($value));
-                    break; // Stop checking once a pattern matches.
+                    break;
                 }
             }
         }
 
-        // If a specific key is requested, use data_get to support wildcard notation.
-        if (!is_null($key)) {
-            return data_get($data, $key, $default);
-        }
-
-        // Otherwise, return the fully processed data.
-        return $data;
+        return data_get($data, $key, $default);
     }
 
     /**
@@ -210,25 +188,13 @@ abstract class Request extends LaravelRequest
      * When decoding a string, if hashids()->decode($value) returns a single element,
      * that element is returned directly.
      */
-    protected function decodeValue($value)
+    public function decodeValue($value)
     {
         if (is_array($value)) {
             return array_map([$this, 'decodeValue'], $value);
         }
 
-        // Only attempt to decode if the value is a string.
-        if (!is_string($value)) {
-            return $value;
-        }
-
-        $decoded = hashids()->decode($value);
-
-        // If the decoded result contains exactly one element, return it directly.
-        if (is_array($decoded) && 1 === count($decoded)) {
-            return $decoded[0];
-        }
-
-        return $decoded;
+        return hashids()->decode($value);
     }
 
     /**
