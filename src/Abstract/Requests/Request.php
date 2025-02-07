@@ -4,7 +4,9 @@ namespace Apiato\Abstract\Requests;
 
 use Apiato\Abstract\Models\UserModel as User;
 use Illuminate\Foundation\Http\FormRequest as LaravelRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 
 abstract class Request extends LaravelRequest
 {
@@ -25,7 +27,7 @@ abstract class Request extends LaravelRequest
     /**
      * Id's that needs decoding before applying the validation rules.
      *
-     * @example ['id', 'author_ids.*', 'nested.id', 'nested.ids.*']
+     * @example ['id', 'author_ids.*', 'nested.id', 'nested.ids.*', 'nested.*.id']
      *
      * @var string[]
      */
@@ -160,25 +162,73 @@ abstract class Request extends LaravelRequest
 
     public function input($key = null, $default = null)
     {
-        if (config('apiato.hash-id')) {
-            if (in_array($key, $this->decode, true)) {
-                $value = parent::input($key);
+        // If hashid decoding is disabled, simply delegate to the parent method.
+        if (!config('apiato.hash-id')) {
+            return parent::input($key, $default);
+        }
 
-                if (is_null($value)) {
-                    return $default;
+        // Retrieve the full input data from the parent.
+        $data = parent::input(null, $default);
+
+        // If the data isn’t an array (e.g. a scalar), handle it as a simple value.
+        if (!is_array($data)) {
+            if (!is_null($key)) {
+                foreach ($this->decode as $pattern) {
+                    if (Str::is($pattern, $key)) {
+                        return $this->decodeValue($data);
+                    }
                 }
-
-                return hashids()->decode($value);
             }
 
-            if (is_null($key)) {
-                $input = parent::input();
+            return $data;
+        }
 
-                return hashids()->decodeFields(is_array($input) ? $input : [], $this->decode);
+        // Flatten the array so that nested keys are expressed in dot notation.
+        $flattened = Arr::dot($data);
+        foreach ($flattened as $dotKey => $value) {
+            // For each flattened key, check if it matches any of the decode patterns.
+            foreach ($this->decode as $pattern) {
+                if (Str::is($pattern, $dotKey)) {
+                    Arr::set($data, $dotKey, $this->decodeValue($value));
+                    break; // Stop checking once a pattern matches.
+                }
             }
         }
 
-        return parent::input($key, $default);
+        // If a specific key is requested, use data_get to support wildcard notation.
+        if (!is_null($key)) {
+            return data_get($data, $key, $default);
+        }
+
+        // Otherwise, return the fully processed data.
+        return $data;
+    }
+
+    /**
+     * Recursively decode a value (or an array of values) using hashids.
+     *
+     * When decoding a string, if hashids()->decode($value) returns a single element,
+     * that element is returned directly.
+     */
+    protected function decodeValue($value)
+    {
+        if (is_array($value)) {
+            return array_map([$this, 'decodeValue'], $value);
+        }
+
+        // Only attempt to decode if the value is a string.
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        $decoded = hashids()->decode($value);
+
+        // If the decoded result contains exactly one element, return it directly.
+        if (is_array($decoded) && 1 === count($decoded)) {
+            return $decoded[0];
+        }
+
+        return $decoded;
     }
 
     /**
