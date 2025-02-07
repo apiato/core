@@ -5,6 +5,7 @@ use Apiato\Abstract\Requests\Request;
 describe(class_basename(Request::class), function (): void {
     it('can decode specified ids', function (bool $enabled): void {
         config(['apiato.hash-id' => $enabled]);
+        $HashedId = hashids()->encode(500);
         $bookId = 5;
         $bookIdHashed = hashids()->encode($bookId);
         $authorId = 10;
@@ -23,6 +24,7 @@ describe(class_basename(Request::class), function (): void {
         ];
         $result = $this->patchJson("v1/books/{$bookIdHashed}", [
             'title' => 'New Title',
+            'hashed_id' => $HashedId,
             'author_id' => $authorIdHashed,
             'authors' => [
                 [
@@ -49,6 +51,7 @@ describe(class_basename(Request::class), function (): void {
                     'id' => null,
                     'id-default' => 100,
                     'title' => 'New Title',
+                    'hashed_id' => $HashedId,
                     'nested.id' => $expectedNestedId,
                     'nested.with-default' => 200,
                     'author_id' => $expectedAuthorId,
@@ -101,6 +104,7 @@ describe(class_basename(Request::class), function (): void {
                 ],
                 'input()' => [
                     'title' => 'New Title',
+                    'hashed_id' => $HashedId,
                     'author_id' => $expectedAuthorId,
                     'authors' => [
                         ['id' => $expectedAuthorId, 'name' => 'Author Name'],
@@ -114,6 +118,7 @@ describe(class_basename(Request::class), function (): void {
                 ],
                 'all()' => [
                     'title' => 'New Title',
+                    'hashed_id' => $HashedId,
                     'author_id' => $expectedAuthorId,
                     'authors' => [
                         ['id' => $expectedAuthorId, 'name' => 'Author Name'],

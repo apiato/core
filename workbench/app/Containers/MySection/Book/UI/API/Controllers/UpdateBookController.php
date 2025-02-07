@@ -15,6 +15,7 @@ class UpdateBookController extends ApiController
                 'id' => $request->input('id'),
                 'id-default' => $request->input('id', 100),
                 'title' => $request->input('title'),
+                'hashed_id' => $request->input('hashed_id'),
                 'nested.id' => $request->input('nested.id'),
                 'nested.with-default' => $request->input('nested.with', 200),
                 'author_id' => $request->input('author_id'),
