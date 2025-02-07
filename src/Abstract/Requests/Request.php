@@ -145,43 +145,6 @@ abstract class Request extends LaravelRequest
         return array_map(static fn ($role) => $user->hasRole($role), $roles);
     }
 
-    public function route($param = null, $default = null)
-    {
-        if (in_array($param, $this->decode, true) && config('apiato.hash-id')) {
-            $value = parent::route($param);
-
-            if (is_null($value)) {
-                return $default;
-            }
-
-            return hashids()->decode($value);
-        }
-
-        return parent::route($param, $default);
-    }
-
-    public function input($key = null, $default = null)
-    {
-        if (!config('apiato.hash-id')) {
-            return parent::input($key, $default);
-        }
-
-        $data = parent::input();
-
-        $flattened = Arr::dot($data);
-
-        foreach ($flattened as $dotKey => $value) {
-            foreach ($this->decode as $pattern) {
-                if (Str::is($pattern, $dotKey)) {
-                    Arr::set($data, $dotKey, hashids()->decode($value));
-                    break;
-                }
-            }
-        }
-
-        return data_get($data, $key, $default);
-    }
-
     /**
      * Used from the `authorize` function if the Request class.
      * To call functions and compare their bool responses to determine
@@ -219,5 +182,42 @@ abstract class Request extends LaravelRequest
         // if in_array returned `false` means all functions returned `true` thus return `true` to allow access.
         // return the final boolean
         return !in_array(false, $returns, true);
+    }
+
+    public function route($param = null, $default = null)
+    {
+        if (in_array($param, $this->decode, true) && config('apiato.hash-id')) {
+            $value = parent::route($param);
+
+            if (is_null($value)) {
+                return $default;
+            }
+
+            return hashids()->decode($value);
+        }
+
+        return parent::route($param, $default);
+    }
+
+    public function input($key = null, $default = null)
+    {
+        if (!config('apiato.hash-id')) {
+            return parent::input($key, $default);
+        }
+
+        $data = parent::input();
+
+        $flattened = Arr::dot($data);
+
+        foreach ($flattened as $dotKey => $value) {
+            foreach ($this->decode as $pattern) {
+                if (Str::is($pattern, $dotKey)) {
+                    Arr::set($data, $dotKey, hashids()->decode($value));
+                    break;
+                }
+            }
+        }
+
+        return data_get($data, $key, $default);
     }
 }
