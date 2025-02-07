@@ -4,6 +4,7 @@ namespace Apiato\Support;
 
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
+use phpDocumentor\Reflection\PseudoTypes\NonEmptyArray;
 use Vinkla\Hashids\HashidsManager;
 use Webmozart\Assert\Assert;
 
@@ -33,13 +34,23 @@ final class HashidsManagerDecorator
     }
 
     /**
+     * @param string ...$hash
+     *
+     * @return int|int[]
+     *
      * @throws \InvalidArgumentException
      */
-    public function decode(string $hash): int
+    public function decode(string... $hash): int|array
     {
-        Assert::stringNotEmpty($hash);
+        if (1 < count($hash)) {
+            Assert::allStringNotEmpty($hash);
 
-        $result = $this->tryDecode($hash);
+            return array_map(fn (string $id): int => $this->decode($id), $hash);
+        }
+
+        Assert::stringNotEmpty($hash[0]);
+
+        $result = $this->tryDecode($hash[0]);
 
         if (is_null($result)) {
             throw new \InvalidArgumentException('Invalid hash id.');
@@ -71,20 +82,6 @@ final class HashidsManagerDecorator
         }
 
         return $result;
-    }
-
-    /**
-     * @param string[] $hash
-     *
-     * @return int[]
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function decodeArray(array $hash): array
-    {
-        Assert::allStringNotEmpty($hash);
-
-        return array_map(fn ($id) => $this->decode($id), $hash);
     }
 
     /**
