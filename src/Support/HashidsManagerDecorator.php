@@ -35,8 +35,6 @@ final class HashidsManagerDecorator
     /**
      * Decode a hash id or an array of hash ids (recursively).
      *
-     * @param string ...$hash
-     *
      * @return int|int[]
      *
      * @throws \InvalidArgumentException
