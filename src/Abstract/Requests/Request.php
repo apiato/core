@@ -173,28 +173,13 @@ abstract class Request extends LaravelRequest
         foreach ($flattened as $dotKey => $value) {
             foreach ($this->decode as $pattern) {
                 if (Str::is($pattern, $dotKey)) {
-                    Arr::set($data, $dotKey, $this->decodeValue($value));
+                    Arr::set($data, $dotKey, hashids()->decode($value));
                     break;
                 }
             }
         }
 
         return data_get($data, $key, $default);
-    }
-
-    /**
-     * Recursively decode a value (or an array of values) using hashids.
-     *
-     * When decoding a string, if hashids()->decode($value) returns a single element,
-     * that element is returned directly.
-     */
-    public function decodeValue($value)
-    {
-        if (is_array($value)) {
-            return array_map([$this, 'decodeValue'], $value);
-        }
-
-        return hashids()->decode($value);
     }
 
     /**
