@@ -6,11 +6,6 @@ use Workbench\App\Ship\Parents\Requests\Request as ParentRequest;
 
 class CreateBookRequest extends ParentRequest
 {
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
     protected array $decode = [
         // 'id',
     ];
@@ -20,10 +15,5 @@ class CreateBookRequest extends ParentRequest
         return [
             // 'id' => 'required',
         ];
-    }
-
-    public function authorize(): bool
-    {
-        return $this->hasAccess();
     }
 }

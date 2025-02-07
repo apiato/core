@@ -11,20 +11,6 @@ use Illuminate\Support\Str;
 abstract class Request extends LaravelRequest
 {
     /**
-     * Roles and/or Permissions that has access to this request.
-     *
-     * @example ['permissions' => 'create-users', 'roles' => 'admin|manager']
-     * @example ['permissions' => null, 'roles' => 'admin']
-     * @example ['permissions' => ['create-users'], 'roles' => null]
-     *
-     * @var array<string, string|null>
-     */
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
-    /**
      * Id's that needs decoding before applying the validation rules.
      *
      * @example ['id', 'author_ids.*', 'nested.id', 'nested.ids.*', 'nested.*.id']
@@ -71,16 +57,6 @@ abstract class Request extends LaravelRequest
     }
 
     /**
-     * Get the access array.
-     *
-     * @return array<string, string|null>
-     */
-    public function getAccessArray(): array
-    {
-        return $this->access;
-    }
-
-    /**
      * Get the decode array.
      *
      * @return string[]
@@ -88,61 +64,6 @@ abstract class Request extends LaravelRequest
     public function getDecodeArray(): array
     {
         return $this->decode;
-    }
-
-    /**
-     * check if a user has permission to perform an action.
-     * User can set multiple permissions (separated with "|") and if the user has
-     * any of the permissions, he will be authorized to proceed with this action.
-     */
-    public function hasAccess(User|null $user = null): bool
-    {
-        // if not in parameters, take from the request object {$this}
-        $user = $user ?: $this->user();
-
-        if ($user) {
-            $autoAccessRoles = config('apiato.requests.allow-roles-to-access-all-routes');
-            // there are some roles defined that will automatically grant access
-            if (!empty($autoAccessRoles)) {
-                $hasAutoAccessByRole = $user->hasAnyRole($autoAccessRoles);
-                if ($hasAutoAccessByRole) {
-                    return true;
-                }
-            }
-        }
-
-        // check if the user has any role / permission to access the route
-        $hasAccess = array_merge(
-            $this->hasAnyPermissionAccess($user),
-            $this->hasAnyRoleAccess($user),
-        );
-
-        // allow access if user has access to any of the defined roles or permissions.
-        return [] === $hasAccess || in_array(true, $hasAccess, true);
-    }
-
-    protected function hasAnyPermissionAccess($user): array
-    {
-        if (!array_key_exists('permissions', $this->access) || !$this->access['permissions']) {
-            return [];
-        }
-
-        $permissions = is_array($this->access['permissions']) ? $this->access['permissions'] :
-            explode('|', $this->access['permissions']);
-
-        return array_map(static fn ($permission) => $user->hasPermissionTo($permission), $permissions);
-    }
-
-    protected function hasAnyRoleAccess($user): array
-    {
-        if (!array_key_exists('roles', $this->access) || !$this->access['roles']) {
-            return [];
-        }
-
-        $roles = is_array($this->access['roles']) ? $this->access['roles'] :
-            explode('|', $this->access['roles']);
-
-        return array_map(static fn ($role) => $user->hasRole($role), $roles);
     }
 
     public function route($param = null, $default = null)

@@ -7,11 +7,6 @@ use Workbench\App\Ship\Parents\Requests\Request as ParentRequest;
 
 class UpdateBookRequest extends ParentRequest
 {
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
     protected array $decode = [
         'id',
         'author_id',
@@ -35,10 +30,5 @@ class UpdateBookRequest extends ParentRequest
             'nested.ids' => 'array',
             'nested.ids.*' => Rule::when($hashIdEnabled, 'integer', 'string'),
         ];
-    }
-
-    public function authorize(): bool
-    {
-        return $this->hasAccess();
     }
 }
