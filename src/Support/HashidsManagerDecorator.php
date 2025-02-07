@@ -4,7 +4,6 @@ namespace Apiato\Support;
 
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
-use phpDocumentor\Reflection\PseudoTypes\NonEmptyArray;
 use Vinkla\Hashids\HashidsManager;
 use Webmozart\Assert\Assert;
 
@@ -42,7 +41,7 @@ final class HashidsManagerDecorator
      *
      * @throws \InvalidArgumentException
      */
-    public function decode(string... $hash): int|array
+    public function decode(string ...$hash): int|array
     {
         if (1 < count($hash)) {
             Assert::allStringNotEmpty($hash);
