@@ -5,7 +5,6 @@ namespace Tests\Unit\Abstract\Tests;
 use Apiato\Abstract\Tests\TestCase;
 use Apiato\Support\Testing\Traits\Assertions;
 use Apiato\Support\Testing\Traits\RequestHelper;
-use Apiato\Support\Testing\Traits\TestingUser;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
 beforeEach(function (): void {
@@ -14,7 +13,6 @@ beforeEach(function (): void {
 describe(class_basename(TestCase::class), function (): void {
     it('uses expected traits', function (): void {
         $traits = [
-            TestingUser::class,
             RequestHelper::class,
             Assertions::class,
             LazilyRefreshDatabase::class,
