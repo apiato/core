@@ -12,11 +12,10 @@ trait RequestHelper
      */
     protected string|null $overrideEndpoint = null;
     protected string $endpoint = '';
-    protected TestResponse $response;
 
     private string|null $url;
 
-    public function makeCall(array $data = [], array $headers = []): TestResponse
+    public function makeCall(array $data = [], array $headers = [], int $options = 0): TestResponse
     {
         $endpoint = $this->parseEndpoint();
         $verb = $endpoint['verb'];
@@ -28,7 +27,7 @@ trait RequestHelper
             $url = $this->dataArrayToQueryParam($data, $url);
         }
 
-        return $this->json($verb, $url, $data, $headers);
+        return $this->json($verb, $url, $data, $headers, $options);
     }
 
     /**
