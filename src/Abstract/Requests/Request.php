@@ -24,14 +24,10 @@ abstract class Request extends LaravelRequest
      */
     public static function injectData(array $parameters = [], User|null $user = null, array $cookies = [], array $files = [], array $server = []): static
     {
-        // if user is passed, will be returned when asking for the authenticated user using `\Auth::user()`
-        if ($user instanceof User) {
-            $app = App::getInstance();
-            $app['auth']->guard($driver = 'api')->setUser($user);
-            $app['auth']->shouldUse($driver);
+        if (!is_null($user)) {
+            auth()->guard('api')->setUser($user);
         }
 
-        // For now doesn't matter which URI or Method is used.
         $request = parent::create('/', 'GET', $parameters, $cookies, $files, $server);
 
         $request->setUserResolver(static fn (): User|null => $user);
