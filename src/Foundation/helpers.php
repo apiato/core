@@ -39,9 +39,11 @@ if (!function_exists('recursiveGlob')) {
      * Recursively find files matching a pattern.
      *
      * @return string[]
+     *
      * @throws FilesystemException
      */
-    function recursiveGlob(string $pattern, int $flags = 0): array {
+    function recursiveGlob(string $pattern, int $flags = 0): array
+    {
         /** @var string[] $topLevelFiles */
         $topLevelFiles = \Safe\glob($pattern, $flags);
         /** @var string[] $dirs */
