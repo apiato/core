@@ -2,6 +2,7 @@
 
 use Apiato\Foundation\Apiato;
 use Apiato\Support\HashidsManagerDecorator;
+use Safe\Exceptions\FilesystemException;
 
 if (!function_exists('apiato')) {
     /**
@@ -30,5 +31,27 @@ if (!function_exists('hashids')) {
     function hashids(): HashidsManagerDecorator
     {
         return app('hashids');
+    }
+}
+
+if (!function_exists('recursiveGlob')) {
+    /**
+     * Recursively find files matching a pattern.
+     *
+     * @return string[]
+     * @throws FilesystemException
+     */
+    function recursiveGlob(string $pattern, int $flags = 0): array {
+        /** @var string[] $topLevelFiles */
+        $topLevelFiles = \Safe\glob($pattern, $flags);
+        /** @var string[] $dirs */
+        $dirs = \Safe\glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
+
+        $allFiles = $topLevelFiles;
+        foreach ($dirs as $dir) {
+            $allFiles = [...$allFiles, ...recursiveGlob("{$dir}/" . basename($pattern), $flags)];
+        }
+
+        return $allFiles;
     }
 }
