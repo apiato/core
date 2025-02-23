@@ -70,7 +70,7 @@ abstract class Request extends LaravelRequest
                 return $default;
             }
 
-            return hashids()->decode($value);
+            return hashids()->decodeOrFail($value);
         }
 
         return parent::route($param, $default);
@@ -89,7 +89,7 @@ abstract class Request extends LaravelRequest
         foreach ($flattened as $dotKey => $value) {
             foreach ($this->decode as $pattern) {
                 if (Str::is($pattern, $dotKey)) {
-                    Arr::set($data, $dotKey, hashids()->decode($value));
+                    Arr::set($data, $dotKey, hashids()->decodeOrFail($value));
                     break;
                 }
             }

@@ -5,22 +5,22 @@ use Apiato\Abstract\Requests\Request;
 describe(class_basename(Request::class), function (): void {
     it('can decode specified ids', function (bool $enabled): void {
         config(['apiato.hash-id' => $enabled]);
-        $HashedId = hashids()->encode(500);
+        $HashedId = hashids()->encodeOrFail(500);
         $bookId = 5;
-        $bookIdHashed = hashids()->encode($bookId);
+        $bookIdHashed = hashids()->encodeOrFail($bookId);
         $authorId = 10;
-        $authorIdHashed = hashids()->encode($authorId);
+        $authorIdHashed = hashids()->encodeOrFail($authorId);
         $nestedId = 15;
-        $nestedIdHashed = hashids()->encode($nestedId);
+        $nestedIdHashed = hashids()->encodeOrFail($nestedId);
         $nestedIds = [1, 2];
         $nestedIdsHashed = [
-            hashids()->encode($nestedIds[0]),
-            hashids()->encode($nestedIds[1]),
+            hashids()->encodeOrFail($nestedIds[0]),
+            hashids()->encodeOrFail($nestedIds[1]),
         ];
         $ids = [2, 1];
         $hashedIds = [
-            hashids()->encode($ids[0]),
-            hashids()->encode($ids[1]),
+            hashids()->encodeOrFail($ids[0]),
+            hashids()->encodeOrFail($ids[1]),
         ];
         $result = $this->patchJson("v1/books/{$bookIdHashed}", [
             'title' => 'New Title',

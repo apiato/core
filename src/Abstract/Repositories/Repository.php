@@ -222,7 +222,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         $searchValue = $this->parserSearchValue($searchQuery);
 
         if (is_string($searchValue)) {
-            return hashids()->tryDecode($searchValue) ?? $searchValue;
+            return hashids()->decode($searchValue) ?? $searchValue;
         }
 
         return null;
@@ -251,7 +251,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
 
         foreach ($fieldsToDecode as $field) {
             if (array_key_exists($field, $searchArray)) {
-                $searchArray[$field] = hashids()->decode($searchArray[$field]);
+                $searchArray[$field] = hashids()->decodeOrFail($searchArray[$field]);
             }
         }
 

@@ -47,13 +47,13 @@ describe(class_basename(BaseModel::class), function (): void {
         it('returns hashed primary key by default', function (): void {
             $book = Book::factory()->createOne();
 
-            expect($book->getHashedKey())->toBe(hashids()->tryEncode($book->getKey()));
+            expect($book->getHashedKey())->toBe(hashids()->encode($book->getKey()));
         });
 
         it('can return hashed key for a specific field', function (): void {
             $book = Book::factory()->makeOne();
 
-            expect($book->getHashedKey('author_id'))->toBe(hashids()->tryEncode($book->author_id));
+            expect($book->getHashedKey('author_id'))->toBe(hashids()->encode($book->author_id));
         });
 
         it('returns null if the field is null', function (): void {
@@ -85,7 +85,7 @@ describe(class_basename(BaseModel::class), function (): void {
 
             expect(
                 Book::newModelInstance()->resolveRouteBinding(
-                    hashids()->tryEncode($target->getKey()),
+                    hashids()->encode($target->getKey()),
                 )->is($target),
             )->toBeTrue();
         });
@@ -98,7 +98,7 @@ describe(class_basename(BaseModel::class), function (): void {
                 expect(
                     Book::newModelInstance()
                     ->setIncrementing($incrementing)
-                    ->shouldProcessHashIdRouteBinding(!$isHashedId ?: hashids()->tryEncode(1)),
+                    ->shouldProcessHashIdRouteBinding(!$isHashedId ?: hashids()->encode(1)),
                 )->toBe($expectation, "Enabled: {$enabled}, Incrementing: {$incrementing}");
             },
         )->with([
@@ -139,12 +139,12 @@ describe(class_basename(BaseModel::class), function (): void {
             function (): array {
                 $target = Book::factory()->createOne();
 
-                return [hashids()->tryEncode($target->id), null, $target];
+                return [hashids()->encode($target->id), null, $target];
             },
             function (): array {
                 $target = Book::factory()->createOne();
 
-                return [hashids()->tryEncode($target->id), 'id', $target];
+                return [hashids()->encode($target->id), 'id', $target];
             },
             function (): array {
                 $target = Book::factory()->createOne();

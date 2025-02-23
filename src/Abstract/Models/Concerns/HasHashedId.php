@@ -22,7 +22,7 @@ trait HasHashedId
         }
 
         if (config('apiato.hash-id')) {
-            return hashids()->encode($attribute);
+            return hashids()->encodeOrFail($attribute);
         }
 
         return $this->getAttribute($field);

@@ -14,7 +14,7 @@ trait HandlesHashedIdRouteModelBinding
     public function processHashId(mixed $value): mixed
     {
         if ($this->shouldProcessHashIdRouteBinding($value)) {
-            return hashids()->tryDecode($value) ?? $value;
+            return hashids()->decode($value) ?? $value;
         }
 
         return $value;

@@ -23,11 +23,11 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
     it('can decode or null', function (string $hashId, int|null $expectation): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
-        $result = $sut->tryDecode($hashId);
+        $result = $sut->decode($hashId);
 
         expect($result)->toBe($expectation);
     })->with([
-        [fn () => hashids()->encode(10), 10],
+        [fn () => hashids()->encodeOrFail(10), 10],
         ['invalid', null],
     ]);
 
@@ -35,7 +35,7 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
         expect(static function () use ($sut, $hashId) {
-            $sut->decode($hashId);
+            $sut->decodeOrFail($hashId);
         })->when(
             is_null($expectation),
             fn (Expectation $ex) => $ex
@@ -43,7 +43,7 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         )->unless(is_null($expectation), fn (Expectation $ex) => $ex
             ->toBe($ex->value));
     })->with([
-        [fn () => hashids()->encode(10), 10],
+        [fn () => hashids()->encodeOrFail(10), 10],
         ['invalid', null],
     ]);
 
@@ -51,12 +51,12 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
         $encodedArray = [
-            $sut->encode(1),
-            $sut->encode(2),
-            $sut->encode(3),
+            $sut->encodeOrFail(1),
+            $sut->encodeOrFail(2),
+            $sut->encodeOrFail(3),
         ];
 
-        $result = $sut->decode(...$encodedArray);
+        $result = $sut->decodeOrFail(...$encodedArray);
 
         expect($result)->toBe([1, 2, 3]);
     });
@@ -64,12 +64,12 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
     it('can encode or null', function (array $numbers, string|null $expectation): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
-        $result = $sut->tryEncode(...$numbers);
+        $result = $sut->encode(...$numbers);
 
         expect($result)->toBe($expectation);
     })->with([
-        [[10], fn () => hashids()->encode(10)],
-        [[10, 12], fn () => hashids()->encode(10, 12)],
+        [[10], fn () => hashids()->encodeOrFail(10)],
+        [[10, 12], fn () => hashids()->encodeOrFail(10, 12)],
         [[], null],
     ]);
 
@@ -77,7 +77,7 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
         expect(static function () use ($sut, $numbers) {
-            $sut->encode(...$numbers);
+            $sut->encodeOrFail(...$numbers);
         })->when(
             is_null($expectation),
             fn (Expectation $ex) => $ex
@@ -88,7 +88,7 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
                 ->toBe($ex->value),
         );
     })->with([
-        [[10], fn () => hashids()->encode(10)],
+        [[10], fn () => hashids()->encodeOrFail(10)],
         [[], null],
     ]);
 

@@ -21,7 +21,7 @@ final class HashidsManagerDecorator
     ) {
     }
 
-    public function tryDecode(string $hash): int|null
+    public function decode(string $hash): int|null
     {
         $result = $this->manager->decode($hash);
 
@@ -39,17 +39,17 @@ final class HashidsManagerDecorator
      *
      * @throws \InvalidArgumentException
      */
-    public function decode(string ...$hash): int|array
+    public function decodeOrFail(string ...$hash): int|array
     {
         if (1 < count($hash)) {
             Assert::allStringNotEmpty($hash);
 
-            return array_map(fn (string $id): int => $this->decode($id), $hash);
+            return array_map(fn (string $id): int => $this->decodeOrFail($id), $hash);
         }
 
         Assert::stringNotEmpty($hash[0]);
 
-        $result = $this->tryDecode($hash[0]);
+        $result = $this->decode($hash[0]);
 
         if (is_null($result)) {
             throw new \InvalidArgumentException('Invalid hash id.');
@@ -58,7 +58,7 @@ final class HashidsManagerDecorator
         return $result;
     }
 
-    public function tryEncode(mixed ...$numbers): string|null
+    public function encode(mixed ...$numbers): string|null
     {
         $result = $this->manager->encode(...$numbers);
 
@@ -72,9 +72,9 @@ final class HashidsManagerDecorator
     /**
      * @throws \InvalidArgumentException
      */
-    public function encode(mixed ...$numbers): string
+    public function encodeOrFail(mixed ...$numbers): string
     {
-        $result = $this->tryEncode(...$numbers);
+        $result = $this->encode(...$numbers);
 
         if (is_null($result)) {
             throw new \InvalidArgumentException('Encoding failed.');

@@ -58,6 +58,6 @@ describe(class_basename(ApiatoServiceProvider::class), function (): void {
     });
 
     it('extends hashids service provider', function (): void {
-        expect(hashids()->tryDecode('abc'))->toBeNull();
+        expect(hashids()->decode('abc'))->toBeNull();
     });
 })->covers(ApiatoServiceProvider::class);
