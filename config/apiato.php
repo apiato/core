@@ -3,6 +3,15 @@
 return [
     /*
     |--------------------------------------------------------------------------
+    | App Defaults
+    |--------------------------------------------------------------------------
+    */
+    'defaults' => [
+        'app' => 'web',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Enable / Disable Hashed ID
     |--------------------------------------------------------------------------
     */
@@ -18,33 +27,6 @@ return [
 
         /*
         |--------------------------------------------------------------------------
-        | Access Token Expiration Time
-        |--------------------------------------------------------------------------
-        |
-        | In Minutes. Default to 1,440 minutes = 1 day
-        |
-        */
-        'expires-in' => env('API_TOKEN_EXPIRES', 1440),
-
-        /*
-        |--------------------------------------------------------------------------
-        | Refresh Token Expiration Time
-        |--------------------------------------------------------------------------
-        |
-        | In Minutes. Default to 43,200 minutes = 30 days
-        |
-        */
-        'refresh-expires-in' => env('API_REFRESH_TOKEN_EXPIRES', 43200),
-
-        /*
-        |--------------------------------------------------------------------------
-        | Enable/Disable Implicit Grant
-        |--------------------------------------------------------------------------
-        */
-        'enabled-implicit-grant' => env('API_ENABLE_IMPLICIT_GRANT', true),
-
-        /*
-        |--------------------------------------------------------------------------
         | Rate Limiting
         |--------------------------------------------------------------------------
         |
@@ -57,6 +39,24 @@ return [
             'enabled' => env('GLOBAL_API_RATE_LIMIT_ENABLED', true),
             'attempts' => env('GLOBAL_API_RATE_LIMIT_ATTEMPTS_PER_MIN', '30'),
             'expires' => env('GLOBAL_API_RATE_LIMIT_EXPIRES_IN_MIN', '1'),
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Apps
+    |--------------------------------------------------------------------------
+    |
+    | A list of apps that have access to the application.
+    |
+    | This is useful when you have multiple web apps (like an admin panel, frontend, etc...), and you want to
+    | generate different URLs for each app.
+    | For example, for the password reset and email verification links.
+    |
+    */
+    'apps' => [
+        'web' => [
+            'url' => env('FRONTEND_URL', env('APP_URL', 'http://localhost:3000')),
         ],
     ],
 
@@ -91,7 +91,7 @@ return [
 
         'params' => [
             // TODO: BC: remove this after removing its usage in ResponseTrait in Core
-            'filter' => 'fieldset',
+            'filter' => 'filter',
         ],
     ],
 ];
