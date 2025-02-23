@@ -1,10 +1,10 @@
 <?php
 
-namespace Apiato\Abstract\Models;
+namespace Apiato\Abstract\Models\Concerns;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-trait HasDiscoverableFactory
+trait HandlesFactoryDiscovery
 {
     use HasFactory;
 

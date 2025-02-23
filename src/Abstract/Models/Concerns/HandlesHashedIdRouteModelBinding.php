@@ -4,7 +4,7 @@ namespace Apiato\Abstract\Models\Concerns;
 
 use Illuminate\Support\Str;
 
-trait HandlesHashIdRouteModelBinding
+trait HandlesHashedIdRouteModelBinding
 {
     public function resolveRouteBinding($value, $field = null)
     {

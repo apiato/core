@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model as LaravelEloquentModel;
 
 abstract class BaseModel extends LaravelEloquentModel implements ResourceKeyAware
 {
-    use ApiatoIntegration;
+    use InteractsWithApiato;
 }

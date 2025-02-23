@@ -1,8 +1,8 @@
 <?php
 
-namespace Apiato\Abstract\Models;
+namespace Apiato\Abstract\Models\Concerns;
 
-trait HasHashId
+trait HasHashedId
 {
     /**
      * Get the hashed key for the model or a specific field.
