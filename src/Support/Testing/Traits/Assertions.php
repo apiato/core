@@ -3,32 +3,11 @@
 namespace Apiato\Support\Testing\Traits;
 
 use Apiato\Abstract\Models\Model;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Schema;
 use Mockery\MockInterface;
-use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 
 trait Assertions
 {
-    /**
-     * Assert that the Gate::allows() method is called once with the given arguments.
-     *
-     * @return Gate|(Gate&MockObject)|MockObject
-     *
-     * @throws Exception
-     */
-    protected function getGateMock(string $policyMethodName, ...$args)
-    {
-        $gateMock = $this->createMock(Gate::class);
-        $gateMock->expects($this->once())
-            ->method('allows')
-            ->with($policyMethodName, ...$args)
-            ->willReturn(true);
-
-        return $gateMock;
-    }
-
     /**
      * Assert that the model casts field is empty.
      * By default, the model casts will have 'id' and 'deleted_at' fields (given model is soft deletable).
@@ -62,19 +41,6 @@ trait Assertions
             $this->assertTrue(Schema::hasColumn($table, $column), "Column '{$column}' not found in '{$table}' table.");
             $this->assertEquals($type, Schema::getColumnType($table, $column), "Column '{$column}' in '{$table}' table does not match expected {$type} type.");
         }
-    }
-
-    /**
-     * Get the given inaccessible (private/protected) property value.
-     *
-     * @throws \ReflectionException
-     */
-    protected function getInaccessiblePropertyValue(object $object, string $property): mixed
-    {
-        $reflection = new \ReflectionClass($object);
-        $property = $reflection->getProperty($property);
-
-        return $property->getValue($object);
     }
 
     /**
