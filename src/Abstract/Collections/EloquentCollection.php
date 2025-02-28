@@ -2,7 +2,6 @@
 
 namespace Apiato\Abstract\Collections;
 
-use Apiato\Abstract\Collections\EloquentCollection as AbstractEloquentCollection;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
