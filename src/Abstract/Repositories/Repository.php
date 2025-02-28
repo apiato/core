@@ -301,9 +301,4 @@ abstract class Repository extends BaseRepository implements CacheableInterface
 
         return $this;
     }
-
-    private function hashIdEnabled(): bool
-    {
-        return config('apiato.hash-id');
-    }
 }
