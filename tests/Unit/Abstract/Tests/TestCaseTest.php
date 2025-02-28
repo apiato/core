@@ -3,7 +3,7 @@
 namespace Tests\Unit\Abstract\Tests;
 
 use Apiato\Abstract\Tests\TestCase;
-use Apiato\Support\Testing\Traits\Assertions;
+use Apiato\Abstract\Tests\Concerns\PerformsAssertions;
 
 beforeEach(function (): void {
     $this->sut = new class('Anonym') extends TestCase {};
@@ -11,7 +11,7 @@ beforeEach(function (): void {
 describe(class_basename(TestCase::class), function (): void {
     it('uses expected traits', function (): void {
         $traits = [
-            Assertions::class,
+            PerformsAssertions::class,
         ];
 
         foreach ($traits as $trait) {

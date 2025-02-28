@@ -2,12 +2,12 @@
 
 namespace Apiato\Abstract\Tests;
 
-use Apiato\Support\Testing\Traits\Assertions;
+use Apiato\Abstract\Tests\Concerns\PerformsAssertions;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 
 abstract class TestCase extends LaravelTestCase
 {
-    use Assertions;
+    use PerformsAssertions;
 
     /**
      * Seed the DB on migrations.
