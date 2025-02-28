@@ -108,7 +108,7 @@ final class Response extends Fractal
     }
 
     /**
-     * Returns a 202 Accepted response.
+     * Returns a "202 - Accepted" response.
      */
     public function accepted(): JsonResponse
     {
@@ -120,7 +120,7 @@ final class Response extends Fractal
     }
 
     /**
-     * Returns a 201 Created response.
+     * Returns a "201 - Created" response.
      */
     public function created(): JsonResponse
     {
@@ -132,7 +132,7 @@ final class Response extends Fractal
     }
 
     /**
-     * Returns a 204 No Content response.
+     * Returns a "204 - No Content" response.
      */
     public function noContent(): JsonResponse
     {
@@ -142,7 +142,7 @@ final class Response extends Fractal
     }
 
     /**
-     * Returns a 200 OK response.
+     * Returns a "200 - OK" response.
      */
     public function ok(): JsonResponse
     {
