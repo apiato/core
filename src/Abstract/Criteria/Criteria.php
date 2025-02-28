@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Abstract\Criterias;
+namespace Apiato\Abstract\Criteria;
 
 use Prettus\Repository\Contracts\CriteriaInterface as PrettusCriteria;
 
