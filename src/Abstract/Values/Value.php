@@ -2,6 +2,6 @@
 
 namespace Apiato\Abstract\Values;
 
-abstract class Value
+abstract readonly class Value
 {
 }
