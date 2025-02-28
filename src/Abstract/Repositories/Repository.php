@@ -72,8 +72,10 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         });
     }
 
-    // TODO: rename this method or maybe keep the name but dont return null.
-    // Returning null causes multiple if() guard clauses as you can see
+    /**
+     * TODO: rename this method or maybe keep the name but dont return null.
+     * Returning null causes multiple if() guard clauses as you can see
+     */
     public function filterInvalidRelations(Builder|Model $model, array $relationParts): string|null
     {
         if ([] === $relationParts) {
