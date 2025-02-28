@@ -3,11 +3,18 @@
 namespace Apiato\Abstract\Actions;
 
 use Illuminate\Support\Facades\DB;
+use Webmozart\Assert\Assert;
 
 abstract class Action
 {
-    public function transactionalRun(...$arguments)
+    /**
+     * Calls run() wrapped in a DB transaction.
+     */
+    public function transactionalRun(...$args): mixed
     {
-        return DB::transaction(fn () => static::run(...$arguments));
+        // we assert that run method exists
+        Assert::methodExists($this, 'run');
+
+        return DB::transaction(fn () => static::run(...$args));
     }
 }
