@@ -4,6 +4,6 @@ namespace Workbench\App\Ship\Parents\Values;
 
 use Apiato\Abstract\Values\Value as AbstractValue;
 
-abstract class Value extends AbstractValue
+abstract readonly class Value extends AbstractValue
 {
 }
