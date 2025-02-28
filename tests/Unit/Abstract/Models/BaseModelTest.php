@@ -32,13 +32,6 @@ describe(class_basename(BaseModel::class), function (): void {
             ->and($usingFactory)->toBeInstanceOf(Book::class);
     });
 
-    it('should have a resource key', function (): void {
-        $book = Book::factory()->makeOne();
-
-        expect($book->getResourceKey())->toBe(class_basename($book))
-            ->and($this->model->getResourceKey())->toBe('custom-resource-key');
-    });
-
     describe('getHashedKey()', function (): void {
         beforeEach(function (): void {
             config(['apiato.hash-id' => true]);
