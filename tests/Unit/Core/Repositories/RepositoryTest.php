@@ -5,6 +5,7 @@ namespace Tests\Unit\Abstract\Repositories;
 use Apiato\Core\Repositories\Exceptions\ResourceCreationFailed;
 use Apiato\Core\Repositories\Exceptions\ResourceNotFound;
 use Apiato\Core\Repositories\Repository;
+use Apiato\Support\Facades\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Pest\Expectation;
@@ -43,6 +44,51 @@ describe(class_basename(Repository::class), function (): void {
                     });
                 });
         });
+
+        it('returns valid includes', function (array $requestedIncludes, array $expected) {
+            $repository = new UserRepository();
+            Response::shouldReceive('getRequestedIncludes')
+                ->andReturn($requestedIncludes);
+
+            $result = $repository->getValidIncludes();
+
+            expect($result)->toBe($expected);
+        })->with([
+            [['books.author', 'parent.children.parent'], ['books.author', 'parent.children.parent']],
+            [['books.invalidRelation'], []],
+            [['invalidRelation'], []],
+            [[], []],
+            [['books'], ['books']],
+        ]);
+
+        it('filters invalid relations correctly', function (array $relationParts, string|null $expected): void {
+            $repository = new UserRepository();
+            $model = new User();
+
+            $result = $repository->filterInvalidRelations($model, $relationParts);
+
+            expect($result)->toBe($expected);
+        })->with([
+            [['books', 'author'], 'books.author'],
+            [['books', 'invalidRelation'], null],
+            [['invalidRelation'], null],
+            [[], null],
+            [['parent'], 'parent'],
+        ]);
+
+        it('converts include name to camel case', function (string $includeName, string $expected): void {
+            $repository = new UserRepository();
+
+            $result = $repository->figureOutRelationName($includeName);
+
+            expect($result)->toBe($expected);
+        })->with([
+            ['user-profile', 'userProfile'],
+            ['user_profile', 'userProfile'],
+            ['user-profile_data', 'userProfileData'],
+            ['', ''],
+            ['user', 'user'],
+        ]);
     });
 
     it('can add/remove request criteria', function (): void {

@@ -4,7 +4,7 @@ namespace Apiato\Core\Repositories;
 
 use Apiato\Core\Repositories\Exceptions\ResourceCreationFailed;
 use Apiato\Core\Repositories\Exceptions\ResourceNotFound;
-use Apiato\Http\Response;
+use Apiato\Support\Facades\Response;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Contracts\Support\Arrayable;
@@ -65,25 +65,17 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      * Eager load relations if requested by the client via "include" query parameter.
      * This is a workaround for incompatible third-party packages. (Fractal, L5Repo).
      *
+     * TODO: Do we need to do the same for the excludes?
+     * TODO: Or default includes! Are they eager loaded by default?
+     * TODO: What if the include has parameters? e.g. include=books:limit(5|3)
+     *
      * @see https://apiato.atlassian.net/browse/API-905
      */
     public function eagerLoadRequestedIncludes(): void
     {
-        $this->scopeQuery(function (Builder|Model $model) {
+        $this->scope(function (Builder|Model $model) {
             if (request()?->has(config('fractal.auto_includes.request_key'))) {
-                $validIncludes = [];
-                // TODO: Do we need to do the same for the excludes?
-                // TODO: Or default includes! Are they eager loaded by default?
-                // TODO: What if the include has parameters? e.g. include=books:limit(5|3)
-                foreach (Response::getRequestedIncludes() as $includeName) {
-                    $relationParts = explode('.', $includeName);
-                    $camelCasedIncludeName = $this->filterInvalidRelations($this->model, $relationParts);
-                    if ($camelCasedIncludeName) {
-                        $validIncludes[] = $camelCasedIncludeName;
-                    }
-                }
-
-                return $model->with($validIncludes);
+                return $model->with($this->getValidIncludes());
             }
 
             return $model;
@@ -91,9 +83,20 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     /**
-     * TODO: rename this method or maybe keep the name but dont return null.
-     * Returning null causes multiple if() guard clauses as you can see.
+     * @return string[]
      */
+    public function getValidIncludes(): array
+    {
+        $validIncludes = array_filter(
+            array_map(
+                fn ($includeName) => $this->filterInvalidRelations($this->model, explode('.', $includeName)),
+                Response::getRequestedIncludes(),
+            ),
+        );
+
+        return $validIncludes;
+    }
+
     public function filterInvalidRelations(Builder|Model $model, array $relationParts): string|null
     {
         if ([] === $relationParts) {
@@ -114,21 +117,16 @@ abstract class Repository extends BaseRepository implements CacheableInterface
 
         $nextRelation = $this->filterInvalidRelations($nextModel, $relationParts);
 
-        if (is_null($nextRelation)) {
-            return null;
+        if (!is_null($nextRelation)) {
+            return $relation . '.' . $nextRelation;
         }
 
-        return $relation . '.' . $nextRelation;
+        return null;
     }
 
     public function figureOutRelationName(string $includeName): string
     {
-        return Str::of($includeName)
-            ->replace('-', ' ')
-            ->replace('_', ' ')
-            ->title()
-            ->replace(' ', '')
-            ->camel();
+        return Str::of($includeName)->camel();
     }
 
     /**

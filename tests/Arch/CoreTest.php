@@ -18,6 +18,7 @@ arch('src - final classes')
         'Apiato\Core',
         'Apiato\Generator',
         'Apiato\Support\Facades',
+        \Apiato\Http\Response::class,
     ]);
 
 arch('src/abstract')

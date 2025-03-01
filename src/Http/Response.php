@@ -16,7 +16,7 @@ use Webmozart\Assert\Assert;
  *
  * @see Fractal
  */
-final class Response extends Fractal
+class Response extends Fractal
 {
     /**
      * Parse the Request's include query parameter and return the requested includes as model relations.
