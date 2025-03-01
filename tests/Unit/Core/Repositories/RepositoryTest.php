@@ -330,7 +330,7 @@ describe(class_basename(Repository::class), function (): void {
     });
 
     describe('update', function (): void {
-        it('can update a model instance', function (): void {
+        it('can update an entity instance', function (): void {
             $repository = new BookRepository();
             $book = Book::factory()->createOne();
 
@@ -350,7 +350,7 @@ describe(class_basename(Repository::class), function (): void {
     });
 
     describe('findOrFail', function (): void {
-        it('can find a model instance', function (): void {
+        it('can find an entity instance', function (): void {
             $repository = new BookRepository();
             $book = Book::factory()->createOne();
 
@@ -370,7 +370,7 @@ describe(class_basename(Repository::class), function (): void {
     });
 
     describe('find', function (): void {
-        it('can find a model instance', function (): void {
+        it('can find an entity instance', function (): void {
             $repository = new BookRepository();
             $book = Book::factory()->createOne();
 
@@ -390,7 +390,7 @@ describe(class_basename(Repository::class), function (): void {
     });
 
     describe('findById', function (): void {
-        it('can find a model instance', function (): void {
+        it('can find an entity instance', function (): void {
             $repository = new BookRepository();
             $book = Book::factory()->createOne();
 
@@ -480,7 +480,7 @@ describe(class_basename(Repository::class), function (): void {
     });
 
     describe('delete', function (): void {
-        it('can delete a model instance', function (): void {
+        it('can delete an entity instance', function (): void {
             $repository = new BookRepository();
             $book = Book::factory()->createOne();
 
