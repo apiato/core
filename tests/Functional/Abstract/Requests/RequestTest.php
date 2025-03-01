@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Abstract\Requests\Request;
+use Apiato\Core\Requests\Request;
 
 describe(class_basename(Request::class), function (): void {
     it('can decode specified ids', function (bool $enabled): void {

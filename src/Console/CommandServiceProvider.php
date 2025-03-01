@@ -2,7 +2,7 @@
 
 namespace Apiato\Console;
 
-use Apiato\Abstract\Providers\ServiceProvider;
+use Apiato\Core\Providers\ServiceProvider;
 use Apiato\Console\Commands\ListActions;
 use Apiato\Console\Commands\ListTasks;
 

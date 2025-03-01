@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Abstract\Seeders\Seeder;
+use Apiato\Core\Seeders\Seeder;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Seeding;
 use Apiato\Foundation\Database\DatabaseSeeder;

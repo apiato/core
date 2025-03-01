@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Abstract\Models\BaseModel;
+use Apiato\Core\Models\BaseModel;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 

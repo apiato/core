@@ -2,7 +2,7 @@
 
 namespace Apiato\Foundation\Configuration;
 
-use Apiato\Abstract\Repositories\Repository as AbstractRepository;
+use Apiato\Core\Repositories\Repository as AbstractRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 

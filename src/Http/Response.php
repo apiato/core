@@ -2,7 +2,7 @@
 
 namespace Apiato\Http;
 
-use Apiato\Abstract\Transformers\Transformer;
+use Apiato\Core\Transformers\Transformer;
 use Apiato\Http\Resources\Collection;
 use Apiato\Http\Resources\Item;
 use Illuminate\Http\JsonResponse;

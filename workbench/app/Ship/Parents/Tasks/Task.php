@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Ship\Parents\Tasks;
 
-use Apiato\Abstract\Tasks\Task as AbstractTask;
+use Apiato\Core\Tasks\Task as AbstractTask;
 
 abstract class Task extends AbstractTask
 {

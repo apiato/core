@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Containers\MySection\Book\Data\Seeders;
 
-use Apiato\Abstract\Seeders\Seeder;
+use Apiato\Core\Seeders\Seeder;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 
 class Wondered_3 extends Seeder

@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Ship\Commands;
 
-use Apiato\Abstract\Commands\Command;
+use Apiato\Core\Commands\Command;
 
 final class ShipTestCommand extends Command
 {

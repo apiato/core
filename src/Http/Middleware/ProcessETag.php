@@ -2,7 +2,7 @@
 
 namespace Apiato\Http\Middleware;
 
-use Apiato\Abstract\Middleware\Middleware;
+use Apiato\Core\Middleware\Middleware;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;

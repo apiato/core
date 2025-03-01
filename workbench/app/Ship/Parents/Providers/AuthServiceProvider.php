@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Ship\Parents\Providers;
 
-use Apiato\Abstract\Providers\AuthServiceProvider as AbstractAuthServiceProvider;
+use Apiato\Core\Providers\AuthServiceProvider as AbstractAuthServiceProvider;
 
 abstract class AuthServiceProvider extends AbstractAuthServiceProvider
 {

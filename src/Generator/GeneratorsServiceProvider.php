@@ -2,7 +2,7 @@
 
 namespace Apiato\Generator;
 
-use Apiato\Abstract\Providers\ServiceProvider;
+use Apiato\Core\Providers\ServiceProvider;
 use Apiato\Generator\Commands\ActionGenerator;
 use Apiato\Generator\Commands\ConfigurationGenerator;
 use Apiato\Generator\Commands\ContainerApiGenerator;

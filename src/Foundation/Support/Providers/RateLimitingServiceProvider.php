@@ -2,7 +2,7 @@
 
 namespace Apiato\Foundation\Support\Providers;
 
-use Apiato\Abstract\Providers\ServiceProvider;
+use Apiato\Core\Providers\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;

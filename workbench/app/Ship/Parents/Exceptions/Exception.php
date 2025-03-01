@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Ship\Parents\Exceptions;
 
-use Apiato\Abstract\Exceptions\Exception as AbstractException;
+use Apiato\Core\Exceptions\Exception as AbstractException;
 
 abstract class Exception extends AbstractException
 {

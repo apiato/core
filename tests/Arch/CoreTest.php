@@ -1,7 +1,7 @@
 <?php
 
-use Apiato\Abstract\Repositories\Exceptions\ResourceCreationFailed;
-use Apiato\Abstract\Repositories\Exceptions\ResourceNotFound;
+use Apiato\Core\Repositories\Exceptions\ResourceCreationFailed;
+use Apiato\Core\Repositories\Exceptions\ResourceNotFound;
 
 arch()->preset()->php();
 
@@ -15,13 +15,13 @@ arch('src - final classes')
     ->expect('Apiato')
     ->classes()->toBeFinal()
     ->ignoring([
-        'Apiato\Abstract',
+        'Apiato\Core',
         'Apiato\Generator',
         'Apiato\Support\Facades',
     ]);
 
 arch('src/abstract')
-    ->expect('Apiato\Abstract')
+    ->expect('Apiato\Core')
     ->classes()->toBeAbstract()->ignoring([
         ResourceCreationFailed::class,
         ResourceNotFound::class,

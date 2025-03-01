@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Ship\Parents\Providers;
 
-use Apiato\Abstract\Providers\ServiceProvider as AbstractServiceProvider;
+use Apiato\Core\Providers\ServiceProvider as AbstractServiceProvider;
 
 abstract class ServiceProvider extends AbstractServiceProvider
 {

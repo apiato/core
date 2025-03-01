@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Containers\MySection\Author\Data\Seeders;
 
-use Apiato\Abstract\Seeders\Seeder;
+use Apiato\Core\Seeders\Seeder;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 
 class Unordered extends Seeder

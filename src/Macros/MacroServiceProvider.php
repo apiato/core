@@ -2,7 +2,7 @@
 
 namespace Apiato\Macros;
 
-use Apiato\Abstract\Providers\ServiceProvider;
+use Apiato\Core\Providers\ServiceProvider;
 use Apiato\Support\Sanitizer;
 use Illuminate\Config\Repository;
 use Illuminate\Http\Request;

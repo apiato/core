@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Ship\Parents\Collections;
 
-use Apiato\Abstract\Collections\EloquentCollection as AbstractEloquentCollection;
+use Apiato\Core\Collections\EloquentCollection as AbstractEloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 
 /**

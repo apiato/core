@@ -2,7 +2,7 @@
 
 namespace Apiato\Foundation\Providers;
 
-use Apiato\Abstract\Providers\ServiceProvider;
+use Apiato\Core\Providers\ServiceProvider;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Support\Providers\ConfigServiceProvider;

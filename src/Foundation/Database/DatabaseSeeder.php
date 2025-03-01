@@ -2,7 +2,7 @@
 
 namespace Apiato\Foundation\Database;
 
-use Apiato\Abstract\Seeders\Seeder;
+use Apiato\Core\Seeders\Seeder;
 use Apiato\Foundation\Apiato;
 
 final class DatabaseSeeder extends Seeder

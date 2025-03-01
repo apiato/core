@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Containers\Identity\User\UI\API\Transformers;
 
-use Apiato\Abstract\Transformers\Transformer;
+use Apiato\Core\Transformers\Transformer;
 use Apiato\Http\Resources\Collection;
 use Apiato\Http\Resources\Item;
 use League\Fractal\Resource\Primitive;

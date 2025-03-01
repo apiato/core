@@ -2,7 +2,7 @@
 
 namespace Apiato\Foundation\Support\Providers;
 
-use Apiato\Abstract\Providers\ServiceProvider;
+use Apiato\Core\Providers\ServiceProvider;
 use Apiato\Foundation\Apiato;
 
 final class MigrationServiceProvider extends ServiceProvider

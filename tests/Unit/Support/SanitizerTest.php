@@ -1,6 +1,6 @@
 <?php
 
-use Apiato\Abstract\Requests\Request;
+use Apiato\Core\Requests\Request;
 use Apiato\Support\Sanitizer;
 
 describe(class_basename(Sanitizer::class), function (): void {
