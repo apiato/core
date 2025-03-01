@@ -1,5 +1,8 @@
 <?php
 
+use Apiato\Abstract\Repositories\Exceptions\ResourceCreationFailed;
+use Apiato\Abstract\Repositories\Exceptions\ResourceNotFound;
+
 arch()->preset()->php();
 
 arch('src')
@@ -19,7 +22,10 @@ arch('src - final classes')
 
 arch('src/abstract')
     ->expect('Apiato\Abstract')
-    ->classes()->toBeAbstract();
+    ->classes()->toBeAbstract()->ignoring([
+        ResourceCreationFailed::class,
+        ResourceNotFound::class,
+    ]);
 
 arch('tests')
     ->expect('Workbench\App')

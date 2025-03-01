@@ -2,21 +2,31 @@
 
 namespace Apiato\Abstract\Repositories;
 
+use Apiato\Abstract\Repositories\Exceptions\ResourceCreationFailed;
+use Apiato\Abstract\Repositories\Exceptions\ResourceNotFound;
 use Apiato\Http\Response;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Database\Query\Expression;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use Prettus\Repository\Contracts\CacheableInterface;
+use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Repository\Traits\CacheableRepository;
+use Prettus\Validator\Exceptions\ValidatorException;
 
+/**
+ * @template TModel of Model
+ */
 abstract class Repository extends BaseRepository implements CacheableInterface
 {
-    use CacheableRepository {
-        CacheableRepository::paginate as cacheablePaginate;
-    }
+    use CacheableRepository;
 
     /**
      * Define the maximum number of entries per page that is returned.
@@ -25,6 +35,14 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     protected int $maxPaginationLimit = 0;
 
     protected bool|null $allowDisablePagination = null;
+
+    /** @var \Closure[] */
+    protected array $scopes = [];
+
+    public function __construct()
+    {
+        parent::__construct(app());
+    }
 
     public function boot(): void
     {
@@ -74,7 +92,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
 
     /**
      * TODO: rename this method or maybe keep the name but dont return null.
-     * Returning null causes multiple if() guard clauses as you can see
+     * Returning null causes multiple if() guard clauses as you can see.
      */
     public function filterInvalidRelations(Builder|Model $model, array $relationParts): string|null
     {
@@ -113,21 +131,14 @@ abstract class Repository extends BaseRepository implements CacheableInterface
             ->camel();
     }
 
-    public function model(): string
-    {
-        return apiato()->repository()->resolveModelName(static::class);
-    }
-
     /**
-     * Paginate the response.
+     * Retrieve all data of repository, paginated.
      *
-     * Apply pagination to the response.
-     * Use ?limit= to specify the number of entities in the response.
-     * The client can request all data (skipping pagination) by applying ?limit=0 to the request, if
-     * skipping pagination is allowed.
-     *
+     * @param int|null $limit The number of entries per page. If set to 0, the pagination is disabled.
      * @param array $columns
      * @param string $method
+     *
+     * @throws RepositoryException
      */
     public function paginate($limit = null, $columns = ['*'], $method = 'paginate'): mixed
     {
@@ -141,7 +152,21 @@ abstract class Repository extends BaseRepository implements CacheableInterface
             $limit = $this->maxPaginationLimit;
         }
 
-        return $this->cacheablePaginate($limit, $columns, $method);
+        if (!$this->allowedCache('paginate') || $this->isSkippedCache()) {
+            return parent::paginate($limit, $columns, $method);
+        }
+
+        $key = $this->getCacheKey('paginate', func_get_args());
+
+        $time = $this->getCacheTime();
+        $value = $this->getCacheRepository()->remember($key, $time, function () use ($limit, $columns, $method) {
+            return parent::paginate($limit, $columns, $method);
+        });
+
+        $this->resetModel();
+        $this->resetScope();
+
+        return $value;
     }
 
     public function setPaginationLimit($limit): mixed
@@ -165,6 +190,48 @@ abstract class Repository extends BaseRepository implements CacheableInterface
 
         // check global (.env) rule
         return config('repository.pagination.skip');
+    }
+
+    /**
+     * Retrieve all data of repository.
+     *
+     * @param array $columns
+     *
+     * @return Collection<array-key, TModel>
+     *
+     * @throws RepositoryException
+     */
+    public function all($columns = ['*'])
+    {
+        if (!$this->allowedCache('all') || $this->isSkippedCache()) {
+            return parent::all($columns);
+        }
+
+        $key = $this->getCacheKey('all', func_get_args());
+        $time = $this->getCacheTime();
+        $value = $this->getCacheRepository()->remember($key, $time, function () use ($columns) {
+            return parent::all($columns);
+        });
+
+        $this->resetModel();
+        $this->resetScope();
+
+        return $value;
+    }
+
+    public function resetScope(): static
+    {
+        parent::resetScope();
+        $this->resetScopes();
+
+        return $this;
+    }
+
+    public function resetScopes(): static
+    {
+        $this->scopes = [];
+
+        return $this;
     }
 
     public function exceedsMaxPaginationLimit(mixed $limit): bool
@@ -299,6 +366,291 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     public function removeRequestCriteria(): static
     {
         $this->popCriteria(RequestCriteria::class);
+
+        return $this;
+    }
+
+    /**
+     * Add a new global scope to the model.
+     */
+    public function scope(\Closure $scope): static
+    {
+        $this->scopes[] = $scope;
+
+        return $this;
+    }
+
+    /**
+     * Create a new Model instance.
+     *
+     * @return TModel
+     */
+    public function make(array $attributes)
+    {
+        return $this->getModel()->newInstance($attributes);
+    }
+
+    /**
+     * Returns the current Model instance.
+     * *
+     * @return TModel
+     */
+    public function getModel()
+    {
+        return parent::getModel();
+    }
+
+    /**
+     * Persist an model with the given attributes.
+     *
+     * TODO: This method should not fire any non-repository related events.
+     *
+     * @return TModel
+     *
+     * @throws ResourceCreationFailed
+     */
+    public function store(Arrayable|array $data)
+    {
+        if (is_array($data)) {
+            return $this->create($data);
+        }
+
+        return $this->create($data->toArray());
+    }
+
+    /**
+     * Save a new model and return the instance.
+     *
+     * @return TModel
+     *
+     * @throws ResourceCreationFailed
+     */
+    public function create(array $attributes)
+    {
+        try {
+            return parent::create($attributes);
+        } catch (\Exception) {
+            throw ResourceCreationFailed::create(class_basename($this->model()));
+        }
+    }
+
+    public function model(): string
+    {
+        return apiato()->repository()->resolveModelName(static::class);
+    }
+
+    /**
+     * Persist a Model instance to the database.
+     *
+     * @param TModel $model
+     *
+     * @return TModel
+     */
+    public function save($model)
+    {
+        $model->save();
+
+        return $model;
+    }
+
+    /**
+     * Get the first record matching the attributes. If the record is not found, create it.
+     *
+     * @return TModel
+     */
+    public function firstOrCreate(array $attributes = [], array $values = [])
+    {
+        /** @var TModel $model */
+        $model = parent::firstOrCreate($attributes);
+        if ($model->wasRecentlyCreated) {
+            $model->update($values);
+        }
+
+        return $model;
+    }
+
+    /**
+     * Update a model in repository by id.
+     *
+     * @param int|string $id
+     *
+     * @return TModel
+     *
+     * @throws ResourceNotFound
+     * @throws ValidatorException
+     */
+    public function update(array $attributes, $id)
+    {
+        try {
+            return parent::update($attributes, $id);
+        } catch (ModelNotFoundException) {
+            throw ResourceNotFound::create(class_basename($this->model()));
+        }
+    }
+
+    /**
+     * Find a model by its primary key or throw an exception.
+     *
+     * @return TModel
+     *
+     * @throws ResourceNotFound
+     */
+    public function findOrFail(int|string $id, array $columns = ['*'])
+    {
+        return $this->find($id, $columns) ?? throw ResourceNotFound::create(class_basename($this->model()));
+    }
+
+    /**
+     * Find a model/s by its primary key.
+     *
+     * @param int|string|array|Arrayable $id
+     * @param array $columns
+     *
+     * @return ($id is array|Arrayable ? Collection<array-key, TModel> : TModel|null)
+     *
+     * @throws RepositoryException
+     */
+    public function find($id, $columns = ['*'])
+    {
+        try {
+            if (!$this->allowedCache('find') || $this->isSkippedCache()) {
+                return parent::find($id, $columns);
+            }
+
+            $key = $this->getCacheKey('find', func_get_args());
+            $time = $this->getCacheTime();
+            $value = $this->getCacheRepository()->remember($key, $time, function () use ($id, $columns) {
+                return parent::find($id, $columns);
+            });
+
+            $this->resetModel();
+            $this->resetScope();
+
+            return $value;
+        } catch (ModelNotFoundException) {
+            return null;
+        }
+    }
+
+    /**
+     * Find a model by its primary key.
+     *
+     * @return TModel|null
+     */
+    public function findById(int|string $id, array $columns = ['*'])
+    {
+        return $this->find($id, $columns);
+    }
+
+    /**
+     * Find multiple models by their primary keys.
+     *
+     * @return Collection<array-key, TModel>
+     */
+    public function findMany(array|Arrayable $ids, array $columns = ['*'])
+    {
+        return $this->find($ids, $columns) ?? new Collection();
+    }
+
+    /**
+     * Find data by field and value.
+     *
+     * @param (\Closure(static): mixed)|string|array|Expression $field
+     * @param mixed $value
+     * @param array $columns
+     *
+     * @return Collection<array-key, TModel>
+     */
+    public function findByField($field, $value = null, $columns = ['*'])
+    {
+        if (!$this->allowedCache('findByField') || $this->isSkippedCache()) {
+            return parent::findByField($field, $value, $columns);
+        }
+
+        $key = $this->getCacheKey('findByField', func_get_args());
+        $time = $this->getCacheTime();
+        $value = $this->getCacheRepository()->remember($key, $time, function () use ($field, $value, $columns) {
+            return parent::findByField($field, $value, $columns);
+        });
+
+        $this->resetModel();
+        $this->resetScope();
+
+        return $value;
+    }
+
+    /**
+     * Find models by multiple fields.
+     *
+     * @param array|string $columns
+     *
+     * @return Collection<array-key, TModel>
+     */
+    public function findWhere(array $where, $columns = ['*'])
+    {
+        if (!$this->allowedCache('findWhere') || $this->isSkippedCache()) {
+            return parent::findWhere($where, $columns);
+        }
+
+        $key = $this->getCacheKey('findWhere', func_get_args());
+        $time = $this->getCacheTime();
+        $value = $this->getCacheRepository()->remember($key, $time, function () use ($where, $columns) {
+            return parent::findWhere($where, $columns);
+        });
+
+        $this->resetModel();
+        $this->resetScope();
+
+        return $value;
+    }
+
+    /**
+     * Delete the model from the database.
+     *
+     * @param int|string $id
+     *
+     * @throws ResourceNotFound
+     */
+    public function delete($id): true
+    {
+        try {
+            return (bool) parent::delete($id);
+        } catch (ModelNotFoundException) {
+            throw ResourceNotFound::create(class_basename($this->model()));
+        }
+    }
+
+    /**
+     * @param class-string<CriteriaInterface> $criteria Criteria class name
+     * @param array<string, mixed> $args Arguments to pass to the criteria constructor
+     *
+     * @throws RepositoryException
+     * @throws BindingResolutionException
+     */
+    public function pushCriteriaWith(string $criteria, array $args): static
+    {
+        /** @var CriteriaInterface $criteriaInstance */
+        $criteriaInstance = $this->app->makeWith($criteria, $args);
+
+        return $this->pushCriteria($criteriaInstance);
+    }
+
+    protected function applyScope(): static
+    {
+        parent::applyScope();
+        $this->applyScopes();
+
+        return $this;
+    }
+
+    protected function applyScopes(): static
+    {
+        foreach ($this->scopes as $scope) {
+            if (!is_callable($scope)) {
+                throw new \RuntimeException('Query scope is not callable');
+            }
+            $this->model = $scope($this->model);
+        }
 
         return $this;
     }
