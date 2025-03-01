@@ -401,9 +401,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     /**
-     * Persist an model with the given attributes.
-     *
-     * TODO: This method should not fire any non-repository related events.
+     * Persist an entity with the given attributes.
      *
      * @return TModel
      *
@@ -440,7 +438,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     /**
-     * Persist a Model instance to the database.
+     * Persist an entity instance to the database.
      *
      * @param TModel $model
      *
@@ -470,7 +468,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     /**
-     * Update a model in repository by id.
+     * Update an entity in repository by id.
      *
      * @param int|string $id
      *
@@ -489,7 +487,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     /**
-     * Find a model by its primary key or throw an exception.
+     * Find an entity by its primary key or throw an exception.
      *
      * @return TModel
      *
@@ -501,7 +499,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     /**
-     * Find a model/s by its primary key.
+     * Find an entity/s by its primary key.
      *
      * @param int|string|array|Arrayable $id
      * @param array $columns
@@ -533,7 +531,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     /**
-     * Find a model by its primary key.
+     * Find an entity by its primary key.
      *
      * @return TModel|null
      */
