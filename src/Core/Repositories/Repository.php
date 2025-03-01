@@ -556,7 +556,6 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      * Find data by field and value.
      *
      * @param (\Closure(static): mixed)|string|array|Expression $field
-     * @param mixed $value
      * @param array $columns
      *
      * @return Collection<array-key, TModel>
