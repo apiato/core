@@ -14,7 +14,6 @@ describe(class_basename(Repository::class), function (): void {
         array $booksMustLoadRelations,
         array $mustNotLoadRelations,
     ): void {
-        config(['fractal.auto_includes.request_key' => 'include']);
         request()->merge(['include' => $include]);
         User::factory()
             ->has(
@@ -83,5 +82,36 @@ describe(class_basename(Repository::class), function (): void {
             ['author'],
             ['children'],
         ],
+    ]);
+
+    it('can disable eager loading', function (bool $enabled): void {
+        request()->merge(['include' => 'books']);
+        User::factory()->has(Book::factory())->createOne();
+        $repository = new class($enabled) extends UserRepository {
+            public function __construct(
+                private readonly bool $enabled,
+            ) {
+                parent::__construct();
+            }
+
+            public function shouldEagerLoadIncludes(): bool
+            {
+                return $this->enabled;
+            }
+        };
+
+        $result = $repository->all();
+
+        expect($result)->toHaveCount(1)
+            ->each(function (Expectation $expectation) use ($enabled): void {
+                $expectation->when($enabled, function (Expectation $expectation): void {
+                    $expectation->relationLoaded('books')->toBeTrue();
+                })->when(!$enabled, function (Expectation $expectation): void {
+                    $expectation->relationLoaded('books')->toBeFalse();
+                });
+            });
+    })->with([
+        'enabled' => [true],
+        'disabled' => [false],
     ]);
 })->covers(Repository::class);
