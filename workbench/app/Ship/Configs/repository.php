@@ -29,7 +29,6 @@ return [
     DataArraySerializer
     JsonApiSerializer
 
-    TODO
     */
     'fractal'    => [
         'params'     => [
