@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Webmozart\Assert\Assert;
 
-final readonly class RequestInclude
+final readonly class RequestRelation
 {
     public function __construct(
         private Request $request,
@@ -29,7 +29,7 @@ final readonly class RequestInclude
      *
      * @return string[]
      */
-    public function getValidIncludesFor(Model $model): array
+    public function getValidRelationsFor(Model $model): array
     {
         return $this->getDeepestRelations(
             ...array_filter(

@@ -4,7 +4,7 @@ namespace Apiato\Core\Repositories;
 
 use Apiato\Core\Repositories\Exceptions\ResourceCreationFailed;
 use Apiato\Core\Repositories\Exceptions\ResourceNotFound;
-use Apiato\Http\RequestInclude;
+use Apiato\Http\RequestRelation;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Contracts\Support\Arrayable;
@@ -48,7 +48,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         parent::boot();
 
         if ($this->shouldEagerLoadIncludes()) {
-            $this->eagerLoadRequestedIncludes(app(RequestInclude::class));
+            $this->eagerLoadRequestedIncludes(app(RequestRelation::class));
         }
     }
 
@@ -64,20 +64,19 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      * Eager load relations if requested by the client via "include" query parameter.
      * This is a workaround for incompatible third-party packages. (Fractal, L5Repo).
      *
-     * TODO: Do we need to do the same for the excludes?
-     * TODO: What if the include has parameters? e.g. include=books:limit(5|3)
+     * TODO: What if the include has parameters? e.g. include=books:limit(5|3). Does this still work?
      *
      * @see https://apiato.atlassian.net/browse/API-905
      */
-    public function eagerLoadRequestedIncludes(RequestInclude $include): void
+    public function eagerLoadRequestedIncludes(RequestRelation $requestRelation): void
     {
-        $this->scope(function (Builder|Model $model) use ($include): Builder|Model {
-            if ($include->requestingIncludes()) {
+        $this->scope(function (Builder|Model $model) use ($requestRelation): Builder|Model {
+            if ($requestRelation->requestingIncludes()) {
                 if ($model instanceof Model) {
-                    return $model->with($include->getValidIncludesFor($model));
+                    return $model->with($requestRelation->getValidRelationsFor($model));
                 }
 
-                return $model->with($include->getValidIncludesFor($model->getModel()));
+                return $model->with($requestRelation->getValidRelationsFor($model->getModel()));
             }
 
             return $model;

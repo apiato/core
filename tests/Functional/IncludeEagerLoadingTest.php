@@ -8,8 +8,8 @@ use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe('Include eager loading', function (): void {
-    it('can eager load requested includes', function (): void {
-        $user = User::factory()
+    beforeEach(function (): void {
+        $this->user = User::factory()
             ->has(
                 User::factory()->has(Book::factory(3)),
                 'children',
@@ -18,28 +18,53 @@ describe('Include eager loading', function (): void {
         request()->merge([
             'include' => 'children.books,parent',
         ]);
-        $repository = new class extends UserRepository {
+        $this->repository = new class extends UserRepository {
             public function shouldEagerLoadIncludes(): bool
             {
                 return true;
             }
         };
 
-        expect($user->relationLoaded('books'))->toBeFalse()
-            ->and($user->relationLoaded('parent'))->toBeFalse()
-            ->and($user->children->first()->relationLoaded('books'))->toBeFalse();
+        expect($this->user->relationLoaded('books'))->toBeFalse()
+            ->and($this->user->relationLoaded('parent'))->toBeFalse()
+            ->and($this->user->children->first()->relationLoaded('books'))->toBeFalse();
+    });
 
-        $result = $repository
+    it('can eager load requested includes', function (): void {
+        $result = $this->repository
             ->with('comments')
-            ->findById($user->id);
-
-        // TODO
-        //        dd(LazyLoadingViolationException::class);
-        // eager true false test
+            ->findById($this->user->id);
 
         expect($result->relationLoaded('children'))->toBeTrue()
             ->and($result->relationLoaded('parent'))->toBeTrue()
             ->and($result->relationLoaded('comments'))->toBeTrue()
             ->and($result->children->first()->relationLoaded('books'))->toBeTrue();
     });
+
+    it('cant automatically include default includes', function (): void {
+        $result = $this->repository
+            ->findById($this->user->id);
+        expect($result->relationLoaded('comments'))->toBeFalse();
+
+        $result = $this->repository
+            ->with('comments')
+            ->findById($this->user->id);
+
+        expect($result->relationLoaded('comments'))->toBeTrue();
+    });
+
+    it('excluding includes will not eager load them', function (): void {
+        request()->merge([
+            'exclude' => 'children.books,parent',
+        ]);
+
+        $result = $this->repository
+            ->with('comments')
+            ->findById($this->user->id);
+
+        expect($result->relationLoaded('children'))->toBeTrue()
+            ->and($result->relationLoaded('parent'))->toBeFalse()
+            ->and($result->relationLoaded('comments'))->toBeTrue()
+            ->and($result->children->first()->relationLoaded('books'))->toBeFalse();
+    })->todo();
 })->covers(Response::class, Transformer::class, Repository::class);

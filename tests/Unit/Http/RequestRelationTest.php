@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Support;
 
-use Apiato\Http\RequestInclude;
+use Apiato\Http\RequestRelation;
 use Workbench\App\Containers\Identity\User\Models\User;
 
-describe(class_basename(RequestInclude::class), function (): void {
+describe(class_basename(RequestRelation::class), function (): void {
     it('can parse requested includes', function (string|array $include): void {
         request()->merge(['include' => $include]);
-        $sut = new RequestInclude(request());
+        $sut = new RequestRelation(request());
 
         $result = $sut->parseIncludes();
 
@@ -24,9 +24,9 @@ describe(class_basename(RequestInclude::class), function (): void {
 
     it('returns valid includes', function (array $include, array $expected): void {
         request()->merge(['include' => $include]);
-        $sut = new RequestInclude(request());
+        $sut = new RequestRelation(request());
 
-        $result = $sut->getValidIncludesFor(new User());
+        $result = $sut->getValidRelationsFor(new User());
 
         expect($result)->toEqualCanonicalizing($expected);
     })->with([
@@ -38,7 +38,7 @@ describe(class_basename(RequestInclude::class), function (): void {
     ]);
 
     it('converts include name to camel case', function (string $includeName, string $expected): void {
-        $result = RequestInclude::figureOutRelationName($includeName);
+        $result = RequestRelation::figureOutRelationName($includeName);
 
         expect($result)->toBe($expected);
     })->with([
@@ -48,4 +48,4 @@ describe(class_basename(RequestInclude::class), function (): void {
         ['', ''],
         ['user', 'user'],
     ]);
-})->covers(RequestInclude::class);
+})->covers(RequestRelation::class);
