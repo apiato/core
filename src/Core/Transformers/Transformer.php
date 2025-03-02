@@ -9,6 +9,11 @@ use League\Fractal\TransformerAbstract as FractalTransformer;
 
 abstract class Transformer extends FractalTransformer
 {
+    public static function empty(): callable
+    {
+        return static fn (): array => [];
+    }
+
     public function nullableItem(mixed $data, callable|self $transformer, string|null $resourceKey = null): Primitive|Item
     {
         if (is_null($data)) {
@@ -26,10 +31,5 @@ abstract class Transformer extends FractalTransformer
     public function collection($data, $transformer, string|null $resourceKey = null): Collection
     {
         return new Collection($data, $transformer, $resourceKey);
-    }
-
-    public static function empty(): callable
-    {
-        return static fn (): array => [];
     }
 }
