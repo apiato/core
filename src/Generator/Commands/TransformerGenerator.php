@@ -80,7 +80,7 @@ final class TransformerGenerator extends Generator implements ComponentsGenerato
         $indent = str_repeat(' ', 12);
         $_model = Str::lower($model);
         $fields = [
-            'object' => '$' . $_model . '->getResourceKey()',
+            'type' => '$' . $_model . '->getResourceKey()',
         ];
 
         if ($full) {
