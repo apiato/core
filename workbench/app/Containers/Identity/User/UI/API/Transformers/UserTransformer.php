@@ -8,6 +8,7 @@ use Apiato\Http\Resources\Item;
 use League\Fractal\Resource\Primitive;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\MySection\Book\UI\API\Transformers\BookTransformer;
+use Workbench\App\Containers\SocialInteraction\Comment\Models\Comment;
 
 final class UserTransformer extends Transformer
 {
@@ -17,12 +18,14 @@ final class UserTransformer extends Transformer
         'books',
     ];
 
-    protected array $defaultIncludes = [];
+    protected array $defaultIncludes = [
+        'comments'
+    ];
 
     public function transform(User $user): array
     {
         return [
-            'object' => $user->getResourceKey(),
+            'type' => $user->getResourceKey(),
             'id' => $user->getHashedKey(),
             'name' => $user->name,
             'email' => $user->email,
@@ -44,5 +47,10 @@ final class UserTransformer extends Transformer
     public function includeBooks(User $user): Collection
     {
         return $this->collection($user->books, new BookTransformer());
+    }
+
+    public function includeComments(User $user): Collection
+    {
+        return $this->collection($user->comments, fn (Comment $comment) => $comment->toArray());
     }
 }

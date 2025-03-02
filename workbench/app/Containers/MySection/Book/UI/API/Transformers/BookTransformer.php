@@ -18,10 +18,10 @@ class BookTransformer extends Transformer
     public function transform(Book $book): array
     {
         return [
-            'object' => $book->getResourceKey(),
+            'type' => $book->getResourceKey(),
             'id' => $book->getHashedKey(),
             'title' => $book->title,
-            'author' => $book->author->name,
+            'author' => $book->author?->name,
             'created_at' => $book->created_at,
             'updated_at' => $book->updated_at,
         ];

@@ -6,6 +6,7 @@ use Apiato\Core\Transformers\Transformer;
 use Apiato\Http\Resources\Collection;
 use Apiato\Http\Resources\Item;
 use Illuminate\Http\JsonResponse;
+use League\Fractal\Manager;
 use League\Fractal\Scope;
 use League\Fractal\TransformerAbstract;
 use Spatie\Fractal\Fractal;
@@ -18,27 +19,9 @@ use Webmozart\Assert\Assert;
  */
 class Response extends Fractal
 {
-    /**
-     * Parse the Request's include query parameter and return the requested includes as model relations.
-     *
-     * For example, if the include query parameter is "books,children.books", this method will return:
-     * ['books', 'children', 'children.books']
-     *
-     * @return string[]
-     */
-    public static function getRequestedIncludes(): array
+    public function manager(): Manager
     {
-        $requestKey = config('fractal.auto_includes.request_key');
-        Assert::nullOrString($requestKey);
-        $includes = request()->input($requestKey, []);
-
-        if (is_array($includes)) {
-            Assert::allString($includes);
-        } else {
-            Assert::string($includes);
-        }
-
-        return self::create()->manager->parseIncludes($includes)->getRequestedIncludes();
+        return $this->manager;
     }
 
     public function createData(): Scope
@@ -47,19 +30,6 @@ class Response extends Fractal
         $this->setAvailableIncludesMeta();
 
         return parent::createData();
-    }
-
-    public function getResourceClass(): string
-    {
-        if ('item' === $this->dataType) {
-            return Item::class;
-        }
-
-        if ('collection' === $this->dataType) {
-            return Collection::class;
-        }
-
-        return parent::getResourceClass();
     }
 
     private function resourceKeyOrDefault(): string
@@ -105,6 +75,19 @@ class Response extends Fractal
         Assert::allString($includes);
 
         return $includes;
+    }
+
+    public function getResourceClass(): string
+    {
+        if ('item' === $this->dataType) {
+            return Item::class;
+        }
+
+        if ('collection' === $this->dataType) {
+            return Collection::class;
+        }
+
+        return parent::getResourceClass();
     }
 
     /**

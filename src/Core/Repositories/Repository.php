@@ -4,7 +4,7 @@ namespace Apiato\Core\Repositories;
 
 use Apiato\Core\Repositories\Exceptions\ResourceCreationFailed;
 use Apiato\Core\Repositories\Exceptions\ResourceNotFound;
-use Apiato\Support\Facades\Response;
+use Apiato\Http\RequestInclude;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Contracts\Support\Arrayable;
@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Str;
 use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -49,7 +48,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         parent::boot();
 
         if ($this->shouldEagerLoadIncludes()) {
-            $this->eagerLoadRequestedIncludes();
+            $this->eagerLoadRequestedIncludes(app(RequestInclude::class));
         }
     }
 
@@ -66,16 +65,19 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      * This is a workaround for incompatible third-party packages. (Fractal, L5Repo).
      *
      * TODO: Do we need to do the same for the excludes?
-     * TODO: Or default includes! Are they eager loaded by default?
      * TODO: What if the include has parameters? e.g. include=books:limit(5|3)
      *
      * @see https://apiato.atlassian.net/browse/API-905
      */
-    public function eagerLoadRequestedIncludes(): void
+    public function eagerLoadRequestedIncludes(RequestInclude $include): void
     {
-        $this->scope(function (Builder|Model $model) {
-            if (request()?->has(config('fractal.auto_includes.request_key'))) {
-                return $model->with($this->getValidIncludes());
+        $this->scope(function (Builder|Model $model) use ($include): Builder|Model {
+            if ($include->requestingIncludes()) {
+                if ($model instanceof Model) {
+                    return $model->with($include->getValidIncludesFor($model));
+                }
+
+                return $model->with($include->getValidIncludesFor($model->getModel()));
             }
 
             return $model;
@@ -83,50 +85,23 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     /**
-     * @return string[]
+     * Add a new global scope to the model.
      */
-    public function getValidIncludes(): array
+    public function scope(\Closure $scope): static
     {
-        $validIncludes = array_filter(
-            array_map(
-                fn ($includeName) => $this->filterInvalidRelations($this->model, explode('.', $includeName)),
-                Response::getRequestedIncludes(),
-            ),
-        );
+        $this->scopes[] = $scope;
 
-        return $validIncludes;
+        return $this;
     }
 
-    public function filterInvalidRelations(Builder|Model $model, array $relationParts): string|null
+    /**
+     * Returns the current Model instance.
+     * *
+     * @return TModel
+     */
+    public function getModel()
     {
-        if ([] === $relationParts) {
-            return null;
-        }
-
-        $relation = $this->figureOutRelationName(array_shift($relationParts));
-
-        if (!method_exists($model, $relation)) {
-            return null;
-        }
-
-        $nextModel = $model->$relation()->getRelated();
-
-        if ([] === $relationParts) {
-            return $relation;
-        }
-
-        $nextRelation = $this->filterInvalidRelations($nextModel, $relationParts);
-
-        if (!is_null($nextRelation)) {
-            return $relation . '.' . $nextRelation;
-        }
-
-        return null;
-    }
-
-    public function figureOutRelationName(string $includeName): string
-    {
-        return Str::of($includeName)->camel();
+        return parent::getModel();
     }
 
     /**
@@ -369,16 +344,6 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     /**
-     * Add a new global scope to the model.
-     */
-    public function scope(\Closure $scope): static
-    {
-        $this->scopes[] = $scope;
-
-        return $this;
-    }
-
-    /**
      * Create a new Model instance.
      *
      * @return TModel
@@ -386,16 +351,6 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     public function make(array $attributes)
     {
         return $this->getModel()->newInstance($attributes);
-    }
-
-    /**
-     * Returns the current Model instance.
-     * *
-     * @return TModel
-     */
-    public function getModel()
-    {
-        return parent::getModel();
     }
 
     /**

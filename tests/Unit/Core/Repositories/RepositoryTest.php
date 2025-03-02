@@ -5,7 +5,6 @@ namespace Tests\Unit\Abstract\Repositories;
 use Apiato\Core\Repositories\Exceptions\ResourceCreationFailed;
 use Apiato\Core\Repositories\Exceptions\ResourceNotFound;
 use Apiato\Core\Repositories\Repository;
-use Apiato\Support\Facades\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Pest\Expectation;
@@ -16,81 +15,6 @@ use Workbench\App\Containers\MySection\Book\Data\Repositories\BookRepository;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(Repository::class), function (): void {
-    describe('eager loading request includes', function (): void {
-        it('can eager load multiple includes', function (): void {
-            User::factory()
-                ->has(
-                    User::factory()
-                        ->has(Book::factory(3)),
-                    'children',
-                )->has(Book::factory(3))
-                ->createOne();
-            $repository = new class extends UserRepository {
-                public function shouldEagerLoadIncludes(): bool
-                {
-                    return true;
-                }
-            };
-
-            /** @var Collection<int, User> $result */
-            $result = $repository->with('books')->with('children.books')->all();
-
-            expect($result)->toBeInstanceOf(Collection::class)
-                ->each(function (Expectation $expectation): void {
-                    $expectation->relationLoaded('books')->toBeTrue();
-                    $expectation->relationLoaded('children')->toBeTrue();
-                    $expectation->children->each(function (Expectation $expectation): void {
-                        $expectation->relationLoaded('books')->toBeTrue();
-                    });
-                });
-        });
-
-        it('returns valid includes', function (array $requestedIncludes, array $expected) {
-            $repository = new UserRepository();
-            Response::shouldReceive('getRequestedIncludes')
-                ->andReturn($requestedIncludes);
-
-            $result = $repository->getValidIncludes();
-
-            expect($result)->toBe($expected);
-        })->with([
-            [['books.author', 'parent.children.parent'], ['books.author', 'parent.children.parent']],
-            [['books.invalidRelation'], []],
-            [['invalidRelation'], []],
-            [[], []],
-            [['books'], ['books']],
-        ]);
-
-        it('filters invalid relations correctly', function (array $relationParts, string|null $expected): void {
-            $repository = new UserRepository();
-            $model = new User();
-
-            $result = $repository->filterInvalidRelations($model, $relationParts);
-
-            expect($result)->toBe($expected);
-        })->with([
-            [['books', 'author'], 'books.author'],
-            [['books', 'invalidRelation'], null],
-            [['invalidRelation'], null],
-            [[], null],
-            [['parent'], 'parent'],
-        ]);
-
-        it('converts include name to camel case', function (string $includeName, string $expected): void {
-            $repository = new UserRepository();
-
-            $result = $repository->figureOutRelationName($includeName);
-
-            expect($result)->toBe($expected);
-        })->with([
-            ['user-profile', 'userProfile'],
-            ['user_profile', 'userProfile'],
-            ['user-profile_data', 'userProfileData'],
-            ['', ''],
-            ['user', 'user'],
-        ]);
-    });
-
     it('can add/remove request criteria', function (): void {
         $repository = new BookRepository();
 

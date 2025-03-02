@@ -6,6 +6,7 @@ use Apiato\Http\Resources\Item;
 use Apiato\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Testing\Fluent\AssertableJson;
+use League\Fractal\Manager;
 use League\Fractal\ParamBag;
 use League\Fractal\Resource\NullResource;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
@@ -27,6 +28,14 @@ describe(class_basename(Response::class), function (): void {
             ->has(Book::factory(2))
             ->createOne();
     }
+
+    it('can return its manager instance', function (): void {
+        $response = Response::create(getUser());
+
+        $result = $response->manager();
+
+        expect($result)->toBeInstanceOf(Manager::class);
+    });
 
     it('can handle CSV includes for single resource', function (string $include, array $expected): void {
         request()->merge(['include' => $include]);
@@ -133,32 +142,32 @@ describe(class_basename(Response::class), function (): void {
         'without includes' => [
             'fields' => ['User' => 'id,email'],
             'expected' => ['data.id', 'data.email'],
-            'missing' => ['data.object', 'data.name', 'data.created_at', 'data.updated_at', 'data.children', 'data.books'],
+            'missing' => ['data.type', 'data.name', 'data.created_at', 'data.updated_at', 'data.children', 'data.books'],
         ],
         'only filter nested include keys' => [
             'fields' => ['Book' => 'author,title'],
-            'expected' => ['data.object', 'data.id', 'data.email', 'data.name', 'data.created_at', 'data.updated_at', 'data.books.data.0.author', 'data.books.data.0.title'],
+            'expected' => ['data.type', 'data.id', 'data.email', 'data.name', 'data.created_at', 'data.updated_at', 'data.books.data.0.author', 'data.books.data.0.title'],
             'missing' => ['data.books.data.0.id', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
         ],
         'with first level includes - no filter' => [
-            'fields' => ['User' => 'object,id,email,books'],
-            'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.author', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
+            'fields' => ['User' => 'type,id,email,books'],
+            'expected' => ['data.type', 'data.id', 'data.email', 'data.books.data.0.type', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.author', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
             'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
         ],
         'with first level includes - filter' => [
-            'fields' => ['User' => 'object,id,email,books', 'Book' => 'object,author'],
-            'expected' => ['data.object', 'data.id', 'data.email', 'data.books.data.0.object', 'data.books.data.0.author'],
+            'fields' => ['User' => 'type,id,email,books', 'Book' => 'type,author'],
+            'expected' => ['data.type', 'data.id', 'data.email', 'data.books.data.0.type', 'data.books.data.0.author'],
             'missing' => ['data.children', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.created_at', 'data.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
         ],
         'with nested includes - no filter' => [
-            'fields' => ['User' => 'object,id,email,children,books'],
-            'expected' => ['data.object', 'data.id', 'data.email', 'data.children.data.0.object', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.id', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at'],
+            'fields' => ['User' => 'type,id,email,children,books'],
+            'expected' => ['data.type', 'data.id', 'data.email', 'data.children.data.0.type', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.type', 'data.children.data.0.books.data.0.id', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at'],
             'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
         ],
         'with nested includes - filter' => [
             'fields' => ['User' => 'id,email,children,books', 'Book' => 'id'],
             'expected' => ['data.id', 'data.email', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.id'],
-            'missing' => ['data.object', 'data.children.data.0.object', 'data.children.data.0.books.data.0.object', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
+            'missing' => ['data.type', 'data.children.data.0.type', 'data.children.data.0.books.data.0.type', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
         ],
     ]);
 
@@ -257,7 +266,7 @@ describe(class_basename(Response::class), function (): void {
 
         $result = AssertableJson::fromArray($response->toArray());
 
-        $result->missing('data.object');
+        $result->missing('data.type');
     })->with([
         'empty string' => [
             'resourceName' => '',
@@ -275,7 +284,7 @@ describe(class_basename(Response::class), function (): void {
 
         $result = AssertableJson::fromArray($response->toArray());
 
-        $result->has('data.object');
+        $result->has('data.type');
     })->with([
         'null' => [
             'resourceName' => null,
@@ -317,21 +326,6 @@ describe(class_basename(Response::class), function (): void {
 
         expect($result->getStatusCode())->toBe(204);
     });
-
-    it('can parse requested includes', function (string|array $include): void {
-        request()->merge(['include' => $include]);
-
-        $result = Response::getRequestedIncludes();
-
-        expect($result)->toBe(['books', 'children', 'children.books']);
-    })->with([
-        'array' => [
-            'include' => ['books', 'children.books'],
-        ],
-        'csv string' => [
-            'include' => 'books,children.books',
-        ],
-    ]);
 
     it('can parse include params with resource name', function (): void {
         $include = 'books';

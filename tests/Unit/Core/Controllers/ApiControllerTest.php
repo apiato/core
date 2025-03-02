@@ -32,8 +32,8 @@ describe(class_basename(ApiController::class), function (): void {
 
         expect($result)->toBeArray()
             ->and($result)->toHaveKey('data')
-            ->and($result['data'])->toHaveKey('object')
-            ->and($result['data']['object'])->toBe($user->getResourceKey())
+            ->and($result['data'])->toHaveKey('type')
+            ->and($result['data']['type'])->toBe($user->getResourceKey())
             ->and($result['data'])->not->toHaveKey('parent');
         assertMetadata($result);
     });
@@ -66,7 +66,7 @@ describe(class_basename(ApiController::class), function (): void {
                 resourceKey: $resourceKey,
             );
 
-        $this->assertEquals($expected, $result['data']['object']);
+        $this->assertEquals($expected, $result['data']['type']);
     })->with([
         'null' => [
             'resourceKey' => null,

@@ -44,6 +44,8 @@ describe(class_basename(Apiato::class), function (): void {
                 EventServiceProvider::class,
             ])->and($apiato->configs())->toEqualCanonicalizing([
                 shared_path('Configs/boat.php'),
+                shared_path('Configs/fractal.php'),
+                shared_path('Configs/repository.php'),
                 app_path('Containers/MySection/Book/Configs/mySection-book.php'),
             ])->and($apiato->events())->toEqualCanonicalizing([
                 shared_path('Listeners'),
