@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Support;
 
+use Apiato\Core\Transformers\Transformer;
 use Apiato\Http\Resources\Item;
 use Apiato\Http\Response;
 use Illuminate\Support\Collection;
@@ -358,4 +359,12 @@ describe(class_basename(Response::class), function (): void {
         [[], \Apiato\Http\Resources\Collection::class],
         [null, NullResource::class],
     ]);
+
+    it('always returns array', function (): void {
+        $response = Response::create(getUser(), Transformer::empty());
+
+        $result = $response->toArray();
+
+        expect($result)->toBeArray();
+    });
 })->covers(Response::class);

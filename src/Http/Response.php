@@ -90,6 +90,11 @@ class Response extends Fractal
         return parent::getResourceClass();
     }
 
+    public function toArray(): array
+    {
+        return $this->createData()->toArray() ?? [];
+    }
+
     /**
      * Returns a "202 - Accepted" response.
      */
