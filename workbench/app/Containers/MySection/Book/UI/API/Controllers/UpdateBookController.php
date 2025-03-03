@@ -2,6 +2,7 @@
 
 namespace Workbench\App\Containers\MySection\Book\UI\API\Controllers;
 
+use Apiato\Support\Facades\Response;
 use Illuminate\Http\JsonResponse;
 use Workbench\App\Containers\MySection\Book\UI\API\Requests\UpdateBookRequest;
 use Workbench\App\Ship\Parents\Controllers\ApiController;
@@ -10,7 +11,7 @@ class UpdateBookController extends ApiController
 {
     public function __invoke(UpdateBookRequest $request): JsonResponse
     {
-        return $this->created([
+        return Response::created([
             'input(val)' => [
                 'id' => $request->input('id'),
                 'id-default' => $request->input('id', 100),

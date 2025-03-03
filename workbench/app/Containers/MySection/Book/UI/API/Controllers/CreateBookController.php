@@ -2,6 +2,7 @@
 
 namespace Workbench\App\Containers\MySection\Book\UI\API\Controllers;
 
+use Apiato\Support\Facades\Response;
 use Illuminate\Http\JsonResponse;
 use Workbench\App\Containers\MySection\Book\Actions\CreateBookAction;
 use Workbench\App\Containers\MySection\Book\UI\API\Requests\CreateBookRequest;
@@ -14,6 +15,6 @@ class CreateBookController extends ApiController
     {
         $book = $action->run($request);
 
-        return $this->created($this->transform($book, BookTransformer::class));
+        return Response::create($book, BookTransformer::class)->created();
     }
 }
