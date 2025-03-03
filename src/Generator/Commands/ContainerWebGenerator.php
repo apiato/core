@@ -137,7 +137,7 @@ final class ContainerWebGenerator extends Generator implements ComponentsGenerat
                 'controller' => 'Find' . $model . 'ByIdController',
             ],
             [
-                'stub' => 'Create',
+                'stub' => 'Store',
                 'name' => 'Store' . $model,
                 'operation' => 'store',
                 'verb' => 'POST',
@@ -145,10 +145,10 @@ final class ContainerWebGenerator extends Generator implements ComponentsGenerat
                 'action' => 'Create' . $model . 'Action',
                 'request' => 'Store' . $model . 'Request',
                 'task' => 'Create' . $model . 'Task',
-                'controller' => 'Create' . $model . 'Controller',
+                'controller' => 'Store' . $model . 'Controller',
             ],
             [
-                'stub' => 'Store',
+                'stub' => 'Create',
                 'name' => 'Create' . $model,
                 'operation' => 'create',
                 'verb' => 'GET',
@@ -178,7 +178,7 @@ final class ContainerWebGenerator extends Generator implements ComponentsGenerat
                 'action' => null,
                 'request' => 'Edit' . $model . 'Request',
                 'task' => null,
-                'controller' => 'Update' . $model . 'Controller',
+                'controller' => 'Edit' . $model . 'Controller',
             ],
             [
                 'stub' => 'Delete',
