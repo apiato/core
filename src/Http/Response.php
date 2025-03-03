@@ -79,6 +79,8 @@ class Response extends Fractal
 
     public function getResourceClass(): string
     {
+        $this->dataType = $this->determineDataType($this->data);
+
         if ('item' === $this->dataType) {
             return Item::class;
         }
@@ -96,48 +98,60 @@ class Response extends Fractal
     }
 
     /**
+     * Create a new JSON response instance.
+     */
+    public function json($data = null, $status = 200, array $headers = [], $options = 0): JsonResponse
+    {
+        if (is_null($data) && !is_null($this->data)) {
+            return $this->respond($status, $headers, $options);
+        }
+
+        return new JsonResponse($data, $status, $headers, $options);
+    }
+
+    /**
      * Returns a "202 - Accepted" response.
      */
-    public function accepted(): JsonResponse
+    public function accepted($data = null, array $headers = [], $options = 0): JsonResponse
     {
         if (is_null($this->getTransformer())) {
             $this->transformWith(Transformer::empty());
         }
 
-        return $this->respond(202);
+        return $this->json($data, 202, $headers, $options);
     }
 
     /**
      * Returns a "201 - Created" response.
      */
-    public function created(): JsonResponse
+    public function created($data = null, array $headers = [], $options = 0): JsonResponse
     {
         if (is_null($this->getTransformer())) {
             $this->transformWith(Transformer::empty());
         }
 
-        return $this->respond(201);
+        return $this->json($data, 201, $headers, $options);
     }
 
     /**
      * Returns a "204 - No Content" response.
      */
-    public function noContent(): JsonResponse
+    public function noContent(array $headers = [], $options = 0): JsonResponse
     {
         $this->transformWith(Transformer::empty());
 
-        return $this->respond(204);
+        return new JsonResponse(null, 204, $headers, $options);
     }
 
     /**
      * Returns a "200 - OK" response.
      */
-    public function ok(): JsonResponse
+    public function ok($data = null, array $headers = [], $options = 0): JsonResponse
     {
         if (is_null($this->getTransformer())) {
             $this->transformWith(Transformer::empty());
         }
 
-        return $this->respond(200);
+        return $this->json($data, 200, $headers, $options);
     }
 }
