@@ -21,6 +21,7 @@ final class RouteGenerator extends Generator implements ComponentsGenerator
         ['url', null, InputOption::VALUE_OPTIONAL, 'The URL of the endpoint (/stores, /cars, ...)'],
         ['verb', null, InputOption::VALUE_OPTIONAL, 'The HTTP verb of the endpoint (GET, POST, ...)'],
         ['controller', null, InputOption::VALUE_OPTIONAL, 'The controller used in this route'],
+        ['sac', null, InputOption::VALUE_OPTIONAL, 'If the route controller is a Single Action Controller'],
     ];
     /**
      * The console command name.
@@ -56,24 +57,25 @@ final class RouteGenerator extends Generator implements ComponentsGenerator
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
         $version = $this->checkParameterOrAsk('docversion', 'Enter the endpoint version (integer)', 1);
         $doctype = $this->checkParameterOrChoice('doctype', 'Select the type for this endpoint', ['private', 'public'], 0);
-        $operation = $this->checkParameterOrAsk('operation', 'Enter the name of the controller action', '__invoke');
-        $verb = Str::upper($this->checkParameterOrAsk('verb', 'Enter the HTTP verb of this endpoint (GET, POST,...)', 'GET'));
+        $verb = Str::upper($this->checkParameterOrChoice('verb', 'Enter the HTTP verb of this endpoint (GET, POST,...)', ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], 0));
         // Get the URI and remove the first trailing slash
         $url = Str::lower($this->checkParameterOrAsk('url', 'Enter the endpoint URI (foo/bar/{id})'));
         $url = ltrim($url, '/');
 
-        $invokable = false;
-        if ('__invoke' === $operation) {
-            $invokable = true;
-        }
         $controllerName = $this->checkParameterOrAsk('controller', 'Enter the controller name', 'Controller');
+
+        $operation = '__invoke';
+        $sac = $this->checkParameterOrConfirm('sac', 'Is this a Single Action Controller route?', true);
+        if (!$sac) {
+            $operation = $this->checkParameterOrAsk('operation', 'Enter the name of the controller action', '__invoke');
+        }
 
         $docUrl = \Safe\preg_replace('~{(.+?)}~', ':$1', $url);
 
         $routeName = Str::lower($ui . '_' . $this->containerName . '_' . Str::snake($operation));
 
         $this->stubName = 'routes/' . $ui . '.mac.stub';
-        if ($invokable) {
+        if ($sac) {
             $this->stubName = 'routes/' . $ui . '.sac.stub';
         }
 
@@ -89,7 +91,7 @@ final class RouteGenerator extends Generator implements ComponentsGenerator
                 '_container-name' => Str::lower($this->containerName),
                 'container-name' => $this->containerName,
                 'operation' => $operation,
-                'doc-api-name' => Str::studly($operation),
+                'doc-api-name' => Str::studly($this->option('operation')),
                 'user-interface' => Str::upper($ui),
                 'endpoint-url' => $url,
                 'endpoint-title' => Str::headline($operation),
