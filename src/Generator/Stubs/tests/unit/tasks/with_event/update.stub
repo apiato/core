@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Event;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Update{{model}}Task::class)]
-class {{class-name}} extends UnitTestCase
+final class {{class-name}} extends UnitTestCase
 {
     // TODO TEST
     public function testUpdate{{model}}(): void

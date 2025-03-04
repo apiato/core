@@ -8,7 +8,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
-class {{class-name}} extends ApiTestCase
+final class {{class-name}} extends ApiTestCase
 {
     protected string $endpoint = 'patch@v1/{{url}}';
 

@@ -15,46 +15,53 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Req
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Store{{model}}Request;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
 use App\Ship\Parents\Controllers\WebController;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
-class {{class-name}} extends WebController
+final class {{class-name}} extends WebController
 {
-    public function index(List{{models}}Request $request)
+    public function index(List{{models}}Request $request, List{{models}}Action $action): RedirectResponse
     {
-        ${{entities}} = app(List{{models}}Action::class)->run($request);
-        // ...
+        $action->run($request);
+
+        return back();
     }
 
-    public function show(Find{{model}}ByIdRequest $request)
+    public function show(Find{{model}}ByIdRequest $request, Find{{model}}ByIdAction $action): RedirectResponse
     {
-        ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
-        // ...
+        $action->run($request);
+
+        return back();
     }
 
-    public function create(Create{{model}}Request $request)
+    public function create(Create{{model}}Request $request): View
     {
+        return view('placeholder');
     }
 
-    public function store(Store{{model}}Request $request)
+    public function store(Store{{model}}Request $request, Create{{model}}Action $action): RedirectResponse
     {
-        ${{entity}} = app(Create{{model}}Action::class)->run($request);
-        // ...
+        $action->run($request);
+
+        return back();
     }
 
-    public function edit(Edit{{model}}Request $request)
+    public function edit(Edit{{model}}Request $request): View
     {
-        ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
-        // ...
+        return view('placeholder');
     }
 
-    public function update(Update{{model}}Request $request)
+    public function update(Update{{model}}Request $request, Update{{model}}Action $action): RedirectResponse
     {
-        ${{entity}} = app(Update{{model}}Action::class)->run($request);
-        // ...
+        $action->run($request);
+
+        return back();
     }
 
-    public function destroy(Delete{{model}}Request $request)
+    public function destroy(Delete{{model}}Request $request, Delete{{model}}Action $action): RedirectResponse
     {
-        $result = app(Delete{{model}}Action::class)->run($request);
-        // ...
+        $action->run($request);
+
+        return back();
     }
 }

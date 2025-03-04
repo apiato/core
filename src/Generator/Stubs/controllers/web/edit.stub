@@ -2,23 +2,14 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use App\Containers\{{section-name}}\{{container-name}}\Actions\Find{{model}}ByIdAction;
-use App\Containers\{{section-name}}\{{container-name}}\Actions\Update{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Edit{{model}}Request;
-use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
 use App\Ship\Parents\Controllers\WebController;
+use Illuminate\View\View;
 
-class {{class-name}} extends WebController
+final class {{class-name}} extends WebController
 {
-    public function edit(Edit{{model}}Request $request)
+    public function __invoke(Edit{{model}}Request $request): View
     {
-        ${{entity}} = app(Find{{model}}ByIdAction::class)->run($request);
-        // ...
-    }
-
-    public function update(Update{{model}}Request $request)
-    {
-        ${{entity}} = app(Update{{model}}Action::class)->run($request);
-        // ...
+        return view('placeholder');
     }
 }

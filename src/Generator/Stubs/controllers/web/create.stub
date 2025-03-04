@@ -2,20 +2,14 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use App\Containers\{{section-name}}\{{container-name}}\Actions\Create{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Create{{model}}Request;
-use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Store{{model}}Request;
 use App\Ship\Parents\Controllers\WebController;
+use Illuminate\View\View;
 
-class {{class-name}} extends WebController
+final class {{class-name}} extends WebController
 {
-    public function create(Create{{model}}Request $request)
+    public function __invoke(Create{{model}}Request $request): View
     {
-    }
-
-    public function store(Store{{model}}Request $request)
-    {
-        ${{entity}} = app(Create{{model}}Action::class)->run($request);
-        // ...
+        return view('placeholder');
     }
 }

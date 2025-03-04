@@ -4,7 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Providers;
 
 use App\Ship\Parents\Providers\ServiceProvider as ParentServiceProvider;
 
-class {{class-name}} extends ParentServiceProvider
+final class {{class-name}} extends ParentServiceProvider
 {
     public function register(): void
     {

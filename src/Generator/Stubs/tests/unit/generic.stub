@@ -4,7 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 
-class {{class-name}} extends UnitTestCase
+final class {{class-name}} extends UnitTestCase
 {
     public function test(): void
     {

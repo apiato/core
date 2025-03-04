@@ -6,7 +6,7 @@ use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\CliTestC
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
-class {{class-name}} extends CliTestCase
+final class {{class-name}} extends CliTestCase
 {
     public function testABC(): void
     {

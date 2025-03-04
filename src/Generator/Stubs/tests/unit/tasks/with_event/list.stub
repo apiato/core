@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Event;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(List{{models}}Task::class)]
-class {{class-name}} extends UnitTestCase
+final class {{class-name}} extends UnitTestCase
 {
     public function testList{{models}}(): void
     {

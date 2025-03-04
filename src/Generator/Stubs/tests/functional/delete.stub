@@ -7,7 +7,7 @@ use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestC
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
-class {{class-name}} extends ApiTestCase
+final class {{class-name}} extends ApiTestCase
 {
     protected string $endpoint = 'delete@v1/{{url}}';
 

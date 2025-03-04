@@ -6,7 +6,7 @@ use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
-class {{class-name}} extends UnitTestCase
+final class {{class-name}} extends UnitTestCase
 {
     public function test{{_table-name_}}TableHasExpectedColumns(): void
     {

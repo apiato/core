@@ -4,6 +4,6 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tests;
 
 use App\Ship\Parents\Tests\TestCase as ParentTestCase;
 
-class {{class-name}} extends ParentTestCase
+final class {{class-name}} extends ParentTestCase
 {
 }

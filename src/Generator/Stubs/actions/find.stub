@@ -5,19 +5,15 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tasks\Find{{model}}ByIdTask;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{ui}}\Requests\Find{{model}}ByIdRequest;
-use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Actions\Action as ParentAction;
 
-class {{class-name}} extends ParentAction
+final class {{class-name}} extends ParentAction
 {
     public function __construct(
         private readonly Find{{model}}ByIdTask $find{{model}}ByIdTask,
     ) {
     }
 
-    /**
-     * @throws NotFoundException
-     */
     public function run(Find{{model}}ByIdRequest $request): {{model}}
     {
         return $this->find{{model}}ByIdTask->run($request->id);

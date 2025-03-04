@@ -6,7 +6,7 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Tests\WebTestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
-class {{class-name}} extends WebTestCase
+final class {{class-name}} extends WebTestCase
 {
     protected string $endpoint = 'method@endpoint';
 

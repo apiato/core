@@ -3,21 +3,15 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 
 use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
-use App\Ship\Exceptions\DeleteResourceFailedException;
-use App\Ship\Exceptions\NotFoundException;
 use App\Ship\Parents\Tasks\Task as ParentTask;
 
-class {{class-name}} extends ParentTask
+final class {{class-name}} extends ParentTask
 {
     public function __construct(
         private readonly {{model}}Repository $repository,
     ) {
     }
 
-    /**
-     * @throws DeleteResourceFailedException
-     * @throws NotFoundException
-     */
     public function run($id): bool
     {
         return $this->repository->delete($id);

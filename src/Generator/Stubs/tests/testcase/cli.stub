@@ -4,6 +4,6 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tests\FunctionalTestCase;
 
-class {{class-name}} extends FunctionalTestCase
+final class {{class-name}} extends FunctionalTestCase
 {
 }

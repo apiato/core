@@ -2,25 +2,19 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use Apiato\Exceptions\CoreInternalErrorException;
-use Apiato\Exceptions\InvalidTransformerException;
+use Apiato\Support\Facades\Response;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\List{{models}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\List{{models}}Request;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
 use App\Ship\Parents\Controllers\{{base-controller}};
-use Prettus\Repository\Exceptions\RepositoryException;
+use Illuminate\Http\JsonResponse;
 
-class {{class-name}} extends {{base-controller}}
+final class {{class-name}} extends {{base-controller}}
 {
-    /**
-     * @throws InvalidTransformerException
-     * @throws CoreInternalErrorException
-     * @throws RepositoryException
-     */
-    public function __invoke(List{{models}}Request $request, List{{models}}Action $action): array
+    public function __invoke(List{{models}}Request $request, List{{models}}Action $action): JsonResponse
     {
         ${{entities}} = $action->run($request);
 
-        return $this->transform(${{entities}}, {{model}}Transformer::class);
+        return Response::create(${{entities}}, {{model}}Transformer::class)->ok();
     }
 }

@@ -5,28 +5,21 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
-use App\Ship\Exceptions\CreateResourceFailedException;
 use App\Ship\Parents\Tasks\Task as ParentTask;
 
-class {{class-name}} extends ParentTask
+final class {{class-name}} extends ParentTask
 {
     public function __construct(
         private readonly {{model}}Repository $repository,
     ) {
     }
 
-    /**
-     * @throws CreateResourceFailedException
-     */
     public function run(array $data): {{model}}
     {
-        try {
-            ${{model_}} = $this->repository->create($data);
-            {{event}}::dispatch(${{model_}});
+        ${{model_}} = $this->repository->create($data);
 
-            return ${{model_}};
-        } catch (\Exception) {
-            throw new CreateResourceFailedException();
-        }
+        {{event}}::dispatch(${{model_}});
+
+        return ${{model_}};
     }
 }

@@ -8,7 +8,7 @@ use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Find{{model}}ByIdTask::class)]
-class {{class-name}} extends UnitTestCase
+final class {{class-name}} extends UnitTestCase
 {
     public function testFind{{model}}ById(): void
     {

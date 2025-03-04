@@ -2,27 +2,19 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use Apiato\Exceptions\IncorrectIdException;
-use Apiato\Exceptions\InvalidTransformerException;
+use Apiato\Support\Facades\Response;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Update{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
-use App\Ship\Exceptions\NotFoundException;
-use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Controllers\{{base-controller}};
+use Illuminate\Http\JsonResponse;
 
-class {{class-name}} extends {{base-controller}}
+final class {{class-name}} extends {{base-controller}}
 {
-    /**
-     * @throws InvalidTransformerException
-     * @throws UpdateResourceFailedException
-     * @throws IncorrectIdException
-     * @throws NotFoundException
-     */
-    public function __invoke(Update{{model}}Request $request, Update{{model}}Action $action): array
+    public function __invoke(Update{{model}}Request $request, Update{{model}}Action $action): JsonResponse
     {
         ${{entity}} = $action->run($request);
 
-        return $this->transform(${{entity}}, {{model}}Transformer::class);
+        return Response::create(${{entity}}, {{model}}Transformer::class)->ok();
     }
 }

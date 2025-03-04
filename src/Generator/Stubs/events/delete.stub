@@ -6,7 +6,7 @@ use App\Ship\Parents\Events\Event as ParentEvent;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 
-class {{class-name}} extends ParentEvent
+final class {{class-name}} extends ParentEvent
 {
     public function __construct(
         public readonly bool $result,

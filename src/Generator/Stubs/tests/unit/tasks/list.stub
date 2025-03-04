@@ -9,7 +9,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(List{{models}}Task::class)]
-class {{class-name}} extends UnitTestCase
+final class {{class-name}} extends UnitTestCase
 {
     public function testList{{models}}(): void
     {

@@ -2,9 +2,7 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Controllers;
 
-use Apiato\Exceptions\CoreInternalErrorException;
-use Apiato\Exceptions\IncorrectIdException;
-use Apiato\Exceptions\InvalidTransformerException;
+use Apiato\Support\Facades\Response;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Create{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Delete{{model}}Action;
 use App\Containers\{{section-name}}\{{container-name}}\Actions\Find{{model}}ByIdAction;
@@ -16,72 +14,43 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Req
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\List{{models}}Request;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Requests\Update{{model}}Request;
 use App\Containers\{{section-name}}\{{container-name}}\UI\{{user-interface}}\Transformers\{{model}}Transformer;
-use App\Ship\Exceptions\CreateResourceFailedException;
-use App\Ship\Exceptions\DeleteResourceFailedException;
-use App\Ship\Exceptions\NotFoundException;
-use App\Ship\Exceptions\UpdateResourceFailedException;
 use App\Ship\Parents\Controllers\{{base-controller}};
 use Illuminate\Http\JsonResponse;
-use Prettus\Repository\Exceptions\RepositoryException;
 
-class {{class-name}} extends {{base-controller}}
+final class {{class-name}} extends {{base-controller}}
 {
-    /**
-     * @throws InvalidTransformerException
-     * @throws CreateResourceFailedException
-     * @throws IncorrectIdException
-     */
     public function create(Create{{model}}Request $request, Create{{model}}Action $action): JsonResponse
     {
        ${{entity}} = $action->run($request);
 
-       return $this->created($this->transform(${{entity}}, {{model}}Transformer::class));
+       return Response::create(${{entity}}, {{model}}Transformer::class)->created();
     }
 
-    /**
-     * @throws InvalidTransformerException
-     * @throws NotFoundException
-     */
-    public function findById(Find{{model}}ByIdRequest $request, Find{{model}}ByIdAction $action): array
+    public function findById(Find{{model}}ByIdRequest $request, Find{{model}}ByIdAction $action): JsonResponse
     {
-     ${{entity}} = $action->run($request);
+        ${{entity}} = $action->run($request);
 
-     return $this->transform(${{entity}}, {{model}}Transformer::class);
+        return Response::create(${{entity}}, {{model}}Transformer::class)->ok();
     }
 
-    /**
-     * @throws InvalidTransformerException
-     * @throws CoreInternalErrorException
-     * @throws RepositoryException
-     */
-    public function list(List{{models}}Request $request, List{{models}}Action $action): array
+    public function list(List{{models}}Request $request, List{{models}}Action $action): JsonResponse
     {
-      ${{entities}} = $action->run($request);
+        ${{entities}} = $action->run($request);
 
-      return $this->transform(${{entities}}, {{model}}Transformer::class);
+        return Response::create(${{entities}}, {{model}}Transformer::class)->ok();
     }
 
-    /**
-     * @throws InvalidTransformerException
-     * @throws UpdateResourceFailedException
-     * @throws IncorrectIdException
-     * @throws NotFoundException
-     */
-    public function update(Update{{model}}Request $request, Update{{model}}Action $action): array
+    public function update(Update{{model}}Request $request, Update{{model}}Action $action): JsonResponse
     {
-       ${{entity}} = $action->run($request);
+        ${{entity}} = $action->run($request);
 
-       return $this->transform(${{entity}}, {{model}}Transformer::class);
+        return Response::create(${{entity}}, {{model}}Transformer::class)->ok();
     }
 
-    /**
-     * @throws DeleteResourceFailedException
-     * @throws NotFoundException
-     */
     public function delete(Delete{{model}}Request $request, Delete{{model}}Action $action): JsonResponse
     {
-       $action->run($request);
+        $action->run($request);
 
-       return $this->noContent();
+        return Response::noContent();
     }
 }
