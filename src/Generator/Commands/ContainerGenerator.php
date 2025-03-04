@@ -32,9 +32,9 @@ final class ContainerGenerator extends Generator implements ComponentsGenerator
      */
     protected $description = 'Create a Container for apiato from scratch';
     /**
-     * The type of class being generated.
+     * The type of file being generated.
      */
-    protected string $fileType = 'Container';
+    protected string $fileType = 'Composer';
     /**
      * The structure of the file path.
      */
