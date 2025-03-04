@@ -2,6 +2,6 @@
 
 namespace Apiato\Core\Controllers;
 
-abstract class ApiController extends Controller
+abstract class ApiController extends BaseController
 {
 }

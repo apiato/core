@@ -2,6 +2,6 @@
 
 namespace Apiato\Core\Controllers;
 
-abstract class WebController extends Controller
+abstract class WebController extends BaseController
 {
 }
