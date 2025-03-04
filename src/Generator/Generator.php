@@ -12,7 +12,9 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
-use Webmozart\Assert\Assert;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 abstract class Generator extends Command
 {
@@ -20,9 +22,6 @@ abstract class Generator extends Command
     use PrinterTrait;
     use FileSystemTrait;
     use FormatterTrait;
-    protected string $fileType;
-    protected string $stubName;
-    protected array $inputs;
 
     /**
      * Root directory of all sections.
@@ -145,7 +144,10 @@ abstract class Generator extends Command
         $value = $this->option($param);
         if (null === $value) {
             // There was no value provided via CLI, so ask the user…
-            $value = $this->ask($question, $default);
+            $value = text(
+                label:$question,
+                default: $default ?? '',
+            );
         }
 
         return $value;
@@ -252,7 +254,7 @@ abstract class Generator extends Command
         $value = $this->option($param);
         if (null === $value) {
             // There was no value provided via CLI, so ask the user…
-            $value = $this->choice($question, $choices, $default);
+            $value = select($question, $choices, $default);
         }
 
         return $value;
@@ -264,7 +266,7 @@ abstract class Generator extends Command
         $value = $this->option($param);
         if (null === $value) {
             // There was no value provided via CLI, so ask the user...
-            $value = $this->confirm($question, $default);
+            $value = confirm($question, $default);
         }
 
         return $value;
