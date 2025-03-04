@@ -2,12 +2,12 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Mails;
 
-use Illuminate\Mail\Mailable;
+use App\Ship\Parents\Mails\Mail as ParentMail;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class {{class-name}} extends ParentMail
+final class {{class-name}} extends ParentMail
 {
     public function __construct()
     {
@@ -16,14 +16,14 @@ class {{class-name}} extends ParentMail
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Asd',
+            subject: '{{subject}}',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: '{{view}}',
         );
     }
 
