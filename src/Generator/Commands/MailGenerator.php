@@ -15,6 +15,7 @@ final class MailGenerator extends Generator implements ComponentsGenerator
      */
     public array $inputs = [
         ['view', null, InputOption::VALUE_OPTIONAL, 'The name of the view (blade template) to be loaded.'],
+        ['subject', null, InputOption::VALUE_OPTIONAL, 'The subject of the email.'],
     ];
     /**
      * The console command name.
@@ -47,7 +48,8 @@ final class MailGenerator extends Generator implements ComponentsGenerator
 
     public function getUserInputs(): array|null
     {
-        $view = $this->checkParameterOrAsk('view', 'Enter the name of the view to be loaded when sending this Mail');
+        $view = $this->checkParameterOrAsk('view', 'Enter the name of the view to be loaded when sending this Mail', '');
+        $subject = $this->checkParameterOrAsk('subject', "What's the the subject this Mail?", '');
 
         return [
             'path-parameters' => [
@@ -63,6 +65,7 @@ final class MailGenerator extends Generator implements ComponentsGenerator
                 'containerName' => Str::camel($this->containerName),
                 'class-name' => $this->fileName,
                 'view' => $view,
+                'subject' => $subject,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
