@@ -25,6 +25,10 @@ abstract class Generator extends Command
     use FileSystemTrait;
     use FormatterTrait;
 
+    protected string $fileType;
+    protected string $stubName;
+    protected array $inputs;
+
     /**
      * Root directory of all sections.
      *
