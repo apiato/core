@@ -3,74 +3,31 @@
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\API;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\Create{{model}}Controller;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class {{class-name}} extends ApiTestCase
 {
-    protected string $endpoint = 'post@v1/{{url}}';
-
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
-    // TODO TEST
     public function testCreate{{model}}(): void
     {
+        $this->actingAs(User::factory()->createOne());
         $data = [
+            // TODO: test
             // 'something' => 'value',
         ];
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(Create{{model}}Controller::class), $data);
 
         $response->assertCreated();
         $response->assertJson(
             fn (AssertableJson $json) =>
                 $json->has('data')
-                    ->where('data.object', '{{model}}')
+                    ->where('data.type', '{{model}}')
                     // ->where('data.something', $data['something'])
                     ->etc()
         );
     }
-
-    // TODO TEST
-    // public function testCreate{{model}}WithInvalidFields(): void
-    // {
-    //     $data = [
-    //         // add some invalid field data here
-    //         // 'something' => 'invalid',
-    //     ];
-    //
-    //     $response = $this->makeCall($data);
-    //
-    //     $response->assertUnprocessable();
-    //     // validate errors and their messages here
-    //     // $response->assertJson(
-    //     //     fn (AssertableJson $json) =>
-    //     //        $json->has('message')
-    //     //            ->has('errors')
-    //     //            ->where('errors.something.0', 'Some validation error message.')
-    //     // );
-    // }
-
-    // TODO TEST
-    // add some roles and permissions to this route's request
-    // then add them to the $access array above
-    // uncomment this test to test accesses
-    // public function testGivenHaveNoAccess_CannotCreate{{model}}(): void
-    // {
-    //     $this->getTestingUserWithoutAccess();
-    //
-    //     $response = $this->makeCall([]);
-    //
-    //     $response->assertForbidden();
-    //     $response->assertJson(
-    //         fn (AssertableJson $json) =>
-    //             $json->has('message')
-    //                 ->where('message', 'This action is unauthorized.')
-    //                 ->etc()
-    //     );
-    // }
 }

@@ -4,70 +4,35 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\AP
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\Update{{model}}Controller;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class {{class-name}} extends ApiTestCase
 {
-    protected string $endpoint = 'patch@v1/{{url}}';
-
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
-    // TODO TEST
+    // TODO: test
     public function testUpdateExisting{{model}}(): void
     {
-        ${{_model}} = {{model}}::factory()->create([
+        $this->actingAs(User::factory()->createOne());
+        ${{_model}} = {{model}}::factory()->createOne([
             // 'some_field' => 'new_field_value',
         ]);
         $data = [
             // 'some_field' => 'new_field_value',
         ];
 
-        $response = $this->injectId(${{_model}}->id)->makeCall($data);
+        $response = $this->patchJson(action(Update{{model}}Controller::class, ['id' => ${{_model}}->getHashedKey()]), $data);
 
         $response->assertOk();
         $response->assertJson(
             fn (AssertableJson $json) =>
                 $json->has('data')
-                    ->where('data.object', '{{model}}')
+                    ->where('data.type', '{{model}}')
                     ->where('data.id', ${{_model}}->getHashedKey())
                     // ->where('data.some_field', $data['some_field'])
                     ->etc()
         );
     }
-
-    public function testUpdateNonExisting{{model}}(): void
-    {
-        $invalidId = 7777;
-
-        $response = $this->injectId($invalidId)->makeCall([]);
-
-        $response->assertNotFound();
-    }
-
-    // TODO TEST
-    // public function testUpdateExisting{{model}}WithEmptyValues(): void
-    // {
-    //     ${{_model}} = {{model}}::factory()->createOne();
-    //     $data = [
-    //         // add some fillable fields here
-    //         // 'first_field' => '',
-    //         // 'second_field' => '',
-    //     ];
-    //
-    //     $response = $this->injectId(${{_model}}->id)->makeCall($data);
-    //
-    //     $response->assertUnprocessable();
-    //     $response->assertJson(
-    //         fn (AssertableJson $json) =>
-    //         $json->has('errors')
-    //             // ->where('errors.first_field.0', 'assert validation errors')
-    //             // ->where('errors.second_field.0', 'assert validation errors')
-    //             ->etc()
-    //     );
-    // }
 }

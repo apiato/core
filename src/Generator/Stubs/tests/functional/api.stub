@@ -8,21 +8,7 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 #[CoversNothing]
 final class {{class-name}} extends ApiTestCase
 {
-    protected string $endpoint = 'method@endpoint';
-
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
-    public function testABC(): void
+    public function test(): void
     {
-        $data = [
-            // 'key' => 'value',
-        ];
-
-        $response = $this->makeCall($data);
-
-        $response->assertOk();
     }
 }

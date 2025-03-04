@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 #[CoversNothing]
 final class {{class-name}} extends CliTestCase
 {
-    public function testABC(): void
+    public function test(): void
     {
     }
 }

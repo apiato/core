@@ -8,14 +8,7 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 #[CoversNothing]
 final class {{class-name}} extends WebTestCase
 {
-    protected string $endpoint = 'method@endpoint';
-
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
-    public function testABC(): void
+    public function test(): void
     {
     }
 }

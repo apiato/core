@@ -4,78 +4,27 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\AP
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestCase;
+use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\Find{{model}}ByIdController;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class {{class-name}} extends ApiTestCase
 {
-    protected string $endpoint = 'get@v1/{{url}}';
-
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
     public function testFind{{model}}(): void
     {
+        $this->actingAs(User::factory()->createOne());
         ${{_model}} = {{model}}::factory()->createOne();
 
-        $response = $this->injectId(${{_model}}->id)->makeCall();
-
-        $response->assertOk();
-        $response->assertJson(
-            fn (AssertableJson $json) =>
-                $json->has('data')
-                    ->where('data.id', $this->encode(${{_model}}->id))
-                    ->etc()
-        );
-    }
-
-    public function testFindNonExisting{{model}}(): void
-    {
-        $invalidId = 7777;
-
-        $response = $this->injectId($invalidId)->makeCall([]);
-
-        $response->assertNotFound();
-    }
-
-    public function testFindFiltered{{model}}Response(): void
-    {
-        ${{_model}} = {{model}}::factory()->createOne();
-
-        $response = $this->injectId(${{_model}}->id)->endpoint($this->endpoint . '?filter=id')->makeCall();
+        $response = $this->getJson(action(Find{{model}}ByIdController::class, ['id' => ${{_model}}->getHashedKey()]));
 
         $response->assertOk();
         $response->assertJson(
             fn (AssertableJson $json) =>
                 $json->has('data')
                     ->where('data.id', ${{_model}}->getHashedKey())
-                    ->missing('data.object')
+                    ->etc()
         );
     }
-
-    // TODO TEST
-    // if your model have relationships which can be included into the response then
-    // uncomment this test
-    // modify it to your needs
-    // test the relation
-    // public function testFind{{model}}WithRelation(): void
-    // {
-    //     ${{_model}} = {{model}}::factory()->createOne();
-    //     $relation = 'roles';
-    //
-    //     $response = $this->injectId(${{_model}}->id)->endpoint($this->endpoint . "?include=$relation")->makeCall();
-    //
-    //     $response->assertOk();
-    //     $response->assertJson(
-    //         fn (AssertableJson $json) =>
-    //           $json->has('data')
-    //               ->where('data.id', ${{_model}}->getHashedKey())
-    //               ->count("data.$relation.data", 1)
-    //               ->where("data.$relation.data.0.name", 'something')
-    //               ->etc()
-    //     );
-    // }
 }

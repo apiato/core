@@ -2,9 +2,9 @@
 
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional;
 
-use App\Containers\{{section-name}}\{{container-name}}\Tests\TestCase;
+use App\Containers\{{section-name}}\{{container-name}}\Tests\FunctionalTestCase;
 
-final class {{class-name}} extends TestCase
+final class {{class-name}} extends FunctionalTestCase
 {
     public function test(): void
     {
