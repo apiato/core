@@ -1,5 +1,6 @@
 {
     "name": "apiato/{{_container-name}}",
     "description": "{{container-name}} Container",
+    "type": "apiato-container",
     "require": {}
 }
