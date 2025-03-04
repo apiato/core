@@ -11,9 +11,9 @@ final class {{class-name}} extends UnitTestCase
     public function test{{_table-name_}}TableHasExpectedColumns(): void
     {
         $columns = [
-            'id' => 'bigint',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
+            'id' => 'int8',
+            'created_at' => 'timestamp',
+            'updated_at' => 'timestamp',
         ];
 
         $this->assertDatabaseTable('{{table-name}}', $columns);
