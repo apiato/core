@@ -12,6 +12,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
@@ -145,7 +146,7 @@ abstract class Generator extends Command
         if (null === $value) {
             // There was no value provided via CLI, so ask the user…
             $value = text(
-                label:$question,
+                label: $question,
                 default: $default ?? '',
             );
         }
