@@ -12,6 +12,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
+use Webmozart\Assert\Assert;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
