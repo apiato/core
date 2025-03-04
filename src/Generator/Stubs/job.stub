@@ -4,7 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Jobs;
 
 use App\Ship\Parents\Jobs\Job as ParentJob;
 
- class {{class-name}} extends ParentJob
+ final class {{class-name}} extends ParentJob
  {
     public function __construct()
     {

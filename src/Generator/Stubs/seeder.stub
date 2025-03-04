@@ -4,7 +4,7 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Data\Seeders;
 
 use App\Ship\Parents\Seeders\Seeder as ParentSeeder;
 
-class {{class-name}} extends ParentSeeder
+final class {{class-name}} extends ParentSeeder
 {
     public function run(): void
     {

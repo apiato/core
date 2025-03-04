@@ -4,6 +4,6 @@ namespace App\Containers\{{section-name}}\{{container-name}}\Tests\E2E;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tests\E2ETestCase;
 
-final class {{class-name}} extends E2ETestCase
+class {{class-name}} extends E2ETestCase
 {
 }
