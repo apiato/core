@@ -2,6 +2,9 @@
 
 namespace Apiato\Generator\Traits;
 
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\error;
+
 trait PrinterTrait
 {
     public function printStartedMessage(string $containerName, string $fileName): void
@@ -11,7 +14,7 @@ trait PrinterTrait
 
     public function printInfoMessage($message): void
     {
-        $this->info($message);
+        info($message);
     }
 
     public function printFinishedMessage(string $type): void
@@ -21,6 +24,6 @@ trait PrinterTrait
 
     public function printErrorMessage($message): void
     {
-        $this->error($message);
+        error($message);
     }
 }
