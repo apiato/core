@@ -223,18 +223,23 @@ final class ContainerWebGenerator extends Generator implements ComponentsGenerat
                 ]);
             }
 
+            $routeArgs = [
+                '--section' => $sectionName,
+                '--container' => $containerName,
+                '--file' => $route['name'],
+                '--ui' => $ui,
+                '--operation' => $route['operation'],
+                '--doctype' => $doctype,
+                '--docversion' => $version,
+                '--url' => $route['url'],
+                '--verb' => $route['verb'],
+            ];
+
             if ('sac' === $controllertype) {
                 $this->call('apiato:make:route', [
-                    '--section' => $sectionName,
-                    '--container' => $containerName,
-                    '--file' => $route['name'],
-                    '--ui' => $ui,
-                    '--operation' => $route['operation'],
-                    '--doctype' => $doctype,
-                    '--docversion' => $version,
-                    '--url' => $route['url'],
-                    '--verb' => $route['verb'],
+                    ...$routeArgs,
                     '--controller' => $route['controller'],
+                    '--sac' => true,
                 ]);
 
                 $this->call('apiato:make:controller', [
@@ -247,16 +252,9 @@ final class ContainerWebGenerator extends Generator implements ComponentsGenerat
                 ]);
             } else {
                 $this->call('apiato:make:route', [
-                    '--section' => $sectionName,
-                    '--container' => $containerName,
-                    '--file' => $route['name'],
-                    '--ui' => $ui,
-                    '--operation' => $route['operation'],
-                    '--doctype' => $doctype,
-                    '--docversion' => $version,
-                    '--url' => $route['url'],
-                    '--verb' => $route['verb'],
+                    ...$routeArgs,
                     '--controller' => 'Controller',
+                    '--sac' => false,
                 ]);
             }
         }
