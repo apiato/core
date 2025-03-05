@@ -57,7 +57,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      */
     public function shouldEagerLoadIncludes(): bool
     {
-        return false;
+        return true;
     }
 
     /**
