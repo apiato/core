@@ -33,7 +33,7 @@ final class MiddlewareGenerator extends Generator implements ComponentsGenerator
     /**
      * The structure of the file path.
      */
-    protected string $pathStructure = '{section-name}/{container-name}/Middlewares/*';
+    protected string $pathStructure = '{section-name}/{container-name}/Middleware/*';
     /**
      * The structure of the file name.
      */

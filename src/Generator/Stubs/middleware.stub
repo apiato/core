@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\Middlewares;
+namespace App\Containers\{{section-name}}\{{container-name}}\Middleware;
 
-use App\Ship\Parents\Middlewares\Middleware as ParentMiddleware;
+use App\Ship\Parents\Middleware\Middleware as ParentMiddleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
