@@ -83,6 +83,11 @@ describe(class_basename(Repository::class), function (): void {
     describe('scopes', function (): void {
         it('can push/reset scopes stack', function (): void {
             $repository = new class extends UserRepository {
+                public function shouldEagerLoadIncludes(): bool
+                {
+                    return false;
+                }
+
                 public function getScopes(): array
                 {
                     return $this->scopes;
