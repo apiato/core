@@ -22,7 +22,7 @@ final class HashidsManagerDecorator
     }
 
     /**
-     * Decode a hashed id
+     * Decode a hashed id.
      *
      * @return int|int[]|null
      */
