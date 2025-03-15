@@ -26,6 +26,19 @@ final class MacroServiceProvider extends ServiceProvider
             );
         }
 
+        if (!Collection::hasMacro('decode')) {
+            Collection::macro(
+                'decode',
+                /**
+                 * Decodes all decodable hashed values in the collection
+                 * or throws an exception if any value is not decodable.
+                 */
+                function (): Collection {
+                    return $this->map(static fn (string $id): int => hashids()->decodeOrFail($id));
+                }
+            );
+        }
+
         if (!Config::hasMacro('unset')) {
             Config::macro(
                 'unset',
