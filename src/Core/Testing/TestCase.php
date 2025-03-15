@@ -1,8 +1,8 @@
 <?php
 
-namespace Apiato\Core\Tests;
+namespace Apiato\Core\Testing;
 
-use Apiato\Core\Tests\Concerns\PerformsAssertions;
+use Apiato\Core\Testing\Concerns\PerformsAssertions;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 
 abstract class TestCase extends LaravelTestCase

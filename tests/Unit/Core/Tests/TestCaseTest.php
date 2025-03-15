@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Abstract\Tests;
 
-use Apiato\Core\Tests\Concerns\PerformsAssertions;
-use Apiato\Core\Tests\TestCase;
+use Apiato\Core\Testing\Concerns\PerformsAssertions;
+use Apiato\Core\Testing\TestCase;
 
 beforeEach(function (): void {
     $this->sut = new class('Anonym') extends TestCase {};

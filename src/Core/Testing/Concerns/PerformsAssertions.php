@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Tests\Concerns;
+namespace Apiato\Core\Testing\Concerns;
 
 use Illuminate\Support\Facades\Schema;
 
