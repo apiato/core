@@ -23,7 +23,7 @@ final class Repository
                     ->append(
                         Str::of(class_basename($repositoryName))
                         ->beforeLast('Repository')
-                        ->title()->value(),
+                        ->value(),
                     )->value();
 
                 if (class_exists($modelName)) {
