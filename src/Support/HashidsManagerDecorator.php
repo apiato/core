@@ -21,12 +21,21 @@ final class HashidsManagerDecorator
     ) {
     }
 
-    public function decode(string $hash): int|null
+    /**
+     * Decode a hashed id
+     *
+     * @return int|int[]|null
+     */
+    public function decode(string $hash): int|array|null
     {
         $result = $this->manager->decode($hash);
 
-        if ([] !== $result && is_int($result[0])) {
+        if (1 === count($result) && is_int($result[0])) {
             return $result[0];
+        }
+
+        if (1 < count($result)) {
+            return $result;
         }
 
         return null;
@@ -44,7 +53,7 @@ final class HashidsManagerDecorator
         if (1 < count($hash)) {
             Assert::allStringNotEmpty($hash);
 
-            return array_map(fn (string $id): int => $this->decodeOrFail($id), $hash);
+            return array_map(fn (string $id): int|array => $this->decodeOrFail($id), $hash);
         }
 
         Assert::stringNotEmpty($hash[0]);
@@ -58,7 +67,7 @@ final class HashidsManagerDecorator
         return $result;
     }
 
-    public function encode(mixed ...$numbers): string|null
+    public function encode(string|int ...$numbers): string|null
     {
         $result = $this->manager->encode(...$numbers);
 

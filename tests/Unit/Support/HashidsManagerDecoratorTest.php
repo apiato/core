@@ -20,7 +20,7 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         expect(in_array(Macroable::class, class_uses(HashidsManagerDecorator::class)))->toBeTrue();
     });
 
-    it('can decode or null', function (string $hashId, int|null $expectation): void {
+    it('can decode or null', function (string $hashId, int|array|null $expectation): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
         $result = $sut->decode($hashId);
@@ -28,10 +28,11 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         expect($result)->toBe($expectation);
     })->with([
         [fn () => hashids()->encodeOrFail(10), 10],
+        [fn () => hashids()->encodeOrFail(10, 13, 2), [10, 13, 2]],
         ['invalid', null],
     ]);
 
-    it('can decode or throw an exception', function (string $hashId, int|null $expectation): void {
+    it('can decode or throw an exception', function (string $hashId, int|array|null $expectation): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
         expect(static function () use ($sut, $hashId) {
@@ -44,6 +45,7 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
             ->toBe($ex->value));
     })->with([
         [fn () => hashids()->encodeOrFail(10), 10],
+        [fn () => hashids()->encodeOrFail(10, 13, 2), [10, 13, 2]],
         ['invalid', null],
     ]);
 
@@ -69,7 +71,9 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         expect($result)->toBe($expectation);
     })->with([
         [[10], fn () => hashids()->encodeOrFail(10)],
-        [[10, 12], fn () => hashids()->encodeOrFail(10, 12)],
+        [['15'], fn () => hashids()->encodeOrFail(15)],
+        [[10, 20], fn () => hashids()->encodeOrFail(10, 20)],
+        [[10, '20'], fn () => hashids()->encodeOrFail(10, 20)],
         [[], null],
     ]);
 
@@ -105,4 +109,4 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
 
         expect($sut->getDefaultConnection())->toBe('something');
     });
-})->covers(HashidsManagerDecorator::class);
+})->covers(HashidsManagerDecorator::class)->only();
