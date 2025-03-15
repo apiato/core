@@ -560,7 +560,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      *
      * @throws ResourceNotFound
      */
-    public function delete($id): true
+    public function delete($id): bool
     {
         try {
             return (bool) parent::delete($id);
