@@ -27,7 +27,7 @@ final readonly class ApplicationBuilder
             ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Listeners')),
         )->withCommands(
             shared_path('Commands'),
-            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/UI/CLI')),
+            ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/UI/CLI/Commands')),
         )->withHelpers(
             shared_path('Helpers'),
             ...$this->getDirs($this->joinPaths($basePath, 'app/Containers/*/*/Helpers')),
@@ -65,6 +65,10 @@ final readonly class ApplicationBuilder
         ->withRepositories();
     }
 
+    // TODO: remove non-standard Laravel configs like the specific Repository classes we have in Apiato.
+    //  Extend the config and add the repository configuration. So anybody can add their own custom configuration.
+    //  Also the same goes for the helpers config I guess? Checkout what other configs we added that could be considered custom and
+    //   non-standard Laravel stuff.
     public function withRepositories(callable|null $callback = null): self
     {
         $this->apiato->withRepositories($callback);

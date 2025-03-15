@@ -1,6 +1,6 @@
 <?php
 
-namespace Workbench\App\Containers\MySection\Book\UI\CLI;
+namespace Workbench\App\Containers\MySection\Book\UI\CLI\Commands;
 
 use Apiato\Core\Commands\Command;
 
