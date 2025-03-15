@@ -35,7 +35,7 @@ final class MacroServiceProvider extends ServiceProvider
                  */
                 function (): Collection {
                     return $this->map(static fn (string $id): int => hashids()->decodeOrFail($id));
-                }
+                },
             );
         }
 
