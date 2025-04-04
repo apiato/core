@@ -109,4 +109,4 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
 
         expect($sut->getDefaultConnection())->toBe('something');
     });
-})->covers(HashidsManagerDecorator::class)->only();
+})->covers(HashidsManagerDecorator::class);
