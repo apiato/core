@@ -2,7 +2,7 @@
 
 namespace Apiato\Console\Commands;
 
-use Apiato\Core\Commands\Command;
+use Apiato\Core\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;

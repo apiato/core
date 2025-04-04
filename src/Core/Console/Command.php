@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiato\Core\Commands;
+namespace Apiato\Core\Console;
 
 use Illuminate\Console\Command as LaravelCommand;
 

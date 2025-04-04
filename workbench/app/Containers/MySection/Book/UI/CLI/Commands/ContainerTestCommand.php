@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Containers\MySection\Book\UI\CLI\Commands;
 
-use Apiato\Core\Commands\Command;
+use Apiato\Core\Console\Command;
 
 class ContainerTestCommand extends Command
 {
