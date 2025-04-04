@@ -99,8 +99,10 @@ class Response extends Fractal
 
     /**
      * Create a new JSON response instance.
+     *
+     * @param array<string, mixed> $headers
      */
-    public function json($data = null, $status = 200, array $headers = [], $options = 0): JsonResponse
+    public function json(mixed $data = null, int $status = 200, array $headers = [], int $options = 0): JsonResponse
     {
         if (is_null($data) && !is_null($this->data)) {
             return $this->respond($status, $headers, $options);
@@ -111,8 +113,10 @@ class Response extends Fractal
 
     /**
      * Returns a "202 - Accepted" response.
+     *
+     * @param array<string, mixed> $headers
      */
-    public function accepted($data = null, array $headers = [], $options = 0): JsonResponse
+    public function accepted(mixed $data = null, array $headers = [], int $options = 0): JsonResponse
     {
         if (is_null($this->getTransformer())) {
             $this->transformWith(Transformer::empty());
@@ -123,8 +127,10 @@ class Response extends Fractal
 
     /**
      * Returns a "201 - Created" response.
+     *
+     * @param array<string, mixed> $headers
      */
-    public function created($data = null, array $headers = [], $options = 0): JsonResponse
+    public function created(mixed $data = null, array $headers = [], int $options = 0): JsonResponse
     {
         if (is_null($this->getTransformer())) {
             $this->transformWith(Transformer::empty());
@@ -134,24 +140,28 @@ class Response extends Fractal
     }
 
     /**
-     * Returns a "204 - No Content" response.
-     */
-    public function noContent(array $headers = [], $options = 0): JsonResponse
-    {
-        $this->transformWith(Transformer::empty());
-
-        return new JsonResponse(null, 204, $headers, $options);
-    }
-
-    /**
      * Returns a "200 - OK" response.
-     */
-    public function ok($data = null, array $headers = [], $options = 0): JsonResponse
+     *
+     * @param array<string, mixed> $headers
+     * */
+    public function ok(mixed $data = null, array $headers = [], int $options = 0): JsonResponse
     {
         if (is_null($this->getTransformer())) {
             $this->transformWith(Transformer::empty());
         }
 
         return $this->json($data, 200, $headers, $options);
+    }
+
+    /**
+     * Returns a "204 - No Content" response.
+     *
+     * @param array<string, mixed> $headers
+     */
+    public function noContent(array $headers = [], int $options = 0): JsonResponse
+    {
+        $this->transformWith(Transformer::empty());
+
+        return new JsonResponse(null, 204, $headers, $options);
     }
 }
