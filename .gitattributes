@@ -10,10 +10,13 @@
 /.ddev export-ignore
 /tests export-ignore
 /workbench export-ignore
+.deptrac.cache export-ignore
 .editorconfig export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
+.php-cs-fixer.cache export-ignore
 .php-cs-fixer.dist.php export-ignore
+.phpunit.result.cache export-ignore
 phpstan.neon.dist export-ignore
 phpunit.xml export-ignore
 psalm.xml export-ignore
