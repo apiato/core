@@ -150,4 +150,4 @@ describe(class_basename(Response::class), function (): void {
         [[], 1],
         [['foo' => 'bar'], 1],
     ]);
-})->covers(Response::class)->only();
+})->covers(Response::class);
