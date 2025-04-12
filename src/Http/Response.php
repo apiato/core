@@ -15,15 +15,25 @@ use Webmozart\Assert\Assert;
 /**
  * A wrapper class for Spatie\Fractal\Fractal.
  *
+ * This class extends the functionality of the Fractal library to provide
+ * additional features such as resource key defaults, meta information for
+ * available includes, and helper methods for creating JSON responses.
+ *
  * @see Fractal
  */
 class Response extends Fractal
 {
+    /**
+     * Get the Fractal Manager instance.
+     */
     public function manager(): Manager
     {
         return $this->manager;
     }
 
+    /**
+     * Create a Fractal Scope instance with the current resource and meta information.
+     */
     public function createData(): Scope
     {
         $this->withResourceName($this->resourceKeyOrDefault());
@@ -32,6 +42,9 @@ class Response extends Fractal
         return parent::createData();
     }
 
+    /**
+     * Get the resource key or a default value if none is set.
+     */
     private function resourceKeyOrDefault(): string
     {
         $resourceName = $this->getResourceName();
@@ -42,6 +55,9 @@ class Response extends Fractal
         return $resourceName;
     }
 
+    /**
+     * Add meta information about available includes to the response.
+     */
     private function setAvailableIncludesMeta(): void
     {
         $this->addMeta([
@@ -50,7 +66,7 @@ class Response extends Fractal
     }
 
     /**
-     * Returns the available includes of the transformer.
+     * Get the available includes of the transformer.
      *
      * @return string[]
      */
@@ -77,6 +93,9 @@ class Response extends Fractal
         return $includes;
     }
 
+    /**
+     * Get the resource class based on the data type.
+     */
     public function getResourceClass(): string
     {
         $this->dataType = $this->determineDataType($this->data);
@@ -92,15 +111,23 @@ class Response extends Fractal
         return parent::getResourceClass();
     }
 
+    /**
+     * Convert the response data to an array.
+     */
     public function toArray(): array
     {
         return $this->createData()->toArray() ?? [];
     }
 
     /**
-     * Create a new JSON response instance.
+     * Create a new JSON response.
      *
-     * @param array<string, mixed> $headers
+     * @param  mixed  $data
+     * @param  int  $status
+     * @param  array<string, mixed>  $headers
+     * @param  int  $options
+     *
+     * @return JsonResponse
      */
     public function json(mixed $data = null, int $status = 200, array $headers = [], int $options = 0): JsonResponse
     {
@@ -112,9 +139,13 @@ class Response extends Fractal
     }
 
     /**
-     * Returns a "202 - Accepted" response.
+     * Return a 202 "Accepted" response.
      *
-     * @param array<string, mixed> $headers
+     * @param  mixed  $data
+     * @param  array<string, mixed>  $headers
+     * @param  int  $options
+     *
+     * @return JsonResponse
      */
     public function accepted(mixed $data = null, array $headers = [], int $options = 0): JsonResponse
     {
@@ -126,9 +157,13 @@ class Response extends Fractal
     }
 
     /**
-     * Returns a "201 - Created" response.
+     * Return a 201 "Created" response.
      *
-     * @param array<string, mixed> $headers
+     * @param  mixed  $data
+     * @param  array<string, mixed>  $headers
+     * @param  int  $options
+     *
+     * @return JsonResponse
      */
     public function created(mixed $data = null, array $headers = [], int $options = 0): JsonResponse
     {
@@ -140,10 +175,14 @@ class Response extends Fractal
     }
 
     /**
-     * Returns a "200 - OK" response.
+     * Return a 200 "OK" response.
      *
-     * @param array<string, mixed> $headers
-     * */
+     * @param  mixed  $data
+     * @param  array<string, mixed>  $headers
+     * @param  int  $options
+     *
+     * @return JsonResponse
+     */
     public function ok(mixed $data = null, array $headers = [], int $options = 0): JsonResponse
     {
         if (is_null($this->getTransformer())) {
@@ -154,9 +193,12 @@ class Response extends Fractal
     }
 
     /**
-     * Returns a "204 - No Content" response.
+     * Return a 204 "No Content" response.
      *
-     * @param array<string, mixed> $headers
+     * @param  array<string, mixed>  $headers
+     * @param  int  $options
+     *
+     * @return JsonResponse
      */
     public function noContent(array $headers = [], int $options = 0): JsonResponse
     {
