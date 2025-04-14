@@ -56,6 +56,7 @@ return [
     */
     'apps' => [
         'web' => [
+            'class' => \App\Ship\Apps\Web::class,
             'url' => env('FRONTEND_URL', env('APP_URL', 'http://localhost:3000')),
         ],
     ],
