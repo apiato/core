@@ -122,12 +122,7 @@ class Response extends Fractal
     /**
      * Create a new JSON response.
      *
-     * @param  mixed  $data
-     * @param  int  $status
-     * @param  array<string, mixed>  $headers
-     * @param  int  $options
-     *
-     * @return JsonResponse
+     * @param array<string, mixed> $headers
      */
     public function json(mixed $data = null, int $status = 200, array $headers = [], int $options = 0): JsonResponse
     {
@@ -141,11 +136,7 @@ class Response extends Fractal
     /**
      * Return a 202 "Accepted" response.
      *
-     * @param  mixed  $data
-     * @param  array<string, mixed>  $headers
-     * @param  int  $options
-     *
-     * @return JsonResponse
+     * @param array<string, mixed> $headers
      */
     public function accepted(mixed $data = null, array $headers = [], int $options = 0): JsonResponse
     {
@@ -159,11 +150,7 @@ class Response extends Fractal
     /**
      * Return a 201 "Created" response.
      *
-     * @param  mixed  $data
-     * @param  array<string, mixed>  $headers
-     * @param  int  $options
-     *
-     * @return JsonResponse
+     * @param array<string, mixed> $headers
      */
     public function created(mixed $data = null, array $headers = [], int $options = 0): JsonResponse
     {
@@ -177,11 +164,7 @@ class Response extends Fractal
     /**
      * Return a 200 "OK" response.
      *
-     * @param  mixed  $data
-     * @param  array<string, mixed>  $headers
-     * @param  int  $options
-     *
-     * @return JsonResponse
+     * @param array<string, mixed> $headers
      */
     public function ok(mixed $data = null, array $headers = [], int $options = 0): JsonResponse
     {
@@ -195,10 +178,7 @@ class Response extends Fractal
     /**
      * Return a 204 "No Content" response.
      *
-     * @param  array<string, mixed>  $headers
-     * @param  int  $options
-     *
-     * @return JsonResponse
+     * @param array<string, mixed> $headers
      */
     public function noContent(array $headers = [], int $options = 0): JsonResponse
     {
