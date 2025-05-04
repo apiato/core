@@ -20,7 +20,7 @@ final readonly class RequestRelation
      */
     public function requestingIncludes(): bool
     {
-        return $this->request->has(config('fractal.auto_includes.request_key'));
+        return $this->request->has(config()->string('fractal.auto_includes.request_key'));
     }
 
     /**
