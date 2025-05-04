@@ -6,6 +6,7 @@ use Workbench\App\Ship\Parents\Events\Event as ParentEvent;
 
 class AuthorCreated extends ParentEvent
 {
-    public function __construct() {
+    public function __construct()
+    {
     }
 }

@@ -19,7 +19,7 @@ final class UserTransformer extends Transformer
     ];
 
     protected array $defaultIncludes = [
-        'comments'
+        'comments',
     ];
 
     public function transform(User $user): array

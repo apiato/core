@@ -28,7 +28,7 @@ class UserFactory extends ParentFactory
 
     public function withParent(): static
     {
-        return $this->state(fn(array $attributes): array => [
+        return $this->state(fn (array $attributes): array => [
             'parent_id' => static::new()->createOne()->id,
         ]);
     }

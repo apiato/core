@@ -24,10 +24,9 @@ return [
      * If you wish to override or extend the default Spatie\Fractal\Fractal
      * instance provide the name of the class you want to use.
      */
-    'fractal_class' => \Apiato\Http\Response::class,
+    'fractal_class' => Apiato\Http\Response::class,
 
     'auto_includes' => [
-
         /*
          * If enabled Fractal will automatically add the includes who's
          * names are present in the `include` request parameter.
@@ -41,7 +40,6 @@ return [
     ],
 
     'auto_excludes' => [
-
         /*
          * If enabled Fractal will automatically add the excludes who's
          * names are present in the `exclude` request parameter.
@@ -55,7 +53,6 @@ return [
     ],
 
     'auto_fieldsets' => [
-
         /*
          * If enabled Fractal will automatically add the fieldsets who's
          * names are present in the `fields` request parameter.

@@ -4,6 +4,6 @@ namespace Workbench\App;
 
 use Illuminate\Support\ServiceProvider;
 
-class StrayServiceProvider extends ServiceProvider {
-
+class StrayServiceProvider extends ServiceProvider
+{
 }
