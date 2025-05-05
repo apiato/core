@@ -30,8 +30,8 @@ final class MacroServiceProvider extends ServiceProvider
             Collection::macro(
                 'decode',
                 /**
-                 * Decodes all decodable hashed values in the collection
-                 * or throws an exception if any value is not decodable.
+                 * Decodes all hashed string values in the collection
+                 * or throws an exception if any value fails to decode.
                  */
                 function (): Collection {
                     return $this->map(static fn (string $id): int => hashids()->decodeOrFail($id));
