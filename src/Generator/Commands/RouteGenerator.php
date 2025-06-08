@@ -133,8 +133,7 @@ class RouteGenerator extends FileGeneratorCommand
 use App\Containers\\$this->sectionName\\$this->containerName\UI\\$this->ui\Controllers\\$this->controller;
 use Illuminate\Support\Facades\Route;
 
-Route::$methodLowerCase('$this->url', $this->controller::class)
-    ->middleware(['auth:api']);
+Route::$methodLowerCase('$this->url', $this->controller::class);
 ";
     }
 
