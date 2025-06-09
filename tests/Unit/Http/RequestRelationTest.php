@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Support;
+declare(strict_types=1);
 
 use Apiato\Http\RequestRelation;
 use Workbench\App\Containers\Identity\User\Models\User;

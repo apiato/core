@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Console\Commands\ListActions;
 
 describe(class_basename(ListActions::class), function (): void {

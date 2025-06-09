@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Configuration\Routing;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;

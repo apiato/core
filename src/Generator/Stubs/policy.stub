@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Policies;
 
 use App\Ship\Parents\Policies\Policy as ParentPolicy;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 final class {{class-name}} extends ParentPolicy
 {
+    use HandlesAuthorization;
+
     public function __construct()
     {
     }

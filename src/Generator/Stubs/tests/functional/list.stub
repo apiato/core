@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\API;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
@@ -8,8 +10,11 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\List{{
 use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Group;
 
 #[CoversNothing]
+#[Group('test')]
+#[Group('api')]
 final class {{class-name}} extends ApiTestCase
 {
     public function testList{{models}}ByAdmin(): void
@@ -21,7 +26,7 @@ final class {{class-name}} extends ApiTestCase
 
         $response->assertOk();
         $response->assertJson(
-            static fn (AssertableJson $json) =>
+            static fn (AssertableJson $json): AssertableJson =>
                 $json->has('data', 2)
                     ->etc()
         );

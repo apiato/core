@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Core\Models;
 
 use Illuminate\Auth\Authenticatable;

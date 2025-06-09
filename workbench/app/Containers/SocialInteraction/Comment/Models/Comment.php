@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\SocialInteraction\Comment\Models;
 
 use Illuminate\Database\Eloquent\Relations\MorphTo;

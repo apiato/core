@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator\Commands;
 
 use Apiato\Generator\Generator;
@@ -19,36 +21,42 @@ final class ActionGenerator extends Generator implements ComponentsGenerator
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['ui', null, InputOption::VALUE_OPTIONAL, 'The user-interface to generate the Action for.'],
     ];
+
     /**
      * The console command name.
      *
      * @var string
      */
     protected $name = 'apiato:make:action';
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Create a Action file for a Container';
+
     /**
      * The type of class being generated.
      */
     protected string $fileType = 'Action';
+
     /**
      * The structure of the file path.
      */
     protected string $pathStructure = '{section-name}/{container-name}/Actions/*';
+
     /**
      * The structure of the file name.
      */
     protected string $nameStructure = '{file-name}';
+
     /**
      * The name of the stub file.
      */
     protected string $stubName = 'actions/generic.stub';
 
-    public function getUserInputs(): array|null
+    public function getUserInputs(): null|array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this action is for.', $this->containerName);
         $ui = Str::upper($this->checkParameterOrChoice('ui', 'Which UI is this Action for?', ['API', 'WEB'], 0));
@@ -68,18 +76,18 @@ final class ActionGenerator extends Generator implements ComponentsGenerator
 
         return [
             'path-parameters' => [
-                'section-name' => $this->sectionName,
+                'section-name'   => $this->sectionName,
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
+                '_section-name'   => Str::lower($this->sectionName),
+                'section-name'    => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-                'model' => $model,
-                'models' => $models,
-                'ui' => $ui,
+                'container-name'  => $this->containerName,
+                'class-name'      => $this->fileName,
+                'model'           => $model,
+                'models'          => $models,
+                'ui'              => $ui,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -90,6 +98,7 @@ final class ActionGenerator extends Generator implements ComponentsGenerator
     /**
      * Get the default file name for this component to be generated.
      */
+    #[\Override]
     public function getDefaultFileName(): string
     {
         return 'DefaultAction';

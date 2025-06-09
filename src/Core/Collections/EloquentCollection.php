@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Core\Collections;
 
 use Illuminate\Database\Eloquent\Collection;

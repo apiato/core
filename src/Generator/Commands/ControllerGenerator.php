@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator\Commands;
 
 use Apiato\Generator\Generator;
@@ -20,36 +22,42 @@ final class ControllerGenerator extends Generator implements ComponentsGenerator
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model you want to use for this controller.'],
     ];
+
     /**
      * The console command name.
      *
      * @var string
      */
     protected $name = 'apiato:make:controller';
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Create a controller for a container';
+
     /**
      * The type of class being generated.
      */
     protected string $fileType = 'Controller';
+
     /**
      * The structure of the file path.
      */
     protected string $pathStructure = '{section-name}/{container-name}/UI/{user-interface}/Controllers/*';
+
     /**
      * The structure of the file name.
      */
     protected string $nameStructure = '{file-name}';
+
     /**
      * The name of the stub file.
      */
     protected string $stubName = 'controllers/generic.stub';
 
-    public function getUserInputs(): array|null
+    public function getUserInputs(): null|array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model that this controller uses', $this->containerName);
         $models = Pluralizer::plural($model);
@@ -75,22 +83,22 @@ final class ControllerGenerator extends Generator implements ComponentsGenerator
 
         return [
             'path-parameters' => [
-                'section-name' => $this->sectionName,
+                'section-name'   => $this->sectionName,
                 'container-name' => $this->containerName,
                 'user-interface' => Str::upper($ui),
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
+                '_section-name'   => Str::lower($this->sectionName),
+                'section-name'    => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-                'user-interface' => Str::upper($ui),
+                'container-name'  => $this->containerName,
+                'class-name'      => $this->fileName,
+                'user-interface'  => Str::upper($ui),
                 'base-controller' => $basecontroller,
 
-                'model' => $model,
-                'models' => $models,
-                'entity' => $entity,
+                'model'    => $model,
+                'models'   => $models,
+                'entity'   => $entity,
                 'entities' => $entities,
             ],
             'file-parameters' => [
@@ -99,6 +107,7 @@ final class ControllerGenerator extends Generator implements ComponentsGenerator
         ];
     }
 
+    #[\Override]
     public function getDefaultFileName(): string
     {
         return 'Controller';

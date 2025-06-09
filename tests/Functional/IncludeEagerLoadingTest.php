@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Core\Repositories\Repository;
 use Apiato\Core\Transformers\Transformer;
 use Apiato\Http\Response;
@@ -18,7 +20,7 @@ describe('Include eager loading', function (): void {
         request()->merge([
             'include' => 'children.books,parent',
         ]);
-        $this->repository = new class extends UserRepository {
+        $this->repository = new class () extends UserRepository {
             public function shouldEagerLoadIncludes(): bool
             {
                 return true;

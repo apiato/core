@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Configuration\Factory;
 use Workbench\App\Containers\MySection\Book\Data\Factories\BookFactory;
 use Workbench\App\Containers\MySection\Book\Models\Book;

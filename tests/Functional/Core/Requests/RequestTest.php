@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Core\Requests\Request;
+use Illuminate\Routing\Route;
 
 describe(class_basename(Request::class), function (): void {
     it('can decode specified ids', function (bool $enabled): void {
@@ -22,20 +25,20 @@ describe(class_basename(Request::class), function (): void {
             hashids()->encodeOrFail($ids[0]),
             hashids()->encodeOrFail($ids[1]),
         ];
-        $result = $this->patchJson("v1/books/{$bookIdHashed}", [
-            'title' => 'New Title',
+        $result = $this->patchJson('v1/books/' . $bookIdHashed, [
+            'title'     => 'New Title',
             'hashed_id' => $HashedId,
             'author_id' => $authorIdHashed,
-            'authors' => [
+            'authors'   => [
                 [
-                    'id' => $authorIdHashed,
+                    'id'   => $authorIdHashed,
                     'name' => 'Author Name',
                 ],
             ],
-            'ids' => $hashedIds,
+            'ids'           => $hashedIds,
             'just_a_number' => 123,
-            'nested' => [
-                'id' => $nestedIdHashed,
+            'nested'        => [
+                'id'  => $nestedIdHashed,
                 'ids' => $nestedIdsHashed,
             ],
         ]);
@@ -48,22 +51,22 @@ describe(class_basename(Request::class), function (): void {
         expect($result->json())
             ->toBe([
                 'input(val)' => [
-                    'id' => null,
-                    'id-default' => 100,
-                    'title' => 'New Title',
-                    'hashed_id' => $HashedId,
-                    'nested.id' => $expectedNestedId,
+                    'id'                  => null,
+                    'id-default'          => 100,
+                    'title'               => 'New Title',
+                    'hashed_id'           => $HashedId,
+                    'nested.id'           => $expectedNestedId,
                     'nested.with-default' => 200,
-                    'author_id' => $expectedAuthorId,
-                    'authors' => [
+                    'author_id'           => $expectedAuthorId,
+                    'authors'             => [
                         ['id' => $expectedAuthorId, 'name' => 'Author Name'],
                     ],
-                    'authors.*.id' => [$expectedAuthorId],
+                    'authors.*.id'           => [$expectedAuthorId],
                     'authors.*.with-default' => [null],
-                    'ids' => $expectedIds,
-                    'with-default' => [1, 2, 3],
-                    'none_existing' => null,
-                    'optional_id' => null,
+                    'ids'                    => $expectedIds,
+                    'with-default'           => [1, 2, 3],
+                    'none_existing'          => null,
+                    'optional_id'            => null,
                 ],
                 'all(val)' => [
                     'id' => [
@@ -93,56 +96,56 @@ describe(class_basename(Request::class), function (): void {
                     ],
                 ],
                 'route(val)' => [
-                    'id' => $expectedBookId,
+                    'id'            => $expectedBookId,
                     'none_existing' => null,
                 ],
                 'request->val' => [
-                    'id' => $expectedBookId,
-                    'title' => 'New Title',
+                    'id'            => $expectedBookId,
+                    'title'         => 'New Title',
                     'none_existing' => null,
-                    'optional_id' => null,
+                    'optional_id'   => null,
                 ],
                 'input()' => [
-                    'title' => 'New Title',
+                    'title'     => 'New Title',
                     'hashed_id' => $HashedId,
                     'author_id' => $expectedAuthorId,
-                    'authors' => [
+                    'authors'   => [
                         ['id' => $expectedAuthorId, 'name' => 'Author Name'],
                     ],
-                    'ids' => $expectedIds,
+                    'ids'           => $expectedIds,
                     'just_a_number' => 123,
-                    'nested' => [
-                        'id' => $expectedNestedId,
+                    'nested'        => [
+                        'id'  => $expectedNestedId,
                         'ids' => $expectedNestedIds,
                     ],
                 ],
                 'all()' => [
-                    'title' => 'New Title',
+                    'title'     => 'New Title',
                     'hashed_id' => $HashedId,
                     'author_id' => $expectedAuthorId,
-                    'authors' => [
+                    'authors'   => [
                         ['id' => $expectedAuthorId, 'name' => 'Author Name'],
                     ],
-                    'ids' => $expectedIds,
+                    'ids'           => $expectedIds,
                     'just_a_number' => 123,
-                    'nested' => [
-                        'id' => $expectedNestedId,
+                    'nested'        => [
+                        'id'  => $expectedNestedId,
                         'ids' => $expectedNestedIds,
                     ],
                 ],
                 'validated' => [
-                    'title' => 'New Title',
+                    'title'     => 'New Title',
                     'author_id' => $expectedAuthorId,
-                    'nested' => [
-                        'id' => $expectedNestedId,
+                    'nested'    => [
+                        'id'  => $expectedNestedId,
                         'ids' => $expectedNestedIds,
                     ],
-                    'ids' => $expectedIds,
+                    'ids'     => $expectedIds,
                     'authors' => [
                         ['id' => $expectedAuthorId],
                     ],
                 ],
-                'route()::class' => Illuminate\Routing\Route::class,
+                'route()::class' => Route::class,
             ]);
     })->with([
         [true],

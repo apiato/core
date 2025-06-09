@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Http;
 
 use Illuminate\Database\Eloquent\Model;
@@ -10,9 +12,8 @@ use Webmozart\Assert\Assert;
 
 final readonly class RequestRelation
 {
-    public function __construct(
-        private Request $request,
-    ) {
+    public function __construct(private Request $request)
+    {
     }
 
     /**
@@ -20,7 +21,7 @@ final readonly class RequestRelation
      */
     public function requestingIncludes(): bool
     {
-        return $this->request->has(config()->string('fractal.auto_includes.request_key'));
+        return $this->request->has(config()?->string('fractal.auto_includes.request_key'));
     }
 
     /**
@@ -34,7 +35,7 @@ final readonly class RequestRelation
         return $this->getDeepestRelations(
             ...array_filter(
                 array_map(
-                    static fn (string $include) => self::isValidRelationOf($model, ...explode('.', $include)),
+                    static fn (string $include): ?string => self::isValidRelationOf($model, ...explode('.', $include)),
                     $this->parseIncludes(),
                 ),
             ),
@@ -46,7 +47,7 @@ final readonly class RequestRelation
      */
     public function getDeepestRelations(string ...$relations): array
     {
-        return array_filter($relations, static function ($relation) use ($relations) {
+        return array_filter($relations, static function (string $relation) use ($relations): bool {
             foreach ($relations as $otherRelation) {
                 if ($relation !== $otherRelation && Str::startsWith($otherRelation, $relation . '.')) {
                     return false;
@@ -57,9 +58,9 @@ final readonly class RequestRelation
         });
     }
 
-    public static function isValidRelationOf(Model $model, string ...$relationParts): string|null
+    public static function isValidRelationOf(Model $model, string ...$relationParts): null|string
     {
-        if ([] === $relationParts) {
+        if ($relationParts === []) {
             return null;
         }
 
@@ -74,13 +75,13 @@ final readonly class RequestRelation
 
         $nextModel = $relation->getRelated();
 
-        if ([] === $relationParts) {
+        if ($relationParts === []) {
             return $relationName;
         }
 
         $nextRelation = self::isValidRelationOf($nextModel, ...$relationParts);
 
-        if (!is_null($nextRelation)) {
+        if (!\is_null($nextRelation)) {
             return $relationName . '.' . $nextRelation;
         }
 
@@ -89,7 +90,7 @@ final readonly class RequestRelation
 
     public static function figureOutRelationName(string $includeName): string
     {
-        return Str::of($includeName)->camel();
+        return Str::of($includeName)->camel()->toString();
     }
 
     /**
@@ -107,7 +108,7 @@ final readonly class RequestRelation
 
         $includes = $this->request->input($requestKey, []);
 
-        if (is_array($includes)) {
+        if (\is_array($includes)) {
             Assert::allString($includes);
         } else {
             Assert::string($includes);

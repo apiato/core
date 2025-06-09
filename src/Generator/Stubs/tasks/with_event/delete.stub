@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 
 use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
@@ -13,7 +15,7 @@ final class {{class-name}} extends ParentTask
     ) {
     }
 
-    public function run($id): bool
+    public function run(int $id): bool
     {
         $result = $this->repository->delete($id);
 

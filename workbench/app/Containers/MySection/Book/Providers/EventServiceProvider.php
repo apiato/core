@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Book\Providers;
 
 use Workbench\App\Containers\MySection\Book\Events\BookCreated;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Author\Data\Seeders;
 
 use Apiato\Core\Seeders\Seeder;

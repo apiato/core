@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit\Tasks;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
@@ -19,7 +21,7 @@ final class {{class-name}} extends UnitTestCase
 
         $result = app(Delete{{model}}Task::class)->run(${{_model}}->id);
 
-        $this->assertEquals(1, $result);
+        self::assertEquals(1, $result);
         Event::assertDispatched({{event}}::class);
     }
 }

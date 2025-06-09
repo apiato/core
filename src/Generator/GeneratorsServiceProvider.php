@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator;
 
 use Apiato\Core\Providers\ServiceProvider;

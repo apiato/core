@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Apiato;
 use Apiato\Http\Middleware\ProcessETag;
 use Apiato\Http\Middleware\ValidateJsonContent;
@@ -19,7 +21,7 @@ return Application::configure(basePath: $basePath)
         web: $apiato->webRoutes(),
         then: static fn () => $apiato->registerApiRoutes(),
     )
-    ->withMiddleware(function (Middleware $middleware): void {
+    ->withMiddleware(static function (Middleware $middleware): void {
         $middleware->api([
             ValidateJsonContent::class,
             ProcessETag::class,

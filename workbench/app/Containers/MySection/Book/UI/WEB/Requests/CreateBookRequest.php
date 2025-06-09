@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Book\UI\WEB\Requests;
 
 use Workbench\App\Ship\Parents\Requests\Request as ParentRequest;

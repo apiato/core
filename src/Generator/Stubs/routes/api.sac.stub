@@ -1,13 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\{{controller-name}};
+use Illuminate\Support\Facades\Route;
+
 /**
  * @apiGroup           {{container-name}}
+ *
  * @apiName            {{doc-api-name}}
  *
  * @api                {{{doc-http-verb}}} {{doc-endpoint-url}} {{endpoint-title}}
+ *
  * @apiDescription     Endpoint description here...
  *
  * @apiVersion         {{endpoint-version}}.0.0
+ *
  * @apiPermission      Authenticated ['permissions' => '', 'roles' => '']
  *
  * @apiHeader          {String} accept=application/json
@@ -21,10 +29,6 @@
  *     // Insert the response of the request here...
  * }
  */
-
-use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\{{controller-name}};
-use Illuminate\Support\Facades\Route;
-
 Route::{{http-verb}}('{{endpoint-url}}', {{controller-name}}::class)
+    ->name('{{route-name}}')
     ->middleware(['auth:{{auth-middleware}}']);
-

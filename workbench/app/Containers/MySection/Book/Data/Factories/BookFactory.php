@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Book\Data\Factories;
 
 use Workbench\App\Containers\Identity\User\Models\User;
@@ -13,15 +15,13 @@ use Workbench\App\Ship\Parents\Factories\Factory as ParentFactory;
  */
 class BookFactory extends ParentFactory
 {
-    /**
-     * @var class-string<TModel>
-     */
+    /** @var class-string<TModel> */
     protected $model = Book::class;
 
     public function definition(): array
     {
         return [
-            'title' => fake()->sentence,
+            'title'     => fake()->sentence,
             'author_id' => User::factory(),
         ];
     }

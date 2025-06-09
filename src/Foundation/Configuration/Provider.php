@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Foundation\Configuration;
 
 use Apiato\Support\DefaultProviders;
@@ -15,7 +17,7 @@ final class Provider extends LaravelDefaultProviders
     /**
      * @param class-string<T>[]|null $providers
      */
-    public function __construct(array|null $providers = null)
+    public function __construct(null|array $providers = null)
     {
         parent::__construct($providers ?? DefaultProviders::providers());
     }
@@ -30,12 +32,12 @@ final class Provider extends LaravelDefaultProviders
 
     public function loadFrom(string ...$paths): self
     {
-        $classMapper = new ClassMapGenerator();
+        $classMapGenerator = new ClassMapGenerator();
         foreach ($paths as $path) {
-            $classMapper->scanPaths($path);
+            $classMapGenerator->scanPaths($path);
         }
 
-        $this->merge(array_keys($classMapper->getClassMap()->getMap()));
+        $this->merge(array_keys($classMapGenerator->getClassMap()->getMap()));
 
         return $this;
     }

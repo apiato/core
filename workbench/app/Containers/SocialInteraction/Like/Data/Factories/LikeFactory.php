@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\SocialInteraction\Like\Data\Factories;
 
 use Workbench\App\Containers\SocialInteraction\Like\Models\Like;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Book\Providers;
 
 use Illuminate\Foundation\Http\Kernel;
@@ -15,7 +17,7 @@ class BookServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        app()->afterResolving(Kernel::class, function (Kernel $kernel): void {
+        app()->afterResolving(Kernel::class, static function (Kernel $kernel): void {
             $kernel->pushMiddleware(BeforeMiddleware::class);
         });
     }

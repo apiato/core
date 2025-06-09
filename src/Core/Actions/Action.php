@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Core\Actions;
 
 use Illuminate\Support\Facades\DB;
@@ -15,6 +17,6 @@ abstract class Action
         // we assert that run method exists
         Assert::methodExists($this, 'run');
 
-        return DB::transaction(fn () => static::run(...$args));
+        return DB::transaction(fn (): mixed => $this->run(...$args));
     }
 }

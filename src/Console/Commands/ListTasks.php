@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Console\Commands;
 
 use Apiato\Core\Console\Command;
@@ -10,7 +12,10 @@ use Symfony\Component\Finder\SplFileInfo;
 
 final class ListTasks extends Command
 {
+    /** @var string */
     protected $signature = 'apiato:list:tasks {--with-file-name}';
+
+    /** @var string */
     protected $description = 'List all Tasks';
 
     public function handle(): void
@@ -26,7 +31,7 @@ final class ListTasks extends Command
                 ->beforeLast(DIRECTORY_SEPARATOR)
                 ->afterLast(DIRECTORY_SEPARATOR)
                 ->value())->each(function (Collection $files, string $group): void {
-                    $this->comment("[{$group}]");
+                    $this->comment(\sprintf('[%s]', $group));
 
                     /** @var SplFileInfo $file */
                     foreach ($files as $file) {
@@ -38,10 +43,10 @@ final class ListTasks extends Command
                             ->headline();
 
                         if ($this->option('with-file-name')) {
-                            $includeFileName = "<fg=red>({$originalFileName})</fg=red>";
-                            $this->info(" - {$fileName} {$includeFileName}");
+                            $includeFileName = \sprintf('<fg=red>(%s)</fg=red>', $originalFileName);
+                            $this->info(\sprintf(' - %s %s', $fileName, $includeFileName));
                         } else {
-                            $this->info(" - {$fileName}");
+                            $this->info(' - ' . $fileName);
                         }
                     }
                 });

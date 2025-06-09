@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Core\Transformers\Transformer;
 use Apiato\Http\Resources\Collection;
 use Apiato\Http\Resources\Item;
@@ -21,11 +23,11 @@ describe(class_basename(Transformer::class), function (): void {
     });
 
     dataset('resourceKeys', [
-        'null resource key' => [null, 'Book'],
+        'null resource key'     => [null, 'Book'],
         'override resource key' => ['CustomKey', 'CustomKey'],
     ]);
 
-    it('can return an item', function (string|null $resourceKey, $expected): void {
+    it('can return an item', function (null|string $resourceKey, $expected): void {
         $transformer = new BookTransformer();
         $transformer->setDefaultIncludes(['author']);
 
@@ -39,7 +41,7 @@ describe(class_basename(Transformer::class), function (): void {
             ->and($item->getResourceKey())->toBe($expected);
     })->with('resourceKeys');
 
-    it('can return a collection', function (string|null $resourceKey, $expected): void {
+    it('can return a collection', function (null|string $resourceKey, $expected): void {
         $transformer = new BookTransformer();
         $transformer->setDefaultIncludes(['author']);
 

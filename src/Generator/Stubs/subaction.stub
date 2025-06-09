@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Containers\{{section-name}}\{{container-name}}\Actions;
+declare(strict_types=1);
+
+namespace App\Containers\{{section-name}}\{{container-name}}\SubActions;
 
 use App\Ship\Parents\Actions\SubAction as ParentSubAction;
 
 final class {{class-name}} extends ParentSubAction
 {
-    public function run()
+    public function run(): void
     {
     }
 }

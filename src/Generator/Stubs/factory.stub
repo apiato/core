@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Data\Factories;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
@@ -17,6 +19,15 @@ final class {{class-name}} extends ParentFactory
 
     public function definition(): array
     {
-        return [];
+        return [
+            'name' => fake()->name(),
+        ];
+    }
+
+    public function name(): self
+    {
+        return $this->state(fn (array $attributes): array => [
+            'name' => fake()->name(),
+        ]);
     }
 }

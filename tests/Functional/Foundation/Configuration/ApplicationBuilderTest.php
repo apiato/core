@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Configuration\ApplicationBuilder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use Tests\FunctionalTestCase;
 use Tests\TestCase;
 use Tests\UnitTestCase;
 
-pest()->afterEach(function () {
+pest()->afterEach(function (): void {
     $this->freezeTime();
 });
 /*

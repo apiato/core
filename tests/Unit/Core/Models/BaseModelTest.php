@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Core\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -7,7 +9,7 @@ use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(BaseModel::class), function (): void {
     beforeEach(function (): void {
-        $this->model = new class extends BaseModel {
+        $this->model = new class () extends BaseModel {
             protected $resourceKey = 'custom-resource-key';
         };
     });
@@ -26,10 +28,10 @@ describe(class_basename(BaseModel::class), function (): void {
 
     it('can locate the factory of the model using different call styles', function (): void {
         $usingModel = Book::factory()->makeOne();
-        $usingFactory = Book::factory()->makeOne();
+        $model = Book::factory()->makeOne();
 
         expect($usingModel)->toBeInstanceOf(Book::class)
-            ->and($usingFactory)->toBeInstanceOf(Book::class);
+            ->and($model)->toBeInstanceOf(Book::class);
     });
 
     describe('getHashedKey()', function (): void {
@@ -38,35 +40,35 @@ describe(class_basename(BaseModel::class), function (): void {
         });
 
         it('returns hashed primary key by default', function (): void {
-            $book = Book::factory()->createOne();
+            $model = Book::factory()->createOne();
 
-            expect($book->getHashedKey())->toBe(hashids()->encode($book->getKey()));
+            expect($model->getHashedKey())->toBe(hashids()->encode($model->getKey()));
         });
 
         it('can return hashed key for a specific field', function (): void {
-            $book = Book::factory()->makeOne();
+            $model = Book::factory()->makeOne();
 
-            expect($book->getHashedKey('author_id'))->toBe(hashids()->encode($book->author_id));
+            expect($model->getHashedKey('author_id'))->toBe(hashids()->encode($model->author_id));
         });
 
         it('returns null if the field is null', function (): void {
-            $book = Book::factory()->makeOne(['author_id' => null]);
+            $model = Book::factory()->makeOne(['author_id' => null]);
 
-            expect($book->getHashedKey('author_id'))->toBeNull();
+            expect($model->getHashedKey('author_id'))->toBeNull();
         });
 
         it('returns the original field value if hash-id is disabled', function (): void {
             config(['apiato.hash-id' => false]);
-            $book = Book::factory()->makeOne();
+            $model = Book::factory()->makeOne();
 
-            expect($book->getHashedKey())->toEqual($book->getKey());
+            expect($model->getHashedKey())->toEqual($model->getKey());
         });
 
         it('returns the original field value if the field is not hashable and hash-id is disabled', function (): void {
             config(['apiato.hash-id' => false]);
-            $book = Book::factory()->makeOne();
+            $model = Book::factory()->makeOne();
 
-            expect($book->getHashedKey('title'))->toEqual($book->title);
+            expect($model->getHashedKey('title'))->toEqual($model->title);
         });
     });
 
@@ -74,12 +76,12 @@ describe(class_basename(BaseModel::class), function (): void {
         it('can handle hashed ids', function (): void {
             config(['apiato.hash-id' => true]);
             Book::factory()->count(3)->create();
-            $target = Book::factory()->createOne();
+            $model = Book::factory()->createOne();
 
             expect(
                 Book::newModelInstance()->resolveRouteBinding(
-                    hashids()->encode($target->getKey()),
-                )->is($target),
+                    hashids()->encode($model->getKey()),
+                )->is($model),
             )->toBeTrue();
         });
 
@@ -90,9 +92,9 @@ describe(class_basename(BaseModel::class), function (): void {
 
                 expect(
                     Book::newModelInstance()
-                    ->setIncrementing($incrementing)
-                    ->shouldProcessHashIdRouteBinding(!$isHashedId ?: hashids()->encode(1)),
-                )->toBe($expectation, "Enabled: {$enabled}, Incrementing: {$incrementing}");
+                        ->setIncrementing($incrementing)
+                        ->shouldProcessHashIdRouteBinding(!$isHashedId ?: hashids()->encode(1)),
+                )->toBe($expectation, sprintf('Enabled: %s, Incrementing: %s', $enabled, $incrementing));
             },
         )->with([
             [true, true, true, true],
@@ -118,7 +120,7 @@ describe(class_basename(BaseModel::class), function (): void {
 
         it(
             'can detect when it should resolve hashed ids and when it should not 2',
-            function (string $value, string|null $field, Book $target): void {
+            function (string $value, null|string $field, Book $target): void {
                 config(['apiato.hash-id' => true]);
 
                 expect(
@@ -130,39 +132,39 @@ describe(class_basename(BaseModel::class), function (): void {
             },
         )->with([
             function (): array {
-                $target = Book::factory()->createOne();
+                $model = Book::factory()->createOne();
 
-                return [hashids()->encode($target->id), null, $target];
+                return [hashids()->encode($model->id), null, $model];
             },
             function (): array {
-                $target = Book::factory()->createOne();
+                $model = Book::factory()->createOne();
 
-                return [hashids()->encode($target->id), 'id', $target];
+                return [hashids()->encode($model->id), 'id', $model];
             },
             function (): array {
-                $target = Book::factory()->createOne();
+                $model = Book::factory()->createOne();
 
-                return [$target->title, 'title', $target];
+                return [$model->title, 'title', $model];
             },
         ])->skip();
 
         it('can handle unhashed ids', function (): void {
             config(['apiato.hash-id' => false]);
             Book::factory()->count(3)->create();
-            $target = Book::factory()->createOne([
+            $model = Book::factory()->createOne([
                 'title' => 'Target',
             ]);
 
             expect(
                 Book::newModelInstance()->resolveRouteBinding(
-                    $target->getKey(),
-                )->is($target),
+                    $model->getKey(),
+                )->is($model),
             )->toBeTrue()
                 ->and(
                     Book::newModelInstance()->resolveRouteBinding(
-                        $target->title,
+                        $model->title,
                         'title',
-                    )->is($target),
+                    )->is($model),
                 )->toBeTrue();
         });
     });

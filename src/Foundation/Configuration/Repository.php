@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Foundation\Configuration;
 
 use Apiato\Core\Repositories\Repository as AbstractRepository;
@@ -12,7 +14,7 @@ use Illuminate\Support\Str;
  */
 final class Repository
 {
-    protected static \Closure $nameResolver;
+    private static \Closure $nameResolver;
 
     public function __construct()
     {
@@ -22,15 +24,15 @@ final class Repository
                     ->append('Models\\')
                     ->append(
                         Str::of(class_basename($repositoryName))
-                        ->beforeLast('Repository')
-                        ->value(),
+                            ->beforeLast('Repository')
+                            ->value(),
                     )->value();
 
                 if (class_exists($modelName)) {
                     return $modelName;
                 }
 
-                throw new \RuntimeException("Model not found for repository: {$repositoryName}");
+                throw new \RuntimeException('Model not found for repository: ' . $repositoryName);
             },
         );
     }

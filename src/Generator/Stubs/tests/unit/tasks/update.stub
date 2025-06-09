@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit\Tasks;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
@@ -20,9 +22,9 @@ final class {{class-name}} extends UnitTestCase
             // 'some_field' => 'new_field_value',
         ];
 
-        $updated{{model}} = app(Update{{model}}Task::class)->run($data, ${{_model}}->id);
+        $updated{{model}} = app(Update{{model}}Task::class)->run(${{_model}}->id, $data);
 
-        $this->assertEquals(${{_model}}->id, $updated{{model}}->id);
-        // $this->assertEquals($data['some_field'], $updated{{model}}->some_field);
+        self::assertEquals(${{_model}}->id, $updated{{model}}->id);
+        // self::assertEquals($data['some_field'], $updated{{model}}->some_field);
     }
 }

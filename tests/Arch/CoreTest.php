@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Core\Repositories\Exceptions\ResourceCreationFailed;
 use Apiato\Core\Repositories\Exceptions\ResourceNotFound;
+use Apiato\Http\Response;
 
 arch()->preset()->php();
 
@@ -18,7 +21,7 @@ arch('src - final classes')
         'Apiato\Core',
         'Apiato\Generator',
         'Apiato\Support\Facades',
-        Apiato\Http\Response::class,
+        Response::class,
     ]);
 
 arch('src/abstract')

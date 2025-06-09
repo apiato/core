@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<phpmd-baseline>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="src/Core/Console/Command.php"/>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="src/Core/Exceptions/HttpException.php"/>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="src/Core/Middleware/Middleware.php"/>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="src/Core/Providers/ServiceProvider.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Core/Repositories/Repository.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyMethods" file="src/Core/Repositories/Repository.php"/>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="src/Core/Seeders/Seeder.php"/>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="src/Core/Transformers/Transformer.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Foundation/Providers/ApiatoServiceProvider.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Generator/Commands/ContainerApiGenerator.php" method="getUserInputs"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Generator/Commands/ContainerApiGenerator.php" method="getUserInputs"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Generator/Commands/ContainerApiGenerator.php" method="getUserInputs"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseVariableName" file="src/Generator/Commands/ContainerApiGenerator.php"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Generator/Commands/ContainerGenerator.php" method="getUserInputs"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseVariableName" file="src/Generator/Commands/ContainerGenerator.php"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Generator/Commands/ContainerWebGenerator.php" method="getUserInputs"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseVariableName" file="src/Generator/Commands/ContainerWebGenerator.php"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Generator/Commands/RouteGenerator.php" method="getUserInputs"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseVariableName" file="src/Generator/Commands/TransformerGenerator.php"/>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="src/Generator/Generator.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Generator/Generator.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Generator/GeneratorsServiceProvider.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseVariableName" file="src/Generator/Traits/UIGeneratorTrait.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Http/Response.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortMethodName" file="src/Http/Response.php" method="ok"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/Identity/User/Data/Factories/UserFactory.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/Identity/User/Models/User.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseClassName" file="workbench/app/Containers/MySection/Author/Data/Seeders/Murdered_2.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseClassName" file="workbench/app/Containers/MySection/Author/Data/Seeders/Ordered_1.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseClassName" file="workbench/app/Containers/MySection/Author/Data/Seeders/Wondered_3.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/MySection/Book/Data/Factories/BookFactory.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/MySection/Book/Data/Repositories/BookRepository.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseClassName" file="workbench/app/Containers/MySection/Book/Data/Seeders/Murdered_2.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseClassName" file="workbench/app/Containers/MySection/Book/Data/Seeders/Ordered_1.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseClassName" file="workbench/app/Containers/MySection/Book/Data/Seeders/Wondered_3.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/MySection/Book/Models/Book.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/MySection/Book/Providers/BookServiceProvider.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/MySection/Book/Providers/EventServiceProvider.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/MySection/Book/UI/API/Requests/CreateBookRequest.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/MySection/Book/UI/API/Requests/UpdateBookRequest.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/MySection/Book/UI/WEB/Requests/CreateBookRequest.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/MySection/MultiWord/Data/Repositories/MultiWordRepository.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/MySection/MultiWord/Models/MultiWord.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/SocialInteraction/Comment/Data/Factories/CommentFactory.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/SocialInteraction/Comment/Models/Comment.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/SocialInteraction/Like/Data/Factories/LikeFactory.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Containers/SocialInteraction/Like/Models/Like.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Ship/Exceptions/CreateResourceFailed.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Ship/Exceptions/ResourceNotFound.php"/>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="workbench/app/Ship/Parents/Factories/Factory.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Ship/Parents/Models/Model.php"/>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="workbench/app/Ship/Parents/Models/Model.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Ship/Parents/Models/UserModel.php"/>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="workbench/app/Ship/Parents/Requests/Request.php"/>
+  <violation rule="PHPMD\Rule\Design\DepthOfInheritance" file="workbench/app/Ship/Providers/ShipServiceProvider.php"/>
+</phpmd-baseline>

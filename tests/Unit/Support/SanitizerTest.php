@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Core\Requests\Request;
 use Apiato\Support\Sanitizer;
 
 describe(class_basename(Sanitizer::class), function (): void {
     it('can sanitize', function (array $requestData, array $sanitizeData, mixed $expectation): void {
-        $request = new class extends Request {};
+        $request = new class () extends Request {
+        };
         $request->merge([
             ...$requestData,
             'something' => 'that should be removed',
@@ -58,7 +61,7 @@ describe(class_basename(Sanitizer::class), function (): void {
         'dot notation with default value' => [
             [],
             ['data.name' => 'Gandalf'],
-            ['data' => ['name' => 'Gandalf']],
+            ['data'      => ['name' => 'Gandalf']],
         ],
     ]);
 })->covers(Sanitizer::class);

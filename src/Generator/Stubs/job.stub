@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Jobs;
 
 use App\Ship\Parents\Jobs\Job as ParentJob;

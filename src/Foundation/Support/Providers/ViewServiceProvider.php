@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Foundation\Support\Providers;
 
 use Apiato\Core\Providers\ServiceProvider;
@@ -9,9 +11,9 @@ final class ViewServiceProvider extends ServiceProvider
 {
     public function boot(Apiato $apiato): void
     {
-        $configuration = $apiato->view();
-        foreach ($configuration->paths() as $path) {
-            $this->loadViewsFrom($path, $configuration->buildNamespaceFor($path));
+        $view = $apiato->view();
+        foreach ($view->paths() as $path) {
+            $this->loadViewsFrom($path, $view->buildNamespaceFor($path));
         }
     }
 }

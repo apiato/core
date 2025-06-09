@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Http\Middleware;
 
 use Apiato\Core\Middleware\Middleware;
@@ -39,7 +41,7 @@ final class ProcessETag extends Middleware
         $response->headers->set('Etag', $etag);
 
         if ($request->hasHeader('if-none-match') && $request->header('if-none-match') === $etag) {
-            $response->setStatusCode(304);
+            $response->setStatusCode(Response::HTTP_NOT_MODIFIED);
         }
 
         return $response;

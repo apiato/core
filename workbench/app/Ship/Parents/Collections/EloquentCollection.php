@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Ship\Parents\Collections;
 
 use Apiato\Core\Collections\EloquentCollection as AbstractEloquentCollection;

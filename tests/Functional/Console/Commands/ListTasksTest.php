@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Console\Commands\ListTasks;
 
 describe(class_basename(ListTasks::class), function (): void {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Support\Providers\HelperServiceProvider;
 
 describe(class_basename(HelperServiceProvider::class), function (): void {

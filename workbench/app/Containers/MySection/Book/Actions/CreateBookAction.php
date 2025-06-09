@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Book\Actions;
 
 use Workbench\App\Containers\MySection\Book\Models\Book;

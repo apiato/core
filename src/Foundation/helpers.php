@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Apiato;
 use Apiato\Support\HashidsManagerDecorator;
 use Safe\Exceptions\FilesystemException;
+
+use function Safe\glob;
 
 if (!function_exists('apiato')) {
     /**
@@ -45,13 +49,13 @@ if (!function_exists('recursiveGlob')) {
     function recursiveGlob(string $pattern, int $flags = 0): array
     {
         /** @var string[] $topLevelFiles */
-        $topLevelFiles = \Safe\glob($pattern, $flags);
+        $topLevelFiles = glob($pattern, $flags);
         /** @var string[] $dirs */
-        $dirs = \Safe\glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
+        $dirs = glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
 
         $allFiles = $topLevelFiles;
         foreach ($dirs as $dir) {
-            $allFiles = [...$allFiles, ...recursiveGlob("{$dir}/" . basename($pattern), $flags)];
+            $allFiles = [...$allFiles, ...recursiveGlob($dir . '/' . basename($pattern), $flags)];
         }
 
         return $allFiles;

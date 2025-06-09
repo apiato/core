@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Http\Middleware\ValidateJsonContent;
 use Illuminate\Support\Facades\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +16,7 @@ describe(class_basename(ValidateJsonContent::class), function (): void {
         config(['apiato.requests.force-accept-header' => true]);
         $request = Request::create('/test', 'GET');
         $request->headers->remove('Accept');
+
         $middleware = new ValidateJsonContent();
 
         $this->expectException(RuntimeException::class);
@@ -25,6 +28,7 @@ describe(class_basename(ValidateJsonContent::class), function (): void {
         config(['apiato.requests.force-accept-header' => $enabled]);
         $request = Request::create('/test', 'GET');
         $request->headers->set('Accept', 'application/json');
+
         $middleware = new ValidateJsonContent();
 
         $response = $middleware->handle($request, $this->next);

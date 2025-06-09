@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit\Tasks;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
@@ -20,8 +22,8 @@ final class {{class-name}} extends UnitTestCase
 
         $found{{models}} = app(List{{models}}Task::class)->run();
 
-        $this->assertCount(3, $found{{models}});
-        $this->assertInstanceOf(LengthAwarePaginator::class, $found{{models}});
+        self::assertCount(3, $found{{models}});
+        self::assertInstanceOf(LengthAwarePaginator::class, $found{{models}});
         Event::assertDispatched({{event}}::class);
     }
 }

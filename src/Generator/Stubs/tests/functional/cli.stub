@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\CLI;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\CliTestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Group;
 
 #[CoversNothing]
+#[Group('{{_container-name}}')]
+#[Group('cli')]
 final class {{class-name}} extends CliTestCase
 {
     public function test(): void

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\SocialInteraction\Comment\Data\Factories;
 
 use Workbench\App\Containers\SocialInteraction\Comment\Models\Comment;
@@ -18,7 +20,7 @@ class CommentFactory extends ParentFactory
     public function definition(): array
     {
         return [
-            'content' => $this->faker->text,
+            'content' => fake()->text,
         ];
     }
 }

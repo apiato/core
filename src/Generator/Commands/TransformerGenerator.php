@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator\Commands;
 
 use Apiato\Generator\Generator;
@@ -18,56 +20,62 @@ final class TransformerGenerator extends Generator implements ComponentsGenerato
         ['model', null, InputOption::VALUE_OPTIONAL, 'The model to generate this Transformer for'],
         ['full', null, InputOption::VALUE_OPTIONAL, 'Generate a Transformer with all fields of the model'],
     ];
+
     /**
      * The console command name.
      *
      * @var string
      */
     protected $name = 'apiato:make:transformer';
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Create a new Transformer class for a given Model';
+
     /**
      * The type of class being generated.
      */
     protected string $fileType = 'Transformer';
+
     /**
      * The structure of the file path.
      */
     protected string $pathStructure = '{section-name}/{container-name}/UI/API/Transformers/*';
+
     /**
      * The structure of the file name.
      */
     protected string $nameStructure = '{file-name}';
+
     /**
      * The name of the stub file.
      */
     protected string $stubName = 'transformer.stub';
 
-    public function getUserInputs(): array|null
+    public function getUserInputs(): null|array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Transformer for');
-        $full = $this->checkParameterOrConfirm('full', 'Generate a Transformer with all fields', false);
+        $full = (bool)$this->checkParameterOrConfirm('full', 'Generate a Transformer with all fields', false);
 
         $attributes = $this->getListOfAllAttributes($full, $model);
 
         return [
             'path-parameters' => [
-                'section-name' => $this->sectionName,
+                'section-name'   => $this->sectionName,
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
+                '_section-name'   => Str::lower($this->sectionName),
+                'section-name'    => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-                'model' => $model,
-                '_model' => Str::lower($model),
-                'attributes' => $attributes,
+                'container-name'  => $this->containerName,
+                'class-name'      => $this->fileName,
+                'model'           => $model,
+                '_model'          => Str::lower($model),
+                'attributes'      => $attributes,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -75,7 +83,7 @@ final class TransformerGenerator extends Generator implements ComponentsGenerato
         ];
     }
 
-    private function getListOfAllAttributes(string|bool|array|null $full, string $model): string
+    private function getListOfAllAttributes(bool $full, string $model): string
     {
         $indent = str_repeat(' ', 12);
         $_model = Str::lower($model);
@@ -89,7 +97,7 @@ final class TransformerGenerator extends Generator implements ComponentsGenerato
             $columns = Schema::getColumnListing($obj->getTable());
 
             foreach ($columns as $column) {
-                if (in_array($column, $obj->getHidden(), false)) {
+                if (\in_array($column, $obj->getHidden(), false)) {
                     // Skip all hidden fields of respective model
                     continue;
                 }
@@ -102,9 +110,12 @@ final class TransformerGenerator extends Generator implements ComponentsGenerato
             'id' => '$' . $_model . '->getHashedKey()',
         ]);
 
+        $lengths   = array_map(Str::length(...), array_keys($fields));
+        $maxLength = max($lengths);
         $attributes = '';
         foreach ($fields as $key => $value) {
-            $attributes .= $indent . "'$key' => $value," . $this->getEndOfLine($key, $fields);
+            $tab         = str_repeat(' ', $maxLength - Str::length($key));
+            $attributes .= $indent . \sprintf("'%s'%s => %s,", $key, $tab, $value) . $this->getEndOfLine($key, $fields);
         }
 
         return $attributes;
@@ -115,6 +126,6 @@ final class TransformerGenerator extends Generator implements ComponentsGenerato
         $keys = array_keys($fields);
         $lastKey = end($keys);
 
-        return $currentKey === $lastKey ? '' : PHP_EOL;
+        return $currentKey === (string)$lastKey ? '' : PHP_EOL;
     }
 }

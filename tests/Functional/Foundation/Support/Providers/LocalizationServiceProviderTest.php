@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Support\Providers\LocalizationServiceProvider;
 
 describe(class_basename(LocalizationServiceProvider::class), function (): void {
     it('loads translation files', function (): void {
-        $configuration = apiato()->localization();
+        $localization = apiato()->localization();
         $this->app->setLocale('en');
-        foreach ($configuration->paths() as $path) {
-            expect(__($configuration->buildNamespaceFor($path) . '::errors.forbidden'))->toBe('forbidden');
+        foreach ($localization->paths() as $path) {
+            expect(__($localization->buildNamespaceFor($path) . '::errors.forbidden'))->toBe('forbidden');
         }
 
         $this->app->setLocale('fa');
-        foreach ($configuration->paths() as $path) {
-            expect(__($configuration->buildNamespaceFor($path) . '::errors.forbidden'))->toBe('ممنوع');
+        foreach ($localization->paths() as $path) {
+            expect(__($localization->buildNamespaceFor($path) . '::errors.forbidden'))->toBe('ممنوع');
         }
     });
 

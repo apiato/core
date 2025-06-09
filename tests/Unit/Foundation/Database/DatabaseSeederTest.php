@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Core\Seeders\Seeder;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Seeding;
@@ -12,7 +14,7 @@ describe(class_basename(DatabaseSeeder::class), function (): void {
         $apiato = Apiato::configure()->withSeeders(
             static fn (Seeding $seeding): Seeding => $seeding->sortUsing(
                 static fn (): array => [
-                    (new class extends Seeder {
+                    (new class () extends Seeder {
                         public function run(): void
                         {
                             User::factory()->createOne([

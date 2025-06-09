@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Foundation\Configuration;
 
 use Illuminate\Support\Str;
 
 final class View
 {
-    protected static \Closure $namespaceBuilder;
+    private static \Closure $namespaceBuilder;
+
     /** @var string[] */
-    protected array $paths = [];
+    private array $paths = [];
 
     public function __construct()
     {
-        $this->buildNamespaceUsing(function (string $path): string {
+        $this->buildNamespaceUsing(static function (string $path): string {
             if (Str::contains($path, shared_path())) {
                 return Str::of(shared_path())
                     ->afterLast(DIRECTORY_SEPARATOR)

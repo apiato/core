@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\UI\API\Transformers;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
@@ -15,8 +17,8 @@ final class {{class-name}} extends ParentTransformer
     {
         return [
 {{attributes}}
-            'created_at' => ${{_model}}->created_at,
-            'updated_at' => ${{_model}}->updated_at,
+            'created_at'          => ${{_model}}->created_at,
+            'updated_at'          => ${{_model}}->updated_at,
             'readable_created_at' => ${{_model}}->created_at->diffForHumans(),
             'readable_updated_at' => ${{_model}}->updated_at->diffForHumans(),
         ];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Book\Tasks;
 
 use Workbench\App\Containers\MySection\Book\Data\Repositories\BookRepository;
@@ -10,9 +12,8 @@ use Workbench\App\Ship\Parents\Tasks\Task as ParentTask;
 
 class CreateBookTask extends ParentTask
 {
-    public function __construct(
-        private readonly BookRepository $repository,
-    ) {
+    public function __construct(private readonly BookRepository $repository)
+    {
     }
 
     public function run(array $data): Book
@@ -22,7 +23,7 @@ class CreateBookTask extends ParentTask
             BookCreated::dispatch($book);
 
             return $book;
-        } catch (\Exception) {
+        } catch (\Throwable) {
             throw CreateResourceFailed::create();
         }
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 
 use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
@@ -14,7 +16,7 @@ final class {{class-name}} extends ParentTask
     ) {
     }
 
-    public function run($id): {{model}}
+    public function run(int $id): {{model}}
     {
         ${{model_}} = $this->repository->findOrFail($id);
 

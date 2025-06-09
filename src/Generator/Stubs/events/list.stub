@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Events;
 
 use App\Ship\Parents\Events\Event as ParentEvent;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\MultiWord\Data\Repositories;
 
 use Workbench\App\Containers\MySection\MultiWord\Models\MultiWord;

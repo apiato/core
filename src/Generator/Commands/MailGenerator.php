@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator\Commands;
 
 use Apiato\Generator\Generator;
@@ -17,55 +19,61 @@ final class MailGenerator extends Generator implements ComponentsGenerator
         ['view', null, InputOption::VALUE_OPTIONAL, 'The name of the view (blade template) to be loaded.'],
         ['subject', null, InputOption::VALUE_OPTIONAL, 'The subject of the email.'],
     ];
+
     /**
      * The console command name.
      *
      * @var string
      */
     protected $name = 'apiato:make:mail';
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Create a new Mail class';
+
     /**
      * The type of class being generated.
      */
     protected string $fileType = 'Mail';
+
     /**
      * The structure of the file path.
      */
     protected string $pathStructure = '{section-name}/{container-name}/Mails/*';
+
     /**
      * The structure of the file name.
      */
     protected string $nameStructure = '{file-name}';
+
     /**
      * The name of the stub file.
      */
     protected string $stubName = 'mail.stub';
 
-    public function getUserInputs(): array|null
+    public function getUserInputs(): null|array
     {
         $view = $this->checkParameterOrAsk('view', 'Enter the name of the view to be loaded when sending this Mail', '');
         $subject = $this->checkParameterOrAsk('subject', "What's the the subject this Mail?", '');
 
         return [
             'path-parameters' => [
-                'section-name' => $this->sectionName,
+                'section-name'   => $this->sectionName,
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
-                'sectionName' => Str::camel($this->sectionName),
+                '_section-name'   => Str::lower($this->sectionName),
+                'section-name'    => $this->sectionName,
+                'sectionName'     => Str::camel($this->sectionName),
                 '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'containerName' => Str::camel($this->containerName),
-                'class-name' => $this->fileName,
-                'view' => $view,
-                'subject' => $subject,
+                'container-name'  => $this->containerName,
+                'containerName'   => Str::camel($this->containerName),
+                'class-name'      => $this->fileName,
+                'view'            => $view,
+                'subject'         => $subject,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -73,6 +81,7 @@ final class MailGenerator extends Generator implements ComponentsGenerator
         ];
     }
 
+    #[\Override]
     public function getDefaultFileName(): string
     {
         return 'DefaultMail';

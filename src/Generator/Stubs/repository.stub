@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Data\Repositories;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
@@ -12,6 +14,9 @@ use App\Ship\Parents\Repositories\Repository as ParentRepository;
  */
 final class {{class-name}} extends ParentRepository
 {
+    /**
+     * @var array
+     */
     protected $fieldSearchable = [
         // 'id' => '=',
     ];

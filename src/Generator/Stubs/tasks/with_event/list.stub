@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tasks;
 
 use App\Containers\{{section-name}}\{{container-name}}\Data\Repositories\{{model}}Repository;
 use App\Containers\{{section-name}}\{{container-name}}\Events\{{event}};
 use App\Ship\Parents\Tasks\Task as ParentTask;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 final class {{class-name}} extends ParentTask
 {
@@ -13,7 +17,7 @@ final class {{class-name}} extends ParentTask
     ) {
     }
 
-    public function run(): mixed
+    public function run(): Collection|LengthAwarePaginator
     {
         $result = $this->repository->addRequestCriteria()->paginate();
 

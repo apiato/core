@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Foundation\Configuration;
 
 use Composer\ClassMapGenerator\ClassMapGenerator;
@@ -11,9 +13,10 @@ use Illuminate\Support\Collection;
  */
 final class Seeding
 {
-    protected static \Closure $seederSorter;
+    private static \Closure $seederSorter;
+
     /** @var string[] */
-    protected array $paths = [];
+    private array $paths = [];
 
     public function __construct()
     {
@@ -57,6 +60,13 @@ final class Seeding
         return $this->getSortedFiles($classMapGroupedByDirectory);
     }
 
+    public function loadFrom(string ...$paths): self
+    {
+        $this->paths = $paths;
+
+        return $this;
+    }
+
     /**
      * @param array<array<class-string<TSeeder>, non-empty-string>> $classMapGroupedByDirectory
      *
@@ -65,12 +75,5 @@ final class Seeding
     private function getSortedFiles(array $classMapGroupedByDirectory): array
     {
         return app()->call(self::$seederSorter, ['classMapGroupedByDirectory' => $classMapGroupedByDirectory]);
-    }
-
-    public function loadFrom(string ...$paths): self
-    {
-        $this->paths = $paths;
-
-        return $this;
     }
 }

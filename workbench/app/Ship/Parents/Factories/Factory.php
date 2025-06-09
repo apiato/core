@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Ship\Parents\Factories;
 
 use Apiato\Core\Factories\Factory as AbstractFactory;
