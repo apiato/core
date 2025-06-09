@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Core\Actions\Action;
 use Workbench\App\Containers\Identity\User\Models\User;
 
 describe(class_basename(Action::class), function (): void {
     it('can run a transactional action', function (): void {
-        $action = new class extends Action {
+        $action = new class () extends Action {
             public static function run(string $name, string $email): never
             {
                 User::factory()->createOne([
-                    'name' => $name,
+                    'name'  => $name,
                     'email' => $email,
                 ]);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\E2E;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tests\E2ETestCase;

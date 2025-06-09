@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Core\Models\Concerns;
 
 trait HasHashedId
@@ -9,15 +11,15 @@ trait HasHashedId
      *
      * Returns the hashed primary key by default.
      */
-    public function getHashedKey(string|null $field = null): mixed
+    public function getHashedKey(null|string $field = null): null|string|int
     {
-        if (is_null($field)) {
+        if (\is_null($field)) {
             $field = $this->getKeyName();
         }
 
         $attribute = $this->getAttribute($field);
 
-        if (is_null($attribute)) {
+        if (\is_null($attribute)) {
             return null;
         }
 

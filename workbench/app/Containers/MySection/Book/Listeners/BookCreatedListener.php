@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Book\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,5 +12,6 @@ class BookCreatedListener extends ParentListener implements ShouldQueue
 {
     public function __invoke(BookCreated $event): void
     {
+        // TODO: For the sake of this example, we are not doing anything here.
     }
 }

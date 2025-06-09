@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Support\Providers\ConfigServiceProvider;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 describe(class_basename(ConfigServiceProvider::class), function (): void {
     it('merges configs from configured path', function (): void {

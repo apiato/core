@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Book\UI\CLI\Commands;
 
 use Apiato\Core\Console\Command;

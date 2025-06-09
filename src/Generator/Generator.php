@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator;
 
 use Apiato\Generator\Interfaces\ComponentsGenerator;
 use Apiato\Generator\Traits\FileSystemTrait;
-use Apiato\Generator\Traits\FormatterTrait;
 use Apiato\Generator\Traits\ParserTrait;
 use Apiato\Generator\Traits\PrinterTrait;
 use Illuminate\Console\Command;
@@ -17,17 +18,13 @@ use Webmozart\Assert\Assert;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
+use function Safe\preg_replace;
 
 abstract class Generator extends Command
 {
+    use FileSystemTrait;
     use ParserTrait;
     use PrinterTrait;
-    use FileSystemTrait;
-    use FormatterTrait;
-
-    protected string $fileType;
-    protected string $stubName;
-    protected array $inputs;
 
     /**
      * Root directory of all sections.
@@ -55,30 +52,36 @@ abstract class Generator extends Command
      */
     private const DEFAULT_SECTION_NAME = 'AppSection';
 
+    protected string $fileType;
+
+    protected string $stubName;
+
+    protected array $inputs;
+
     protected string $filePath;
 
     /**
-     * @var string the name of the section to generate the stubs
+     * The name of the section to generate the stubs.
      */
     protected string $sectionName;
 
     /**
-     * @var string the name of the container to generate the stubs
+     * The name of the container to generate the stubs.
      */
     protected string $containerName;
 
     /**
-     * @var string The name of the file to be created (entered by the user)
+     * The name of the file to be created (entered by the user).
      */
     protected string $fileName;
 
-    protected $userData;
+    protected ?array $userData;
 
-    protected $parsedFileName;
+    protected string $parsedFileName = '';
 
-    protected $stubContent;
+    protected string $stubContent;
 
-    protected $renderedStubContent;
+    protected string $renderedStubContent;
 
     private array $defaultInputs = [
         ['section', null, InputOption::VALUE_OPTIONAL, 'The name of the section'],
@@ -96,7 +99,7 @@ abstract class Generator extends Command
      *
      * @throws FileNotFoundException
      */
-    public function handle(): int|null
+    public function handle(): int
     {
         Assert::isInstanceOf($this, ComponentsGenerator::class);
 
@@ -107,7 +110,8 @@ abstract class Generator extends Command
         // Now fix the section, container and file name
         $this->sectionName = $this->removeSpecialChars($this->sectionName);
         $this->containerName = $this->removeSpecialChars($this->containerName);
-        if ('Configuration' !== $this->fileType) {
+
+        if ($this->fileType !== 'Configuration') {
             $this->fileName = $this->removeSpecialChars($this->fileName);
         }
 
@@ -117,10 +121,11 @@ abstract class Generator extends Command
         // Get user inputs
         $this->userData = $this->getUserInputs();
 
-        if (null === $this->userData) {
+        if ($this->userData === null || $this->userData === []) {
             // The user skipped this step
-            return null;
+            return Command::SUCCESS;
         }
+
         $this->userData = $this->sanitizeUserData($this->userData);
 
         // Get the actual path of the output file as well as the correct filename
@@ -138,19 +143,23 @@ abstract class Generator extends Command
         }
 
         // Exit the command successfully
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
      * Checks if the param is set (via CLI), otherwise asks the user for a value.
      */
-    protected function checkParameterOrAsk($param, $question, string|null $default = null): mixed
-    {
+    protected function checkParameterOrAsk(
+        string $param,
+        string $question,
+        null|string|int $default = null,
+    ): array|string|int {
         // Check if we already have a param set
         $value = $this->option($param);
-        if (null === $value) {
-            // There was no value provided via CLI, so ask the user…
-            $value = text(
+
+        if ($value === null) {
+            // There was no value provided via CLI, so ask the user.
+            return text(
                 label: $question,
                 default: $default ?? '',
             );
@@ -173,31 +182,10 @@ abstract class Generator extends Command
     protected function removeSpecialChars(string $str): string
     {
         // remove everything that is NOT a character or digit
-        return \Safe\preg_replace('/[^A-Za-z0-9]/', '', $str);
+        return preg_replace('/[^A-Za-z0-9]/', '', $str);
     }
 
-    /**
-     * Checks, if the data from the generator contains path, stub and file-parameters.
-     * Adds empty arrays, if they are missing.
-     */
-    private function sanitizeUserData(array $data): mixed
-    {
-        if (!array_key_exists('path-parameters', $data)) {
-            $data['path-parameters'] = [];
-        }
-
-        if (!array_key_exists('stub-parameters', $data)) {
-            $data['stub-parameters'] = [];
-        }
-
-        if (!array_key_exists('file-parameters', $data)) {
-            $data['file-parameters'] = [];
-        }
-
-        return $data;
-    }
-
-    protected function getFilePath($path): string
+    protected function getFilePath(string $path): string
     {
         // Complete the missing parts of the path
         $path = base_path() . '/' .
@@ -246,35 +234,58 @@ abstract class Generator extends Command
         return array_merge($this->defaultInputs, $this->inputs);
     }
 
-    protected function getInput($arg, bool $trim = true): array|string|null
+    protected function getInput($arg, bool $trim = true): null|array|string
     {
-        return $trim ? $this->trimString($this->argument($arg)) : $this->argument($arg);
+        return $trim ? trim($this->argument($arg)) : $this->argument($arg);
     }
 
     /**
      * Checks if the param is set (via CLI), otherwise proposes choices to the user.
      */
-    protected function checkParameterOrChoice($param, $question, array $choices, mixed $default = null): bool|array|string|null
+    protected function checkParameterOrChoice(string $param, string $question, array $choices, null|string|int $default = null): null|bool|array|string
     {
         // Check if we already have a param set
         $value = $this->option($param);
-        if (null === $value) {
-            // There was no value provided via CLI, so ask the user…
-            $value = select($question, $choices, $default);
+
+        if ($value === null) {
+            // There was no value provided via CLI, so ask the user.
+            return select($question, $choices, $default);
         }
 
         return $value;
     }
 
-    protected function checkParameterOrConfirm($param, $question, bool $default = false): string|array|bool|null
+    protected function checkParameterOrConfirm(string $param, string $question, bool $default = false): null|string|array|bool
     {
         // Check if we already have a param set
         $value = $this->option($param);
-        if (null === $value) {
-            // There was no value provided via CLI, so ask the user...
-            $value = confirm($question, $default);
+
+        if ($value === null) {
+            // There was no value provided via CLI, so ask the user.
+            return confirm($question, $default);
         }
 
         return $value;
+    }
+
+    /**
+     * Checks, if the data from the generator contains path, stub and file-parameters.
+     * Adds empty arrays, if they are missing.
+     */
+    private function sanitizeUserData(array $data): array
+    {
+        if (!\array_key_exists('path-parameters', $data)) {
+            $data['path-parameters'] = [];
+        }
+
+        if (!\array_key_exists('stub-parameters', $data)) {
+            $data['stub-parameters'] = [];
+        }
+
+        if (!\array_key_exists('file-parameters', $data)) {
+            $data['file-parameters'] = [];
+        }
+
+        return $data;
     }
 }

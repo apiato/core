@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Macros\MacroServiceProvider;
 
 describe(class_basename(MacroServiceProvider::class), function (): void {

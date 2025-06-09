@@ -1,14 +1,16 @@
-name: Tests
+name: "Test suite"
 
 on:
   push:
-    branches:
-      - master
-      - '*.x'
+    branches: [ master, '*.x' ]
   pull_request:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   matrix_prep:
@@ -42,14 +44,27 @@ jobs:
           coverage: xdebug
           tools: ${{ matrix.php_unit_version }}
 
+      - name: Setup Composer token
+        run: composer config -g github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache PHPUnit results
+        uses: actions/cache@v4
+        with:
+          path: .phpunit.result.cache
+          key: ${{ runner.os }}-php-${{ matrix.php }}-phpunit-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php }}-phpunit-
+
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: --prefer-dist
 
       - name: Execute tests
-        run: vendor/bin/pest --ci --coverage-clover=coverage.xml
+        run: vendor/bin/pest --ci --coverage-clover=coverage.xml --cache-directory=.phpunit.result.cache --order-by=random --colors=always --display-deprecations --display-incomplete --display-notices --display-warnings
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true
           verbose: true

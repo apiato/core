@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Foundation\Support\Providers;
+declare(strict_types=1);
 
 use Apiato\Macros\MacroServiceProvider;
 use Illuminate\Http\Request;

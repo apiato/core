@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Database\DatabaseSeeder;
 use Apiato\Foundation\Providers\ApiatoServiceProvider;
 use Apiato\Foundation\Support\Providers\ConfigServiceProvider;

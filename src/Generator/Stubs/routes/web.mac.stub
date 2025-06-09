@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Containers\{{section-name}}\{{container-name}}\UI\WEB\Controllers\{{controller-name}};
 use Illuminate\Support\Facades\Route;
 
 Route::{{http-verb}}('{{endpoint-url}}', [{{controller-name}}::class, '{{operation}}'])
+    ->name('{{route-name}}')
     ->middleware(['auth:{{auth-middleware}}']);
-

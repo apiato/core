@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Console\CommandServiceProvider;
 use Apiato\Generator\GeneratorsServiceProvider;
 use Apiato\Macros\MacroServiceProvider;

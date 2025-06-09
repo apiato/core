@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Foundation\Providers;
 
 use Apiato\Core\Providers\ServiceProvider;
@@ -32,7 +34,7 @@ final class ApiatoServiceProvider extends ServiceProvider
 
         $this->app->singletonIf(Apiato::class, static fn (): Apiato => Apiato::instance());
 
-        $this->app->extend('hashids', static function (HashidsManager $manager) {
+        $this->app->extend('hashids', static function (HashidsManager $manager): HashidsManagerDecorator {
             return new HashidsManagerDecorator($manager);
         });
     }

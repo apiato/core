@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Book\UI\API\Transformers;
 
 use Apiato\Core\Transformers\Transformer;
@@ -18,10 +20,10 @@ class BookTransformer extends Transformer
     public function transform(Book $book): array
     {
         return [
-            'type' => $book->getResourceKey(),
-            'id' => $book->getHashedKey(),
-            'title' => $book->title,
-            'author' => $book->author?->name,
+            'type'       => $book->getResourceKey(),
+            'id'         => $book->getHashedKey(),
+            'title'      => $book->title,
+            'author'     => $book->author?->name,
             'created_at' => $book->created_at,
             'updated_at' => $book->updated_at,
         ];

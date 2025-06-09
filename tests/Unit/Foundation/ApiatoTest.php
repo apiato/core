@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Console\CommandServiceProvider;
 use Apiato\Foundation\Apiato;
 use Apiato\Foundation\Configuration\Factory;
@@ -22,6 +24,8 @@ use Workbench\App\Containers\MySection\Book\Providers\BookServiceProvider;
 use Workbench\App\Containers\MySection\Book\Providers\EventServiceProvider;
 use Workbench\App\Ship\Providers\ShipServiceProvider;
 use Workbench\App\StrayServiceProvider;
+
+use function Safe\realpath;
 
 describe(class_basename(Apiato::class), function (): void {
     it('can be created with default configuration', function (): void {
@@ -92,7 +96,7 @@ describe(class_basename(Apiato::class), function (): void {
     });
 
     it('can be instantiated without a path', function (): void {
-        $basePath = Safe\realpath(__DIR__ . '/../../../workbench');
+        $basePath = realpath(__DIR__ . '/../../../workbench');
 
         $apiato = Apiato::configure()->create();
 
@@ -100,9 +104,11 @@ describe(class_basename(Apiato::class), function (): void {
     });
 
     it('can infer base path', function (): void {
-        $basePath = Safe\realpath(__DIR__ . '/../../..');
+        $basePath = realpath(__DIR__ . '/../../..');
 
-        expect(Apiato::inferBasePath())->toBe($basePath);
+        $expectation = Apiato::inferBasePath();
+
+        expect($expectation)->toBe($basePath);
     });
 
     it('accepts and apply  routing config override', function (): void {

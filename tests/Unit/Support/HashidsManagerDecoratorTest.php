@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Support\HashidsManagerDecorator;
 use Hashids\Hashids;
 use Illuminate\Support\Traits\ForwardsCalls;
@@ -13,39 +15,39 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
     });
 
     it('should use the ForwardsCalls trait', function (): void {
-        expect(in_array(ForwardsCalls::class, class_uses(HashidsManagerDecorator::class)))->toBeTrue();
+        expect(in_array(ForwardsCalls::class, class_uses(HashidsManagerDecorator::class), true))->toBeTrue();
     });
 
     it('should use the Macroable trait', function (): void {
-        expect(in_array(Macroable::class, class_uses(HashidsManagerDecorator::class)))->toBeTrue();
+        expect(in_array(Macroable::class, class_uses(HashidsManagerDecorator::class), true))->toBeTrue();
     });
 
-    it('can decode or null', function (string $hashId, int|array|null $expectation): void {
+    it('can decode or null', function (string $hashId, null|int|array $expectation): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
         $result = $sut->decode($hashId);
 
         expect($result)->toBe($expectation);
     })->with([
-        [fn () => hashids()->encodeOrFail(10), 10],
-        [fn () => hashids()->encodeOrFail(10, 13, 2), [10, 13, 2]],
+        [fn (): string => hashids()->encodeOrFail(10), 10],
+        [fn (): string => hashids()->encodeOrFail(10, 13, 2), [10, 13, 2]],
         ['invalid', null],
     ]);
 
-    it('can decode or throw an exception', function (string $hashId, int|array|null $expectation): void {
+    it('can decode or throw an exception', function (string $hashId, null|int|array $expectation): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
-        expect(static function () use ($sut, $hashId) {
+        expect(static function () use ($sut, $hashId): void {
             $sut->decodeOrFail($hashId);
         })->when(
             is_null($expectation),
-            fn (Expectation $ex) => $ex
+            fn (Expectation $ex): Expectation => $ex
                     ->toThrow(InvalidArgumentException::class),
-        )->unless(is_null($expectation), fn (Expectation $ex) => $ex
+        )->unless(is_null($expectation), fn (Expectation $ex): Expectation => $ex
             ->toBe($ex->value));
     })->with([
-        [fn () => hashids()->encodeOrFail(10), 10],
-        [fn () => hashids()->encodeOrFail(10, 13, 2), [10, 13, 2]],
+        [fn (): string => hashids()->encodeOrFail(10), 10],
+        [fn (): string => hashids()->encodeOrFail(10, 13, 2), [10, 13, 2]],
         ['invalid', null],
     ]);
 
@@ -63,36 +65,36 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         expect($result)->toBe([1, 2, 3]);
     });
 
-    it('can encode or null', function (array $numbers, string|null $expectation): void {
+    it('can encode or null', function (array $numbers, null|string $expectation): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
         $result = $sut->encode(...$numbers);
 
         expect($result)->toBe($expectation);
     })->with([
-        [[10], fn () => hashids()->encodeOrFail(10)],
-        [['15'], fn () => hashids()->encodeOrFail(15)],
-        [[10, 20], fn () => hashids()->encodeOrFail(10, 20)],
-        [[10, '20'], fn () => hashids()->encodeOrFail(10, 20)],
+        [[10], fn (): string => hashids()->encodeOrFail(10)],
+        [['15'], fn (): string => hashids()->encodeOrFail(15)],
+        [[10, 20], fn (): string => hashids()->encodeOrFail(10, 20)],
+        [[10, '20'], fn (): string => hashids()->encodeOrFail(10, 20)],
         [[], null],
     ]);
 
-    it('can encode or throw', function (array $numbers, string|null $expectation): void {
+    it('can encode or throw', function (array $numbers, null|string $expectation): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
-        expect(static function () use ($sut, $numbers) {
+        expect(static function () use ($sut, $numbers): void {
             $sut->encodeOrFail(...$numbers);
         })->when(
             is_null($expectation),
-            fn (Expectation $ex) => $ex
+            fn (Expectation $ex): Expectation => $ex
                 ->toThrow(InvalidArgumentException::class),
         )->when(
             !is_null($expectation),
-            fn (Expectation $ex) => $ex
+            fn (Expectation $ex): Expectation => $ex
                 ->toBe($ex->value),
         );
     })->with([
-        [[10], fn () => hashids()->encodeOrFail(10)],
+        [[10], fn (): string => hashids()->encodeOrFail(10)],
         [[], null],
     ]);
 
@@ -105,7 +107,7 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
     it('prioritize macro methods if it exists when delegating method calls', function (): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
-        HashidsManagerDecorator::macro('getDefaultConnection', fn () => 'something');
+        HashidsManagerDecorator::macro('getDefaultConnection', fn (): string => 'something');
 
         expect($sut->getDefaultConnection())->toBe('something');
     });

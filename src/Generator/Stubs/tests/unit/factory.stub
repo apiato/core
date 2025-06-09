@@ -1,19 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Unit\Factories;
 
 use App\Containers\{{section-name}}\{{container-name}}\Data\Factories\{{model}}Factory;
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
 use App\Containers\{{section-name}}\{{container-name}}\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 #[CoversClass({{model}}Factory::class)]
+#[Group('{{_container-name}}')]
+#[Group('unit')]
 final class {{class-name}} extends UnitTestCase
 {
     public function testCreate{{model}}(): void
     {
         ${{_model}} = {{model}}::factory()->make();
 
-        $this->assertInstanceOf({{model}}::class, ${{_model}});
+        self::assertInstanceOf({{model}}::class, ${{_model}});
     }
 }

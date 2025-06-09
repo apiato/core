@@ -1,0 +1,23 @@
+#https://phpstan.org/user-guide/getting-started
+
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: max
+    paths:
+        - config
+        - src
+        - tests
+        - .php-cs-fixer.dist.php
+    tmpDir: phpstan_cache
+    excludePaths:
+        - tests/Support/Doubles/Fakes/Laravel/vendor (?)
+
+    reportUnmatchedIgnoredErrors: true
+
+#    ignoreErrors:
+#        - '#PHPDoc tag @var#'
+
+    fileExtensions:
+        - php

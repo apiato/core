@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Core\Models\Concerns;
 
 use Illuminate\Support\Str;
@@ -22,7 +24,7 @@ trait HandlesHashedIdRouteModelBinding
 
     public function shouldProcessHashIdRouteBinding(mixed $value): bool
     {
-        return config('apiato.hash-id') && is_string($value);
+        return config('apiato.hash-id') && \is_string($value);
     }
 
     public function resolveChildRouteBinding($childType, $value, $field)
@@ -33,8 +35,9 @@ trait HandlesHashedIdRouteModelBinding
     protected function childRouteBindingRelationshipName($childType): string
     {
         $relationship = Str::camel($childType);
+
         if (!method_exists($this, $relationship)) {
-            $relationship = Str::plural($relationship);
+            return Str::plural($relationship);
         }
 
         return $relationship;

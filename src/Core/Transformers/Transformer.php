@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Core\Transformers;
 
 use Apiato\Http\Resources\Collection;
@@ -14,21 +16,25 @@ abstract class Transformer extends FractalTransformer
         return static fn (): array => [];
     }
 
-    public function nullableItem(mixed $data, callable|self $transformer, string|null $resourceKey = null): Primitive|Item
+    public function nullableItem(mixed $data, callable|self $transformer, null|string $resourceKey = null): Primitive|Item
     {
-        if (is_null($data)) {
+        if (\is_null($data)) {
             return $this->primitive(null);
         }
 
         return $this->item($data, $transformer, $resourceKey);
     }
 
-    public function item($data, $transformer, string|null $resourceKey = null): Item
+    /** @inheritDoc */
+    #[\Override]
+    public function item($data, $transformer, null|string $resourceKey = null): Item
     {
         return new Item($data, $transformer, $resourceKey);
     }
 
-    public function collection($data, $transformer, string|null $resourceKey = null): Collection
+    /** @inheritDoc */
+    #[\Override]
+    public function collection($data, $transformer, null|string $resourceKey = null): Collection
     {
         return new Collection($data, $transformer, $resourceKey);
     }

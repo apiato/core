@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator\Commands;
 
 use Apiato\Generator\Generator;
@@ -19,36 +21,42 @@ final class TaskGenerator extends Generator implements ComponentsGenerator
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['event', null, InputOption::VALUE_OPTIONAL, 'The Event this task fires'],
     ];
+
     /**
      * The console command name.
      *
      * @var string
      */
     protected $name = 'apiato:make:task';
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Create a Task file for a Container';
+
     /**
      * The type of class being generated.
      */
     protected string $fileType = 'Task';
+
     /**
      * The structure of the file path.
      */
     protected string $pathStructure = '{section-name}/{container-name}/Tasks/*';
+
     /**
      * The structure of the file name.
      */
     protected string $nameStructure = '{file-name}';
+
     /**
      * The name of the stub file.
      */
     protected string $stubName = 'tasks/generic.stub';
 
-    public function getUserInputs(): array|null
+    public function getUserInputs(): null|array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the model this task is for.', $this->containerName);
         $stub = Str::lower(
@@ -68,20 +76,20 @@ final class TaskGenerator extends Generator implements ComponentsGenerator
 
         return [
             'path-parameters' => [
-                'section-name' => $this->sectionName,
+                'section-name'   => $this->sectionName,
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
+                '_section-name'   => Str::lower($this->sectionName),
+                'section-name'    => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-                'model' => $model,
-                'models' => $models,
-                '_model' => Str::lower($model),
-                'model_' => Str::camel($model),
-                'event' => $event,
+                'container-name'  => $this->containerName,
+                'class-name'      => $this->fileName,
+                'model'           => $model,
+                'models'          => $models,
+                '_model'          => Str::lower($model),
+                'model_'          => Str::camel($model),
+                'event'           => $event,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -92,6 +100,7 @@ final class TaskGenerator extends Generator implements ComponentsGenerator
     /**
      * Get the default file name for this component to be generated.
      */
+    #[\Override]
     public function getDefaultFileName(): string
     {
         return 'DefaultTask';

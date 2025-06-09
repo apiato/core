@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Http\Middleware\ProcessETag;
 use Illuminate\Support\Facades\Request;
 use Symfony\Component\HttpFoundation\Response;

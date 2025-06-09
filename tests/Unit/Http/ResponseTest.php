@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Support;
+declare(strict_types=1);
 
 use Apiato\Core\Transformers\Transformer;
 use Apiato\Http\Resources\Item;
@@ -33,9 +33,9 @@ describe(class_basename(Response::class), function (): void {
     it('can return its manager instance', function (): void {
         $response = Response::create(getUser());
 
-        $result = $response->manager();
+        $manager = $response->manager();
 
-        expect($result)->toBeInstanceOf(Manager::class);
+        expect($manager)->toBeInstanceOf(Manager::class);
     });
 
     it('can handle CSV includes for single resource', function (string $include, array $expected): void {
@@ -43,26 +43,26 @@ describe(class_basename(Response::class), function (): void {
         $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
 
-        $result = AssertableJson::fromArray($response->toArray());
+        $assertableJson = AssertableJson::fromArray($response->toArray());
 
         foreach ($expected as $expectation) {
-            $result->has($expectation);
+            $assertableJson->has($expectation);
         }
     })->with([
         'single string' => [
-            'include' => 'parent',
+            'include'  => 'parent',
             'expected' => ['data.parent'],
         ],
         'single string nested' => [
-            'include' => 'children.books',
+            'include'  => 'children.books',
             'expected' => ['data.children.data.0.books'],
         ],
         'csv string' => [
-            'include' => 'parent,children',
+            'include'  => 'parent,children',
             'expected' => ['data.parent', 'data.children'],
         ],
         'csv string and nested' => [
-            'include' => 'parent,children.books',
+            'include'  => 'parent,children.books',
             'expected' => ['data.parent', 'data.children.data.0.books'],
         ],
     ]);
@@ -72,22 +72,22 @@ describe(class_basename(Response::class), function (): void {
         $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
 
-        $result = AssertableJson::fromArray($response->toArray());
+        $assertableJson = AssertableJson::fromArray($response->toArray());
 
         foreach ($expected as $expectation) {
-            $result->has($expectation);
+            $assertableJson->has($expectation);
         }
     })->with([
         'single array' => [
-            'include' => ['parent'],
+            'include'  => ['parent'],
             'expected' => ['data.parent'],
         ],
         'multiple array' => [
-            'include' => ['parent', 'children'],
+            'include'  => ['parent', 'children'],
             'expected' => ['data.parent', 'data.children'],
         ],
         'multiple array nested' => [
-            'include' => ['parent.books', 'children'],
+            'include'  => ['parent.books', 'children'],
             'expected' => ['data.parent.data.books', 'data.children'],
         ],
     ]);
@@ -98,9 +98,9 @@ describe(class_basename(Response::class), function (): void {
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
         $response = Response::create($users)->transformWith(UserTransformer::class);
 
-        $result = AssertableJson::fromArray($response->toArray());
+        $assertableJson = AssertableJson::fromArray($response->toArray());
 
-        $result->has('meta.include', fn (AssertableJson $json): AssertableJson => $json->whereAll(['parent', 'children', 'books']));
+        $assertableJson->has('meta.include', fn (AssertableJson $json): AssertableJson => $json->whereAll(['parent', 'children', 'books']));
     })->with([
         'single string' => [
             'include' => 'parent',
@@ -130,45 +130,46 @@ describe(class_basename(Response::class), function (): void {
         $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
 
-        $result = AssertableJson::fromArray($response->toArray());
+        $assertableJson = AssertableJson::fromArray($response->toArray());
 
         foreach ($expected as $expectation) {
-            $result->has($expectation);
-            $result->has('meta.include', fn (AssertableJson $json): AssertableJson => $json->whereAll(['parent', 'children', 'books']));
+            $assertableJson->has($expectation);
+            $assertableJson->has('meta.include', fn (AssertableJson $json): AssertableJson => $json->whereAll(['parent', 'children', 'books']));
         }
+
         foreach ($missing as $expectation) {
-            $result->missing($expectation);
+            $assertableJson->missing($expectation);
         }
     })->with([
         'without includes' => [
-            'fields' => ['User' => 'id,email'],
+            'fields'   => ['User' => 'id,email'],
             'expected' => ['data.id', 'data.email'],
-            'missing' => ['data.type', 'data.name', 'data.created_at', 'data.updated_at', 'data.children', 'data.books'],
+            'missing'  => ['data.type', 'data.name', 'data.created_at', 'data.updated_at', 'data.children', 'data.books'],
         ],
         'only filter nested include keys' => [
-            'fields' => ['Book' => 'author,title'],
+            'fields'   => ['Book' => 'author,title'],
             'expected' => ['data.type', 'data.id', 'data.email', 'data.name', 'data.created_at', 'data.updated_at', 'data.books.data.0.author', 'data.books.data.0.title'],
-            'missing' => ['data.books.data.0.id', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
+            'missing'  => ['data.books.data.0.id', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
         ],
         'with first level includes - no filter' => [
-            'fields' => ['User' => 'type,id,email,books'],
+            'fields'   => ['User' => 'type,id,email,books'],
             'expected' => ['data.type', 'data.id', 'data.email', 'data.books.data.0.type', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.author', 'data.books.data.0.created_at', 'data.books.data.0.updated_at'],
-            'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
+            'missing'  => ['data.name', 'data.created_at', 'data.updated_at'],
         ],
         'with first level includes - filter' => [
-            'fields' => ['User' => 'type,id,email,books', 'Book' => 'type,author'],
+            'fields'   => ['User' => 'type,id,email,books', 'Book' => 'type,author'],
             'expected' => ['data.type', 'data.id', 'data.email', 'data.books.data.0.type', 'data.books.data.0.author'],
-            'missing' => ['data.children', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.created_at', 'data.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
+            'missing'  => ['data.children', 'data.books.data.0.id', 'data.books.data.0.title', 'data.books.data.0.created_at', 'data.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
         ],
         'with nested includes - no filter' => [
-            'fields' => ['User' => 'type,id,email,children,books'],
+            'fields'   => ['User' => 'type,id,email,children,books'],
             'expected' => ['data.type', 'data.id', 'data.email', 'data.children.data.0.type', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.type', 'data.children.data.0.books.data.0.id', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at'],
-            'missing' => ['data.name', 'data.created_at', 'data.updated_at'],
+            'missing'  => ['data.name', 'data.created_at', 'data.updated_at'],
         ],
         'with nested includes - filter' => [
-            'fields' => ['User' => 'id,email,children,books', 'Book' => 'id'],
+            'fields'   => ['User' => 'id,email,children,books', 'Book' => 'id'],
             'expected' => ['data.id', 'data.email', 'data.children.data.0.id', 'data.children.data.0.email', 'data.children.data.0.books.data.0.id'],
-            'missing' => ['data.type', 'data.children.data.0.type', 'data.children.data.0.books.data.0.type', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
+            'missing'  => ['data.type', 'data.children.data.0.type', 'data.children.data.0.books.data.0.type', 'data.children.data.0.books.data.0.title', 'data.children.data.0.books.data.0.author', 'data.children.data.0.books.data.0.created_at', 'data.children.data.0.books.data.0.updated_at', 'data.name', 'data.created_at', 'data.updated_at'],
         ],
     ]);
 
@@ -177,26 +178,26 @@ describe(class_basename(Response::class), function (): void {
         $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
-        $result = AssertableJson::fromArray($response->toArray());
+        $assertableJson = AssertableJson::fromArray($response->toArray());
 
         foreach ($expected as $expectation) {
-            $result->missing($expectation);
+            $assertableJson->missing($expectation);
         }
     })->with([
         'single string' => [
-            'exclude' => 'parent',
+            'exclude'  => 'parent',
             'expected' => ['data.parent'],
         ],
         'single string nested' => [
-            'exclude' => 'children.books',
+            'exclude'  => 'children.books',
             'expected' => ['data.children.data.0.books'],
         ],
         'csv string' => [
-            'exclude' => 'parent,children',
+            'exclude'  => 'parent,children',
             'expected' => ['data.parent', 'data.children'],
         ],
         'csv string and nested' => [
-            'exclude' => 'parent,children.books',
+            'exclude'  => 'parent,children.books',
             'expected' => ['data.parent', 'data.children.data.0.books'],
         ],
     ]);
@@ -206,22 +207,22 @@ describe(class_basename(Response::class), function (): void {
         $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
-        $result = AssertableJson::fromArray($response->toArray());
+        $assertableJson = AssertableJson::fromArray($response->toArray());
 
         foreach ($expected as $expectation) {
-            $result->missing($expectation);
+            $assertableJson->missing($expectation);
         }
     })->with([
         'single array' => [
-            'exclude' => ['parent'],
+            'exclude'  => ['parent'],
             'expected' => ['data.parent'],
         ],
         'multiple array' => [
-            'exclude' => ['parent', 'children'],
+            'exclude'  => ['parent', 'children'],
             'expected' => ['data.parent', 'data.children'],
         ],
         'multiple array nested' => [
-            'exclude' => ['parent.books', 'children'],
+            'exclude'  => ['parent.books', 'children'],
             'expected' => ['data.parent.data.books', 'data.children'],
         ],
     ]);
@@ -232,9 +233,9 @@ describe(class_basename(Response::class), function (): void {
         $users = app(UserRepository::class, ['app' => $this->app])->paginate();
         $response = Response::create($users)->transformWith(UserTransformer::class)->parseIncludes($exclude);
 
-        $result = AssertableJson::fromArray($response->toArray());
+        $assertableJson = AssertableJson::fromArray($response->toArray());
 
-        $result->has('meta.include', fn (AssertableJson $json): AssertableJson => $json->whereAll(['parent', 'children', 'books']));
+        $assertableJson->has('meta.include', fn (AssertableJson $json): AssertableJson => $json->whereAll(['parent', 'children', 'books']));
     })->with([
         'single string' => [
             'exclude' => 'parent',
@@ -265,9 +266,9 @@ describe(class_basename(Response::class), function (): void {
         $response->transformWith(UserTransformer::class);
         $response->withResourceName($resourceName);
 
-        $result = AssertableJson::fromArray($response->toArray());
+        $assertableJson = AssertableJson::fromArray($response->toArray());
 
-        $result->missing('data.type');
+        $assertableJson->missing('data.type');
     })->with([
         'empty string' => [
             'resourceName' => '',
@@ -277,15 +278,15 @@ describe(class_basename(Response::class), function (): void {
         ],
     ]);
 
-    it('can use fallback default resource name', function (bool|null $resourceName): void {
+    it('can use fallback default resource name', function (null|bool $resourceName): void {
         request()->merge(['include' => 'books,children.books', 'fields' => [$resourceName => 'id', 'Book' => 'author,title']]);
         $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
         $response->withResourceName($resourceName);
 
-        $result = AssertableJson::fromArray($response->toArray());
+        $assertableJson = AssertableJson::fromArray($response->toArray());
 
-        $result->has('data.type');
+        $assertableJson->has('data.type');
     })->with([
         'null' => [
             'resourceName' => null,
@@ -298,39 +299,39 @@ describe(class_basename(Response::class), function (): void {
     it('can generate 200/OK response', function (): void {
         $response = Response::create(getUser());
 
-        $result = $response->ok();
+        $jsonResponse = $response->ok();
 
-        expect($result)->getStatusCode()->toBe(200)->getData()->toHaveKey('data', []);
+        expect($jsonResponse)->getStatusCode()->toBe(200)->getData()->toHaveKey('data', []);
     });
 
     it('can generate 202/Accepted response', function (): void {
         $response = Response::create(getUser());
 
-        $result = $response->accepted();
+        $jsonResponse = $response->accepted();
 
-        expect($result)->getStatusCode()->toBe(202)->getData()->toHaveKey('data', []);
+        expect($jsonResponse)->getStatusCode()->toBe(202)->getData()->toHaveKey('data', []);
     });
 
     it('can generate 201/Created response', function (): void {
         $response = Response::create(getUser());
 
-        $result = $response->created();
+        $jsonResponse = $response->created();
 
-        expect($result)->getStatusCode()->toBe(201)->getData()->toHaveKey('data', []);
+        expect($jsonResponse)->getStatusCode()->toBe(201)->getData()->toHaveKey('data', []);
     });
 
     it('can generate 204/NoContent response', function (): void {
         $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
 
-        $result = $response->noContent();
+        $jsonResponse = $response->noContent();
 
-        expect($result->getStatusCode())->toBe(204);
+        expect($jsonResponse->getStatusCode())->toBe(204);
     });
 
     it('can parse include params with resource name', function (): void {
         $include = 'books';
-        $includeWithParams = "$include:test(2|value)";
+        $includeWithParams = $include . ':test(2|value)';
         request()->merge(['include' => $includeWithParams]);
         $response = Response::create(getUser());
         $response->transformWith(UserTransformer::class);
@@ -347,7 +348,7 @@ describe(class_basename(Response::class), function (): void {
         expect($expectedParams)->toEqual($actualParams);
     });
 
-    it('returns the custom resource class', function (Collection|User|array|null $data, string $expectation): void {
+    it('returns the custom resource class', function (null|Collection|User|array $data, string $expectation): void {
         $response = Response::create($data);
 
         $result = $response->getResourceClass();
@@ -355,8 +356,8 @@ describe(class_basename(Response::class), function (): void {
         expect($result)->toBe($expectation);
     })->with([
         [fn () => User::factory()->makeOne(), Item::class],
-        [Collection::empty(), \Apiato\Http\Resources\Collection::class],
-        [[], \Apiato\Http\Resources\Collection::class],
+        [Collection::empty(), Apiato\Http\Resources\Collection::class],
+        [[], Apiato\Http\Resources\Collection::class],
         [null, NullResource::class],
     ]);
 

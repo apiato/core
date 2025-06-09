@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Foundation;
 
 use Apiato\Foundation\Configuration\ApplicationBuilder;
@@ -13,59 +15,45 @@ use Apiato\Foundation\Configuration\View;
 use Composer\Autoload\ClassLoader;
 
 use function Illuminate\Filesystem\join_paths;
+use function Safe\glob;
 
 final class Apiato
 {
     private static self $instance;
+
     private string $sharedPath;
+
     /** @var string[] */
     private array $configPaths = [];
+
     /** @var string[] */
     private array $eventDiscoveryPaths = [];
+
     /** @var string[] */
     private array $commandPaths = [];
+
     /** @var string[] */
     private array $migrationPaths = [];
+
     /** @var string[] */
     private array $helperPaths = [];
+
     private Routing $routing;
+
     private Localization $localization;
+
     private View $view;
+
     private Seeding $seeding;
+
     private Factory $factory;
+
     private Repository $repository;
+
     private Provider $provider;
 
-    private function __construct(
-        private readonly string $basePath,
-    ) {
-    }
-
-    public static function configure(string|null $basePath = null): ApplicationBuilder
+    private function __construct(private readonly string $basePath)
     {
-        if (isset(self::$instance)) {
-            return new ApplicationBuilder(self::$instance);
-        }
-
-        $basePath = match (true) {
-            is_string($basePath) => $basePath,
-            default => self::inferBasePath(),
-        };
-
-        self::$instance = new self($basePath);
-
-        return new ApplicationBuilder(self::$instance);
-    }
-
-    /**
-     * Infer the application's base directory from the environment.
-     */
-    public static function inferBasePath(): string
-    {
-        return match (true) {
-            isset($_ENV['APP_BASE_PATH']) => $_ENV['APP_BASE_PATH'],
-            default => dirname(array_keys(ClassLoader::getRegisteredLoaders())[0]),
-        };
     }
 
     /**
@@ -86,6 +74,33 @@ final class Apiato
         return (new ApplicationBuilder(self::$instance))->create();
     }
 
+    public static function configure(null|string $basePath = null): ApplicationBuilder
+    {
+        if (isset(self::$instance)) {
+            return new ApplicationBuilder(self::$instance);
+        }
+
+        $basePath = match (true) {
+            \is_string($basePath) => $basePath,
+            default               => self::inferBasePath(),
+        };
+
+        self::$instance = new self($basePath);
+
+        return new ApplicationBuilder(self::$instance);
+    }
+
+    /**
+     * Infer the application's base directory from the environment.
+     */
+    public static function inferBasePath(): string
+    {
+        return match (true) {
+            isset($_ENV['APP_BASE_PATH']) => $_ENV['APP_BASE_PATH'],
+            default                       => self::findShortestVendorPath(),
+        };
+    }
+
     public function basePath(): string
     {
         return $this->basePath;
@@ -96,7 +111,7 @@ final class Apiato
      */
     public function sharedPath(string $path = ''): string
     {
-        return join_paths($this->sharedPath ?: app_path('Ship'), $path);
+        return join_paths($this->sharedPath !== '' && $this->sharedPath !== '0' ? $this->sharedPath : app_path('Ship'), $path);
     }
 
     /**
@@ -109,77 +124,77 @@ final class Apiato
         return $this;
     }
 
-    public function withRouting(callable|null $callback = null): self
+    public function withRouting(null|callable $callback = null): self
     {
         $this->routing ??= new Routing();
 
-        if (!is_null($callback)) {
+        if (!\is_null($callback)) {
             $callback($this->routing);
         }
 
         return $this;
     }
 
-    public function withFactories(callable|null $callback = null): self
+    public function withFactories(null|callable $callback = null): self
     {
         $this->factory ??= new Factory();
 
-        if (!is_null($callback)) {
+        if (!\is_null($callback)) {
             $callback($this->factory);
         }
 
         return $this;
     }
 
-    public function withRepositories(callable|null $callback = null): self
+    public function withRepositories(null|callable $callback = null): self
     {
         $this->repository ??= new Repository();
 
-        if (!is_null($callback)) {
+        if (!\is_null($callback)) {
             $callback($this->repository);
         }
 
         return $this;
     }
 
-    public function withViews(callable|null $callback = null): self
+    public function withViews(null|callable $callback = null): self
     {
         $this->view ??= new View();
 
-        if (!is_null($callback)) {
+        if (!\is_null($callback)) {
             $callback($this->view);
         }
 
         return $this;
     }
 
-    public function withTranslations(callable|null $callback = null): self
+    public function withTranslations(null|callable $callback = null): self
     {
         $this->localization ??= new Localization();
 
-        if (!is_null($callback)) {
+        if (!\is_null($callback)) {
             $callback($this->localization);
         }
 
         return $this;
     }
 
-    public function withSeeders(callable|null $callback = null): self
+    public function withSeeders(null|callable $callback = null): self
     {
         $this->seeding ??= new Seeding();
 
-        if (!is_null($callback)) {
+        if (!\is_null($callback)) {
             $callback($this->seeding);
         }
 
         return $this;
     }
 
-    public function withProviders(callable|null $callback = null): self
+    public function withProviders(null|callable $callback = null): self
     {
         $this->provider ??= new Provider();
 
-        if (!is_null($callback)) {
+        if (!\is_null($callback)) {
             $callback($this->provider);
         }
 
@@ -221,7 +236,7 @@ final class Apiato
     public function configs(): array
     {
         return collect($this->configPaths)->flatMap(
-            static fn (string $path): array => \Safe\glob($path . '/*.php'),
+            static fn (string $path): array => glob($path . '/*.php'),
         )->toArray();
     }
 
@@ -233,7 +248,7 @@ final class Apiato
     public function helpers(): array
     {
         return collect($this->helperPaths)->flatMap(
-            static fn (string $path): array => \Safe\glob($path . '/*.php'),
+            static fn (string $path): array => glob($path . '/*.php'),
         )->toArray();
     }
 
@@ -336,5 +351,28 @@ final class Apiato
     public function view(): View
     {
         return $this->view;
+    }
+
+    /**
+     * Find the shortest vendor path, which should be the main project's vendor directory.
+     *
+     * TODO: This approach is needed because:
+     *  1. In CI environments, the order of ClassLoader instances can differ from local/Docker environments
+     *  2. There can be multiple ClassLoader instances (main project + nested ones like rector/rector)
+     *  3. When CI runs, sometimes the nested loader from vendor/rector/rector/vendor appears first
+     *     causing base path to be incorrectly resolved to /home/runner/work/core/core/vendor/rector/rector
+     *  4. By selecting the shortest path, we consistently get the main project's vendor dir
+     *     regardless of loader registration order
+     */
+    private static function findShortestVendorPath(): string
+    {
+        $registeredLoaders = ClassLoader::getRegisteredLoaders();
+        $vendorPaths = array_keys($registeredLoaders);
+
+        usort($vendorPaths, static function ($a, $b): int {
+            return \strlen($a) - \strlen($b);
+        });
+
+        return \dirname($vendorPaths[0]);
     }
 }

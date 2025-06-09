@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Foundation\Configuration;
 
 use Illuminate\Database\Eloquent\Factories\Factory as AbstractFactory;
@@ -12,12 +14,12 @@ use Illuminate\Support\Str;
  */
 final class Factory
 {
-    protected static \Closure $nameResolver;
+    private static \Closure $nameResolver;
 
     public function __construct()
     {
         $this->resolveFactoryNameUsing(
-            static function (string $modelName): string|null {
+            static function (string $modelName): null|string {
                 $factoryName = Str::of($modelName)->beforeLast('Models\\')
                     ->append('Data\\Factories\\' . class_basename($modelName) . 'Factory')
                     ->value();
@@ -46,7 +48,7 @@ final class Factory
      *
      * @return class-string<TFactory>|null
      */
-    public function resolveFactoryName(string $modelName): string|null
+    public function resolveFactoryName(string $modelName): null|string
     {
         return app()->call(self::$nameResolver, ['modelName' => $modelName]);
     }

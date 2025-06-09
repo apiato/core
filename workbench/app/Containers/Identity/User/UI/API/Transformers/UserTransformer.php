@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\Identity\User\UI\API\Transformers;
 
 use Apiato\Core\Transformers\Transformer;
@@ -25,10 +27,10 @@ final class UserTransformer extends Transformer
     public function transform(User $user): array
     {
         return [
-            'type' => $user->getResourceKey(),
-            'id' => $user->getHashedKey(),
-            'name' => $user->name,
-            'email' => $user->email,
+            'type'       => $user->getResourceKey(),
+            'id'         => $user->getHashedKey(),
+            'name'       => $user->name,
+            'email'      => $user->email,
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at,
         ];
@@ -51,6 +53,6 @@ final class UserTransformer extends Transformer
 
     public function includeComments(User $user): Collection
     {
-        return $this->collection($user->comments, fn (Comment $comment) => $comment->toArray());
+        return $this->collection($user->comments, static fn (Comment $comment) => $comment->toArray());
     }
 }

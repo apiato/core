@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Unit\Abstract\Repositories\Exceptions;
+declare(strict_types=1);
 
 use Apiato\Core\Repositories\Exceptions\ResourceNotFound;
 
 describe(class_basename(ResourceNotFound::class), function (): void {
     it('can be created via factory method', function (): void {
-        $exception = ResourceNotFound::create();
-        expect($exception)->toBeInstanceOf(ResourceNotFound::class);
-        expect($exception->getMessage())->toBe('Resource not found.');
-        expect($exception->getStatusCode())->toBe(404);
+        $resourceNotFound = ResourceNotFound::create();
+        expect($resourceNotFound)->toBeInstanceOf(ResourceNotFound::class);
+        expect($resourceNotFound->getMessage())->toBe('Resource not found.');
+        expect($resourceNotFound->getStatusCode())->toBe(404);
     });
 })->covers(ResourceNotFound::class);

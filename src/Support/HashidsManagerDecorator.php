@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Support;
 
 use Illuminate\Support\Traits\ForwardsCalls;
@@ -16,9 +18,8 @@ final class HashidsManagerDecorator
         __call as macroCall;
     }
 
-    public function __construct(
-        private readonly HashidsManager $manager,
-    ) {
+    public function __construct(private readonly HashidsManager $manager)
+    {
     }
 
     /**
@@ -26,15 +27,15 @@ final class HashidsManagerDecorator
      *
      * @return int|int[]|null
      */
-    public function decode(string $hash): int|array|null
+    public function decode(string $hash): null|int|array
     {
         $result = $this->manager->decode($hash);
 
-        if (1 === count($result) && is_int($result[0])) {
+        if (\count($result) === 1 && \is_int($result[0])) {
             return $result[0];
         }
 
-        if (1 < count($result)) {
+        if (\count($result) > 1) {
             return $result;
         }
 
@@ -50,7 +51,7 @@ final class HashidsManagerDecorator
      */
     public function decodeOrFail(string ...$hash): int|array
     {
-        if (1 < count($hash)) {
+        if (\count($hash) > 1) {
             Assert::allStringNotEmpty($hash);
 
             return array_map(fn (string $id): int|array => $this->decodeOrFail($id), $hash);
@@ -60,18 +61,18 @@ final class HashidsManagerDecorator
 
         $result = $this->decode($hash[0]);
 
-        if (is_null($result)) {
+        if (\is_null($result)) {
             throw new \InvalidArgumentException('Invalid hash id.');
         }
 
         return $result;
     }
 
-    public function encode(string|int ...$numbers): string|null
+    public function encode(string|int ...$numbers): null|string
     {
         $result = $this->manager->encode(...$numbers);
 
-        if ('' === $result) {
+        if ($result === '') {
             return null;
         }
 
@@ -85,7 +86,7 @@ final class HashidsManagerDecorator
     {
         $result = $this->encode(...$numbers);
 
-        if (is_null($result)) {
+        if (\is_null($result)) {
             throw new \InvalidArgumentException('Encoding failed.');
         }
 
@@ -96,7 +97,7 @@ final class HashidsManagerDecorator
      * Dynamically pass method calls to the underlying resource.
      *
      * @param string $method
-     * @param array $parameters
+     * @param array  $parameters
      */
     public function __call($method, $parameters)
     {

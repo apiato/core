@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Configuration\Repository;
 use Workbench\App\Containers\MySection\Book\Data\Repositories\BookRepository;
 use Workbench\App\Containers\MySection\Book\Models\Book;

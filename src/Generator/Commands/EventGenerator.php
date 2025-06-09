@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator\Commands;
 
 use Apiato\Generator\Generator;
@@ -18,47 +20,55 @@ final class EventGenerator extends Generator implements ComponentsGenerator
         ['stub', null, InputOption::VALUE_OPTIONAL, 'The stub file to load for this generator.'],
         ['listener', null, InputOption::VALUE_OPTIONAL, 'Generate a Listener for this Event?'],
     ];
+
     /**
      * The console command name.
      *
      * @var string
      */
     protected $name = 'apiato:make:event';
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Create a new Event class and its corresponding Listener';
+
     /**
      * The type of class being generated.
      */
     protected string $fileType = 'Event';
+
     /**
      * The structure of the file path.
      */
     protected string $pathStructure = '{section-name}/{container-name}/Events/*';
+
     /**
      * The structure of the file name.
      */
     protected string $nameStructure = '{file-name}';
+
     /**
      * The name of the stub file.
      */
     protected string $stubName = 'events/generic.stub';
 
-    public function getUserInputs(): array|null
+    public function getUserInputs(): null|array
     {
         $model = $this->checkParameterOrAsk('model', 'Enter the name of the Model to generate this Event for', Str::ucfirst($this->containerName));
         $listener = $this->option('listener');
-        if (is_null($listener)) {
+
+        if (\is_null($listener)) {
             $listener = $this->checkParameterOrConfirm('listener', 'Do you want to generate a Listener for this Event?', false);
+
             if ($listener) {
                 $this->call('apiato:make:listener', [
-                    '--section' => $this->sectionName,
+                    '--section'   => $this->sectionName,
                     '--container' => $this->containerName,
-                    '--file' => $this->fileName . 'Listener',
-                    '--event' => $this->fileName,
+                    '--file'      => $this->fileName . 'Listener',
+                    '--event'     => $this->fileName,
                 ]);
             }
         }
@@ -69,17 +79,17 @@ final class EventGenerator extends Generator implements ComponentsGenerator
 
         return [
             'path-parameters' => [
-                'section-name' => $this->sectionName,
+                'section-name'   => $this->sectionName,
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
+                '_section-name'   => Str::lower($this->sectionName),
+                'section-name'    => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-                'model' => $model,
-                '_model' => Str::lower($model),
+                'container-name'  => $this->containerName,
+                'class-name'      => $this->fileName,
+                'model'           => $model,
+                '_model'          => Str::lower($model),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

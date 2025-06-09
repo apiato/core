@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Core\Repositories\Exceptions;
 
 use Apiato\Core\Exceptions\HttpException as AbstractHttpException;
@@ -9,6 +11,6 @@ final class ResourceNotFound extends AbstractHttpException
 {
     public static function create(string $resourceName = 'Resource'): self
     {
-        return new self(Response::HTTP_NOT_FOUND, "{$resourceName} not found.");
+        return new self(Response::HTTP_NOT_FOUND, $resourceName . ' not found.');
     }
 }

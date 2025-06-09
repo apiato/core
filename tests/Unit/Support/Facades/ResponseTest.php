@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Support\Facades\Response;
 use Illuminate\Http\JsonResponse;
 use Pest\Expectation;
@@ -10,7 +12,7 @@ describe(class_basename(Response::class), function (): void {
             ->toBeInstanceOf(Apiato\Http\Response::class);
     });
 
-    dataset('method_params', function () {
+    dataset('method_params', function (): array {
         return [
             [null, [], 0],
             ['foo', [], 0],
@@ -31,18 +33,18 @@ describe(class_basename(Response::class), function (): void {
         expect($result)
             ->toBeInstanceOf(JsonResponse::class)
             ->and($result->getData(true))
-            ->when(!is_null($data), fn (Expectation $ex) => $ex->toBe($data))
-            ->when(is_null($data), fn (Expectation $ex) => $ex->toBeArray()->toBeEmpty())
+            ->when(!is_null($data), fn (Expectation $ex): Expectation => $ex->toBe($data))
+            ->when(is_null($data), fn (Expectation $ex): Expectation => $ex->toBeArray()->toBeEmpty())
             ->and($result->getStatusCode())
             ->toBe(200)
             ->and($result->headers->get('foo'))
-            ->when([] !== $headers, fn (Expectation $ex) => $ex->toBe('bar'))
+            ->when($headers !== [], fn (Expectation $ex): Expectation => $ex->toBe('bar'))
             ->when(
-                [] === $headers,
-                fn (Expectation $ex) => $ex->toBeEmpty()
-            ->and($result->getEncodingOptions())
-            ->when(0 !== $options, fn (Expectation $ex) => $ex->toBe(1))
-            ->when(0 === $options, fn (Expectation $ex) => $ex->toBe(0)),
+                $headers === [],
+                fn (Expectation $ex): Expectation => $ex->toBeEmpty()
+                    ->and($result->getEncodingOptions())
+                    ->when($options !== 0, fn (Expectation $ex): Expectation => $ex->toBe(1))
+                    ->when($options === 0, fn (Expectation $ex): Expectation => $ex->toBe(0)),
             );
     })->with('method_params');
 
@@ -51,23 +53,23 @@ describe(class_basename(Response::class), function (): void {
         array $headers,
         int $options,
     ): void {
-        $result = Response::accepted($data, $headers, $options);
+        $jsonResponse = Response::accepted($data, $headers, $options);
 
-        expect($result)
+        expect($jsonResponse)
             ->toBeInstanceOf(JsonResponse::class)
-            ->and($result->getData(true))
-            ->when(!is_null($data), fn (Expectation $ex) => $ex->toBe($data))
-            ->when(is_null($data), fn (Expectation $ex) => $ex->toBeArray()->toBeEmpty())
-            ->and($result->getStatusCode())
+            ->and($jsonResponse->getData(true))
+            ->when(!is_null($data), fn (Expectation $ex): Expectation => $ex->toBe($data))
+            ->when(is_null($data), fn (Expectation $ex): Expectation => $ex->toBeArray()->toBeEmpty())
+            ->and($jsonResponse->getStatusCode())
             ->toBe(202)
-            ->and($result->headers->get('foo'))
-            ->when([] !== $headers, fn (Expectation $ex) => $ex->toBe('bar'))
+            ->and($jsonResponse->headers->get('foo'))
+            ->when($headers !== [], fn (Expectation $ex): Expectation => $ex->toBe('bar'))
             ->when(
-                [] === $headers,
-                fn (Expectation $ex) => $ex->toBeEmpty()
-            ->and($result->getEncodingOptions())
-            ->when(0 !== $options, fn (Expectation $ex) => $ex->toBe(1))
-            ->when(0 === $options, fn (Expectation $ex) => $ex->toBe(0)),
+                $headers === [],
+                fn (Expectation $ex): Expectation => $ex->toBeEmpty()
+                    ->and($jsonResponse->getEncodingOptions())
+                    ->when($options !== 0, fn (Expectation $ex): Expectation => $ex->toBe(1))
+                    ->when($options === 0, fn (Expectation $ex): Expectation => $ex->toBe(0)),
             );
     })->with('method_params');
 
@@ -76,23 +78,23 @@ describe(class_basename(Response::class), function (): void {
         array $headers,
         int $options,
     ): void {
-        $result = Response::created($data, $headers, $options);
+        $jsonResponse = Response::created($data, $headers, $options);
 
-        expect($result)
+        expect($jsonResponse)
             ->toBeInstanceOf(JsonResponse::class)
-            ->and($result->getData(true))
-            ->when(!is_null($data), fn (Expectation $ex) => $ex->toBe($data))
-            ->when(is_null($data), fn (Expectation $ex) => $ex->toBeArray()->toBeEmpty())
-            ->and($result->getStatusCode())
+            ->and($jsonResponse->getData(true))
+            ->when(!is_null($data), fn (Expectation $ex): Expectation => $ex->toBe($data))
+            ->when(is_null($data), fn (Expectation $ex): Expectation => $ex->toBeArray()->toBeEmpty())
+            ->and($jsonResponse->getStatusCode())
             ->toBe(201)
-            ->and($result->headers->get('foo'))
-            ->when([] !== $headers, fn (Expectation $ex) => $ex->toBe('bar'))
+            ->and($jsonResponse->headers->get('foo'))
+            ->when($headers !== [], fn (Expectation $ex): Expectation => $ex->toBe('bar'))
             ->when(
-                [] === $headers,
-                fn (Expectation $ex) => $ex->toBeEmpty()
-            ->and($result->getEncodingOptions())
-            ->when(0 !== $options, fn (Expectation $ex) => $ex->toBe(1))
-            ->when(0 === $options, fn (Expectation $ex) => $ex->toBe(0)),
+                $headers === [],
+                fn (Expectation $ex): Expectation => $ex->toBeEmpty()
+                    ->and($jsonResponse->getEncodingOptions())
+                    ->when($options !== 0, fn (Expectation $ex): Expectation => $ex->toBe(1))
+                    ->when($options === 0, fn (Expectation $ex): Expectation => $ex->toBe(0)),
             );
     })->with('method_params');
 
@@ -101,23 +103,23 @@ describe(class_basename(Response::class), function (): void {
         array $headers,
         int $options,
     ): void {
-        $result = Response::ok($data, $headers, $options);
+        $jsonResponse = Response::ok($data, $headers, $options);
 
-        expect($result)
+        expect($jsonResponse)
             ->toBeInstanceOf(JsonResponse::class)
-            ->and($result->getData(true))
-            ->when(!is_null($data), fn (Expectation $ex) => $ex->toBe($data))
-            ->when(is_null($data), fn (Expectation $ex) => $ex->toBeArray()->toBeEmpty())
-            ->and($result->getStatusCode())
+            ->and($jsonResponse->getData(true))
+            ->when(!is_null($data), fn (Expectation $ex): Expectation => $ex->toBe($data))
+            ->when(is_null($data), fn (Expectation $ex): Expectation => $ex->toBeArray()->toBeEmpty())
+            ->and($jsonResponse->getStatusCode())
             ->toBe(200)
-            ->and($result->headers->get('foo'))
-            ->when([] !== $headers, fn (Expectation $ex) => $ex->toBe('bar'))
+            ->and($jsonResponse->headers->get('foo'))
+            ->when($headers !== [], fn (Expectation $ex): Expectation => $ex->toBe('bar'))
             ->when(
-                [] === $headers,
-                fn (Expectation $ex) => $ex->toBeEmpty()
-            ->and($result->getEncodingOptions())
-            ->when(0 !== $options, fn (Expectation $ex) => $ex->toBe(1))
-            ->when(0 === $options, fn (Expectation $ex) => $ex->toBe(0)),
+                $headers === [],
+                fn (Expectation $ex): Expectation => $ex->toBeEmpty()
+                    ->and($jsonResponse->getEncodingOptions())
+                    ->when($options !== 0, fn (Expectation $ex): Expectation => $ex->toBe(1))
+                    ->when($options === 0, fn (Expectation $ex): Expectation => $ex->toBe(0)),
             );
     })->with('method_params');
 
@@ -125,22 +127,22 @@ describe(class_basename(Response::class), function (): void {
         array $headers,
         int $options,
     ): void {
-        $result = Response::noContent($headers, $options);
+        $jsonResponse = Response::noContent($headers, $options);
 
-        expect($result)
+        expect($jsonResponse)
             ->toBeInstanceOf(JsonResponse::class)
-            ->and($result->getData(true))
+            ->and($jsonResponse->getData(true))
             ->toBeEmpty()
-            ->and($result->getStatusCode())
+            ->and($jsonResponse->getStatusCode())
             ->toBe(204)
-            ->and($result->headers->get('foo'))
-            ->when([] !== $headers, fn (Expectation $ex) => $ex->toBe('bar'))
+            ->and($jsonResponse->headers->get('foo'))
+            ->when($headers !== [], fn (Expectation $ex): Expectation => $ex->toBe('bar'))
             ->when(
-                [] === $headers,
-                fn (Expectation $ex) => $ex->toBeEmpty()
-            ->and($result->getEncodingOptions())
-            ->when(0 !== $options, fn (Expectation $ex) => $ex->toBe(1))
-            ->when(0 === $options, fn (Expectation $ex) => $ex->toBe(0)),
+                $headers === [],
+                fn (Expectation $ex): Expectation => $ex->toBeEmpty()
+                    ->and($jsonResponse->getEncodingOptions())
+                    ->when($options !== 0, fn (Expectation $ex): Expectation => $ex->toBe(1))
+                    ->when($options === 0, fn (Expectation $ex): Expectation => $ex->toBe(0)),
             );
     })->with([
         [[], 0],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Foundation\Configuration;
 
 use Illuminate\Support\Facades\Route;
@@ -8,12 +10,16 @@ use Webmozart\Assert\Assert;
 
 final class Routing
 {
-    protected static \Closure $apiVersionResolver;
+    private static \Closure $apiVersionResolver;
+
     /** @var string[] */
     private array $apiRouteDirs = [];
+
     /** @var string[] */
     private array $webRouteDirs = [];
+
     private string $apiPrefix = '/';
+
     private bool $apiVersionAutoPrefix = true;
 
     public function __construct()
@@ -62,33 +68,6 @@ final class Routing
             );
     }
 
-    /**
-     * @return string[]
-     */
-    private function getApiMiddlewares(): array
-    {
-        $middlewares = ['api'];
-        if (config('apiato.api.rate-limiter.enabled')) {
-            $middlewares[] = 'throttle:' . config('apiato.api.rate-limiter.name');
-        }
-
-        return $middlewares;
-    }
-
-    private function buildApiPrefixFor(string $file): string
-    {
-        if ($this->apiVersionAutoPrefix) {
-            return $this->apiPrefix . $this->resolveApiVersionFor($file);
-        }
-
-        return $this->apiPrefix;
-    }
-
-    private function resolveApiVersionFor(string $file): string
-    {
-        return app()->call(self::$apiVersionResolver, ['file' => $file]);
-    }
-
     public function getApiPrefix(): string
     {
         return $this->apiPrefix;
@@ -118,5 +97,33 @@ final class Routing
         return collect($this->webRouteDirs)
             ->flatMap(static fn (string $path): array => recursiveGlob($path . '/*.php'))
             ->toArray();
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getApiMiddlewares(): array
+    {
+        $middlewares = ['api'];
+
+        if (config('apiato.api.rate-limiter.enabled')) {
+            $middlewares[] = 'throttle:' . config('apiato.api.rate-limiter.name');
+        }
+
+        return $middlewares;
+    }
+
+    private function buildApiPrefixFor(string $file): string
+    {
+        if ($this->apiVersionAutoPrefix) {
+            return $this->apiPrefix . $this->resolveApiVersionFor($file);
+        }
+
+        return $this->apiPrefix;
+    }
+
+    private function resolveApiVersionFor(string $file): string
+    {
+        return app()->call(self::$apiVersionResolver, ['file' => $file]);
     }
 }

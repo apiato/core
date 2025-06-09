@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Configuration\Seeding;
 use Workbench\App\Containers\MySection\Book\Data\Seeders\Murdered_2;
 use Workbench\App\Containers\MySection\Book\Data\Seeders\Ordered_1;

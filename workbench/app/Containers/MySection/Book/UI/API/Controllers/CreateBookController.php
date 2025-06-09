@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Containers\MySection\Book\UI\API\Controllers;
 
 use Apiato\Support\Facades\Response;

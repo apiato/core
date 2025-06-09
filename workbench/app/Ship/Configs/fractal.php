@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use Apiato\Http\Response;
+
 return [
     /*
      * The default serializer to be used when performing a transformation. It
@@ -24,7 +28,7 @@ return [
      * If you wish to override or extend the default Spatie\Fractal\Fractal
      * instance provide the name of the class you want to use.
      */
-    'fractal_class' => Apiato\Http\Response::class,
+    'fractal_class' => Response::class,
 
     'auto_includes' => [
         /*

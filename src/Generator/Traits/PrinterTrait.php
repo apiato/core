@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator\Traits;
 
 use function Laravel\Prompts\error;
@@ -12,7 +14,7 @@ trait PrinterTrait
         $this->printInfoMessage('> Generating (' . $fileName . ') in (' . $containerName . ') Container.');
     }
 
-    public function printInfoMessage($message): void
+    public function printInfoMessage(string $message): void
     {
         info($message);
     }
@@ -22,7 +24,7 @@ trait PrinterTrait
         $this->printInfoMessage($type . ' generated successfully.');
     }
 
-    public function printErrorMessage($message): void
+    public function printErrorMessage(string $message): void
     {
         error($message);
     }

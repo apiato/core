@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\API;
 
 use App\Containers\{{section-name}}\{{container-name}}\Models\{{model}};
@@ -7,8 +9,11 @@ use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestC
 use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\Delete{{model}}Controller;
 use App\Containers\AppSection\User\Models\User;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Group;
 
 #[CoversNothing]
+#[Group('{{_container-name}}')]
+#[Group('api')]
 final class {{class-name}} extends ApiTestCase
 {
     public function testDeleteExisting{{model}}(): void

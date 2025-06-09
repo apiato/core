@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Core\Repositories\Repository;
 use Illuminate\Support\Collection;
 use Pest\Expectation;
@@ -22,7 +24,7 @@ describe(class_basename(Repository::class), function (): void {
                 'children',
             )->has(Book::factory(3))
             ->createOne();
-        $repository = new class extends UserRepository {
+        $repository = new class () extends UserRepository {
             public function shouldEagerLoadIncludes(): bool
             {
                 return true;
@@ -33,16 +35,18 @@ describe(class_basename(Repository::class), function (): void {
 
         expect($result)->toBeInstanceOf(Collection::class)
             ->each(function (Expectation $expectation) use ($userMustLoadRelations, $booksMustLoadRelations, $mustNotLoadRelations): void {
-                foreach ($userMustLoadRelations as $relation) {
-                    $expectation->relationLoaded($relation)->toBeTrue();
+                foreach ($userMustLoadRelations as $userMustLoadRelation) {
+                    $expectation->relationLoaded($userMustLoadRelation)->toBeTrue();
                 }
-                foreach ($booksMustLoadRelations as $relation) {
-                    $expectation->books->each(function (Expectation $expectation) use ($relation): void {
-                        $expectation->relationLoaded($relation)->toBeTrue();
+
+                foreach ($booksMustLoadRelations as $bookMustLoadRelation) {
+                    $expectation->books->each(function (Expectation $expectation) use ($bookMustLoadRelation): void {
+                        $expectation->relationLoaded($bookMustLoadRelation)->toBeTrue();
                     });
                 }
-                foreach ($mustNotLoadRelations as $relation) {
-                    $expectation->relationLoaded($relation)->toBeFalse();
+
+                foreach ($mustNotLoadRelations as $mustNotLoadRelation) {
+                    $expectation->relationLoaded($mustNotLoadRelation)->toBeFalse();
                 }
             });
     })->with([
@@ -87,10 +91,9 @@ describe(class_basename(Repository::class), function (): void {
     it('can disable eager loading', function (bool $enabled): void {
         request()->merge(['include' => 'books']);
         User::factory()->has(Book::factory())->createOne();
-        $repository = new class($enabled) extends UserRepository {
-            public function __construct(
-                private readonly bool $enabled,
-            ) {
+        $repository = new class ($enabled) extends UserRepository {
+            public function __construct(private readonly bool $enabled)
+            {
                 parent::__construct();
             }
 
@@ -111,7 +114,7 @@ describe(class_basename(Repository::class), function (): void {
                 });
             });
     })->with([
-        'enabled' => [true],
+        'enabled'  => [true],
         'disabled' => [false],
     ]);
 })->covers(Repository::class);

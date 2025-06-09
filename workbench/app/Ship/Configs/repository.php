@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use League\Fractal\Serializer\DataArraySerializer;
+
 /*
 |--------------------------------------------------------------------------
 | Prettus Repository Config
@@ -34,7 +38,7 @@ return [
         'params' => [
             'include' => 'include',
         ],
-        'serializer' => League\Fractal\Serializer\DataArraySerializer::class,
+        'serializer' => DataArraySerializer::class,
     ],
 
     /*
@@ -137,7 +141,7 @@ return [
        | 'except'  =>['find'],
        */
         'allowed' => [
-            'only' => null,
+            'only'   => null,
             'except' => null,
         ],
     ],
@@ -210,14 +214,14 @@ return [
         |
         */
         'params' => [
-            'search' => 'search',
+            'search'       => 'search',
             'searchFields' => 'searchFields',
             // 'filter'       => 'filter',
-            'orderBy' => 'orderBy',
+            'orderBy'  => 'orderBy',
             'sortedBy' => 'sortedBy',
             // 'with'         => 'with',
             'searchJoin' => 'searchJoin',
-            'withCount' => 'withCount',
+            'withCount'  => 'withCount',
         ],
     ],
     /*
@@ -227,19 +231,19 @@ return [
     |
     */
     'generator' => [
-        'basePath' => app()->path(),
-        'rootNamespace' => 'App\\',
+        'basePath'          => app()->path(),
+        'rootNamespace'     => 'App\\',
         'stubsOverridePath' => app()->path(),
-        'paths' => [
-            'models' => 'Entities',
+        'paths'             => [
+            'models'       => 'Entities',
             'repositories' => 'Repositories',
-            'interfaces' => 'Repositories',
+            'interfaces'   => 'Repositories',
             'transformers' => 'Transformers',
-            'presenters' => 'Presenters',
-            'validators' => 'Validators',
-            'controllers' => 'Http/Controllers',
-            'provider' => 'RepositoryServiceProvider',
-            'criteria' => 'Criteria',
+            'presenters'   => 'Presenters',
+            'validators'   => 'Validators',
+            'controllers'  => 'Http/Controllers',
+            'provider'     => 'RepositoryServiceProvider',
+            'criteria'     => 'Criteria',
         ],
     ],
 ];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator\Commands;
 
 use Apiato\Generator\Generator;
@@ -52,7 +54,7 @@ final class RequestGenerator extends Generator implements ComponentsGenerator
      */
     protected string $stubName = 'requests/generic.stub';
 
-    public function getUserInputs(): array|null
+    public function getUserInputs(): null|array
     {
         $ui = Str::lower($this->checkParameterOrChoice('ui', 'Select the UI for the controller', ['API', 'WEB'], 0));
         $stub = $this->option('stub');
@@ -62,17 +64,17 @@ final class RequestGenerator extends Generator implements ComponentsGenerator
 
         return [
             'path-parameters' => [
-                'section-name' => $this->sectionName,
+                'section-name'   => $this->sectionName,
                 'container-name' => $this->containerName,
                 'user-interface' => Str::upper($ui),
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
+                '_section-name'   => Str::lower($this->sectionName),
+                'section-name'    => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
-                'user-interface' => Str::upper($ui),
+                'container-name'  => $this->containerName,
+                'class-name'      => $this->fileName,
+                'user-interface'  => Str::upper($ui),
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,

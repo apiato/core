@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\API;
 
 use App\Containers\{{section-name}}\{{container-name}}\Tests\Functional\ApiTestCase;
@@ -7,15 +9,17 @@ use App\Containers\{{section-name}}\{{container-name}}\UI\API\Controllers\Create
 use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Group;
 
 #[CoversNothing]
+#[Group('{{_container-name}}')]
+#[Group('api')]
 final class {{class-name}} extends ApiTestCase
 {
     public function testCreate{{model}}(): void
     {
         $this->actingAs(User::factory()->createOne());
         $data = [
-            // TODO: test
             // 'something' => 'value',
         ];
 
@@ -23,7 +27,7 @@ final class {{class-name}} extends ApiTestCase
 
         $response->assertCreated();
         $response->assertJson(
-            fn (AssertableJson $json) =>
+            static fn (AssertableJson $json): AssertableJson =>
                 $json->has('data')
                     ->where('data.type', '{{model}}')
                     // ->where('data.something', $data['something'])

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Http\Middleware;
 
 use Apiato\Core\Middleware\Middleware;

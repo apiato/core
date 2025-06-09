@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Support;
 
 use Illuminate\Support\Arr;
@@ -32,7 +34,7 @@ final class Sanitizer
         $sanitized = [];
 
         foreach ($fields as $key => $value) {
-            if (is_int($key)) {
+            if (\is_int($key)) {
                 if (Arr::has($source, $value)) {
                     Arr::set($sanitized, $value, Arr::get($source, $value));
                 }

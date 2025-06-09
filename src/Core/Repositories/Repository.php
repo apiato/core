@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Core\Repositories;
 
 use Apiato\Core\Repositories\Exceptions\ResourceCreationFailed;
@@ -12,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -33,7 +36,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      */
     protected int $maxPaginationLimit = 0;
 
-    protected bool|null $allowDisablePagination = null;
+    protected null|bool $allowDisablePagination = null;
 
     /** @var \Closure[] */
     protected array $scopes = [];
@@ -43,6 +46,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         parent::__construct(app());
     }
 
+    #[\Override]
     public function boot(): void
     {
         parent::boot();
@@ -70,7 +74,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      */
     public function eagerLoadRequestedIncludes(RequestRelation $requestRelation): void
     {
-        $this->scope(function (Builder|Model $model) use ($requestRelation): Builder|Model {
+        $this->scope(static function (Builder|Model $model) use ($requestRelation): Builder|Model {
             if ($requestRelation->requestingIncludes()) {
                 if ($model instanceof Model) {
                     return $model->with($requestRelation->getValidRelationsFor($model));
@@ -106,12 +110,13 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     /**
      * Retrieve all data of repository, paginated.
      *
-     * @param int|null $limit The number of entries per page. If set to 0, the pagination is disabled.
-     * @param array $columns
-     * @param string $method
+     * @param int|null $limit   The number of entries per page. If set to 0, the pagination is disabled.
+     * @param array    $columns
+     * @param string   $method
      *
      * @throws RepositoryException
      */
+    #[\Override]
     public function paginate($limit = null, $columns = ['*'], $method = 'paginate'): mixed
     {
         $limit = $this->setPaginationLimit($limit);
@@ -128,7 +133,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
             return parent::paginate($limit, $columns, $method);
         }
 
-        $key = $this->getCacheKey('paginate', func_get_args());
+        $key = $this->getCacheKey('paginate', \func_get_args());
 
         $time = $this->getCacheTime();
         $value = $this->getCacheRepository()->remember($key, $time, function () use ($limit, $columns, $method) {
@@ -141,26 +146,26 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         return $value;
     }
 
-    public function setPaginationLimit($limit): mixed
+    public function setPaginationLimit(null|int|string $limit = null): int
     {
-        // the priority is for the function parameter, if not available then take
-        // it from the request if available and if not keep it null.
-        return $limit ?? request()?->input('limit');
+        // The priority is for the function parameter, if not available then take it
+        // from the request if available and if not keep it null.
+        return (int)($limit ?? request()?->input('limit', 0));
     }
 
-    public function wantsToSkipPagination(string|int|null $limit): bool
+    public function wantsToSkipPagination(int $limit): bool
     {
-        return '0' === $limit || 0 === $limit;
+        return $limit === 0;
     }
 
     public function canSkipPagination(): mixed
     {
-        // check local (per repository) rule
-        if (!is_null($this->allowDisablePagination)) {
+        // Check local (per repository) rule
+        if (!\is_null($this->allowDisablePagination)) {
             return $this->allowDisablePagination;
         }
 
-        // check global (.env) rule
+        // Check global (.env) rule
         return config('repository.pagination.skip');
     }
 
@@ -179,7 +184,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
             return parent::all($columns);
         }
 
-        $key = $this->getCacheKey('all', func_get_args());
+        $key = $this->getCacheKey('all', \func_get_args());
         $time = $this->getCacheTime();
         $value = $this->getCacheRepository()->remember($key, $time, function () use ($columns) {
             return parent::all($columns);
@@ -194,6 +199,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     public function resetScope(): static
     {
         parent::resetScope();
+
         $this->resetScopes();
 
         return $this;
@@ -214,125 +220,41 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     /**
      * @throws RepositoryException
      */
-    public function addRequestCriteria(array $fieldsToDecode = ['id']): static
+    public function addRequestCriteria(): static
     {
-        $this->pushCriteria(app(RequestCriteria::class));
         if ($this->shouldDecodeSearch()) {
-            $this->decodeSearchQueryString($fieldsToDecode);
+            $this->decodeSearchQueryString();
         }
+
+        $this->pushCriteria(app(RequestCriteria::class));
 
         return $this;
     }
 
-    private function shouldDecodeSearch(): bool
+    public function decodeSearchQueryString(): void
     {
-        return config('apiato.hash-id') && $this->isSearching(request()->query());
-    }
+        /** @var Request $request */
+        $request = app(Request::class);
+        $query = $request->query();
+        $searchKey = config('repository.criteria.params.search', 'search');
+        $searchQuery = $query[$searchKey];
 
-    private function isSearching(array $query): bool
-    {
-        return array_key_exists('search', $query) && $query['search'];
-    }
-
-    public function decodeSearchQueryString(array $fieldsToDecode): void
-    {
-        $query = request()->query();
-        $searchQuery = $query['search'];
-
-        $decodedValue = $this->decodeValue($searchQuery);
-        $decodedData = $this->decodeData($fieldsToDecode, $searchQuery);
-
-        $decodedQuery = $this->arrayToSearchQuery($decodedData);
-
-        if ($decodedValue) {
-            if (empty($decodedQuery)) {
-                $decodedQuery .= $decodedValue;
-            } else {
-                $decodedQuery .= (';' . $decodedValue);
-            }
+        if (\is_string($searchQuery) === false || $searchQuery === '') {
+            return;
         }
 
-        $query['search'] = $decodedQuery;
+        $searchData = $this->parserSearchData($searchQuery);
+        $decodedData = $this->getDecodedSearchValues($searchData);
 
-        request()->query->replace($query);
-    }
-
-    private function decodeValue(string $searchQuery): string|int|null
-    {
-        $searchValue = $this->parserSearchValue($searchQuery);
-
-        if (is_string($searchValue)) {
-            return hashids()->decode($searchValue) ?? $searchValue;
+        if ($decodedData === $searchData) {
+            return;
         }
 
-        return null;
-    }
+        $newSearchQuery = $this->arrayToSearchQuery($decodedData);
 
-    private function parserSearchValue($search)
-    {
-        if (strpos((string) $search, ';') || strpos((string) $search, ':')) {
-            $values = explode(';', (string) $search);
-            foreach ($values as $value) {
-                $s = explode(':', $value);
-                if (1 === count($s)) {
-                    return $s[0];
-                }
-            }
+        $query[$searchKey] = $newSearchQuery;
 
-            return null;
-        }
-
-        return $search;
-    }
-
-    private function decodeData(array $fieldsToDecode, string $searchQuery): array
-    {
-        $searchArray = $this->parserSearchData($searchQuery);
-
-        foreach ($fieldsToDecode as $field) {
-            if (array_key_exists($field, $searchArray)) {
-                $searchArray[$field] = hashids()->decodeOrFail($searchArray[$field]);
-            }
-        }
-
-        return $searchArray;
-    }
-
-    private function parserSearchData($search): array
-    {
-        $searchData = [];
-
-        if (strpos((string) $search, ':')) {
-            $fields = explode(';', (string) $search);
-
-            foreach ($fields as $row) {
-                try {
-                    [$field, $value] = explode(':', $row);
-                    $searchData[$field] = $value;
-                } catch (\Exception) {
-                    // Surround offset error
-                }
-            }
-        }
-
-        return $searchData;
-    }
-
-    private function arrayToSearchQuery(array $decodedSearchArray): string
-    {
-        $decodedSearchQuery = '';
-
-        $fields = array_keys($decodedSearchArray);
-        $length = count($fields);
-        for ($i = 0; $i < $length; ++$i) {
-            $field = $fields[$i];
-            $decodedSearchQuery .= "{$field}:$decodedSearchArray[$field]";
-            if (1 !== $length && $i < $length - 1) {
-                $decodedSearchQuery .= ';';
-            }
-        }
-
-        return $decodedSearchQuery;
+        $request->query->replace($query);
     }
 
     public function removeRequestCriteria(): static
@@ -361,7 +283,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      */
     public function store(Arrayable|array $data)
     {
-        if (is_array($data)) {
+        if (\is_array($data)) {
             return $this->create($data);
         }
 
@@ -379,7 +301,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     {
         try {
             return parent::create($attributes);
-        } catch (\Exception) {
+        } catch (\Throwable) {
             throw ResourceCreationFailed::create(class_basename($this->model()));
         }
     }
@@ -412,6 +334,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     {
         /** @var TModel $model */
         $model = parent::firstOrCreate($attributes);
+
         if ($model->wasRecentlyCreated) {
             $model->update($values);
         }
@@ -454,7 +377,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      * Find an entity/s by its primary key.
      *
      * @param int|string|array|Arrayable $id
-     * @param array $columns
+     * @param array                      $columns
      *
      * @return ($id is array|Arrayable ? Collection<array-key, TModel> : TModel|null)
      *
@@ -467,7 +390,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
                 return parent::find($id, $columns);
             }
 
-            $key = $this->getCacheKey('find', func_get_args());
+            $key = $this->getCacheKey('find', \func_get_args());
             $time = $this->getCacheTime();
             $value = $this->getCacheRepository()->remember($key, $time, function () use ($id, $columns) {
                 return parent::find($id, $columns);
@@ -506,7 +429,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      * Find data by field and value.
      *
      * @param (\Closure(static): mixed)|string|array|Expression $field
-     * @param array $columns
+     * @param array                                             $columns
      *
      * @return Collection<array-key, TModel>
      */
@@ -516,7 +439,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
             return parent::findByField($field, $value, $columns);
         }
 
-        $key = $this->getCacheKey('findByField', func_get_args());
+        $key = $this->getCacheKey('findByField', \func_get_args());
         $time = $this->getCacheTime();
         $value = $this->getCacheRepository()->remember($key, $time, function () use ($field, $value, $columns) {
             return parent::findByField($field, $value, $columns);
@@ -541,7 +464,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
             return parent::findWhere($where, $columns);
         }
 
-        $key = $this->getCacheKey('findWhere', func_get_args());
+        $key = $this->getCacheKey('findWhere', \func_get_args());
         $time = $this->getCacheTime();
         $value = $this->getCacheRepository()->remember($key, $time, function () use ($where, $columns) {
             return parent::findWhere($where, $columns);
@@ -571,7 +494,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
 
     /**
      * @param class-string<CriteriaInterface> $criteria Criteria class name
-     * @param array<string, mixed> $args Arguments to pass to the criteria constructor
+     * @param array<string, mixed>            $args     Arguments to pass to the criteria constructor
      *
      * @throws RepositoryException
      * @throws BindingResolutionException
@@ -587,6 +510,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     protected function applyScope(): static
     {
         parent::applyScope();
+
         $this->applyScopes();
 
         return $this;
@@ -595,12 +519,109 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     protected function applyScopes(): static
     {
         foreach ($this->scopes as $scope) {
-            if (!is_callable($scope)) {
+            if (!\is_callable($scope)) {
                 throw new \RuntimeException('Query scope is not callable');
             }
+
             $this->model = $scope($this->model);
         }
 
         return $this;
+    }
+
+    private function parserSearchData(string $search): array
+    {
+        $searchData = [];
+
+        if (str_contains($search, ':') === false) {
+            return $searchData;
+        }
+
+        $fields = explode(';', $search);
+
+        foreach ($fields as $field) {
+            if (str_contains($field, ':') === false) {
+                continue;
+            }
+
+            $parts = explode(':', $field, 2);
+
+            if (\count($parts) !== 2) {
+                continue;
+            }
+
+            $field = trim($parts[0]);
+
+            if ($field === '') {
+                continue;
+            }
+
+            $searchData[$field] = trim($parts[1]);
+        }
+
+        return $searchData;
+    }
+
+    private function getDecodedSearchValues(array $searchData): array
+    {
+        foreach ($searchData as $field => $value) {
+            $isBool = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+            if ($isBool !== null) {
+                $searchData[$field] = $value;
+                continue;
+            }
+
+            if (is_numeric($value)) {
+                $searchData[$field] = $value;
+                continue;
+            }
+
+            $decodedId = hashids()->decode($value);
+
+            if ($decodedId === null) {
+                $searchData[$field] = $value;
+                continue;
+            }
+
+            $searchData[$field] = $decodedId;
+        }
+
+        return $searchData;
+    }
+
+    private function shouldDecodeSearch(): bool
+    {
+        return config('apiato.hash-id') && $this->isSearching();
+    }
+
+    private function isSearching(): bool
+    {
+        $searchKey = config('repository.criteria.params.search', 'search');
+        /** @var Request $request */
+        $request = app(Request::class);
+
+        return $request->filled($searchKey);
+    }
+
+    /**
+     * Reconstructs the search string from an array of field => value pairs.
+     */
+    private function arrayToSearchQuery(array $decodedSearchArray): string
+    {
+        $decodedSearchQuery = '';
+
+        $fields = array_keys($decodedSearchArray);
+        $length = \count($fields);
+        foreach ($fields as $i => $iValue) {
+            $field = $iValue;
+            $decodedSearchQuery .= \sprintf('%s:%s', $field, $decodedSearchArray[$field]);
+
+            if ($length !== 1 && $i < $length - 1) {
+                $decodedSearchQuery .= ';';
+            }
+        }
+
+        return $decodedSearchQuery;
     }
 }

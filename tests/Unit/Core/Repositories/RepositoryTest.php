@@ -1,40 +1,163 @@
 <?php
 
-namespace Tests\Unit\Abstract\Repositories;
+declare(strict_types=1);
 
 use Apiato\Core\Repositories\Exceptions\ResourceCreationFailed;
 use Apiato\Core\Repositories\Exceptions\ResourceNotFound;
 use Apiato\Core\Repositories\Repository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Pest\Expectation;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Workbench\App\Containers\Identity\User\Data\Repositories\UserRepository;
 use Workbench\App\Containers\Identity\User\Models\User;
 use Workbench\App\Containers\MySection\Book\Data\Repositories\BookRepository;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(Repository::class), function (): void {
-    it('can add/remove request criteria', function (): void {
-        $repository = new BookRepository();
+    describe('RequestCriteria handling', function (): void {
+        it('can add request criteria', function (): void {
+            $repository = new BookRepository();
 
-        $result = $repository->addRequestCriteria();
+            $bookRepository = $repository->addRequestCriteria();
 
-        expect($result->getCriteria())->toHaveCount(1)
-            ->and($result->getCriteria()->first())->toBeInstanceOf(RequestCriteria::class);
+            expect($bookRepository->getCriteria())->toHaveCount(1)
+                ->and($bookRepository->getCriteria()->first())->toBeInstanceOf(RequestCriteria::class);
+        });
 
-        $result = $repository->removeRequestCriteria();
+        it('can remove request criteria', function (): void {
+            $repository = new BookRepository();
+            $repository->addRequestCriteria();
 
-        expect($result->getCriteria())->toBeEmpty();
+            $bookRepository = $repository->removeRequestCriteria();
+
+            expect($bookRepository->getCriteria())->toBeEmpty();
+        });
+
+        it('decodes search query when hash-id is enabled', function (): void {
+            config(['apiato.hash-id' => true]);
+
+            $hashedId = hashids()->encode(123);
+            $searchString = 'id:' . $hashedId;
+            $expectedString = 'id:123';
+
+            $request = Request::create('/', SymfonyRequest::METHOD_GET, ['search' => $searchString]);
+            app()->instance(Request::class, $request);
+
+            $repository = new BookRepository();
+            $repository->addRequestCriteria();
+
+            $actualQuery = app(Request::class)->query('search');
+
+            expect($actualQuery)->toBe($expectedString);
+        });
+
+        it('does not decode search query when hash-id is disabled', function (): void {
+            config(['apiato.hash-id' => false]);
+
+            $hashedId = hashids()->encode(123);
+            $searchString = 'id:' . $hashedId;
+
+            $request = Request::create('/', SymfonyRequest::METHOD_GET, ['search' => $searchString]);
+            app()->instance(Request::class, $request);
+
+            $repository = new BookRepository();
+            $repository->addRequestCriteria();
+
+            $actualQuery = app(Request::class)->query('search');
+
+            expect($actualQuery)->toBe($searchString);
+        });
+
+        it('ignores boolean values when decoding search query', function (): void {
+            config(['apiato.hash-id' => true]);
+
+            $searchString = 'is_active:true;is_admin:false;status:1;flag:0';
+
+            $request = Request::create('/', SymfonyRequest::METHOD_GET, ['search' => $searchString]);
+            app()->instance(Request::class, $request);
+
+            $repository = new BookRepository();
+            $repository->addRequestCriteria();
+
+            $actualQuery = app(Request::class)->query('search');
+
+            expect($actualQuery)->toBe($searchString);
+        });
+
+        it('ignores numeric values when decoding search query', function (): void {
+            config(['apiato.hash-id' => true]);
+
+            $searchString = 'age:30;count:5';
+
+            $request = Request::create('/', SymfonyRequest::METHOD_GET, ['search' => $searchString]);
+            app()->instance(Request::class, $request);
+
+            $repository = new BookRepository();
+            $repository->addRequestCriteria();
+
+            $actualQuery = app(Request::class)->query('search');
+
+            expect($actualQuery)->toBe($searchString);
+        });
+
+        it('handles complex search input with mixed values', function (): void {
+            config(['apiato.hash-id' => true]);
+
+            $hashedId1 = hashids()->encode(123);
+            $hashedId2 = hashids()->encode(456);
+            $searchString = sprintf('id:%s;name:John;is_active:true;role_id:%s;age:30', $hashedId1, $hashedId2);
+            $expectedString = 'id:123;name:John;is_active:true;role_id:456;age:30';
+
+            $request = Request::create('/', SymfonyRequest::METHOD_GET, ['search' => $searchString]);
+            app()->instance(Request::class, $request);
+
+            $repository = new BookRepository();
+            $repository->addRequestCriteria();
+
+            $actualQuery = app(Request::class)->query('search');
+
+            expect($actualQuery)->toBe($expectedString);
+        });
+
+        it('does nothing when search parameter is empty', function (): void {
+            config(['apiato.hash-id' => true]);
+
+            $request = Request::create('/', SymfonyRequest::METHOD_GET, ['search' => '']);
+            app()->instance(Request::class, $request);
+
+            $repository = new BookRepository();
+            $repository->addRequestCriteria();
+
+            $actualQuery = app(Request::class)->query('search');
+
+            expect($actualQuery)->toBe('');
+        });
+
+        it('does nothing when search parameter is not a string', function (): void {
+            config(['apiato.hash-id' => true]);
+
+            $request = Request::create('/', SymfonyRequest::METHOD_GET, ['search' => null]);
+            app()->instance(Request::class, $request);
+
+            $repository = new BookRepository();
+            $repository->addRequestCriteria();
+
+            $actualQuery = app(Request::class)->query('search');
+
+            expect($actualQuery)->toBeNull();
+        });
     });
 
     it('can push criteria and passing args', function (): void {
         $repository = new BookRepository();
 
-        $result = $repository->pushCriteriaWith(RequestCriteria::class, ['criteria' => request()]);
+        $bookRepository = $repository->pushCriteriaWith(RequestCriteria::class, ['criteria' => app(Request::class)]);
 
-        expect($result->getCriteria())->toHaveCount(1)
-            ->and($result->getCriteria()->first())->toBeInstanceOf(RequestCriteria::class);
+        expect($bookRepository->getCriteria())->toHaveCount(1)
+            ->and($bookRepository->getCriteria()->first())->toBeInstanceOf(RequestCriteria::class);
     });
 
     it('discover its model', function (): void {
@@ -43,28 +166,28 @@ describe(class_basename(Repository::class), function (): void {
         expect($repository->model())->toBe(Book::class);
     });
 
-    it('can cache method call results', function (string $method, \Closure $args): void {
+    it('can cache method call results', function (string $method, Closure $args): void {
         Cache::clear();
         config(['repository.cache.enabled' => true]);
-        $user = User::factory()->createOne();
+        $model = User::factory()->createOne();
         $repository = $this->app->make(UserRepository::class);
-        $arguments = $args($user->id);
+        $arguments = $args($model->id);
         $cacheKey = $repository->getCacheKey($method, [$arguments]);
 
         expect(Cache::missing($cacheKey))->toBeTrue();
 
         // hit the cache
-        $repository->$method($arguments);
+        $repository->{$method}($arguments);
 
         expect(Cache::has($cacheKey))->toBeTrue();
     })->with([
         'all' => [
             'all',
-            static fn () => ['*'],
+            static fn (): array => ['*'],
         ],
         'paginate' => [
             'paginate',
-            static fn () => null,
+            static fn (): int => 0,
         ],
         'find' => [
             'find',
@@ -72,17 +195,17 @@ describe(class_basename(Repository::class), function (): void {
         ],
         'findByField' => [
             'findByField',
-            static fn ($id) => ['id', $id],
+            static fn ($id): array => ['id', $id],
         ],
         'findWhere' => [
             'findWhere',
-            static fn ($id) => [$id],
+            static fn ($id): array => [$id],
         ],
     ]);
 
     describe('scopes', function (): void {
         it('can push/reset scopes stack', function (): void {
-            $repository = new class extends UserRepository {
+            $repository = new class () extends UserRepository {
                 public function shouldEagerLoadIncludes(): bool
                 {
                     return false;
@@ -130,30 +253,30 @@ describe(class_basename(Repository::class), function (): void {
     it('can make new model instance', function (): void {
         $repository = new BookRepository();
 
-        $result = $repository->make(['title' => 'test']);
+        $book = $repository->make(['title' => 'test']);
 
-        expect($result)->toBeInstanceOf(Book::class)
-            ->and($result->title)->toBe('test');
+        expect($book)->toBeInstanceOf(Book::class)
+            ->and($book->title)->toBe('test');
     });
 
     it('can get the model instance', function (): void {
         $repository = new BookRepository();
 
-        $result = $repository->getModel();
+        $book = $repository->getModel();
 
-        expect($result)->toBeInstanceOf(Book::class);
+        expect($book)->toBeInstanceOf(Book::class);
     });
 
     it('can store a new model instance', function ($data): void {
         $repository = new BookRepository();
 
-        $result = $repository->store($data);
+        $book = $repository->store($data);
 
-        expect($result)->toBeInstanceOf(Book::class)
-            ->and($result->title)->toBe('test');
+        expect($book)->toBeInstanceOf(Book::class)
+            ->and($book->title)->toBe('test');
     })->with([
         'array' => [
-            fn () => ['title' => 'test'],
+            fn (): array => ['title' => 'test'],
         ],
         'model' => [
             fn () => Book::factory()->makeOne(['title' => 'test']),
@@ -164,10 +287,10 @@ describe(class_basename(Repository::class), function (): void {
         it('can create a new model instance', function (): void {
             $repository = new BookRepository();
 
-            $result = $repository->create(['title' => 'test']);
+            $book = $repository->create(['title' => 'test']);
 
-            expect($result)->toBeInstanceOf(Book::class)
-                ->and($result->title)->toBe('test');
+            expect($book)->toBeInstanceOf(Book::class)
+                ->and($book->title)->toBe('test');
         });
 
         it('throws custom exception', function (): void {
@@ -181,36 +304,36 @@ describe(class_basename(Repository::class), function (): void {
 
     it('can save the model instance', function (): void {
         $repository = new BookRepository();
-        $book = Book::factory()->makeOne();
+        $model = Book::factory()->makeOne();
 
-        $this->assertModelMissing($book);
+        $this->assertModelMissing($model);
 
-        $repository->save($book);
+        $repository->save($model);
 
-        $this->assertModelExists($book);
+        $this->assertModelExists($model);
     });
 
     describe('first or create', function (): void {
         it('can find first or create', function (): void {
             $repository = new BookRepository();
-            $book = Book::factory()->makeOne();
+            $model = Book::factory()->makeOne();
 
-            $this->assertModelMissing($book);
+            $this->assertModelMissing($model);
 
-            $result = $repository->firstOrCreate(['title' => $book->title], $book->toArray());
+            $book = $repository->firstOrCreate(['title' => $model->title], $model->toArray());
 
-            expect($result)->toBeInstanceOf(Book::class)
-                ->and($result->title)->toBe($book->title);
+            expect($book)->toBeInstanceOf(Book::class)
+                ->and($book->title)->toBe($model->title);
 
-            $this->assertModelExists($result);
+            $this->assertModelExists($book);
         });
 
         it('can update attributes if model is found', function (): void {
             $repository = new UserRepository();
 
-            $result = $repository->firstOrCreate(
+            $model = $repository->firstOrCreate(
                 [
-                    'email' => 'saruman@the.white',
+                    'email'    => 'saruman@the.white',
                     'password' => 'password',
                 ],
                 [
@@ -218,21 +341,21 @@ describe(class_basename(Repository::class), function (): void {
                 ],
             );
 
-            expect($result)->toBeInstanceOf(User::class)
-                ->and($result->name)->toBe('saruman')
-                ->and($result->email)->toBe('saruman@the.white');
+            expect($model)->toBeInstanceOf(User::class)
+                ->and($model->name)->toBe('saruman')
+                ->and($model->email)->toBe('saruman@the.white');
         });
     });
 
     describe('update', function (): void {
         it('can update an entity instance', function (): void {
             $repository = new BookRepository();
-            $book = Book::factory()->createOne();
+            $model = Book::factory()->createOne();
 
-            $result = $repository->update(['title' => 'updated'], $book->id);
+            $book = $repository->update(['title' => 'updated'], $model->id);
 
-            $this->assertModelExists($result);
-            expect($result->title)->toBe('updated');
+            $this->assertModelExists($book);
+            expect($book->title)->toBe('updated');
         });
 
         it('throws custom exception', function (): void {
@@ -247,12 +370,12 @@ describe(class_basename(Repository::class), function (): void {
     describe('findOrFail', function (): void {
         it('can find an entity instance', function (): void {
             $repository = new BookRepository();
-            $book = Book::factory()->createOne();
+            $model = Book::factory()->createOne();
 
-            $result = $repository->findOrFail($book->id);
+            $book = $repository->findOrFail($model->id);
 
-            expect($result)->toBeInstanceOf(Book::class)
-                ->and($result->id)->toBe($book->id);
+            expect($book)->toBeInstanceOf(Book::class)
+                ->and($book->id)->toBe($model->id);
         });
 
         it('throws custom exception', function (): void {
@@ -267,12 +390,12 @@ describe(class_basename(Repository::class), function (): void {
     describe('find', function (): void {
         it('can find an entity instance', function (): void {
             $repository = new BookRepository();
-            $book = Book::factory()->createOne();
+            $model = Book::factory()->createOne();
 
-            $result = $repository->find($book->id);
+            $result = $repository->find($model->id);
 
             expect($result)->toBeInstanceOf(Book::class)
-                ->and($result->id)->toBe($book->id);
+                ->and($result?->getKey())->toBe($model->id);
         });
 
         it('returns null if model is not found', function (): void {
@@ -287,12 +410,12 @@ describe(class_basename(Repository::class), function (): void {
     describe('findById', function (): void {
         it('can find an entity instance', function (): void {
             $repository = new BookRepository();
-            $book = Book::factory()->createOne();
+            $model = Book::factory()->createOne();
 
-            $result = $repository->findById($book->id);
+            $result = $repository->findById($model->id);
 
             expect($result)->toBeInstanceOf(Book::class)
-                ->and($result->id)->toBe($book->id);
+                ->and($result?->getKey())->toBe($model->id);
         });
 
         it('returns null if model is not found', function (): void {
@@ -377,12 +500,12 @@ describe(class_basename(Repository::class), function (): void {
     describe('delete', function (): void {
         it('can delete an entity instance', function (): void {
             $repository = new BookRepository();
-            $book = Book::factory()->createOne();
+            $model = Book::factory()->createOne();
 
-            $result = $repository->delete($book->id);
+            $result = $repository->delete($model->id);
 
             expect($result)->toBeTrue();
-            $this->assertModelMissing($book);
+            $this->assertModelMissing($model);
         });
 
         it('throws custom exception', function (): void {
@@ -391,6 +514,74 @@ describe(class_basename(Repository::class), function (): void {
 
                 $repository->findOrFail(777);
             })->toThrow(ResourceNotFound::create('Book'));
+        });
+
+        it('throws exception when deleting non-existent entity', function (): void {
+            expect(function (): void {
+                $repository = new BookRepository();
+
+                $repository->delete(777);
+            })->toThrow(Error::class);
+        });
+    });
+
+    describe('pagination handling', function (): void {
+        it('can set pagination limit from request', function (): void {
+            $repository = new BookRepository();
+
+            $request = Request::create('/', SymfonyRequest::METHOD_GET, ['limit' => '42']);
+            app()->instance(Request::class, $request);
+
+            $limit = $repository->setPaginationLimit(42);
+
+            expect($limit)->toBe(42);
+        });
+
+        it('can set pagination limit from parameter', function (): void {
+            $repository = new BookRepository();
+
+            $limit = $repository->setPaginationLimit(42);
+
+            expect($limit)->toBe(42);
+        });
+
+        it('can check if pagination should be skipped', function (): void {
+            $repository = new BookRepository();
+
+            expect($repository->wantsToSkipPagination(0))->toBeTrue();
+            expect($repository->wantsToSkipPagination(5))->toBeFalse();
+        });
+
+        it('checks if disable pagination is allowed via repository property', function (): void {
+            $repository = mock(UserRepository::class)->makePartial();
+            $repository->shouldReceive('canSkipPagination')->andReturn(true);
+
+            expect($repository->canSkipPagination())->toBeTrue();
+
+            $repository = mock(UserRepository::class)->makePartial();
+            $repository->shouldReceive('canSkipPagination')->andReturn(false);
+
+            expect($repository->canSkipPagination())->toBeFalse();
+        });
+
+        it('checks if disable pagination is allowed via global config', function (): void {
+            $repository = new BookRepository();
+
+            config(['repository.pagination.skip' => true]);
+            expect($repository->canSkipPagination())->toBeTrue();
+
+            config(['repository.pagination.skip' => false]);
+            expect($repository->canSkipPagination())->toBeFalse();
+        });
+
+        it('can check if limit exceeds max pagination limit', function (): void {
+            $legacyMock = mock(BookRepository::class)->makePartial();
+            $legacyMock->allows('exceedsMaxPaginationLimit')->andReturnUsing(
+                fn ($limit): bool => $limit > 10
+            );
+
+            expect($legacyMock->exceedsMaxPaginationLimit(20))->toBeTrue();
+            expect($legacyMock->exceedsMaxPaginationLimit(5))->toBeFalse();
         });
     });
 })->covers(Repository::class);

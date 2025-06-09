@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Configuration\Provider;
 use Apiato\Support\DefaultProviders;
 use Workbench\App\StrayServiceProvider;
@@ -30,7 +32,7 @@ describe(class_basename(Provider::class), function (): void {
 
         expect(
             collect($provider->toArray())
-                ->filter(static fn (string $provider): bool => StrayServiceProvider::class === $provider)
+                ->filter(static fn (string $provider): bool => $provider === StrayServiceProvider::class)
                 ->count(),
         )->toBe(1);
     });

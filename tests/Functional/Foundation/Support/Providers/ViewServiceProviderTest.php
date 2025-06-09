@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Apiato\Foundation\Support\Providers\ViewServiceProvider;
 use Illuminate\Support\Facades\View;
 

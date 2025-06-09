@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Generator\Commands;
 
 use Apiato\Generator\Generator;
@@ -14,48 +16,54 @@ final class PolicyGenerator extends Generator implements ComponentsGenerator
      */
     public array $inputs = [
     ];
+
     /**
      * The console command name.
      *
      * @var string
      */
     protected $name = 'apiato:make:policy';
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Create a new Policy class';
+
     /**
      * The type of class being generated.
      */
     protected string $fileType = 'Policy';
+
     /**
      * The structure of the file path.
      */
     protected string $pathStructure = '{section-name}/{container-name}/Policies/*';
+
     /**
      * The structure of the file name.
      */
     protected string $nameStructure = '{file-name}';
+
     /**
      * The name of the stub file.
      */
     protected string $stubName = 'policy.stub';
 
-    public function getUserInputs(): array|null
+    public function getUserInputs(): null|array
     {
         return [
             'path-parameters' => [
-                'section-name' => $this->sectionName,
+                'section-name'   => $this->sectionName,
                 'container-name' => $this->containerName,
             ],
             'stub-parameters' => [
-                '_section-name' => Str::lower($this->sectionName),
-                'section-name' => $this->sectionName,
+                '_section-name'   => Str::lower($this->sectionName),
+                'section-name'    => $this->sectionName,
                 '_container-name' => Str::lower($this->containerName),
-                'container-name' => $this->containerName,
-                'class-name' => $this->fileName,
+                'container-name'  => $this->containerName,
+                'class-name'      => $this->fileName,
             ],
             'file-parameters' => [
                 'file-name' => $this->fileName,
@@ -63,6 +71,7 @@ final class PolicyGenerator extends Generator implements ComponentsGenerator
         ];
     }
 
+    #[\Override]
     public function getDefaultFileName(): string
     {
         return $this->containerName . 'Policy';

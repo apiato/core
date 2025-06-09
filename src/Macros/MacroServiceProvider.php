@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Apiato\Macros;
 
 use Apiato\Core\Providers\ServiceProvider;
@@ -20,8 +22,7 @@ final class MacroServiceProvider extends ServiceProvider
                 /**
                  * Decodes a hashed value and checks if the decoded value exists in the collection under the specified key.
                  */
-                fn (string $hashedValue, string $key = 'id'): bool =>
-                    /* @var Collection $this */
+                fn (string $hashedValue, string $key = 'id'): bool => /** @var Collection $this */
                     $this->contains($key, hashids()->decode($hashedValue)),
             );
         }
@@ -34,6 +35,7 @@ final class MacroServiceProvider extends ServiceProvider
                  * or throws an exception if any value fails to decode.
                  */
                 function (): Collection {
+                    /** @var Collection $this */
                     return $this->map(static fn (string $id): int => hashids()->decodeOrFail($id));
                 },
             );
@@ -43,9 +45,17 @@ final class MacroServiceProvider extends ServiceProvider
             Config::macro(
                 'unset',
                 function (array|string|int|float $key): void {
-                    /* @var Repository $this */
-                    Arr::forget($this->items, $key);
-                },
+                    $deleter = \Closure::bind(
+                        static function (Repository $repo, array|string|int|float $key): void {
+                            Arr::forget($repo->items, $key);
+                        },
+                        null,
+                        Repository::class
+                    );
+
+                    /** @var Repository $this */
+                    $deleter($this, $key);
+                }
             );
         }
 
@@ -53,7 +63,7 @@ final class MacroServiceProvider extends ServiceProvider
             Request::macro(
                 'sanitize',
                 function (array $fields): array {
-                    /* @var Request $this */
+                    /** @var Request $this */
                     return Sanitizer::sanitize($this->all(), $fields);
                 },
             );
