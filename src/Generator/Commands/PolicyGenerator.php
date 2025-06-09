@@ -146,15 +146,26 @@ return true;
                 ->setExtends($parentUnitTestCaseFullPath);
         }
 
+        // setup method
+        $setupMethodName = 'setUp';
+        if (!$class->hasMethod($setupMethodName)) {
+            $setupMethod = $class->addMethod($setupMethodName)->setPublic();
+            $setupMethod->addBody("
+parent::setUp();
+
+\$this->policy = app($this->fileName::class);
+");
+            $setupMethod->setReturnType('void');
+        }
+
         // test method
         $testMethodName = 'testCan' . ucfirst($this->method);
         if (!$class->hasMethod($testMethodName)) {
             $testMethod = $class->addMethod($testMethodName)->setPublic();
             $testMethod->addBody("
-\$policy = app($this->fileName::class);
 \$user = UserFactory::new()->createOne();
 
-\$this->assertTrue(\$policy->$this->method(\$user));
+\$this->assertTrue(\$this->policy->$this->method(\$user));
 ");
 
             $testMethod->setReturnType('void');
