@@ -8,7 +8,7 @@ body:
     attributes:
       label: Apiato Core Version
       description: Provide the Apiato Core version that you are using. [Please ensure it is still supported.](https://apiato.io/docs/prologue/release-notes#support-policy)
-      placeholder: 8.x
+      placeholder: 13.x
     validations:
       required: true
   - type: input

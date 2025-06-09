@@ -15,7 +15,7 @@
         "runs_on": "ubuntu-latest",
         "runOn":"master",
         "php_version":"8.4",
-        "php_unit_version":  "phpunit:11.*"
+        "php_unit_version":  "phpunit:12.*"
     },
     {
         "runs_on": "ubuntu-latest",
@@ -33,6 +33,6 @@
         "runs_on": "ubuntu-latest",
         "runOn":"13.x",
         "php_version":"8.4",
-        "php_unit_version":  "phpunit:11.*"
+        "php_unit_version":  "phpunit:12.*"
     }
 ]

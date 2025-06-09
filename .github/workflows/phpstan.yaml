@@ -22,38 +22,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
-          coverage: none
-
       - name: Setup Composer token
         run: composer config -g github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Copy environment file for Composer
+        run: cp .env.ci .env
 
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v3
         with:
           composer-options: --prefer-dist
 
-      - name: Prepare PHPStan cache directory
-        run: mkdir -p ./tmp/phpstan
-
-      - name: Restore PHPStan result cache
-        uses: actions/cache/restore@v4
-        with:
-          path: ./tmp/phpstan
-          key: ${{ runner.os }}-phpstan-result-cache-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-phpstan-result-cache-
-
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse --memory-limit=512M --ansi --error-format=github
-
-      - name: Save PHPStan result cache
-        uses: actions/cache/save@v4
-        if: ${{ !cancelled() }}
+        uses: php-actions/phpstan@v3
         with:
-          path: ./tmp/phpstan
-          key: phpstan-result-cache-${{ github.sha }}
+          configuration: phpstan.neon
+          path: app/ config/ tests/ database/
+          version: 'composer'
+          php_version: '8.3'

@@ -36,9 +36,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .php-cs-fixer.cache
-          key: ${{ runner.os }}-php-cs-fixer-${{ github.sha }}
+          key: ${{ runner.OS }}-${{ github.repository }}-php-cs-fixer-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-php-cs-fixer-
+            ${{ runner.OS }}-${{ github.repository }}-php-cs-fixer-
 
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v3

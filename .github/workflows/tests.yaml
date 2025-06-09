@@ -51,9 +51,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .phpunit.result.cache
-          key: ${{ runner.os }}-php-${{ matrix.php }}-phpunit-${{ github.sha }}
+          key: ${{ runner.OS }}-${{ github.repository }}-php-${{ matrix.php }}-phpunit-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-php-${{ matrix.php }}-phpunit-
+            ${{ runner.OS }}-${{ github.repository }}-php-${{ matrix.php }}-phpunit-
 
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v3
@@ -66,6 +66,8 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
+          slug: apiato/core
+          files: coverage.xml
           fail_ci_if_error: true
           verbose: true
         env:
