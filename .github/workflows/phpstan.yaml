@@ -25,9 +25,6 @@ jobs:
       - name: Setup Composer token
         run: composer config -g github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Copy environment file for Composer
-        run: cp .env.ci .env
-
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v3
         with:
