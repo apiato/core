@@ -94,8 +94,8 @@ class ControllerGenerator extends FileGeneratorCommand
         $namespace->addUse($actionFullPath);
         $transformerFullPath = 'App\Containers\\' . $this->sectionName . '\\' . $this->containerName . '\UI\\API\\Transformers\\' . $model . 'Transformer';
         $namespace->addUse($transformerFullPath);
-        $responseFullPath = 'Apiato\Core\Facades\Response';
-        $namespace->addUse($responseFullPath);
+        $invalidTransformerExceptionFullPath = 'Apiato\Core\Exceptions\InvalidTransformerException';
+        $namespace->addUse($invalidTransformerExceptionFullPath);
 
         // class
         $class = $file->addNamespace($namespace)
@@ -104,26 +104,31 @@ class ControllerGenerator extends FileGeneratorCommand
 
         // invoke method
         $invoke = $class->addMethod('__invoke');
+        $invoke->addComment('@throws InvalidTransformerException');
         $invoke->addParameter('request')->setType($requestFullPath);
         $invoke->addParameter('action')->setType($actionFullPath);
         $invoke->setReturnType($jsonResponseFullPath);
         switch ($this->stub) {
             case 'list':
                 $invoke->addBody("$$entities = \$action->run(\$request);");
-                $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entities, $model . 'Transformer'));
+                $invoke->addBody(sprintf('return $this->transform($%s, %sTransformer::class);', $entities, $model));
                 break;
             case 'create':
+                $invoke->addBody("$$entity = \$action->transactionalRun(\$request);");
+                $invoke->addBody(sprintf('return $this->created($this->transform($%s, %sTransformer::class));', $entity, $model));
+                break;
             case 'update':
                 $invoke->addBody("$$entity = \$action->transactionalRun(\$request);");
-                $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entity, $model . 'Transformer'));
+                $invoke->addBody(sprintf('return $this->transform($%s, %sTransformer::class);', $entity, $model));
                 break;
             case 'find':
                 $invoke->addBody("$$entity = \$action->run(\$request);");
-                $invoke->addBody(sprintf('return Response::createFrom($%s)->transformWith(%s::class)->ok();', $entity, $model . 'Transformer'));
+                $invoke->addBody(sprintf('return $this->transform($%s, %sTransformer::class);', $entity, $model));
                 break;
             case 'delete':
+                $invoke->removeComment();
                 $invoke->addBody('$action->transactionalRun($request);');
-                $invoke->addBody('return Response::noContent();');
+                $invoke->addBody('return $this->deleted();');
                 break;
         }
 
