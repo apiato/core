@@ -232,7 +232,7 @@ class RequestGenerator extends FileGeneratorCommand
         $testMethod3->addBody('
 $rules = $this->request->rules();
 
-$this->assertSame([], $rules);
+$this->assertEquals([], $rules);
 ');
         $testMethod3->setReturnType('void');
 
