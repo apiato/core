@@ -49,8 +49,10 @@ jobs:
         run: vendor/bin/pest --ci --coverage-clover=coverage.xml
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
+          slug: apiato/core
+          files: coverage.xml
           fail_ci_if_error: true
           verbose: true
         env:
