@@ -15,6 +15,23 @@ use Workbench\App\Containers\MySection\Book\Data\Repositories\BookRepository;
 use Workbench\App\Containers\MySection\Book\Models\Book;
 
 describe(class_basename(Repository::class), function (): void {
+    it('returns original thrown exception message in debug mode', function (): void {
+        config(['app.debug' => true]);
+        $repository = new BookRepository();
+
+        expect(function () use ($repository): void {
+            $repository->create(['non-existing-id']);
+        })->toThrow(function (ResourceCreationFailed $exception): void {
+            expect(strpos($exception->getMessage(), 'SQLSTATE[23000]: Integrity constraint violation'))
+                ->toBeInt();
+        })->and(function () use ($repository): void {
+            $repository->update(['non-existing-id'], 777);
+        })->toThrow(function (ResourceNotFound $exception): void {
+            expect(strpos($exception->getMessage(), 'No query results for model'))
+                ->toBeInt();
+        });
+    });
+
     it('can add/remove request criteria', function (): void {
         $repository = new BookRepository();
 
