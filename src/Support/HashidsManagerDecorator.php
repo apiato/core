@@ -22,6 +22,36 @@ final class HashidsManagerDecorator
     }
 
     /**
+     * Decode a hash id or an array of hash ids (recursively).
+     *
+     * @return int|int[]
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function decodeOrFail(string ...$hash): int|array
+    {
+        if (count($hash) > 1) {
+            Assert::allStringNotEmpty($hash);
+            return array_map(
+                function (string $id): int|array {
+                    return $this->decodeOrFail($id);
+                },
+                $hash,
+            );
+        }
+
+        Assert::stringNotEmpty($hash[0]);
+
+        $result = $this->decode($hash[0]);
+
+        if (is_null($result)) {
+            throw new \InvalidArgumentException('Invalid hash id.');
+        }
+
+        return $result;
+    }
+
+    /**
      * Decode a hashed id.
      *
      * @return int|int[]|null
@@ -42,26 +72,14 @@ final class HashidsManagerDecorator
     }
 
     /**
-     * Decode a hash id or an array of hash ids (recursively).
-     *
-     * @return int|int[]
-     *
      * @throws \InvalidArgumentException
      */
-    public function decodeOrFail(string ...$hash): int|array
+    public function encodeOrFail(mixed ...$numbers): string
     {
-        if (1 < count($hash)) {
-            Assert::allStringNotEmpty($hash);
-
-            return array_map(fn (string $id): int|array => $this->decodeOrFail($id), $hash);
-        }
-
-        Assert::stringNotEmpty($hash[0]);
-
-        $result = $this->decode($hash[0]);
+        $result = $this->encode(...$numbers);
 
         if (is_null($result)) {
-            throw new \InvalidArgumentException('Invalid hash id.');
+            throw new \InvalidArgumentException('Encoding failed.');
         }
 
         return $result;
@@ -73,20 +91,6 @@ final class HashidsManagerDecorator
 
         if ('' === $result) {
             return null;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @throws \InvalidArgumentException
-     */
-    public function encodeOrFail(mixed ...$numbers): string
-    {
-        $result = $this->encode(...$numbers);
-
-        if (is_null($result)) {
-            throw new \InvalidArgumentException('Encoding failed.');
         }
 
         return $result;
