@@ -16,6 +16,8 @@ use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Repository\Events\RepositoryEntityDeleted;
+use Prettus\Repository\Events\RepositoryEntityDeleting;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Repository\Traits\CacheableRepository;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -361,11 +363,11 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      */
     public function store(Arrayable|array $data)
     {
-        if (is_array($data)) {
-            return $this->create($data);
+        if ($data instanceof Arrayable) {
+            return $this->create($data->toArray());
         }
 
-        return $this->create($data->toArray());
+        return $this->create($data);
     }
 
     /**
@@ -379,9 +381,18 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     {
         try {
             return parent::create($attributes);
-        } catch (\Exception) {
-            throw ResourceCreationFailed::create(class_basename($this->model()));
+        } catch (\Throwable $throwable) {
+            throw ResourceCreationFailed::create($this->getExceptionMessage($throwable));
         }
+    }
+
+    protected function getExceptionMessage(\Throwable|null $throwable = null): string
+    {
+        if (!is_null($throwable) && app()->hasDebugModeEnabled()) {
+            return $throwable->getMessage();
+        }
+
+        return class_basename($this->model());
     }
 
     public function model(): string
@@ -433,21 +444,21 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     {
         try {
             return parent::update($attributes, $id);
-        } catch (ModelNotFoundException) {
-            throw ResourceNotFound::create(class_basename($this->model()));
+        } catch (ModelNotFoundException $exception) {
+            throw ResourceNotFound::create($this->getExceptionMessage($exception));
         }
     }
 
     /**
-     * Find an entity by its primary key or throw an exception.
+     * Find an entity by its primary key.
      *
-     * @return TModel
+     * @return TModel|null
      *
-     * @throws ResourceNotFound
+     * @throws RepositoryException
      */
-    public function findOrFail(int|string $id, array $columns = ['*'])
+    public function findById(int|string $id, array $columns = ['*'])
     {
-        return $this->find($id, $columns) ?? throw ResourceNotFound::create(class_basename($this->model()));
+        return $this->find($id, $columns);
     }
 
     /**
@@ -483,19 +494,11 @@ abstract class Repository extends BaseRepository implements CacheableInterface
     }
 
     /**
-     * Find an entity by its primary key.
-     *
-     * @return TModel|null
-     */
-    public function findById(int|string $id, array $columns = ['*'])
-    {
-        return $this->find($id, $columns);
-    }
-
-    /**
      * Find multiple models by their primary keys.
      *
      * @return Collection<array-key, TModel>
+     *
+     * @throws RepositoryException
      */
     public function findMany(array|Arrayable $ids, array $columns = ['*'])
     {
@@ -509,6 +512,8 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      * @param array $columns
      *
      * @return Collection<array-key, TModel>
+     *
+     * @throws RepositoryException
      */
     public function findByField($field, $value = null, $columns = ['*'])
     {
@@ -534,6 +539,8 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      * @param array|string $columns
      *
      * @return Collection<array-key, TModel>
+     *
+     * @throws RepositoryException
      */
     public function findWhere(array $where, $columns = ['*'])
     {
@@ -559,29 +566,28 @@ abstract class Repository extends BaseRepository implements CacheableInterface
      * @param int|string $id
      *
      * @throws ResourceNotFound
+     * @throws RepositoryException
      */
     public function delete($id): bool
     {
-        try {
-            return (bool) parent::delete($id);
-        } catch (ModelNotFoundException) {
-            throw ResourceNotFound::create(class_basename($this->model()));
-        }
-    }
+        $this->applyScope();
 
-    /**
-     * @param class-string<CriteriaInterface> $criteria Criteria class name
-     * @param array<string, mixed> $args Arguments to pass to the criteria constructor
-     *
-     * @throws RepositoryException
-     * @throws BindingResolutionException
-     */
-    public function pushCriteriaWith(string $criteria, array $args): static
-    {
-        /** @var CriteriaInterface $criteriaInstance */
-        $criteriaInstance = $this->app->makeWith($criteria, $args);
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
 
-        return $this->pushCriteria($criteriaInstance);
+        $model = $this->findOrFail($id);
+        $originalModel = clone $model;
+
+        $this->skipPresenter($temporarySkipPresenter);
+        $this->resetModel();
+
+        event(new RepositoryEntityDeleting($this, $model));
+
+        $deleted = $model->delete();
+
+        event(new RepositoryEntityDeleted($this, $originalModel));
+
+        return (bool) $deleted;
     }
 
     protected function applyScope(): static
@@ -602,5 +608,33 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Find an entity by its primary key or throw an exception.
+     *
+     * @return TModel
+     *
+     * @throws ResourceNotFound
+     * @throws RepositoryException
+     */
+    public function findOrFail(int|string $id, array $columns = ['*'])
+    {
+        return $this->find($id, $columns) ?? throw ResourceNotFound::create($this->getExceptionMessage());
+    }
+
+    /**
+     * @param class-string<CriteriaInterface> $criteria Criteria class name
+     * @param array<string, mixed> $args Arguments to pass to the criteria constructor
+     *
+     * @throws RepositoryException
+     * @throws BindingResolutionException
+     */
+    public function pushCriteriaWith(string $criteria, array $args): static
+    {
+        /** @var CriteriaInterface $criteriaInstance */
+        $criteriaInstance = $this->app->makeWith($criteria, $args);
+
+        return $this->pushCriteria($criteriaInstance);
     }
 }

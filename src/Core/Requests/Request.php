@@ -55,7 +55,7 @@ abstract class Request extends LaravelRequest
         foreach ($flattened as $dotKey => $value) {
             foreach ($this->decode as $pattern) {
                 if (Str::is($pattern, $dotKey)) {
-                    Arr::set($data, $dotKey, hashids()->decodeOrFail($value));
+                    Arr::set($data, $dotKey, is_string($value) ? hashids()->decode($value) : null);
                     break;
                 }
             }

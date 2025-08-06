@@ -32,21 +32,45 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
         ['invalid', null],
     ]);
 
-    it('can decode or throw an exception', function (string $hashId, int|array|null $expectation): void {
+    it('can decode or throw an exception', function (array $hashId, int|array|null $expectation): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
-        expect(static function () use ($sut, $hashId) {
-            $sut->decodeOrFail($hashId);
-        })->when(
+        when(
             is_null($expectation),
-            fn (Expectation $ex) => $ex
-                    ->toThrow(InvalidArgumentException::class),
-        )->unless(is_null($expectation), fn (Expectation $ex) => $ex
-            ->toBe($ex->value));
+            fn () => expect(static function () use ($sut, $hashId) {
+                $sut->decodeOrFail(...$hashId);
+            })->toThrow(InvalidArgumentException::class),
+        );
+
+        when(
+            !is_null($expectation),
+            fn () => expect($sut->decodeOrFail(...$hashId))->toBe($expectation),
+        );
     })->with([
-        [fn () => hashids()->encodeOrFail(10), 10],
-        [fn () => hashids()->encodeOrFail(10, 13, 2), [10, 13, 2]],
-        ['invalid', null],
+        [
+            fn () => [hashids()->encodeOrFail(10)],
+            10,
+        ],
+        [
+            fn () => [hashids()->encodeOrFail(10, 13, 2)],
+            [10, 13, 2],
+        ],
+        [
+            fn () => [hashids()->encodeOrFail(10), 'invalid'],
+            null,
+        ],
+        [
+            fn () => [hashids()->encodeOrFail(10), ''],
+            null,
+        ],
+        [
+            ['invalid'],
+            null,
+        ],
+        [
+            [''],
+            null,
+        ],
     ]);
 
     it('can decode array of hash ids', function (): void {

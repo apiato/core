@@ -20,7 +20,7 @@ final class View
                     ->value();
             }
 
-            return Str::of($path)
+            return Str::of(realpath($path))
                 ->after(app_path('Containers') . DIRECTORY_SEPARATOR)
                 ->explode(DIRECTORY_SEPARATOR)
                 ->take(2)
