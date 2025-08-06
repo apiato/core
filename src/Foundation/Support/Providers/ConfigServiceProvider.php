@@ -4,16 +4,14 @@ namespace Apiato\Foundation\Support\Providers;
 
 use Apiato\Core\Providers\ServiceProvider;
 use Apiato\Foundation\Apiato;
-use Illuminate\Support\Str;
 
 final class ConfigServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
         foreach (Apiato::instance()->configs() as $path) {
-            $this->mergeConfigFrom($path, Str::of($path)
-                ->afterLast(DIRECTORY_SEPARATOR)
-                ->before('.php')->value());
+            $key = basename($path, '.php');
+            $this->mergeConfigFrom($path, $key);
         }
 
         $this->mergeConfigFrom(
