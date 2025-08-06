@@ -255,13 +255,16 @@ describe(class_basename(Repository::class), function (): void {
                 ->and($result->id)->toBe($book->id);
         });
 
-        it('throws custom exception', function (): void {
-            expect(function (): void {
+        it('throws custom exception', function (int|null $id): void {
+            expect(function () use ($id): void {
                 $repository = new BookRepository();
 
-                $repository->findOrFail(777);
+                $repository->findOrFail($id);
             })->toThrow(ResourceNotFound::create('Book'));
-        });
+        })->with([
+            777,
+            null
+        ]);
     });
 
     describe('find', function (): void {
