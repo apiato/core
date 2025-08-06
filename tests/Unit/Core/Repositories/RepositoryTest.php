@@ -263,7 +263,7 @@ describe(class_basename(Repository::class), function (): void {
             })->toThrow(ResourceNotFound::create('Book'));
         })->with([
             777,
-            null
+            null,
         ]);
     });
 

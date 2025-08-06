@@ -32,6 +32,7 @@ final class HashidsManagerDecorator
     {
         if (count($hash) > 1) {
             Assert::allStringNotEmpty($hash);
+
             return array_map(
                 function (string $id): int|array {
                     return $this->decodeOrFail($id);
