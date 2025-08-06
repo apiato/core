@@ -35,14 +35,17 @@ describe(class_basename(HashidsManagerDecorator::class), function (): void {
     it('can decode or throw an exception', function (array $hashId, int|array|null $expectation): void {
         $sut = new HashidsManagerDecorator(new HashidsManager(config(), app('hashids.factory')));
 
-        expect(static function () use ($sut, $hashId) {
-            $sut->decodeOrFail(...$hashId);
-        })->when(
+        when(
             is_null($expectation),
-            fn (Expectation $ex) => $ex
-                    ->toThrow(InvalidArgumentException::class),
-        )->unless(is_null($expectation), fn (Expectation $ex) => $ex
-            ->toBe($ex->value));
+            fn () => expect(static function () use ($sut, $hashId) {
+                $sut->decodeOrFail(...$hashId);
+            })->toThrow(InvalidArgumentException::class),
+        );
+
+        when(
+            !is_null($expectation),
+            fn () => expect($sut->decodeOrFail(...$hashId))->toBe($expectation),
+        );
     })->with([
         [
             fn () => [hashids()->encodeOrFail(10)],
