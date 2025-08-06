@@ -386,7 +386,7 @@ abstract class Repository extends BaseRepository implements CacheableInterface
         }
     }
 
-    protected function getExceptionMessage(\Throwable|\Exception|null $throwable = null): string
+    protected function getExceptionMessage(\Throwable|null $throwable = null): string
     {
         if (!is_null($throwable) && app()->hasDebugModeEnabled()) {
             return $throwable->getMessage();
